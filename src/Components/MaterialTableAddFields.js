@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import MaterialTable, { MTableBodyRow } from "material-table";
 import { css } from "@emotion/core";
@@ -5,8 +6,9 @@ import { ClipLoader } from "react-spinners";
 import MuiAlert from "@material-ui/lab/Alert";
 import { getData, addInField, editField, deleteField } from "../Services/Services";
 import { Snackbar } from "@material-ui/core";
+import { id } from "date-fns/locale";
 
-const MaterialTableAddFields = ({ name, status, lookup,id }) => {
+const MaterialTableAddFields = ({ name, status, lookup, }) => {
   const [column, setColumn] = useState([]);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,9 +47,10 @@ const MaterialTableAddFields = ({ name, status, lookup,id }) => {
   useEffect(() => {
     getData(name)
       .then((data) => {
+        console.log(data.data)
         setColumn(
           Object.keys(data.data.result[0]).map((key) => {
-            if (key.endsWith("Id")) {
+            if (key === 'id') {
               return { title: humanReadable(key), field: key, hidden: true };
             }
             if (key === status) {
@@ -100,31 +103,34 @@ const MaterialTableAddFields = ({ name, status, lookup,id }) => {
         data={data}
         editable={{
           isDeleteHidden: (rowData) => (rowData && rowData.statusId) || data.length === 1,
-          onRowAdd: (newData) =>{
+          onRowAdd: (newData) => {
             return addInField(`Add ${name}`, newData)
-            .then((fetchedData) => {
-              if (fetchedData.data.status === "OK") {
-                if(fetchedData.data.result.classesStatus){
-                  fetchedData.data.result.status = fetchedData.data.result.classesStatus
+              .then((fetchedData) => {
+                console.log(fetchedData)
+                if (fetchedData.data.status === "ok") {
+                  if (fetchedData.data.result.classesStatus) {
+                    fetchedData.data.result.status = fetchedData.data.result.classesStatus
+                  }
+                  setData([...data, fetchedData.data.result]);
+                  setSuccess(true);
+                  setResponse(fetchedData.data.message);
+                  setOpen(true);
+                  setLoading(false);
+                } else {
+                  setSuccess(false);
+                  setResponse(fetchedData.data.message);
+                  setOpen(true);
+                  setLoading(false);
                 }
-                setData([...data, fetchedData.data.result]);
-                setSuccess(true);
-                setResponse(fetchedData.data.message);
-                setOpen(true);
-              } else {
-                setSuccess(false);
-                setResponse(fetchedData.data.message);
-                setOpen(true);
-              }
-            })
+              })
 
-            .catch((e) => {
-              console.log(e, e.response);
-            })
+              .catch((e) => {
+                console.log(e, e.response);
+              })
           },
           onRowUpdate: (newData, oldData) => {
             return editField(`Update ${name}`, newData).then((fetchedData) => {
-              if (fetchedData.data.status === "OK") {
+              if (fetchedData.data.status === "ok") {
                 const dataUpdate = [...data];
                 const index = oldData.tableData.id;
                 dataUpdate[index] = newData;
@@ -140,28 +146,28 @@ const MaterialTableAddFields = ({ name, status, lookup,id }) => {
             });
           },
           onRowDelete: (oldData) =>
-          deleteField(`Delete ${name}`,oldData[id])
-          .then(fetchedData => {
-            if(fetchedData.data.status === "OK"){
-              const dataDelete = [...data];
-              const index = oldData.tableData.id;
-              dataDelete.splice(index, 1);
-              setData([...dataDelete]);
-              setSuccess(true);
-              setResponse(fetchedData.data.message);
-              setOpen(true);
-            } else {
-              setSuccess(false);
-              setResponse(fetchedData.data.message || "Something went wrong,Try again later" );
-              setOpen(true);
-            }
-          })
-          .catch(err => {
-            console.log(err,err.response)
-            setSuccess(false);
-            setResponse("Something went wrong,Try again later");
-            setOpen(true);
-          })
+            deleteField(`Delete ${name}`, oldData['id'])
+              .then(fetchedData => {
+                if (fetchedData.data.status === "ok") {
+                  const dataDelete = [...data];
+                  const index = oldData.tableData.id;
+                  dataDelete.splice(index, 1);
+                  setData([...dataDelete]);
+                  setSuccess(true);
+                  setResponse(fetchedData.data.message);
+                  setOpen(true);
+                } else {
+                  setSuccess(false);
+                  setResponse(fetchedData.data.message || "Something went wrong,Try again later");
+                  setOpen(true);
+                }
+              })
+              .catch(err => {
+                console.log(err, err.response)
+                setSuccess(false);
+                setResponse("Something went wrong,Try again later");
+                setOpen(true);
+              })
         }}
       />
     </>

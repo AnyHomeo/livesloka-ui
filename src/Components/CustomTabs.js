@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
 const CustomTabs = () => {
   const classes = useStyles();
   const [value, setValue] = useState(0);
+  // eslint-disable-next-line no-unused-vars
   const [lookup, setLookup] = useState({});
 
   const tabs = [
@@ -73,14 +74,14 @@ const CustomTabs = () => {
     "countryStatus",
   ];
 
-  const id = [
-    "classId",
-    "timeZoneId",
-    "classStatusId",
-    "currencyId",
-    "",
-    "countryId"
-  ]
+  // const id = [
+  //   "classId",
+  //   "timeZoneId",
+  //   "classStatusId",
+  //   "currencyId",
+  //   "",
+  //   "countryId"
+  // ]
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -88,6 +89,7 @@ const CustomTabs = () => {
 
   useEffect(() => {
     getData("Status").then((data) => {
+      console.log(data)
       data.data.result.forEach((data) => {
         setLookup((prev) => {
           return { ...prev, [data.statusId]: data.statusName };
@@ -119,7 +121,7 @@ const CustomTabs = () => {
             name={item}
             status={status[index]}
             lookup={lookup}
-            id={id[index]}
+          // id={id[index]}
           />
         </TabPanel>
       ))}

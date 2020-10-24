@@ -130,7 +130,8 @@ export const getAllCustomerDetails = () => {
 };
 
 export const getData = (name) => {
-
+  console.log(name);
+  console.log(`${API.main}${API[name]}`);
   return Axios.get(`${API.main}${API[name]}`);
 };
 
@@ -143,14 +144,19 @@ export const editCustomer = (data) => {
 };
 
 export const addInField = (name, data) => {
+  // console.log(`${API.main}${API[name]}`)
+  console.log(data);
   return Axios.post(`${API.main}${API[name]}`, data);
 };
 
 export const editField = (name, data) => {
+  console.log(`${API.main}${API[name]}`);
   return Axios.post(`${API.main}${API[name]}`, data);
 };
 
-export const deleteField = (name, id) => Axios.post(`${API.main}${API[name]}/${id}`)
+export const deleteField = (name, id) =>
+  Axios.post(`${API.main}${API[name]}/${id}`)
+
 
 
 export const getComments = (id) => {
