@@ -130,7 +130,7 @@ const MaterialTableAddFields = ({ name, status, lookup, }) => {
           },
           onRowUpdate: (newData, oldData) => {
             return editField(`Update ${name}`, newData).then((fetchedData) => {
-              if (fetchedData.data.status === "ok") {
+              if (fetchedData.data.status === "OK") {
                 const dataUpdate = [...data];
                 const index = oldData.tableData.id;
                 dataUpdate[index] = newData;
