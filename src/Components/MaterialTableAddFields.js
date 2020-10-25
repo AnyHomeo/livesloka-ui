@@ -107,8 +107,8 @@ const MaterialTableAddFields = ({ name, status, lookup, }) => {
           onRowAdd: (newData) => {
             return addInField(`Add ${name}`, newData)
               .then((fetchedData) => {
-                console.log(fetchedData)
                 if (fetchedData.data.status === "ok") {
+                  console.log("inside")
                   if (fetchedData.data.result.classesStatus) {
                     fetchedData.data.result.status = fetchedData.data.result.classesStatus
                   }
@@ -131,7 +131,7 @@ const MaterialTableAddFields = ({ name, status, lookup, }) => {
           },
           onRowUpdate: (newData, oldData) => {
             return editField(`Update ${name}`, newData).then((fetchedData) => {
-              if (fetchedData.data.status === "ok") {
+              if (fetchedData.data.status === "OK") {
                 const dataUpdate = [...data];
                 const index = oldData.tableData.id;
                 dataUpdate[index] = newData;
