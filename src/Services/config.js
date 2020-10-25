@@ -12,32 +12,32 @@ exports.services = {
 
     "Time Zone": "/admin/get/timezones",
     "Add Time Zone": "/admin/addtimezone",
-    "Update Time Zone": "/admin/update/updatetimezone",
+    "Update Time Zone": "/admin/update/timeZone",
     "Delete Time Zone": "/admin/delete/timeZone",
 
     Class: "/admin/get/classes",
     "Add Class": "/admin/addclass",
-    "Update Class": "/admin/update/updateclass",
+    "Update Class": "/admin/update/classes",
     "Delete Class": "/admin/delete/classes",
 
-    "Class Status": "/admin/get/classstatus",
+    "Class Status": "/admin/get/ClassStatuses",
     "Add Class Status": "/admin/addclassstatus",
-    "Update Class Status": "/admin/update/updateclassstatus",
+    "Update Class Status": "/admin/update/ClassStatuses",
     "Delete Class Status": "/admin/delete/classstatus",
 
     Currency: "/admin/get/currencies",
     "Add Currency": "/admin/addcurrency",
-    "Update Currency": "/admin/update/updatecurrency",
+    "Update Currency": "/admin/update/Currency",
     "Delete Currency": "/admin/delete/Currency",
 
     Country: "/admin/get/countries",
     "Add Country": "/admin/addcountry",
-    "Update Country": "/admin/update/updatecountry",
+    "Update Country": "/admin/update/Country",
     "Delete Country": "/admin/delete/Country",
 
     Status: "/admin/get/statuses",
     "Add Status": "/admin/addstatus",
-    "Update Status": "/admin/update/updatestatus",
+    "Update Status": "/admin/update/status",
 
     allCustomerDetails: "/customer/details",
     addCustomer: "/customer/registerCustomer",

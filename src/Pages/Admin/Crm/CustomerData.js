@@ -19,7 +19,7 @@ import {
   IconButton,
   Typography,
   Slide,
- TextField,
+  TextField,
   Snackbar,
   Checkbox,
 } from "@material-ui/core";
@@ -68,20 +68,22 @@ const status = [
   "countryName",
 ];
 
-const id = [
-  "classId",
-  "timeZoneId",
-  "classStatusId",
-  "currencyId",
-  "countryId",
-];
+// const id = [
+//   "classId",
+//   "timeZoneId",
+//   "classStatusId",
+//   "currencyId",
+//   "countryId",
+// ];
 
 const fetchDropDown = (index) => {
   var obj = {};
   getData(names[index])
     .then((data) => {
       data.data.result.forEach((item) => {
-        obj[item[id[index]]] = item[status[index]];
+        console.log(item);
+        //obj[item[id[index]]] = item[status[index]];
+        obj[item.id] = item[status[index]];
       });
     })
     .catch((err) => {
@@ -417,7 +419,7 @@ const CrmDetails = () => {
             <MTableBodyRow
               {...props}
               onDoubleClick={(e) => {
-                  props.actions[2]().onClick(e, props.data);
+                props.actions[2]().onClick(e, props.data);
               }}
             />
           ),
@@ -444,32 +446,32 @@ const CrmDetails = () => {
                 setSnackBarOpen(true);
               });
           },
-          onRowUpdate: (newData, oldData) =>{
+          onRowUpdate: (newData, oldData) => {
             return editCustomer(newData)
-            .then((fetchedData) => {
-              if (fetchedData.data.status === "OK") {
-                const dataUpdate = [...data];
-                const index = oldData.tableData.id;
-                dataUpdate[index] = newData;
-                setdata([...dataUpdate]);
-                setSuccess(true);
-                setResponse(fetchedData.data.message);
-                setSnackBarOpen(true);
-              } else {
-                setSuccess(false);
-                setResponse(
-                  fetchedData.data.message ||
+              .then((fetchedData) => {
+                if (fetchedData.data.status === "OK") {
+                  const dataUpdate = [...data];
+                  const index = oldData.tableData.id;
+                  dataUpdate[index] = newData;
+                  setdata([...dataUpdate]);
+                  setSuccess(true);
+                  setResponse(fetchedData.data.message);
+                  setSnackBarOpen(true);
+                } else {
+                  setSuccess(false);
+                  setResponse(
+                    fetchedData.data.message ||
                     "Something went wrong,Try again later"
-                );
+                  );
+                  setSnackBarOpen(true);
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+                setSuccess(false);
+                setResponse("Something went wrong,Try again later");
                 setSnackBarOpen(true);
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-              setSuccess(false);
-              setResponse("Something went wrong,Try again later");
-              setSnackBarOpen(true);
-            })
+              })
           }
         }}
       />

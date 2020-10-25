@@ -6,6 +6,7 @@ import { ClipLoader } from "react-spinners";
 import MuiAlert from "@material-ui/lab/Alert";
 import { getData, addInField, editField, deleteField } from "../Services/Services";
 import { Snackbar } from "@material-ui/core";
+// eslint-disable-next-line no-unused-vars
 import { id } from "date-fns/locale";
 
 const MaterialTableAddFields = ({ name, status, lookup, }) => {
