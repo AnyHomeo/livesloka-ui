@@ -63,6 +63,8 @@ const CustomTabs = () => {
     "Currency",
     "Status",
     "Country",
+    "Teacher",
+    "Agent"
   ];
 
   const status = [
