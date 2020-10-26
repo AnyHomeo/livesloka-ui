@@ -5,7 +5,7 @@ exports.services = {
   //   changePassword: "",
   // },
   prod: {
-    main: "http://localhost:5000",
+    main: "https://livekumon-services.herokuapp.com",
     // main: "https://livesloka.azurewebsites.net",
     login: "/login",
     changePassword: "/ChangePassword",
