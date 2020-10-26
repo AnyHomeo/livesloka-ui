@@ -131,11 +131,14 @@ export const getAllCustomerDetails = () => {
 };
 
 export const getData = (name) => {
-  console.log(`${API.main}${API[name]}`);
+  if (name === "Teacher") {
+    console.log(`${API.main}${API[name]}`);
+  }
   return Axios.get(`${API.main}${API[name]}`);
 };
 
 export const AddCustomer = (data) => {
+  console.log(data)
   return Axios.post(`${API.main}${API.addCustomer}`, data);
 };
 
@@ -145,7 +148,6 @@ export const editCustomer = (data) => {
 
 export const addInField = (name, data) => {
   // console.log(`${API.main}${API[name]}`)
-
   return Axios.post(`${API.main}${API[name]}`, data);
 };
 

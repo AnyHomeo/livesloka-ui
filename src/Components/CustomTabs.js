@@ -74,6 +74,8 @@ const CustomTabs = () => {
     "currencyStatus",
     "",
     "countryStatus",
+    "TeacherStatus",
+    "AgentStatus"
   ];
 
   // const id = [

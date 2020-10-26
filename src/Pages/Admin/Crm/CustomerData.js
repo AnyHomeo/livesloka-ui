@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const names = ["Class", "Time Zone", "Class Status", "Currency", "Country"];
+const names = ["Class", "Time Zone", "Class Status", "Currency", "Country", "Teacher", "Agent",];
 
 const status = [
   "className",
@@ -66,23 +66,15 @@ const status = [
   "classStatusName",
   "currencyName",
   "countryName",
+  "TeacherName",
+  "AgentName",
 ];
-
-// const id = [
-//   "classId",
-//   "timeZoneId",
-//   "classStatusId",
-//   "currencyId",
-//   "countryId",
-// ];
 
 const fetchDropDown = (index) => {
   var obj = {};
   getData(names[index])
     .then((data) => {
       data.data.result.forEach((item) => {
-        console.log(item);
-        //obj[item[id[index]]] = item[status[index]];
         obj[item.id] = item[status[index]];
       });
     })
@@ -101,7 +93,6 @@ const fetchAdmins = () => {
       });
     })
     .catch((err) => {
-      console.log(err);
     });
   return obj;
 };
@@ -114,7 +105,6 @@ const fetchTeachers = () => {
       });
     })
     .catch((err) => {
-      console.log(err);
     });
   return obj;
 };
@@ -139,8 +129,8 @@ const CrmDetails = () => {
   const classStatusDropdown = fetchDropDown(2);
   const currencyDropdown = fetchDropDown(3);
   const countryDropdown = fetchDropDown(4);
-  const teachersDropdown = fetchTeachers();
-  const agentDropdown = fetchAdmins();
+  const teachersDropdown = fetchDropDown(5);
+  const agentDropdown = fetchDropDown(6);
 
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;

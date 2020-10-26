@@ -39,6 +39,16 @@ exports.services = {
     "Add Status": "/admin/addstatus",
     "Update Status": "/admin/update/status",
 
+    Teacher: "/admin/get/Teachers",
+    "Add Teacher": "/admin/addTeacher",
+    "Update Teacher": "/admin/update/Teacher",
+    "Delete Teacher": "/admin/delete/Teacher",
+
+    Agent: "/admin/get/Agents",
+    "Add Agent": "/admin/addAgent",
+    "Update Teacher": "/admin/update/Agent",
+    "Delete Agent": "/admin/delete/Agent",
+
     allCustomerDetails: "/customer/details",
     addCustomer: "/customer/registerCustomer",
     updateCustomer: "/customer/updateCustomer",

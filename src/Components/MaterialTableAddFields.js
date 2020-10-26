@@ -48,7 +48,6 @@ const MaterialTableAddFields = ({ name, status, lookup, }) => {
   useEffect(() => {
     getData(name)
       .then((data) => {
-        console.log(data.data)
         setColumn(
           Object.keys(data.data.result[0]).map((key) => {
             if (key === 'id') {
