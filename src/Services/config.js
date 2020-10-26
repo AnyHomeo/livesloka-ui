@@ -46,7 +46,7 @@ exports.services = {
 
     Agent: "/admin/get/Agents",
     "Add Agent": "/admin/addAgent",
-    "Update Teacher": "/admin/update/Agent",
+    "Update Agent": "/admin/update/Agent",
     "Delete Agent": "/admin/delete/Agent",
 
     allCustomerDetails: "/customer/details",
