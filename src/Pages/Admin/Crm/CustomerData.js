@@ -143,53 +143,25 @@ const CrmDetails = () => {
   useEffect(() => {
     fetchData();
     setColumns([
-      { title: "Id", field: "id", hidden: true },
       {
-        title: "Country",
-        field: "countryId",
-        lookup: countryDropdown,
+        title: "Time Zone",
+        field: "timeZoneId",
         width: "1%",
+        lookup: timeZoneDropdown,
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
       },
+      { title: "Id", field: "id", hidden: true },
       {
-        title: "First Name",
+        title: "Student Name",
         field: "firstName",
         width: "1%",
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
       },
       {
-        title: "Last Name",
+        title: "Guardian",
         field: "lastName",
-        width: "1%",
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-      },
-      {
-        title: "Email",
-        field: "email",
-        width: "1%",
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-      },
-      {
-        title: "Whatsapp",
-        field: "whatsAppnumber",
-        width: "1%",
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-      },
-      {
-        title: "Phone No",
-        field: "phone",
-        width: "1%",
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-      },
-      {
-        title: "Meeting Link",
-        field: "meetingLink",
         width: "1%",
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
@@ -203,46 +175,15 @@ const CrmDetails = () => {
         headerStyle: { whiteSpace: "nowrap" },
       },
       {
-        title: "Time Zone",
-        field: "timeZoneId",
-        width: "1%",
-        lookup: timeZoneDropdown,
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-      },
-      {
-        title: "Students",
-        field: "numberOfStudents",
-        type: "numeric",
-        width: "1%",
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-        editComponent: (props) => (
-          <TextField
-            type="number"
-            inputProps={{ min: "0", step: "1" }}
-            value={props.value}
-            onChange={(e) => {
-              if (e.target.value < 0) {
-                return props.onChange(0);
-              } else {
-                return props.onChange(e.target.value);
-              }
-            }}
-          />
-        ),
-      },
-      {
-        title: "Customer Id",
-        field: "customerId",
-        editable: "never",
+        title: "Email",
+        field: "email",
         width: "1%",
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
       },
       {
-        title: "Place Of Stay",
-        field: "placeOfStay",
+        title: "Whatsapp",
+        field: "whatsAppnumber",
         width: "1%",
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
@@ -266,12 +207,64 @@ const CrmDetails = () => {
         ),
       },
       {
-        title: "Class Status",
-        field: "classStatusId",
+        title: "Teacher Id",
+        field: "teacherId",
         width: "1%",
-        lookup: classStatusDropdown,
+        lookup: teachersDropdown,
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
+      },
+      {
+        title: "Age",
+        field: "age",
+        type: "numeric",
+        width: "1%",
+        cellStyle: { whiteSpace: "nowrap" },
+        headerStyle: { whiteSpace: "nowrap" },
+        editComponent: (props) => (
+          <TextField
+            type="number"
+            inputProps={{ min: "0", step: "1" }}
+            value={props.value}
+            onChange={(e) => {
+              if (e.target.value < 0) {
+                return props.onChange(0);
+              } else {
+                return props.onChange(e.target.value);
+              }
+            }}
+          />
+        ),
+      },
+      {
+        title: "Country",
+        field: "countryId",
+        lookup: countryDropdown,
+        width: "1%",
+        cellStyle: { whiteSpace: "nowrap" },
+        headerStyle: { whiteSpace: "nowrap" },
+      },
+      {
+        title: "No of Students",
+        field: "numberOfStudents",
+        type: "numeric",
+        width: "1%",
+        cellStyle: { whiteSpace: "nowrap" },
+        headerStyle: { whiteSpace: "nowrap" },
+        editComponent: (props) => (
+          <TextField
+            type="number"
+            inputProps={{ min: "0", step: "1" }}
+            value={props.value}
+            onChange={(e) => {
+              if (e.target.value < 0) {
+                return props.onChange(0);
+              } else {
+                return props.onChange(e.target.value);
+              }
+            }}
+          />
+        ),
       },
       {
         title: "Proposed Amount",
@@ -304,10 +297,17 @@ const CrmDetails = () => {
         headerStyle: { whiteSpace: "nowrap" },
       },
       {
-        title: "Teacher Id",
-        field: "teacherId",
+        title: "Place Of Stay",
+        field: "placeOfStay",
         width: "1%",
-        lookup: teachersDropdown,
+        cellStyle: { whiteSpace: "nowrap" },
+        headerStyle: { whiteSpace: "nowrap" },
+      },
+      {
+        title: "Class Status",
+        field: "classStatusId",
+        width: "1%",
+        lookup: classStatusDropdown,
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
       },
@@ -316,6 +316,42 @@ const CrmDetails = () => {
         field: "agentId",
         width: "1%",
         lookup: agentDropdown,
+        cellStyle: { whiteSpace: "nowrap" },
+        headerStyle: { whiteSpace: "nowrap" },
+      },
+      {
+        title: "Zoom Color",
+        field: "zoomcolor",
+        width: "1%",
+        cellStyle: { whiteSpace: "nowrap" },
+        headerStyle: { whiteSpace: "nowrap" },
+      },
+      {
+        title: "Meeting Link",
+        field: "meetingLink",
+        width: "1%",
+        cellStyle: { whiteSpace: "nowrap" },
+        headerStyle: { whiteSpace: "nowrap" },
+      },
+      {
+        title: "Customer Id",
+        field: "customerId",
+        editable: "never",
+        width: "1%",
+        cellStyle: { whiteSpace: "nowrap" },
+        headerStyle: { whiteSpace: "nowrap" },
+      },
+      {
+        title: "Joining Date",
+        field: "joindate",
+        width: "1%",
+        cellStyle: { whiteSpace: "nowrap" },
+        headerStyle: { whiteSpace: "nowrap" },
+      },
+      {
+        title: "Phone No",
+        field: "phone",
+        width: "1%",
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
       },
