@@ -1,12 +1,7 @@
 exports.services = {
-  // dev: {
-  //   main: "http://localhost:5000",
-  //   login: "/api/login",
-  //   changePassword: "",
-  // },
+
   prod: {
     main: "https://live-kumon-services.herokuapp.com",
-    // main: "https://livesloka.azurewebsites.net",
     login: "/login",
     changePassword: "/ChangePassword",
 
