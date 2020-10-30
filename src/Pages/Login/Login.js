@@ -135,10 +135,10 @@ const Login = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err,err.response);
         setUser({
           ...user,
-          errors: "Invalid userName or Password",
+          errors: "Invalid user Name or Password",
           isLoading: false,
           didRedirect: false,
         });

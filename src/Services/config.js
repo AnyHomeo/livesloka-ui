@@ -1,12 +1,7 @@
 exports.services = {
-  // dev: {
-  //   main: "http://localhost:5000",
-  //   login: "/api/login",
-  //   changePassword: "",
-  // },
+  
   prod: {
-    main: "http://localhost:5000",
-    // main: "https://livesloka.azurewebsites.net",
+    main: "https://murmuring-river-06744.herokuapp.com",
     login: "/login",
     changePassword: "/ChangePassword",
 
