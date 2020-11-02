@@ -138,7 +138,8 @@ export const getData = (name) => {
 };
 
 export const AddCustomer = (data) => {
-  console.log(data)
+  data['customerId'] = Math.floor(Math.random() * 100) * Number(Date.now());
+  console.log(data);
   return Axios.post(`${API.main}${API.addCustomer}`, data);
 };
 
@@ -165,10 +166,12 @@ export const getComments = (id) => {
 };
 
 export const addComments = (formData) => {
+  console.log(formData)
   return axios.post(`${API.main}${API.addComment}`, formData);
 };
 
 export const updateComment = (data) => {
+  console.log(data)
   return axios.post(`${API.main}${API.updateComment}`, data);
 };
 

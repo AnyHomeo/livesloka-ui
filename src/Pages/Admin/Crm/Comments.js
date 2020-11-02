@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
 import { getComments, getData, addComments } from "../../../Services/Services";
 import { useState } from "react";
@@ -39,12 +40,13 @@ function Comments(props) {
     setOpen(false);
   };
 
-  let id = props.id || 71;
+  let id = props.id;
   let name = props.name || "demo";
 
   useEffect(() => {
     getComments(id)
       .then((fetchedData) => {
+        console.log(fetchedData)
         setComments(fetchedData.data.result);
       })
       .catch((err) => {
@@ -60,6 +62,7 @@ function Comments(props) {
   }, [id]);
 
   const addNewComment = () => {
+
     addComments({
       comment: newComment,
       commentStatus: 1,
@@ -68,7 +71,8 @@ function Comments(props) {
       auditUserId: isAutheticated().userId,
     })
       .then((fetchedData) => {
-        if (fetchedData.data.status === "OK") {
+        console.log(fetchedData)
+        if (fetchedData.data.status === "ok") {
           setComments((prev) => [...prev, fetchedData.data.result]);
           setNewComment("");
           setStatus("");
@@ -97,10 +101,11 @@ function Comments(props) {
           {response}
         </Alert>
       </Snackbar>
+
       <Grid item sm={6} xs={12} md={3} lg={3}>
         <Card style={{ padding: "20px" }}>
           <Typography color="textPrimary" gutterBottom>
-Add New Comment to {name}
+            Add New Comment to {name}
           </Typography>
           <TextField
             id="comment"
@@ -132,7 +137,7 @@ Add New Comment to {name}
                 {...comment}
                 statuses={statuses}
                 id={id}
- setComments={setComments}
+                setComments={setComments}
               />
             ))
             .reverse()}
