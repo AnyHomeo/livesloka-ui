@@ -1,8 +1,7 @@
 exports.services = {
-
   prod: {
     main: "https://live-kumon-services.herokuapp.com",
-    //main: "http://localhost:5000",
+    // main: "http://localhost:5000",
     login: "/login",
     changePassword: "/ChangePassword",
 
@@ -52,6 +51,7 @@ exports.services = {
     getComment: "/admin/comments",
     addComment: "/admin/addcomment",
     updateComment: "/admin/updatecomment",
+    deleteComment: "/admin/deletecomment",
 
     getAllAdmins: "/employee/admins",
     getAllTeachers: "/employee/teachers",
