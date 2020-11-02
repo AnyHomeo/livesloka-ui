@@ -161,11 +161,20 @@ class Comments extends React.Component {
     this.setState(change);
   }
 
+  parseDate() {}
+
+  getDate() {
+    let y = new Date();
+
+    return y.getDay() + "-" + y.getMonth() + "-" + y.getFullYear();
+  }
+
   render() {
     return (
       <MaterialTable
         options={{
           grouping: true,
+          pageSize: 10,
         }}
         data={this.state.comments}
         title={"Comments of " + this.props.name}
@@ -174,11 +183,6 @@ class Comments extends React.Component {
           {
             title: "Agent ID",
             field: "auditUserId",
-            editComponent: (props) => <span>{props.value}</span>,
-          },
-          {
-            title: "Customer ID",
-            field: "customerId",
             editComponent: (props) => <span>{props.value}</span>,
           },
           {
@@ -193,7 +197,7 @@ class Comments extends React.Component {
               comment: newData.comment,
               commentStatus: 1,
               customerId: this.props.id,
-              timeStamp: new Date(),
+              timeStamp: this.getDate(),
               auditUserId: isAutheticated().userId,
             })
               .then((fetchedData) => {
