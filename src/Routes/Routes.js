@@ -14,6 +14,10 @@ import CustomerData from "../Pages/Admin/Crm/CustomerData";
 import AddFields from "../Pages/Admin/AddFields/AddFields";
 import Comments from "../Pages/Admin/Crm/Comments";
 import Scheduler from "../Pages/Admin/Meetings/Scheduler/Scheduler";
+import Invoice from "../Pages/invoice/Invoice";
+import Generator from "../Pages/invoice/Generator";
+import Invoices from "../Pages/invoice/Invoices";
+
 function Routes() {
   return (
     <>
@@ -36,6 +40,9 @@ function Routes() {
           <AdminRoute path="/customer-data" exact component={CustomerData} />
           <AdminRoute path="/add-fields" exact component={AddFields} />
           <AdminRoute path="/meeting-schedule" exact component={Scheduler} />
+          <AdminRoute path="/manual-invoice" exact component={Invoice} />
+          <AdminRoute path="/invoice-generator" exact component={Generator} />
+          <AdminRoute path="/invoices" exact component={Invoices} />
         </Switch>
       </Router>
     </>

@@ -1,0 +1,80 @@
+.main-div {
+  display: flex;
+  width: 100vw;
+  padding: 50px;
+  flex-direction: column;
+  .top {
+    width: 100vw;
+    display: flex;
+    padding: 30px;
+    justify-content: space-around;
+    .logo {
+      display: flex;
+      flex-direction: column;
+      img {
+        width: 120px;
+      }
+    }
+    .invoice-details {
+      h1 {
+        color: rgb(211, 211, 211);
+        margin: 30px;
+        font-size: 45px;
+      }
+      .details {
+        display: flex;
+        flex-direction: column;
+        span {
+          font-size: 15px;
+          color: rgb(61, 61, 61);
+        }
+
+        .amount {
+          margin-top: 25px;
+          padding: 10px;
+          border: 3px solid #d3cdb0;
+          border-radius: 20px;
+          h1 {
+            font-size: 15px;
+            color: black;
+          }
+        }
+      }
+    }
+  }
+
+  .bottom {
+    width: 100vw;
+    display: flex;
+    padding: 50px;
+
+    flex-direction: column;
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+      tr {
+        td,
+        th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+          font-size: 15px;
+        }
+
+        th {
+          background-color: black;
+          color: white;
+        }
+      }
+    }
+
+    span {
+      margin: 20px;
+      font-size: 15px;
+    }
+  }
+}

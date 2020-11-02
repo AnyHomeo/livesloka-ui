@@ -339,14 +339,24 @@ const Adminsidebar = ({ history }) => {
           <Collapse in={invoicingOpen} timeout="auto" unmountOnExit>
             <Divider />
             <List component="div" disablePadding>
-              <Link to="/customer-data" className={classes.links}>
+              <Link to="/manual-invoice" className={classes.links}>
                 <ListItem button className={classes.menuItem}>
                   <i
                     className={clsx("fas fa-file-invoice customIcon", {
                       [classes.iconleft]: !open,
                     })}
                   ></i>
-                  <ListItemText inset primary="Customers Data" />
+                  <ListItemText inset primary="Manual Invoice" />
+                </ListItem>
+              </Link>
+              <Link to="/invoices" className={classes.links}>
+                <ListItem button className={classes.menuItem}>
+                  <i
+                    className={clsx("fas fa-file-invoice customIcon", {
+                      [classes.iconleft]: !open,
+                    })}
+                  ></i>
+                  <ListItemText inset primary="Invoice Data" />
                 </ListItem>
               </Link>
             </List>
