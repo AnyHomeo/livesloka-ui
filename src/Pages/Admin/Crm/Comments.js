@@ -166,7 +166,17 @@ class Comments extends React.Component {
   getDate() {
     let y = new Date();
 
-    return y.getDay() + "-" + y.getMonth() + "-" + y.getFullYear();
+    return (
+      y.getDay() +
+      "-" +
+      y.getMonth() +
+      "-" +
+      y.getFullYear() +
+      " " +
+      y.getHours() +
+      ":" +
+      y.getMinutes()
+    );
   }
 
   render() {
