@@ -163,6 +163,7 @@ export const getComments = (id) => {
 };
 
 export const addComments = (formData) => {
+  console.log(formData);
   return axios.post(`${API.main}${API.addComment}`, formData);
 };
 
