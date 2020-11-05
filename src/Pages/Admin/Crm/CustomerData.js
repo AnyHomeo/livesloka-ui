@@ -60,7 +60,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const names = ["Class", "Time Zone", "Class Status", "Currency", "Country", "Teacher", "Agent",];
+const names = [
+  "Class",
+  "Time Zone",
+  "Class Status",
+  "Currency",
+  "Country",
+  "Teacher",
+  "Agent",
+];
 
 const status = [
   "className",
@@ -94,8 +102,7 @@ const fetchAdmins = () => {
         obj[dataObj.employeeId] = `${dataObj.firstName} ${dataObj.lastName}`;
       });
     })
-    .catch((err) => {
-    });
+    .catch((err) => {});
   return obj;
 };
 const fetchTeachers = () => {
@@ -106,8 +113,7 @@ const fetchTeachers = () => {
         obj[dataObj.employeeId] = `${dataObj.firstName} ${dataObj.lastName}`;
       });
     })
-    .catch((err) => {
-    });
+    .catch((err) => {});
   return obj;
 };
 
@@ -489,7 +495,7 @@ const CrmDetails = () => {
                   setSuccess(false);
                   setResponse(
                     fetchedData.data.message ||
-                    "Something went wrong,Try again later"
+                      "Something went wrong,Try again later"
                   );
                   setSnackBarOpen(true);
                 }
@@ -499,8 +505,8 @@ const CrmDetails = () => {
                 setSuccess(false);
                 setResponse("Something went wrong,Try again later");
                 setSnackBarOpen(true);
-              })
-          }
+              });
+          },
         }}
       />
       <Dialog

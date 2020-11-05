@@ -4,12 +4,17 @@ import MaterialTable, { MTableBodyRow } from "material-table";
 import { css } from "@emotion/core";
 import { ClipLoader } from "react-spinners";
 import MuiAlert from "@material-ui/lab/Alert";
-import { getData, addInField, editField, deleteField } from "../Services/Services";
+import {
+  getData,
+  addInField,
+  editField,
+  deleteField,
+} from "../Services/Services";
 import { Snackbar } from "@material-ui/core";
 // eslint-disable-next-line no-unused-vars
 import { id } from "date-fns/locale";
 
-const MaterialTableAddFields = ({ name, status, lookup, }) => {
+const MaterialTableAddFields = ({ name, status, lookup }) => {
   const [column, setColumn] = useState([]);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,7 +55,7 @@ const MaterialTableAddFields = ({ name, status, lookup, }) => {
       .then((data) => {
         setColumn(
           Object.keys(data.data.result[0]).map((key) => {
-            if (key === 'id') {
+            if (key === "id") {
               return { title: humanReadable(key), field: key, hidden: true };
             }
             if (key === status) {
@@ -102,14 +107,16 @@ const MaterialTableAddFields = ({ name, status, lookup, }) => {
         }}
         data={data}
         editable={{
-          isDeleteHidden: (rowData) => (rowData && rowData.statusId) || data.length === 1,
+          isDeleteHidden: (rowData) =>
+            (rowData && rowData.statusId) || data.length === 1,
           onRowAdd: (newData) => {
             return addInField(`Add ${name}`, newData)
               .then((fetchedData) => {
                 if (fetchedData.data.status === "ok") {
-                  console.log("inside")
+                  console.log("inside");
                   if (fetchedData.data.result.classesStatus) {
-                    fetchedData.data.result.status = fetchedData.data.result.classesStatus
+                    fetchedData.data.result.status =
+                      fetchedData.data.result.classesStatus;
                   }
                   setData([...data, fetchedData.data.result]);
                   setSuccess(true);
@@ -126,7 +133,7 @@ const MaterialTableAddFields = ({ name, status, lookup, }) => {
 
               .catch((e) => {
                 console.log(e, e.response);
-              })
+              });
           },
           onRowUpdate: (newData, oldData) => {
             return editField(`Update ${name}`, newData).then((fetchedData) => {
@@ -146,8 +153,8 @@ const MaterialTableAddFields = ({ name, status, lookup, }) => {
             });
           },
           onRowDelete: (oldData) =>
-            deleteField(`Delete ${name}`, oldData['id'])
-              .then(fetchedData => {
+            deleteField(`Delete ${name}`, oldData["id"])
+              .then((fetchedData) => {
                 if (fetchedData.data.status === "ok") {
                   const dataDelete = [...data];
                   const index = oldData.tableData.id;
@@ -158,16 +165,19 @@ const MaterialTableAddFields = ({ name, status, lookup, }) => {
                   setOpen(true);
                 } else {
                   setSuccess(false);
-                  setResponse(fetchedData.data.message || "Something went wrong,Try again later");
+                  setResponse(
+                    fetchedData.data.message ||
+                      "Something went wrong,Try again later"
+                  );
                   setOpen(true);
                 }
               })
-              .catch(err => {
-                console.log(err, err.response)
+              .catch((err) => {
+                console.log(err, err.response);
                 setSuccess(false);
                 setResponse("Something went wrong,Try again later");
                 setOpen(true);
-              })
+              }),
         }}
       />
     </>
