@@ -55,5 +55,9 @@ exports.services = {
 
     getAllAdmins: "/employee/admins",
     getAllTeachers: "/employee/teachers",
+
+    addInvoice: "/admin/addinvoice",
+    getInvoices: "/admin/getinvoices",
+    deleteInvoice: "/admin/deleteinvoice",
   },
 };

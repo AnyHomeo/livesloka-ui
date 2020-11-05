@@ -170,11 +170,16 @@ export const updateComment = (data) => {
   return axios.post(`${API.main}${API.updateComment}`, data);
 };
 
-export const deleteComment = (data) => {
-  return axios.post(`${API.main}${API.deleteComment}`, data);
-};
-
 export const getAllAdmins = () => axios.get(`${API.main}${API.getAllAdmins}`);
 
 export const getAllTeachers = () =>
   axios.get(`${API.main}${API.getAllTeachers}`);
+
+export const addInvoice = (data) =>
+  axios.post(`${API.main}${API.addInvoice}`, data);
+
+export const getInvoices = (data) =>
+  axios.post(`${API.main}${API.getInvoices}`, data);
+
+export const deleteInvoice = (data) =>
+  axios.post(`${API.main}${API.deleteInvoice}`, data);
