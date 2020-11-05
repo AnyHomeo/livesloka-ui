@@ -1,6 +1,6 @@
 import React from "react";
 import Adminsidebar from "../Admin/Adminsidebar";
-import MaterialTable from "material-table";
+import MaterialTable, { MTableToolbar } from "material-table";
 import "../../sass/invoice-data.scss";
 import { getInvoices, deleteInvoice } from "../../Services/Services";
 import Table from "@material-ui/core/Table";
@@ -11,7 +11,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Dialog from "@material-ui/core/Dialog";
-import { DialogTitle } from "@material-ui/core";
+import { Button, Chip, DialogTitle, TextField } from "@material-ui/core";
 
 class Invoices extends React.Component {
   constructor(props) {
@@ -21,13 +21,18 @@ class Invoices extends React.Component {
       data: [],
       open: false,
       dialogData: [],
+      startDate: "",
+      endDate: "",
     };
 
     this.getAllInvoices();
   }
 
   async getAllInvoices() {
-    let data = await getInvoices();
+    let data = await getInvoices({
+      start: this.state.startDate,
+      end: this.state.endDate,
+    });
     data = data.data.result;
 
     let change = (prevState) => {
@@ -39,8 +44,10 @@ class Invoices extends React.Component {
   }
 
   print(data) {
-    data = JSON.stringify(data);
-    window.open("/invoice-generator?" + data);
+    this.props.history.push({
+      pathname: "/invoice-generator",
+      state: this.state.data,
+    });
   }
 
   async deleteInvoices(row) {
@@ -56,7 +63,7 @@ class Invoices extends React.Component {
 
   dialogHandle(row) {
     let change = (prevState) => {
-      prevState.open = true;
+      prevState.open = !prevState.open;
       prevState.dialogData = row.classes;
       return prevState;
     };
@@ -69,30 +76,94 @@ class Invoices extends React.Component {
       <div className="main-div">
         <Adminsidebar />
         <Dialog open={this.state.open}>
-          <DialogTitle>Classes</DialogTitle>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Class</TableCell>
-                  <TableCell>Price</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {this.state.dialogData.map((val, index) => {
-                  return (
-                    <TableRow key={index}>
-                      <TableCell>{val.class}</TableCell>
-                      <TableCell>{val.price}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <DialogTitle>
+            <Chip
+              label="X"
+              onClick={(e) => {
+                let change = (prevState) => {
+                  prevState.open = false;
+                  return prevState;
+                };
+
+                this.setState(change);
+              }}
+            />
+            {"   "}
+            Classes
+          </DialogTitle>
+          <div className="dialog-div">
+            <TableContainer className="container" component={Paper}>
+              <Table style={{ padding: "20px" }}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell style={{ padding: "10px" }}>Class</TableCell>
+                    <TableCell style={{ padding: "10px" }}>Price</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {this.state.dialogData.map((val, index) => {
+                    return (
+                      <TableRow key={index}>
+                        <TableCell style={{ padding: "10px" }}>
+                          {val.class}
+                        </TableCell>
+                        <TableCell style={{ padding: "10px" }}>
+                          {val.price}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
         </Dialog>
 
         <MaterialTable
+          components={{
+            Toolbar: (props) => (
+              <div>
+                <MTableToolbar {...props} />
+                <div style={{ padding: "0px 10px" }}>
+                  <TextField
+                    label="Start Date"
+                    type="date"
+                    style={{ margin: 10 }}
+                    className="field"
+                    onChange={(e) => {
+                      // eslint-disable-next-line react/no-direct-mutation-state
+                      this.state.startDate = e.target.value;
+                    }}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                  <TextField
+                    style={{ margin: 10 }}
+                    label="End Date"
+                    type="date"
+                    className="field"
+                    onChange={(e) => {
+                      // eslint-disable-next-line react/no-direct-mutation-state
+                      this.state.endDate = e.target.value;
+                    }}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                  <Button
+                    style={{ margin: 10 }}
+                    className="field"
+                    variant="contained"
+                    color="primary"
+                    onClick={this.getAllInvoices.bind(this)}
+                  >
+                    Filter
+                  </Button>
+                </div>
+              </div>
+            ),
+          }}
           options={{
             paging: false,
             actionsColumnIndex: 0,
@@ -100,8 +171,8 @@ class Invoices extends React.Component {
           }}
           actions={[
             (rowData) => ({
-              icon: "help",
-              tooltip: "Classe",
+              icon: "I",
+              tooltip: "Classes",
               onClick: (event, rowData) => {
                 this.dialogHandle(rowData);
               },
@@ -128,22 +199,8 @@ class Invoices extends React.Component {
           title="Invoices Data"
           columns={[
             {
-              title: "Reference ID",
-              field: "refID",
-              width: "1%",
-              cellStyle: { whiteSpace: "nowrap" },
-              headerStyle: { whiteSpace: "nowrap" },
-            },
-            {
               title: "Invoice ID",
               field: "invoiceID",
-              width: "1%",
-              cellStyle: { whiteSpace: "nowrap" },
-              headerStyle: { whiteSpace: "nowrap" },
-            },
-            {
-              title: "Customer ID",
-              field: "currentCustomerID",
               width: "1%",
               cellStyle: { whiteSpace: "nowrap" },
               headerStyle: { whiteSpace: "nowrap" },
@@ -156,8 +213,22 @@ class Invoices extends React.Component {
               headerStyle: { whiteSpace: "nowrap" },
             },
             {
+              title: "Currency",
+              field: "currency",
+              width: "1%",
+              cellStyle: { whiteSpace: "nowrap" },
+              headerStyle: { whiteSpace: "nowrap" },
+            },
+            {
               title: "Total Amount",
               field: "totalAmount",
+              width: "1%",
+              cellStyle: { whiteSpace: "nowrap" },
+              headerStyle: { whiteSpace: "nowrap" },
+            },
+            {
+              title: "Total Amount (INR)",
+              field: "totalAmountINR",
               width: "1%",
               cellStyle: { whiteSpace: "nowrap" },
               headerStyle: { whiteSpace: "nowrap" },
@@ -172,6 +243,13 @@ class Invoices extends React.Component {
             {
               title: "Due Date",
               field: "dueDate",
+              width: "1%",
+              cellStyle: { whiteSpace: "nowrap" },
+              headerStyle: { whiteSpace: "nowrap" },
+            },
+            {
+              title: "Reference ID",
+              field: "refID",
               width: "1%",
               cellStyle: { whiteSpace: "nowrap" },
               headerStyle: { whiteSpace: "nowrap" },

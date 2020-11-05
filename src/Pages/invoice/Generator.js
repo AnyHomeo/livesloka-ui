@@ -2,7 +2,7 @@ import { Divider } from "@material-ui/core";
 import React from "react";
 import Logo from "../../Images/Logo2.png";
 import "../../sass/generator.scss";
-import { addInvoice } from "../../Services/Services";
+import coinify from "coinify";
 
 class InvoiceGenerator extends React.Component {
   constructor(props) {
@@ -10,9 +10,13 @@ class InvoiceGenerator extends React.Component {
 
     this.state = this.getOb();
 
-    addInvoice(this.state)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+    console.log(this.state);
+
+    if (this.state == null) {
+      this.props.history.push({
+        pathname: "/manual-invoice",
+      });
+    }
   }
 
   componentDidMount() {
@@ -20,9 +24,10 @@ class InvoiceGenerator extends React.Component {
   }
 
   getOb() {
-    let data = window.location.href.split("?")[1];
-    data = JSON.parse(decodeURIComponent(data));
-    return data;
+    return this.props.location.state;
+    // let data = window.location.href.split("?")[1];
+    // data = JSON.parse(decodeURIComponent(data));
+    // return data;
   }
 
   render() {
@@ -45,7 +50,13 @@ class InvoiceGenerator extends React.Component {
               <span>Bill to : {this.state.customerName}</span>
 
               <div className="amount">
-                <h1>Amount Payable = {this.state.totalAmount}</h1>
+                <h1>
+                  Amount Payable ={" "}
+                  {coinify.symbol(this.state.currency) +
+                    " " +
+                    this.state.totalAmount +
+                    "/-"}
+                </h1>
               </div>
             </div>
           </div>
@@ -62,13 +73,24 @@ class InvoiceGenerator extends React.Component {
                 return (
                   <tr key={index}>
                     <td>{val.class}</td>
-                    <td>{val.price}</td>
+                    <td>
+                      {coinify.symbol(this.state.currency) + " " + val.price}
+                    </td>
                   </tr>
                 );
               })}
+            </tbody>
+          </table>
+          <br></br>
+          <table>
+            <tbody>
               <tr>
-                <td></td>
-                <td>Total Amount : {this.state.totalAmount}</td>
+                <td> Total Amount</td>
+                <td>
+                  {coinify.symbol(this.state.currency) +
+                    " " +
+                    this.state.totalAmount}
+                </td>
               </tr>
             </tbody>
           </table>

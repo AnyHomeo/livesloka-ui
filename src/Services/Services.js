@@ -177,7 +177,8 @@ export const getAllTeachers = () =>
 export const addInvoice = (data) =>
   axios.post(`${API.main}${API.addInvoice}`, data);
 
-export const getInvoices = () => axios.get(`${API.main}${API.getInvoices}`);
+export const getInvoices = (data) =>
+  axios.post(`${API.main}${API.getInvoices}`, data);
 
 export const deleteInvoice = (data) =>
   axios.post(`${API.main}${API.deleteInvoice}`, data);
