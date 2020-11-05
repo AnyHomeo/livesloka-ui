@@ -170,6 +170,10 @@ export const updateComment = (data) => {
   return axios.post(`${API.main}${API.updateComment}`, data);
 };
 
+export const deleteComment = (data) => {
+  return axios.post(`${API.main}${API.deleteComment}`, data);
+};
+
 export const getAllAdmins = () => axios.get(`${API.main}${API.getAllAdmins}`);
 
 export const getAllTeachers = () =>
