@@ -113,10 +113,8 @@ const Login = () => {
     login(userId, password)
       .then((res) => res.json())
       .then((data) => {
-        console.log("charan")
-        console.log(data.obj);
-        if (data.obj.token) {
-          authenticate(data.obj, remember, () => {
+        if (data.result.token) {
+          authenticate(data.result, remember, () => {
             setUser({
               ...user,
               errors: false,
@@ -125,7 +123,6 @@ const Login = () => {
             });
           });
         } else {
-          console.log(data);
           setUser({
             ...user,
             errors: data.details,
