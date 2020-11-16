@@ -9,7 +9,7 @@ export const login = (userId, password) => {
     userId,
     password,
   };
-  console.log(postData)
+  console.log(postData);
   return fetch(`${API.main}${API.login}`, {
     headers: {
       "Content-Type": "application/json",
@@ -126,7 +126,6 @@ export const getMeeting = (token, time) => {
 };
 
 export const getAllCustomerDetails = () => {
-
   return axios.get(`${API.main}${API.allCustomerDetails}`);
 };
 
@@ -138,7 +137,8 @@ export const getData = (name) => {
 };
 
 export const AddCustomer = (data) => {
-  console.log(data)
+  data["customerId"] = Math.floor(Math.random() * 100) * Number(Date.now());
+  console.log(data);
   return Axios.post(`${API.main}${API.addCustomer}`, data);
 };
 
@@ -156,15 +156,14 @@ export const editField = (name, data) => {
 };
 
 export const deleteField = (name, id) =>
-  Axios.post(`${API.main}${API[name]}/${id}`)
-
-
+  Axios.post(`${API.main}${API[name]}/${id}`);
 
 export const getComments = (id) => {
   return axios.get(`${API.main}${API.getComment}/${id}`);
 };
 
 export const addComments = (formData) => {
+  console.log(formData);
   return axios.post(`${API.main}${API.addComment}`, formData);
 };
 
@@ -172,6 +171,20 @@ export const updateComment = (data) => {
   return axios.post(`${API.main}${API.updateComment}`, data);
 };
 
-export const getAllAdmins = () => axios.get(`${API.main}${API.getAllAdmins}`)
+export const deleteComment = (data) => {
+  return axios.post(`${API.main}${API.deleteComment}`, data);
+};
 
-export const getAllTeachers = () => axios.get(`${API.main}${API.getAllTeachers}`)
+export const getAllAdmins = () => axios.get(`${API.main}${API.getAllAdmins}`);
+
+export const getAllTeachers = () =>
+  axios.get(`${API.main}${API.getAllTeachers}`);
+
+export const addInvoice = (data) =>
+  axios.post(`${API.main}${API.addInvoice}`, data);
+
+export const getInvoices = (data) =>
+  axios.post(`${API.main}${API.getInvoices}`, data);
+
+export const deleteInvoice = (data) =>
+  axios.post(`${API.main}${API.deleteInvoice}`, data);

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import {
   Grid,
@@ -26,7 +27,7 @@ function SingleComment(props) {
   const {
     comment,
     commentStatus,
-    commentId,
+    _id,
     id,
     timeStamp,
     auditUserId,
@@ -55,7 +56,7 @@ function SingleComment(props) {
 
   const updateThisComment = () => {
     updateComment({
-      commentId,
+      _id,
       comment: text,
       commentStatus: status,
       customerId: id,
@@ -64,11 +65,11 @@ function SingleComment(props) {
     })
       .then((data) => {
         if (data.data.status === "OK") {
-setComments((prev) => {
+          setComments((prev) => {
             let prevData = [...prev]
             var index = 0
-            for(var i = 0; i<prevData.length; i++){
-              if(prevData[i].commentId === data.data.result.commentId){
+            for (var i = 0; i < prevData.length; i++) {
+              if (prevData[i].commentId === data.data.result.commentId) {
                 index = i
               }
             }
@@ -93,6 +94,10 @@ setComments((prev) => {
         setOpen(true);
       });
   };
+
+  // const deleteThisComment = () => {
+  //   console.log("is it requiresww")
+  // }
 
   return (
     <Grid item sm={12} xs={12} md={4}>
@@ -143,13 +148,13 @@ setComments((prev) => {
             </FormControl>
           </>
         ) : (
-          <Typography
-            onDoubleClick={() => setEditing(true)}
-            style={{ marginTop: "20px" }}
-          >
-            {text}
-          </Typography>
-        )}
+            <Typography
+              onDoubleClick={() => setEditing(true)}
+              style={{ marginTop: "20px" }}
+            >
+              {text}
+            </Typography>
+          )}
         <CardActions style={{ marginTop: "20px", float: "right" }}>
           {editing ? (
             <>
@@ -171,24 +176,25 @@ setComments((prev) => {
               </Button>
             </>
           ) : (
-            <>
-              <Button
-                color="primary"
-                variant="contained"
-                endIcon={<EditIcon />}
-                onClick={() => setEditing(true)}
-              >
-                Edit
+              <>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  endIcon={<EditIcon />}
+                  onClick={() => setEditing(true)}
+                >
+                  Edit
               </Button>
-              <Button
-                color="secondary"
-                varient="outlined"
-                endIcon={<DeleteIcon />}
-              >
-                Delete
-              </Button>
-            </>
-          )}
+                {/* <Button
+                  color="secondary"
+                  varient="outlined"
+                  endIcon={<DeleteIcon />}
+                  onClick={() => deleteThisComment()}
+                >
+                  Delete
+              </Button> */}
+              </>
+            )}
         </CardActions>
       </Card>
     </Grid>

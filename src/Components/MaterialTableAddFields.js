@@ -4,39 +4,56 @@ import MaterialTable, { MTableBodyRow } from "material-table";
 import { css } from "@emotion/core";
 import { ClipLoader } from "react-spinners";
 import MuiAlert from "@material-ui/lab/Alert";
-import { getData, addInField, editField, deleteField } from "../Services/Services";
+import {
+  getData,
+  addInField,
+  editField,
+  deleteField,
+} from "../Services/Services";
 import { Chip, Snackbar, TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 
-const DropdownEditor = ({ onChange,value }) => {
-    const [arr, setArr] = useState(value)
-    return (
-      <Autocomplete
-          multiple 
-          options={[{_id:'2345455',className:"CLASS OLD"},{"_id":'12345',"className":"class1"},{"_id":'12348',"className":"class2"},{"_id":'12349',"className":"class3"}]}
-          value={arr}
-          filterSelectedOptions
-          getOptionSelected={option => arr.map(i => i._id).includes(option._id)}
-          getOptionLabel={(option) => option.className}
-          onChange={ (_,newVal) => {
-            setArr(newVal)
-            onChange(newVal);
-          }}
-            renderInput={params => (
-                <TextField 
-                    {...params} label={"Subjects"} variant="standard" margin="dense" />
-            )}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip variant="outlined" label={option.className}  {...getTagProps({ index })} />
-              ))
-            }
+const DropdownEditor = ({ onChange, value }) => {
+  const [arr, setArr] = useState(value);
+  return (
+    <Autocomplete
+      multiple
+      options={[
+        { _id: "2345455", className: "CLASS OLD" },
+        { _id: "12345", className: "class1" },
+        { _id: "12348", className: "class2" },
+        { _id: "12349", className: "class3" },
+      ]}
+      value={arr}
+      filterSelectedOptions
+      getOptionSelected={(option) => arr.map((i) => i._id).includes(option._id)}
+      getOptionLabel={(option) => option.className}
+      onChange={(_, newVal) => {
+        setArr(newVal);
+        onChange(newVal);
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={"Subjects"}
+          variant="standard"
+          margin="dense"
         />
-    )
-}
-                            
+      )}
+      renderTags={(value, getTagProps) =>
+        value.map((option, index) => (
+          <Chip
+            variant="outlined"
+            label={option.className}
+            {...getTagProps({ index })}
+          />
+        ))
+      }
+    />
+  );
+};
 
-const MaterialTableAddFields = ({ name, status, lookup, }) => {
+const MaterialTableAddFields = ({ name, status, lookup }) => {
   const [column, setColumn] = useState([]);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -77,18 +94,29 @@ const MaterialTableAddFields = ({ name, status, lookup, }) => {
       .then((data) => {
         setColumn(
           Object.keys(data.data.result[0]).map((key) => {
-            if (key === 'id') {
+            if (key === "id") {
               return { title: humanReadable(key), field: key, hidden: true };
-            }
-            else if(key === 'TeacherSubjectsId'){
+            } else if (key === "TeacherSubjectsId") {
               return {
-                title: humanReadable(key), 
+                title: humanReadable(key),
                 field: key,
-                render:rowData => rowData[key] && rowData[key].map(subject => <Chip variant="outlined" key={subject._id} label={subject.className} />), 
-                editComponent: props => <DropdownEditor {...props} value={[{_id:'2345455',className:"CLASS OLD"}]} />
-              }
-            }
-            else if (key === status) {
+                render: (rowData) =>
+                  rowData[key] &&
+                  rowData[key].map((subject) => (
+                    <Chip
+                      variant="outlined"
+                      key={subject._id}
+                      label={subject.className}
+                    />
+                  )),
+                editComponent: (props) => (
+                  <DropdownEditor
+                    {...props}
+                    value={[{ _id: "2345455", className: "CLASS OLD" }]}
+                  />
+                ),
+              };
+            } else if (key === status) {
               return { title: humanReadable(key), field: key, lookup };
             } else {
               return { title: humanReadable(key), field: key };
@@ -137,15 +165,17 @@ const MaterialTableAddFields = ({ name, status, lookup, }) => {
         }}
         data={data}
         editable={{
-          isDeleteHidden: (rowData) => (rowData && rowData.statusId) || data.length === 1,
+          isDeleteHidden: (rowData) =>
+            (rowData && rowData.statusId) || data.length === 1,
           onRowAdd: (newData) => {
-            console.log(newData)
+            console.log(newData);
             return addInField(`Add ${name}`, newData)
               .then((fetchedData) => {
                 if (fetchedData.data.status === "ok") {
-                  console.log("inside")
+                  console.log("inside");
                   if (fetchedData.data.result.classesStatus) {
-                    fetchedData.data.result.status = fetchedData.data.result.classesStatus
+                    fetchedData.data.result.status =
+                      fetchedData.data.result.classesStatus;
                   }
                   setData([...data, fetchedData.data.result]);
                   setSuccess(true);
@@ -162,10 +192,10 @@ const MaterialTableAddFields = ({ name, status, lookup, }) => {
 
               .catch((e) => {
                 console.log(e, e.response);
-              })
+              });
           },
           onRowUpdate: (newData, oldData) => {
-            console.log(newData)
+            console.log(newData);
             return editField(`Update ${name}`, newData).then((fetchedData) => {
               if (fetchedData.data.status === "OK") {
                 const dataUpdate = [...data];
@@ -183,8 +213,8 @@ const MaterialTableAddFields = ({ name, status, lookup, }) => {
             });
           },
           onRowDelete: (oldData) =>
-            deleteField(`Delete ${name}`, oldData['id'])
-              .then(fetchedData => {
+            deleteField(`Delete ${name}`, oldData["id"])
+              .then((fetchedData) => {
                 if (fetchedData.data.status === "ok") {
                   const dataDelete = [...data];
                   const index = oldData.tableData.id;
@@ -195,16 +225,19 @@ const MaterialTableAddFields = ({ name, status, lookup, }) => {
                   setOpen(true);
                 } else {
                   setSuccess(false);
-                  setResponse(fetchedData.data.message || "Something went wrong,Try again later");
+                  setResponse(
+                    fetchedData.data.message ||
+                      "Something went wrong,Try again later"
+                  );
                   setOpen(true);
                 }
               })
-              .catch(err => {
-                console.log(err, err.response)
+              .catch((err) => {
+                console.log(err, err.response);
                 setSuccess(false);
                 setResponse("Something went wrong,Try again later");
                 setOpen(true);
-              })
+              }),
         }}
       />
     </>

@@ -14,6 +14,11 @@ import CustomerData from "../Pages/Admin/Crm/CustomerData";
 import AddFields from "../Pages/Admin/AddFields/AddFields";
 import Comments from "../Pages/Admin/Crm/Comments";
 import Scheduler from "../Pages/Admin/Meetings/Scheduler/Scheduler";
+import Invoice from "../Pages/invoice/Invoice";
+import Generator from "../Pages/invoice/Generator";
+import Invoices from "../Pages/invoice/Invoices";
+import Attedance from "../Pages/Admin/Crm/Attedance";
+
 function Routes() {
   return (
     <>
@@ -24,7 +29,7 @@ function Routes() {
           <Route path="/password-reset" exact component={PasswordReset} />
           <Route path="/comments" exact component={Comments} />
           <PrivateRoute path="/home" exact component={Home} />
-          <AdminRoute path="/admin" exact component={Adminsidebar} />
+          <Route path="/admin" exact component={Adminsidebar} />
           <AdminRoute path="/admin-meeting" exact component={Admin} />
           <AdminRoute path="/add-teacher" exact component={AddTeachers} />
           <AdminRoute path="/add-student" exact component={AddStudent} />
@@ -36,6 +41,10 @@ function Routes() {
           <AdminRoute path="/customer-data" exact component={CustomerData} />
           <AdminRoute path="/add-fields" exact component={AddFields} />
           <AdminRoute path="/meeting-schedule" exact component={Scheduler} />
+          <AdminRoute path="/manual-invoice" exact component={Invoice} />
+          <AdminRoute path="/invoice-generator" exact component={Generator} />
+          <AdminRoute path="/invoices" exact component={Invoices} />
+          <Route path="/attedance" exact component={Attedance} />
         </Switch>
       </Router>
     </>
