@@ -66,9 +66,11 @@ const Attedance = () => {
         <Autocomplete
           id="free-solo-demo"
           freeSolo
-          options={top100Films.map((option) => option.title)}
+          getOptionLabel={(option) => option.title}
+          options={top100Films}
           onChange={onNameChange}
           renderInput={(params) => (
+            
             <TextField
               {...params}
               label="Student"
