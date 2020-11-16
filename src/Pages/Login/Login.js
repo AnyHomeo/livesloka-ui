@@ -111,10 +111,10 @@ const Login = () => {
     event.preventDefault();
     setUser({ ...user, isLoading: true, errors: false });
     login(userId, password)
-      .then((res) => res.json())
       .then((data) => {
-        if (data.result.token) {
-          authenticate(data.result, remember, () => {
+        console.log(data);
+        if (data.data.result.token && data.data.result.roleId === 3) {
+          authenticate(data.data.result, remember, () => {
             setUser({
               ...user,
               errors: false,
@@ -122,40 +122,44 @@ const Login = () => {
               didRedirect: true,
             });
           });
-        } else {
+        } else if (data.data.result && data.data.result.roleId !== 3) {
+          console.log(data);
           setUser({
             ...user,
-            errors: data.details,
+            errors: "you had no admin access",
             isLoading: false,
             didRedirect: true,
           });
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err, err.response);
         setUser({
           ...user,
-          errors: "Invalid userName or Password",
+          errors: "Invalid user Name or Password",
           isLoading: false,
           didRedirect: false,
         });
       });
   };
   const performRedirect = () => {
-    if (didRedirect) {
-      if (isAutheticated() && isAutheticated().firstTimeLogin === "Y") {
-        return <Redirect to="/password-reset" />;
-      }
+    if (isAutheticated()) {
+      console.log(isAutheticated());
       if (isAutheticated() && isAutheticated().roleId === 1) {
-        return <Redirect to="/home" />;
+        setUser((prev) => ({
+          ...prev,
+          didRedirect: false,
+          error: "no admin access to login",
+        }));
       } else if (isAutheticated() && isAutheticated().roleId === 3) {
         return <Redirect to="/admin" />;
       }
     }
-    if (isAutheticated()) {
-      if (isAutheticated() && isAutheticated().roleId === 1) {
-        return <Redirect to="/home" />;
-      } else if (isAutheticated() && isAutheticated().roleId === 3) {
+    if (didRedirect) {
+      if (isAutheticated() && isAutheticated().firstTimeLogin === "Y") {
+        return <Redirect to="/password-reset" />;
+      }
+      if (isAutheticated() && isAutheticated().roleId === 3) {
         return <Redirect to="/admin" />;
       }
     }
@@ -170,7 +174,11 @@ const Login = () => {
           </Alert>
         ));
       } else {
-        return <Alert severity="error" className={classes.AlertMsg}>{errors}</Alert>;
+        return (
+          <Alert severity="error" className={classes.AlertMsg}>
+            {errors}
+          </Alert>
+        );
       }
     }
   };

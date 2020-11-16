@@ -10,9 +10,48 @@ import {
   editField,
   deleteField,
 } from "../Services/Services";
-import { Snackbar } from "@material-ui/core";
-// eslint-disable-next-line no-unused-vars
-import { id } from "date-fns/locale";
+import { Chip, Snackbar, TextField } from "@material-ui/core";
+import { Autocomplete } from "@material-ui/lab";
+
+const DropdownEditor = ({ onChange, value }) => {
+  const [arr, setArr] = useState(value);
+  return (
+    <Autocomplete
+      multiple
+      options={[
+        { _id: "2345455", className: "CLASS OLD" },
+        { _id: "12345", className: "class1" },
+        { _id: "12348", className: "class2" },
+        { _id: "12349", className: "class3" },
+      ]}
+      value={arr}
+      filterSelectedOptions
+      getOptionSelected={(option) => arr.map((i) => i._id).includes(option._id)}
+      getOptionLabel={(option) => option.className}
+      onChange={(_, newVal) => {
+        setArr(newVal);
+        onChange(newVal);
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={"Subjects"}
+          variant="standard"
+          margin="dense"
+        />
+      )}
+      renderTags={(value, getTagProps) =>
+        value.map((option, index) => (
+          <Chip
+            variant="outlined"
+            label={option.className}
+            {...getTagProps({ index })}
+          />
+        ))
+      }
+    />
+  );
+};
 
 const MaterialTableAddFields = ({ name, status, lookup }) => {
   const [column, setColumn] = useState([]);
@@ -57,8 +96,27 @@ const MaterialTableAddFields = ({ name, status, lookup }) => {
           Object.keys(data.data.result[0]).map((key) => {
             if (key === "id") {
               return { title: humanReadable(key), field: key, hidden: true };
-            }
-            if (key === status) {
+            } else if (key === "TeacherSubjectsId") {
+              return {
+                title: humanReadable(key),
+                field: key,
+                render: (rowData) =>
+                  rowData[key] &&
+                  rowData[key].map((subject) => (
+                    <Chip
+                      variant="outlined"
+                      key={subject._id}
+                      label={subject.className}
+                    />
+                  )),
+                editComponent: (props) => (
+                  <DropdownEditor
+                    {...props}
+                    value={[{ _id: "2345455", className: "CLASS OLD" }]}
+                  />
+                ),
+              };
+            } else if (key === status) {
               return { title: humanReadable(key), field: key, lookup };
             } else {
               return { title: humanReadable(key), field: key };
@@ -110,6 +168,7 @@ const MaterialTableAddFields = ({ name, status, lookup }) => {
           isDeleteHidden: (rowData) =>
             (rowData && rowData.statusId) || data.length === 1,
           onRowAdd: (newData) => {
+            console.log(newData);
             return addInField(`Add ${name}`, newData)
               .then((fetchedData) => {
                 if (fetchedData.data.status === "ok") {
@@ -136,6 +195,7 @@ const MaterialTableAddFields = ({ name, status, lookup }) => {
               });
           },
           onRowUpdate: (newData, oldData) => {
+            console.log(newData);
             return editField(`Update ${name}`, newData).then((fetchedData) => {
               if (fetchedData.data.status === "OK") {
                 const dataUpdate = [...data];

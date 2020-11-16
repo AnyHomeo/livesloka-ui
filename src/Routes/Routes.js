@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Login from "../Pages/Login/Login";
 import PasswordReset from "../Pages/Login/PasswordReset";
 import PrivateRoute from "../auth/PrivateRoutes";
-import Home from "../Pages/Home/Home";
 import Adminsidebar from "../Pages/Admin/Adminsidebar";
 import Admin from "../Pages/Admin/Meetings/Admin";
 import AddTeachers from "../Pages/Admin/Teachers/AddTeachers";
@@ -17,6 +16,7 @@ import Scheduler from "../Pages/Admin/Meetings/Scheduler/Scheduler";
 import Invoice from "../Pages/invoice/Invoice";
 import Generator from "../Pages/invoice/Generator";
 import Invoices from "../Pages/invoice/Invoices";
+import Attedance from "../Pages/Admin/Crm/Attedance";
 
 function Routes() {
   return (
@@ -27,7 +27,6 @@ function Routes() {
           <Route path="/login" exact component={Login} />
           <Route path="/password-reset" exact component={PasswordReset} />
           <Route path="/comments" exact component={Comments} />
-          <PrivateRoute path="/home" exact component={Home} />
           <AdminRoute path="/admin" exact component={Adminsidebar} />
           <AdminRoute path="/admin-meeting" exact component={Admin} />
           <AdminRoute path="/add-teacher" exact component={AddTeachers} />
@@ -43,6 +42,7 @@ function Routes() {
           <AdminRoute path="/manual-invoice" exact component={Invoice} />
           <AdminRoute path="/invoice-generator" exact component={Generator} />
           <AdminRoute path="/invoices" exact component={Invoices} />
+          <AdminRoute path="/attedance" exact component={Attedance} />
         </Switch>
       </Router>
     </>
