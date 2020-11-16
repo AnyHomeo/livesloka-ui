@@ -10,12 +10,11 @@ export const login = (userId, password) => {
     password,
   };
   console.log(postData);
-  return fetch(`${API.main}${API.login}`, {
+  return Axios.post(`${API.main}${API.login}`,postData,{
     headers: {
       "Content-Type": "application/json",
     },
     method: "POST",
-    body: JSON.stringify(postData),
   });
 };
 
@@ -188,3 +187,7 @@ export const getInvoices = (data) =>
 
 export const deleteInvoice = (data) =>
   axios.post(`${API.main}${API.deleteInvoice}`, data);
+
+export const getUsers = () => axios.get(`${API.main}/customer/data?params=userId,username,customerId`);
+
+export const getUserAttendance = (id,date) => axios.get(`${API.main}/admin/attendance/${id}?date=${date}`)

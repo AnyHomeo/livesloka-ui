@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Adminsidebar from "../Adminsidebar";
@@ -20,6 +20,7 @@ import {
 } from "@material-ui/pickers";
 import { Button } from "@material-ui/core";
 import moment from "moment";
+import { getUsers, getUserAttendance } from "../../../Services/Services";
 
 const useStyles = makeStyles({
   table: {
@@ -27,30 +28,43 @@ const useStyles = makeStyles({
   },
 });
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData("16-02-2000", "9:15 PM", "Yes"),
-  createData("16-02-2000", "8:20 PM", "Yes"),
-];
-
 const Attedance = () => {
   const classes = useStyles();
-  const [names, setNames] = useState("");
+  const [user, setUser] = useState({});
+  const [names, setNames] = useState([]);
+  const [tableData, setTableData] = useState([])
   const [selectedDate, setSelectedDate] = useState(new Date());
   const handleDateChange = (date) => {
     const newDate = moment(date).format("YYYY-MM-DD");
+    console.log(newDate,user)
     setSelectedDate(newDate);
   };
 
   const onNameChange = (event, values) => {
-    setNames(values);
-    console.log(event.target);
+    setUser(values);
   };
 
-  console.log(names);
+  const getAttendance = () => {
+    getUserAttendance(user.customerId,selectedDate)
+    .then(data => {
+      console.log(data.data.result)
+      setTableData(data.data.result)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
+
+  useEffect(() => {
+   getUsers()
+    .then((result) => {
+      console.log(result.data.result)
+      setNames(result.data.result)
+    }).catch((err) => {
+      console.log(err)
+    });
+  }, [])
+
   return (
     <>
       <Adminsidebar />
@@ -60,20 +74,20 @@ const Attedance = () => {
       <div
         style={{
           margin: "0 auto",
-          width: 300,
+          width: 400,
         }}
       >
         <Autocomplete
           id="free-solo-demo"
           freeSolo
-          getOptionLabel={(option) => option.title}
-          options={top100Films}
+          getOptionLabel={(option) => option.username + `(${option.userId})`}
+          options={names}
           onChange={onNameChange}
           renderInput={(params) => (
             
             <TextField
               {...params}
-              label="Student"
+              label="Customer"
               margin="normal"
               variant="outlined"
             />
@@ -83,11 +97,12 @@ const Attedance = () => {
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <KeyboardDatePicker
             margin="normal"
+            fullWidth
             id="date-picker-dialog"
-            label="Date picker dialog"
+            label="Select starting Date"
             format="MM/dd/yyyy"
+            inputVariant="outlined"
             value={selectedDate}
-            style={{ marginLeft: "25px" }}
             onChange={handleDateChange}
             KeyboardButtonProps={{
               "aria-label": "change date",
@@ -95,9 +110,10 @@ const Attedance = () => {
           />
         </MuiPickersUtilsProvider>
         <Button
-          style={{ marginLeft: "50px", marginTop: "20px" }}
+          fullWidth
           variant="contained"
           color="primary"
+          onClick={() => getAttendance()}
         >
           Get Attedance
         </Button>
@@ -112,19 +128,25 @@ const Attedance = () => {
             <TableRow>
               <TableCell>Date</TableCell>
               <TableCell align="right">Time</TableCell>
+              <TableCell align="right">Time Zone</TableCell>
               <TableCell align="right">Attedended</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.name}>
+          {
+            tableData.map(row => {
+              return (
+                <TableRow >
                 <TableCell component="th" scope="row">
-                  {row.name}
+                  {row.date}
                 </TableCell>
-                <TableCell align="right">{row.calories}</TableCell>
-                <TableCell align="right">{row.fat}</TableCell>
+                <TableCell align="right">{row.time}</TableCell>
+                <TableCell align="right"> {row.timeZone} </TableCell>
+                <TableCell align="right"> YES </TableCell>
               </TableRow>
-            ))}
+              )
+            })
+          }
           </TableBody>
         </Table>
       </TableContainer>
@@ -133,8 +155,3 @@ const Attedance = () => {
 };
 
 export default Attedance;
-const top100Films = [
-  { title: "Kamal", year: 1994 },
-  { title: "The Godfather", year: 1972 },
-  { title: "The Godfather: Part II", year: 1974 },
-];

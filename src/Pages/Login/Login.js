@@ -111,12 +111,10 @@ const Login = () => {
     event.preventDefault();
     setUser({ ...user, isLoading: true, errors: false });
     login(userId, password)
-      .then((res) => res.json())
       .then((data) => {
-        console.log("charan")
-        console.log(data.obj);
-        if (data.obj.token) {
-          authenticate(data.obj, remember, () => {
+        console.log(data);
+        if (data.data.result.token && data.data.result.roleId === 3 ) {
+          authenticate(data.data.result, remember, () => {
             setUser({
               ...user,
               errors: false,
@@ -124,11 +122,11 @@ const Login = () => {
               didRedirect: true,
             });
           });
-        } else {
+        } else if(data.data.result && data.data.result.roleId !== 3){
           console.log(data);
           setUser({
             ...user,
-            errors: data.details,
+            errors: "you had no admin access",
             isLoading: false,
             didRedirect: true,
           });
@@ -145,20 +143,19 @@ const Login = () => {
       });
   };
   const performRedirect = () => {
-    if (didRedirect) {
-      if (isAutheticated() && isAutheticated().firstTimeLogin === "Y") {
-        return <Redirect to="/password-reset" />;
-      }
+        if (isAutheticated()) {
+      console.log(isAutheticated())
       if (isAutheticated() && isAutheticated().roleId === 1) {
-        return <Redirect to="/home" />;
+        setUser(prev => ({...prev,didRedirect:false, error:"no admin access to login"}))
       } else if (isAutheticated() && isAutheticated().roleId === 3) {
         return <Redirect to="/admin" />;
       }
     }
-    if (isAutheticated()) {
-      if (isAutheticated() && isAutheticated().roleId === 1) {
-        return <Redirect to="/home" />;
-      } else if (isAutheticated() && isAutheticated().roleId === 3) {
+    if (didRedirect) {
+      if (isAutheticated() && isAutheticated().firstTimeLogin === "Y") {
+        return <Redirect to="/password-reset" />;
+      }
+      if (isAutheticated() && isAutheticated().roleId === 3) {
         return <Redirect to="/admin" />;
       }
     }
