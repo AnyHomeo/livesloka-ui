@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import AdminSideBarAccordian from "./AdminSideBarAccordian";
 import {
   Drawer,
   AppBar,
@@ -200,7 +201,6 @@ const Adminsidebar = ({ history }) => {
           <ListItem
             button
             onClick={handleMeetingsOpen}
-            className={classes.menuItem}
           >
             <ListItemIcon className={classes.menuItemIcon}>
               <BookmarkIcon fontSize="large" />
@@ -221,17 +221,6 @@ const Adminsidebar = ({ history }) => {
                   <ListItemText inset primary="Schedule meeting" />
                 </Link>
               </ListItem>
-
-              {/* <ListItem button className={classes.menuItem}>
-                <Link to="/meeting-schedule" className={classes.links}>
-                  <i
-                    className={clsx("fas fa-calendar customIcon", {
-                      [classes.iconleft]: !open,
-                    })}
-                  ></i>
-                  <ListItemText inset primary="Meeting Scheduler" />
-                </Link>
-              </ListItem> */}
             </List>
           </Collapse>
           {/* Teachers */}
@@ -361,6 +350,7 @@ const Adminsidebar = ({ history }) => {
               </Link>
             </List>
           </Collapse>
+          <AdminSideBarAccordian/>
         </Drawer>
       </div>
       <main className={classes.content}>
