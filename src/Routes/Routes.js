@@ -42,7 +42,7 @@ function Routes() {
           <AdminRoute path="/manual-invoice" exact component={Invoice} />
           <AdminRoute path="/invoice-generator" exact component={Generator} />
           <AdminRoute path="/invoices" exact component={Invoices} />
-          <AdminRoute path="/attedance" exact component={Attedance} />
+          <AdminRoute path="/attendance" exact component={Attedance} />
         </Switch>
       </Router>
     </>

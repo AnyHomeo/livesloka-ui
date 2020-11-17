@@ -198,10 +198,7 @@ const Adminsidebar = ({ history }) => {
           </div>
           <Divider />
           {/* Meetings */}
-          <ListItem
-            button
-            onClick={handleMeetingsOpen}
-          >
+          <ListItem button onClick={handleMeetingsOpen}>
             <ListItemIcon className={classes.menuItemIcon}>
               <BookmarkIcon fontSize="large" />
             </ListItemIcon>
@@ -303,11 +300,21 @@ const Adminsidebar = ({ history }) => {
               <Link to="/add-fields" className={classes.links}>
                 <ListItem button className={classes.menuItem}>
                   <i
-                    className={clsx("fas fa-business-time customIcon", {
+                    className={clsx("fas fa-text-height customIcon", {
                       [classes.iconleft]: !open,
                     })}
                   ></i>
                   <ListItemText inset primary="Add Fields" />
+                </ListItem>
+              </Link>
+              <Link to="/attendance" className={classes.links}>
+                <ListItem button className={classes.menuItem}>
+                  <i
+                    className={clsx("fas fa-clipboard customIcon", {
+                      [classes.iconleft]: !open,
+                    })}
+                  ></i>
+                  <ListItemText inset primary="Attendance" />
                 </ListItem>
               </Link>
             </List>
@@ -350,7 +357,7 @@ const Adminsidebar = ({ history }) => {
               </Link>
             </List>
           </Collapse>
-          <AdminSideBarAccordian/>
+          <AdminSideBarAccordian />
         </Drawer>
       </div>
       <main className={classes.content}>
