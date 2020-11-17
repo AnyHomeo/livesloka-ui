@@ -465,11 +465,11 @@ const CrmDetails = () => {
             paging: false,
             actionsColumnIndex: 0,
             addRowPosition: "first",
-            maxBodyHeight: 500,
+            maxBodyHeight: 600,
             grouping: true,
             rowStyle: (rowData) => ({
               backgroundColor:
-                selectedRow === rowData.tableData.id ? "#EEE" : "#FFF",
+                selectedRow === rowData.tableData.id ? "#CCC" : "#FFF",
             }),
           }}
           onRowClick={(evt, selectedRow) =>
@@ -500,6 +500,7 @@ const CrmDetails = () => {
             onRowAdd: (newData) => {
               return AddCustomer(newData)
                 .then((fetchedData) => {
+                  console.log(fetchedData)
                   if (fetchedData.data.status === "OK") {
                     setdata([...data, newData]);
                     setSuccess(true);
@@ -512,9 +513,13 @@ const CrmDetails = () => {
                   }
                 })
                 .catch((err) => {
-                  console.log(err);
+                  console.log(err,err.response);
                   setSuccess(false);
+                  if(err.response && err.response.error){
+                    setResponse(err.response.error)
+                  }else{
                   setResponse("Something went wrong,Please try again!");
+                  }
                   setSnackBarOpen(true);
                 });
             },
@@ -532,7 +537,7 @@ const CrmDetails = () => {
                   } else {
                     setSuccess(false);
                     setResponse(
-                      fetchedData.data.message ||
+                      fetchedData.data.error ||
                         "Something went wrong,Try again later"
                     );
                     setSnackBarOpen(true);

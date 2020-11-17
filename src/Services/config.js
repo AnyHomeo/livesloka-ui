@@ -1,7 +1,7 @@
 exports.services = {
   prod: {
-    main: "https://livekumon-development-services.herokuapp.com",
-    // main: "http://localhost:5000",
+    // main: "https://livekumon-development-services.herokuapp.com",
+    main: "http://localhost:5000",
     login: "/login",
     changePassword: "/ChangePassword",
 
