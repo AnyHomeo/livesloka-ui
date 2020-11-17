@@ -94,7 +94,7 @@ const MaterialTableAddFields = ({ name, status, lookup }) => {
       .then((data) => {
         setColumn(
           Object.keys(data.data.result[0]).map((key) => {
-            if (key === "id") {
+            if (key === "id" || key === "statusId") {
               return { title: humanReadable(key), field: key, hidden: true };
             } else if (key === "TeacherSubjectsId") {
               return {

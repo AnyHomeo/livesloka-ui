@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Adminsidebar from "../Adminsidebar";
@@ -32,11 +32,11 @@ const Attedance = () => {
   const classes = useStyles();
   const [user, setUser] = useState({});
   const [names, setNames] = useState([]);
-  const [tableData, setTableData] = useState([])
+  const [tableData, setTableData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const handleDateChange = (date) => {
     const newDate = moment(date).format("YYYY-MM-DD");
-    console.log(newDate,user)
+    console.log(newDate, user);
     setSelectedDate(newDate);
   };
 
@@ -45,31 +45,32 @@ const Attedance = () => {
   };
 
   const getAttendance = () => {
-    getUserAttendance(user.customerId,selectedDate)
-    .then(data => {
-      console.log(data.data.result)
-      setTableData(data.data.result)
-    })
-    .catch(err => {
-      console.log(err)
-    })
-  }
+    getUserAttendance(user.customerId, selectedDate)
+      .then((data) => {
+        console.log(data.data.result);
+        setTableData(data.data.result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
-   getUsers()
-    .then((result) => {
-      console.log(result.data.result)
-      setNames(result.data.result)
-    }).catch((err) => {
-      console.log(err)
-    });
-  }, [])
+    getUsers()
+      .then((result) => {
+        console.log(result.data.result);
+        setNames(result.data.result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <>
       <Adminsidebar />
       <p style={{ textAlign: "center", fontSize: 24, fontWeight: "bold" }}>
-        Attedance
+        Attendance
       </p>
       <div
         style={{
@@ -84,7 +85,6 @@ const Attedance = () => {
           options={names}
           onChange={onNameChange}
           renderInput={(params) => (
-            
             <TextField
               {...params}
               label="Customer"
@@ -133,20 +133,18 @@ const Attedance = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-          {
-            tableData.map(row => {
+            {tableData.map((row) => {
               return (
-                <TableRow >
-                <TableCell component="th" scope="row">
-                  {row.date}
-                </TableCell>
-                <TableCell align="right">{row.time}</TableCell>
-                <TableCell align="right"> {row.timeZone} </TableCell>
-                <TableCell align="right"> YES </TableCell>
-              </TableRow>
-              )
-            })
-          }
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    {row.date}
+                  </TableCell>
+                  <TableCell align="right">{row.time}</TableCell>
+                  <TableCell align="right"> {row.timeZone} </TableCell>
+                  <TableCell align="right"> YES </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>

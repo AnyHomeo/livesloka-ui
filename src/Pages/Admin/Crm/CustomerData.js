@@ -30,6 +30,15 @@ import { ClipLoader } from "react-spinners";
 import { css } from "@emotion/core";
 import Comments from "./Comments";
 
+import "date-fns";
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+import moment from "moment";
+
 const loaderCss = css`
   margin-top: 25px;
   position: absolute;
@@ -43,7 +52,6 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     marginTop: "-10px",
     textAlign: "center",
-    Width: "50% !important",
   },
   space: {
     margin: "20px",
@@ -63,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
 const names = [
   "Class",
   "Time Zone",
-  "Class Status",
+  "Customer Status",
   "Currency",
   "Country",
   "Teacher",
@@ -139,6 +147,13 @@ const CrmDetails = () => {
   const countryDropdown = fetchDropDown(4);
   const teachersDropdown = fetchDropDown(5);
   const agentDropdown = fetchDropDown(6);
+  const [selectedRow, setSelectedRow] = useState(null);
+
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const handleDateChange = (date) => {
+    const newDate = moment(date).format("YYYY-MM-DD");
+    setSelectedDate(newDate);
+  };
 
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -312,7 +327,7 @@ const CrmDetails = () => {
         headerStyle: { whiteSpace: "nowrap" },
       },
       {
-        title: "Class Status",
+        title: "Customer Status",
         field: "classStatusId",
         width: "1%",
         lookup: classStatusDropdown,
@@ -355,6 +370,20 @@ const CrmDetails = () => {
         width: "1%",
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
+        editComponent: (props) => (
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              margin="normal"
+              format="MM/dd/yyyy"
+              style={{ width: "140px" }}
+              value={selectedDate}
+              onChange={handleDateChange}
+              KeyboardButtonProps={{
+                "aria-label": "change date",
+              }}
+            />
+          </MuiPickersUtilsProvider>
+        ),
       },
       {
         title: "Phone No",
@@ -418,97 +447,113 @@ const CrmDetails = () => {
           {response}
         </Alert>
       </Snackbar>
-      <MaterialTable
-        stickyHeader
-        style={{
-          maxWidth: "80%",
-          margin: "0 auto",
-          minHeight: "60vh",
-          marginBottom: "100px",
-        }}
-        className={classes.content}
-        title="Customer data"
-        columns={columns}
-        data={data}
-        options={{
-          paging: false,
-          actionsColumnIndex: 0,
-          addRowPosition: "first",
-          maxBodyHeight: 500,
-          grouping: true,
-        }}
-        actions={[
-          (rowData) => ({
-            icon: "comment",
-            tooltip: "Add comment",
-            onClick: (event, rowData) => {
-              setOpen(true);
-              setName(rowData.firstName);
-              setId(rowData._id);
+      <div>
+        <MaterialTable
+          stickyHeader
+          style={{
+            maxWidth: "93%",
+            minHeight: "60vh",
+            margin: "0 auto",
+            marginBottom: "100px",
+            marginLeft: "80px",
+          }}
+          // className={classes.content}
+          title="Customer data"
+          columns={columns}
+          data={data}
+          options={{
+            paging: false,
+            actionsColumnIndex: 0,
+            addRowPosition: "first",
+            maxBodyHeight: 600,
+            grouping: true,
+            rowStyle: (rowData) => ({
+              backgroundColor:
+                selectedRow === rowData.tableData.id ? "#CCC" : "#FFF",
+            }),
+          }}
+          onRowClick={(evt, selectedRow) =>
+            setSelectedRow(selectedRow.tableData.id)
+          }
+          actions={[
+            (rowData) => ({
+              icon: "comment",
+              tooltip: "Add comment",
+              onClick: (event, rowData) => {
+                setOpen(true);
+                setName(rowData.firstName);
+                setId(rowData._id);
+              },
+            }),
+          ]}
+          components={{
+            Row: (props) => (
+              <MTableBodyRow
+                {...props}
+                onDoubleClick={(e) => {
+                  props.actions[2]().onClick(e, props.data);
+                }}
+              />
+            ),
+          }}
+          editable={{
+            onRowAdd: (newData) => {
+              return AddCustomer(newData)
+                .then((fetchedData) => {
+                  console.log(fetchedData)
+                  if (fetchedData.data.status === "OK") {
+                    setdata([...data, newData]);
+                    setSuccess(true);
+                    setResponse(fetchedData.data.message);
+                    setSnackBarOpen(true);
+                  } else {
+                    setSuccess(false);
+                    setResponse(fetchedData.data.message);
+                    setSnackBarOpen(true);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err,err.response);
+                  setSuccess(false);
+                  if(err.response && err.response.error){
+                    setResponse(err.response.error)
+                  }else{
+                  setResponse("Something went wrong,Please try again!");
+                  }
+                  setSnackBarOpen(true);
+                });
             },
-          }),
-        ]}
-        components={{
-          Row: (props) => (
-            <MTableBodyRow
-              {...props}
-              onDoubleClick={(e) => {
-                props.actions[2]().onClick(e, props.data);
-              }}
-            />
-          ),
-        }}
-        editable={{
-          onRowAdd: (newData) => {
-            return AddCustomer(newData)
-              .then((fetchedData) => {
-                if (fetchedData.data.status === "OK") {
-                  setdata([...data, newData]);
-                  setSuccess(true);
-                  setResponse(fetchedData.data.message);
-                  setSnackBarOpen(true);
-                } else {
+            onRowUpdate: (newData, oldData) => {
+              return editCustomer(newData)
+                .then((fetchedData) => {
+                  if (fetchedData.data.status === "OK") {
+                    const dataUpdate = [...data];
+                    const index = oldData.tableData.id;
+                    dataUpdate[index] = newData;
+                    setdata([...dataUpdate]);
+                    setSuccess(true);
+                    setResponse(fetchedData.data.message);
+                    setSnackBarOpen(true);
+                  } else {
+                    setSuccess(false);
+                    setResponse(
+                      fetchedData.data.error ||
+                        "Something went wrong,Try again later"
+                    );
+                    setSnackBarOpen(true);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err);
                   setSuccess(false);
-                  setResponse(fetchedData.data.message);
+                  setResponse("Something went wrong,Try again later");
                   setSnackBarOpen(true);
-                }
-              })
-              .catch((err) => {
-                console.log(err);
-                setSuccess(false);
-                setResponse("Something went wrong,Please try again!");
-                setSnackBarOpen(true);
-              });
-          },
-          onRowUpdate: (newData, oldData) => {
-            return editCustomer(newData)
-              .then((fetchedData) => {
-                if (fetchedData.data.status === "OK") {
-                  const dataUpdate = [...data];
-                  const index = oldData.tableData.id;
-                  dataUpdate[index] = newData;
-                  setdata([...dataUpdate]);
-                  setSuccess(true);
-                  setResponse(fetchedData.data.message);
-                  setSnackBarOpen(true);
-                } else {
-                  setSuccess(false);
-                  setResponse(
-                    fetchedData.data.message ||
-                      "Something went wrong,Try again later"
-                  );
-                  setSnackBarOpen(true);
-                }
-              })
-              .catch((err) => {
-                console.log(err);
-                setSuccess(false);
-                setResponse("Something went wrong,Try again later");
-                setSnackBarOpen(true);
-              });
-          },
-        }}
-      />
+                });
+            },
+          }}
+        />
+      </div>
+
       <Dialog
         open={open}
         fullScreen

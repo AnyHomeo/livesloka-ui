@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import AdminSideBarAccordian from "./AdminSideBarAccordian";
 import {
   Drawer,
   AppBar,
@@ -197,11 +198,7 @@ const Adminsidebar = ({ history }) => {
           </div>
           <Divider />
           {/* Meetings */}
-          <ListItem
-            button
-            onClick={handleMeetingsOpen}
-            className={classes.menuItem}
-          >
+          <ListItem button onClick={handleMeetingsOpen}>
             <ListItemIcon className={classes.menuItemIcon}>
               <BookmarkIcon fontSize="large" />
             </ListItemIcon>
@@ -221,17 +218,6 @@ const Adminsidebar = ({ history }) => {
                   <ListItemText inset primary="Schedule meeting" />
                 </Link>
               </ListItem>
-
-              {/* <ListItem button className={classes.menuItem}>
-                <Link to="/meeting-schedule" className={classes.links}>
-                  <i
-                    className={clsx("fas fa-calendar customIcon", {
-                      [classes.iconleft]: !open,
-                    })}
-                  ></i>
-                  <ListItemText inset primary="Meeting Scheduler" />
-                </Link>
-              </ListItem> */}
             </List>
           </Collapse>
           {/* Teachers */}
@@ -314,11 +300,21 @@ const Adminsidebar = ({ history }) => {
               <Link to="/add-fields" className={classes.links}>
                 <ListItem button className={classes.menuItem}>
                   <i
-                    className={clsx("fas fa-business-time customIcon", {
+                    className={clsx("fas fa-text-height customIcon", {
                       [classes.iconleft]: !open,
                     })}
                   ></i>
                   <ListItemText inset primary="Add Fields" />
+                </ListItem>
+              </Link>
+              <Link to="/attendance" className={classes.links}>
+                <ListItem button className={classes.menuItem}>
+                  <i
+                    className={clsx("fas fa-clipboard customIcon", {
+                      [classes.iconleft]: !open,
+                    })}
+                  ></i>
+                  <ListItemText inset primary="Attendance" />
                 </ListItem>
               </Link>
             </List>
@@ -361,6 +357,7 @@ const Adminsidebar = ({ history }) => {
               </Link>
             </List>
           </Collapse>
+          <AdminSideBarAccordian />
         </Drawer>
       </div>
       <main className={classes.content}>
