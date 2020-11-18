@@ -137,7 +137,7 @@ const CrmDetails = () => {
   const [id, setId] = useState("");
   const [loading, setLoading] = useState(true);
   const [columns, setColumns] = useState([]);
-  const [data, setdata] = useState([]);
+  const [data, setData] = useState([]);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [success, setSuccess] = useState(false);
   const [response, setResponse] = useState("");
@@ -425,7 +425,7 @@ const CrmDetails = () => {
     try {
       const data = await getAllCustomerDetails();
       let details = data.data.result;
-      setdata(details);
+      setData(details);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -514,7 +514,7 @@ const CrmDetails = () => {
                 .then((fetchedData) => {
                   console.log(fetchedData);
                   if (fetchedData.data.status === "OK") {
-                    setdata([...data, newData]);
+                    setData([...data, newData]);
                     setSuccess(true);
                     setResponse(fetchedData.data.message);
                     setSnackBarOpen(true);
@@ -542,7 +542,7 @@ const CrmDetails = () => {
                     const dataUpdate = [...data];
                     const index = oldData.tableData.id;
                     dataUpdate[index] = newData;
-                    setdata([...dataUpdate]);
+                    setData([...dataUpdate]);
                     setSuccess(true);
                     setResponse(fetchedData.data.message);
                     setSnackBarOpen(true);
@@ -564,13 +564,19 @@ const CrmDetails = () => {
             },
             onRowDelete:(oldData) => deleteUser(oldData._id)
               .then(res => {
-                    const dataDelete = [...data];
-                    const index = oldData.tableData.id;
-                    dataDelete.splice(index, 1);
-                    setdata([...dataDelete]);
+                const dataDelete = [...data];
+                const index = oldData.tableData.id;
+                dataDelete.splice(index, 1);
+                setData([...dataDelete]);
+                setSuccess(true);
+                setResponse(res.data.message);
+                setSnackBarOpen(true);
               })
               .catch(err => {
                 console.log(err,err.response)
+                setSuccess(false);
+                setResponse("unable to delete customer, Try again");
+                setSnackBarOpen(true);
               })
           }}
         />
