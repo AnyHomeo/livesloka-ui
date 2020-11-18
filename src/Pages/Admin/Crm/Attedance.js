@@ -116,7 +116,7 @@ const Attedance = () => {
           Get Attedance
         </Button>
       </div>
-            <h3 style={{textAlign:"center"}} > Classes Attended: { tableData.length } </h3>
+            <h3 style={{textAlign:"center",marginTop:"20px"}} > Classes Attended: { tableData.length } </h3>
       <TableContainer
         component={Paper}
         style={{ width: "800px", margin: "0 auto", marginTop: "40px" }}
