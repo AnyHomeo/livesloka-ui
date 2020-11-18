@@ -47,6 +47,7 @@ exports.services = {
     allCustomerDetails: "/customer/details",
     addCustomer: "/customer/registerCustomer",
     updateCustomer: "/customer/updateCustomer",
+    deleteCustomer:"/customer/delete",
 
     getComment: "/admin/comments",
     addComment: "/admin/addcomment",

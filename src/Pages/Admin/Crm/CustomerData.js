@@ -11,6 +11,7 @@ import {
   editCustomer,
   getAllAdmins,
   getAllTeachers,
+  deleteUser,
 } from "../../../Services/Services";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -550,6 +551,16 @@ const CrmDetails = () => {
                   setSnackBarOpen(true);
                 });
             },
+            onRowDelete:(oldData) => deleteUser(oldData._id)
+              .then(res => {
+                    const dataDelete = [...data];
+                    const index = oldData.tableData.id;
+                    dataDelete.splice(index, 1);
+                    setdata([...dataDelete]);
+              })
+              .catch(err => {
+                console.log(err,err.response)
+              })
           }}
         />
       </div>
