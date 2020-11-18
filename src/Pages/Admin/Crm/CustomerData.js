@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import MaterialTable, { MTableBodyRow } from "material-table";
 import { makeStyles } from "@material-ui/core/styles";
 import Adminsidebar from "../Adminsidebar";
+import useWindowDimensions from "../../../Components/useWindowDimensions"; 
 import {
   getAllCustomerDetails,
   AddCustomer,
@@ -131,6 +132,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const CrmDetails = () => {
+  const { height, width } = useWindowDimensions();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
@@ -165,6 +167,7 @@ const CrmDetails = () => {
   };
 
   useEffect(() => {
+    console.log(height,width)
     fetchData();
     setColumns([
       {
@@ -458,11 +461,8 @@ const CrmDetails = () => {
         <MaterialTable
           stickyHeader
           style={{
-            maxWidth: "95%",
-            minHeight: "90vh",
-            margin: "0 auto",
-            marginBottom: "20px",
-            marginLeft: "80px",
+            maxWidth: width,
+            paddingLeft:"80px"
           }}
           isLoading={loading}
           title="Customer data"
@@ -472,6 +472,7 @@ const CrmDetails = () => {
             paging: false,
             actionsColumnIndex: 0,
             addRowPosition: "first",
+            maxBodyHeight:height,
             grouping: true,
             rowStyle: (rowData) => ({
               backgroundColor:
