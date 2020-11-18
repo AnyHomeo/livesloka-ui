@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import Adminsidebar from "../Adminsidebar";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -68,7 +67,6 @@ const Attedance = () => {
 
   return (
     <>
-      <Adminsidebar />
       <p style={{ textAlign: "center", fontSize: 24, fontWeight: "bold" }}>
         Attendance
       </p>

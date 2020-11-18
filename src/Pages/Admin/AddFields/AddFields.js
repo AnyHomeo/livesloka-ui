@@ -4,7 +4,6 @@ import Adminsidebar from ".././Adminsidebar";
 const AddFields = () => {
   return (
     <div>
-      <Adminsidebar />
       <CustomTabs />
     </div>
   );

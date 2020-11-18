@@ -19,7 +19,6 @@ import {
   getData,
 } from "../../Services/Services";
 
-import Adminsidebar from "../Admin/Adminsidebar";
 
 class Invoice extends React.Component {
   constructor(params) {
@@ -140,7 +139,6 @@ class Invoice extends React.Component {
   render() {
     return (
       <div className="main-div">
-        <Adminsidebar />
         <div className="invoice">
           <div className="section invoice-data">
             <h3>Invoice Details</h3>

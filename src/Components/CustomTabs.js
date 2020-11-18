@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "block",
     margin: "0 auto",
-    width: "80%",
+    width: "90%",
     backgroundColor: theme.palette.background.paper,
   },
 }));
@@ -95,7 +95,6 @@ const CustomTabs = () => {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" color="default">
         <Tabs
           value={value}
           onChange={handleChange}
@@ -109,7 +108,6 @@ const CustomTabs = () => {
             return <Tab label={item} {...a11yProps(index)} key={index} />;
           })}
         </Tabs>
-      </AppBar>
       {tabs.map((item, index) => (
         <TabPanel value={value} key={index} index={index}>
           <MaterialTableAddFields

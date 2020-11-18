@@ -9,7 +9,7 @@ import {
   Box,
   Grid,
   Typography,
-} from "@material-ui/core/";
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MuiAlert from "@material-ui/lab/Alert";
 import React, { useState } from "react";
@@ -152,7 +152,7 @@ const Login = () => {
           error: "no admin access to login",
         }));
       } else if (isAutheticated() && isAutheticated().roleId === 3) {
-        return <Redirect to="/admin" />;
+        return <Redirect to="/customer-data" />;
       }
     }
     if (didRedirect) {
@@ -160,7 +160,7 @@ const Login = () => {
         return <Redirect to="/password-reset" />;
       }
       if (isAutheticated() && isAutheticated().roleId === 3) {
-        return <Redirect to="/admin" />;
+        return <Redirect to="/customer-data" />;
       }
     }
   };

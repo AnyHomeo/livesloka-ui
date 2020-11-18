@@ -149,6 +149,7 @@ const MaterialTableAddFields = ({ name, status, lookup }) => {
         columns={column}
         options={{
           paging: false,
+          maxBodyHeight: 400,
           addRowPosition: "first",
           actionsColumnIndex: -1,
         }}

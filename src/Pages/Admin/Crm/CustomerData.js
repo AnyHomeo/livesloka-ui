@@ -444,7 +444,6 @@ const CrmDetails = () => {
 
   return (
     <>
-      <Adminsidebar />
       <Snackbar
         open={snackBarOpen}
         autoHideDuration={6000}
@@ -462,7 +461,7 @@ const CrmDetails = () => {
           stickyHeader
           style={{
             maxWidth: width,
-            paddingLeft:"80px"
+            padding:'20px'
           }}
           isLoading={loading}
           title="Customer data"

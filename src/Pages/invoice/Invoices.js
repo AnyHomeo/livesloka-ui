@@ -1,5 +1,4 @@
 import React from "react";
-import Adminsidebar from "../Admin/Adminsidebar";
 import MaterialTable, { MTableToolbar } from "material-table";
 import "../../sass/invoice-data.scss";
 import { getInvoices, deleteInvoice } from "../../Services/Services";
@@ -74,7 +73,6 @@ class Invoices extends React.Component {
   render() {
     return (
       <div className="main-div">
-        <Adminsidebar />
         <Dialog open={this.state.open}>
           <DialogTitle>
             <Chip
