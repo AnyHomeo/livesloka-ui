@@ -343,8 +343,15 @@ const CrmDetails = () => {
         headerStyle: { whiteSpace: "nowrap" },
       },
       {
+        title: "Schedule Description",
+        field: "scheduleDescription",
+        width: "1%",
+        cellStyle: { whiteSpace: "nowrap" },
+        headerStyle: { whiteSpace: "nowrap" },
+      },
+      {
         title: "Zoom Color",
-        field: "zoomcolor",
+        field: "zoomColor",
         width: "1%",
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
@@ -434,7 +441,6 @@ const CrmDetails = () => {
   return (
     <>
       <Adminsidebar />
-      <ClipLoader size={48} color="blue" css={loaderCss} loading={loading} />
       <Snackbar
         open={snackBarOpen}
         autoHideDuration={6000}
@@ -452,12 +458,12 @@ const CrmDetails = () => {
           stickyHeader
           style={{
             maxWidth: "93%",
-            minHeight: "60vh",
+            minHeight: "80vh",
             margin: "0 auto",
             marginBottom: "100px",
             marginLeft: "80px",
           }}
-          // className={classes.content}
+          isLoading={loading}
           title="Customer data"
           columns={columns}
           data={data}
@@ -465,7 +471,6 @@ const CrmDetails = () => {
             paging: false,
             actionsColumnIndex: 0,
             addRowPosition: "first",
-            maxBodyHeight: 600,
             grouping: true,
             rowStyle: (rowData) => ({
               backgroundColor:
@@ -475,6 +480,12 @@ const CrmDetails = () => {
           onRowClick={(evt, selectedRow) =>
             setSelectedRow(selectedRow.tableData.id)
           }
+          onColumnDragged = {(sourceIndex, destinationIndex) => {
+            console.log(sourceIndex, destinationIndex)
+          }}
+          onOrderChange = {(orderedColumnId, orderDirection) => {
+            console.log(orderedColumnId, orderDirection)
+          }}
           actions={[
             (rowData) => ({
               icon: "comment",

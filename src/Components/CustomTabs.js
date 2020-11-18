@@ -78,15 +78,6 @@ const CustomTabs = () => {
     "AgentStatus"
   ];
 
-  // const id = [
-  //   "classId",
-  //   "timeZoneId",
-  //   "classStatusId",
-  //   "currencyId",
-  //   "",
-  //   "countryId"
-  // ]
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -125,7 +116,6 @@ const CustomTabs = () => {
             name={item}
             status={status[index]}
             lookup={lookup}
-          // id={id[index]}
           />
         </TabPanel>
       ))}
