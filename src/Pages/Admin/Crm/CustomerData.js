@@ -510,6 +510,7 @@ const CrmDetails = () => {
           }}
           editable={{
             onRowAdd: (newData) => {
+              console.log(newData)
               return AddCustomer(newData)
                 .then((fetchedData) => {
                   console.log(fetchedData);

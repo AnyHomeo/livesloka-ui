@@ -136,8 +136,6 @@ export const getData = (name) => {
 };
 
 export const AddCustomer = (data) => {
-  data["customerId"] = Math.floor(Math.random() * 100) * Number(Date.now());
-  console.log(data);
   return Axios.post(`${API.main}${API.addCustomer}`, data);
 };
 
