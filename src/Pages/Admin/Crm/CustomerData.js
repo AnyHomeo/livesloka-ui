@@ -11,6 +11,7 @@ import {
   editCustomer,
   getAllAdmins,
   getAllTeachers,
+  deleteUser,
 } from "../../../Services/Services";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -457,10 +458,10 @@ const CrmDetails = () => {
         <MaterialTable
           stickyHeader
           style={{
-            maxWidth: "93%",
-            minHeight: "80vh",
+            maxWidth: "95%",
+            minHeight: "90vh",
             margin: "0 auto",
-            marginBottom: "100px",
+            marginBottom: "20px",
             marginLeft: "80px",
           }}
           isLoading={loading}
@@ -474,7 +475,7 @@ const CrmDetails = () => {
             grouping: true,
             rowStyle: (rowData) => ({
               backgroundColor:
-                selectedRow === rowData.tableData.id ? "#CCC" : "#FFF",
+                selectedRow === rowData.tableData.id ? "#3498db60" : "#FFF",
             }),
           }}
           onRowClick={(evt, selectedRow) =>
@@ -511,7 +512,7 @@ const CrmDetails = () => {
             onRowAdd: (newData) => {
               return AddCustomer(newData)
                 .then((fetchedData) => {
-                  console.log(fetchedData)
+                  console.log(fetchedData);
                   if (fetchedData.data.status === "OK") {
                     setdata([...data, newData]);
                     setSuccess(true);
@@ -524,12 +525,12 @@ const CrmDetails = () => {
                   }
                 })
                 .catch((err) => {
-                  console.log(err,err.response);
+                  console.log(err, err.response);
                   setSuccess(false);
-                  if(err.response && err.response.error){
-                    setResponse(err.response.error)
-                  }else{
-                  setResponse("Something went wrong,Please try again!");
+                  if (err.response && err.response.error) {
+                    setResponse(err.response.error);
+                  } else {
+                    setResponse("Something went wrong,Please try again!");
                   }
                   setSnackBarOpen(true);
                 });
@@ -561,6 +562,16 @@ const CrmDetails = () => {
                   setSnackBarOpen(true);
                 });
             },
+            onRowDelete:(oldData) => deleteUser(oldData._id)
+              .then(res => {
+                    const dataDelete = [...data];
+                    const index = oldData.tableData.id;
+                    dataDelete.splice(index, 1);
+                    setdata([...dataDelete]);
+              })
+              .catch(err => {
+                console.log(err,err.response)
+              })
           }}
         />
       </div>

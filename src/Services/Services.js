@@ -191,3 +191,5 @@ export const deleteInvoice = (data) =>
 export const getUsers = () => axios.get(`${API.main}/customer/data?params=userId,username,customerId`);
 
 export const getUserAttendance = (id,date) => axios.get(`${API.main}/admin/attendance/${id}?date=${date}`)
+
+export const deleteUser = (id) => axios.get(`${API.main}${API.deleteCustomer}/${id}`)
