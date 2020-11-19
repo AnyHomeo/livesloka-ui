@@ -522,7 +522,7 @@ const CrmDetails = () => {
                 .then((fetchedData) => {
                   console.log(fetchedData);
                   if (fetchedData.data.status === "OK") {
-                    setData([...data, fetchedData.data.result]);
+                    setData([fetchedData.data.result, ...data]);
                     setSuccess(true);
                     setResponse(fetchedData.data.message);
                     setSnackBarOpen(true);
