@@ -173,18 +173,18 @@ const CrmDetails = () => {
     fetchData();
     setColumns([
       {
-        title: "Time Zone",
-        field: "timeZoneId",
-        width: "1%",
-        lookup: timeZoneDropdown,
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-      },
-      {
         title: "Customer Status",
         field: "classStatusId",
         width: "1%",
         lookup: classStatusDropdown,
+        cellStyle: { whiteSpace: "nowrap" },
+        headerStyle: { whiteSpace: "nowrap" },
+      },
+      {
+        title: "Time Zone",
+        field: "timeZoneId",
+        width: "1%",
+        lookup: timeZoneDropdown,
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
       },
