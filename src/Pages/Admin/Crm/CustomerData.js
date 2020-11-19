@@ -3,8 +3,10 @@
 import React, { useEffect, useState } from "react";
 import MaterialTable, { MTableBodyRow } from "material-table";
 import { makeStyles } from "@material-ui/core/styles";
-import Adminsidebar from "../Adminsidebar";
-import useWindowDimensions from "../../../Components/useWindowDimensions"; 
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
+import SmsOutlinedIcon from "@material-ui/icons/SmsOutlined";
+import useWindowDimensions from "../../../Components/useWindowDimensions";
 import {
   getAllCustomerDetails,
   AddCustomer,
@@ -73,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
 const names = [
   "Class",
   "Time Zone",
-  "Customer Status",
+  "Class Status",
   "Currency",
   "Country",
   "Teacher",
@@ -167,7 +169,7 @@ const CrmDetails = () => {
   };
 
   useEffect(() => {
-    console.log(height,width)
+    console.log(height, width);
     fetchData();
     setColumns([
       {
@@ -175,6 +177,14 @@ const CrmDetails = () => {
         field: "timeZoneId",
         width: "1%",
         lookup: timeZoneDropdown,
+        cellStyle: { whiteSpace: "nowrap" },
+        headerStyle: { whiteSpace: "nowrap" },
+      },
+      {
+        title: "Customer Status",
+        field: "classStatusId",
+        width: "1%",
+        lookup: classStatusDropdown,
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
       },
@@ -331,14 +341,6 @@ const CrmDetails = () => {
         headerStyle: { whiteSpace: "nowrap" },
       },
       {
-        title: "Customer Status",
-        field: "classStatusId",
-        width: "1%",
-        lookup: classStatusDropdown,
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-      },
-      {
         title: "Agent Id",
         field: "agentId",
         width: "1%",
@@ -461,7 +463,7 @@ const CrmDetails = () => {
           stickyHeader
           style={{
             maxWidth: width,
-            padding:'20px'
+            padding: "20px",
           }}
           isLoading={loading}
           title="Customer data"
@@ -471,25 +473,30 @@ const CrmDetails = () => {
             paging: false,
             actionsColumnIndex: 0,
             addRowPosition: "first",
-            maxBodyHeight:height,
+            maxBodyHeight: height,
             grouping: true,
             rowStyle: (rowData) => ({
               backgroundColor:
-                selectedRow === rowData.tableData.id ? "#3498db60" : "#FFF",
+                selectedRow === rowData.tableData.id ? "#3F51B5" : "#FFF",
+              color: selectedRow === rowData.tableData.id ? "#fff" : "#000",
             }),
           }}
           onRowClick={(evt, selectedRow) =>
             setSelectedRow(selectedRow.tableData.id)
           }
-          onColumnDragged = {(sourceIndex, destinationIndex) => {
-            console.log(sourceIndex, destinationIndex)
-          }}
-          onOrderChange = {(orderedColumnId, orderDirection) => {
-            console.log(orderedColumnId, orderDirection)
+          onColumnDragged={(sourceIndex, destinationIndex) => {
+            console.log(sourceIndex, destinationIndex);
           }}
           actions={[
             (rowData) => ({
-              icon: "comment",
+              icon: () => (
+                <SmsOutlinedIcon
+                  style={{
+                    color:
+                      selectedRow === rowData.tableData.id ? "#fff" : "#3f51B5",
+                  }}
+                />
+              ),
               tooltip: "Add comment",
               onClick: (event, rowData) => {
                 setOpen(true);
@@ -510,12 +517,12 @@ const CrmDetails = () => {
           }}
           editable={{
             onRowAdd: (newData) => {
-              console.log(newData)
+              console.log(newData);
               return AddCustomer(newData)
                 .then((fetchedData) => {
                   console.log(fetchedData);
                   if (fetchedData.data.status === "OK") {
-                    setData([...data, newData]);
+                    setData([...data, fetchedData.data.result]);
                     setSuccess(true);
                     setResponse(fetchedData.data.message);
                     setSnackBarOpen(true);
@@ -563,22 +570,23 @@ const CrmDetails = () => {
                   setSnackBarOpen(true);
                 });
             },
-            onRowDelete:(oldData) => deleteUser(oldData._id)
-              .then(res => {
-                const dataDelete = [...data];
-                const index = oldData.tableData.id;
-                dataDelete.splice(index, 1);
-                setData([...dataDelete]);
-                setSuccess(true);
-                setResponse(res.data.message);
-                setSnackBarOpen(true);
-              })
-              .catch(err => {
-                console.log(err,err.response)
-                setSuccess(false);
-                setResponse("unable to delete customer, Try again");
-                setSnackBarOpen(true);
-              })
+            onRowDelete: (oldData) =>
+              deleteUser(oldData._id)
+                .then((res) => {
+                  const dataDelete = [...data];
+                  const index = oldData.tableData.id;
+                  dataDelete.splice(index, 1);
+                  setData([...dataDelete]);
+                  setSuccess(true);
+                  setResponse(res.data.message);
+                  setSnackBarOpen(true);
+                })
+                .catch((err) => {
+                  console.log(err, err.response);
+                  setSuccess(false);
+                  setResponse("unable to delete customer, Try again");
+                  setSnackBarOpen(true);
+                }),
           }}
         />
       </div>
