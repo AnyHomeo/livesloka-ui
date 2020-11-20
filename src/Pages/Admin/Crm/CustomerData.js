@@ -517,7 +517,12 @@ const CrmDetails = () => {
   useEffect(() => {
     getSettings(isAutheticated()._id)
     .then(data => {
-      let settings = data.data.result.columns
+      let settings
+      if(data.data.result.columns){
+      settings = data.data.result.columns
+      } else {
+        settings = []
+      }
       setColumnFilters({
     classStatusId: { selected: settings.includes("classStatusId"), name: "Customer Status" },
     timeZoneId: { selected: settings.includes("timeZoneId"), name: "Time Zone" },
