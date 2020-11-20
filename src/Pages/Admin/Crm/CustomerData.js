@@ -7,6 +7,7 @@ import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import SmsOutlinedIcon from "@material-ui/icons/SmsOutlined";
 import useWindowDimensions from "../../../Components/useWindowDimensions";
+import clsx from "clsx";
 import {
   getAllCustomerDetails,
   AddCustomer,
@@ -42,6 +43,21 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import moment from "moment";
+import TableChartOutlinedIcon from "@material-ui/icons/TableChartOutlined";
+import Drawer from "@material-ui/core/Drawer";
+import List from "@material-ui/core/List";
+import Divider from "@material-ui/core/Divider";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import { isAutheticated } from "../../../auth"
+import { getSettings,updateSettings } from "../../../Services/Services"
+
 
 const loaderCss = css`
   margin-top: 25px;
@@ -51,7 +67,14 @@ const loaderCss = css`
   transform: translate(-50%, -50%);
   z-index: 1000;
 `;
+
 const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+  },
+  formControl: {
+    margin: theme.spacing(3),
+  },
   content: {
     flexGrow: 1,
     marginTop: "-10px",
@@ -69,6 +92,12 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     fullWidth: true,
+  },
+  list: {
+    width: 250,
+  },
+  fullList: {
+    width: "auto",
   },
 }));
 
@@ -106,32 +135,77 @@ const fetchDropDown = (index) => {
   return obj;
 };
 
-const fetchAdmins = () => {
-  var obj = {};
-  getAllAdmins()
-    .then((fetchedData) => {
-      fetchedData.data.result.forEach((dataObj) => {
-        obj[dataObj.employeeId] = `${dataObj.firstName} ${dataObj.lastName}`;
-      });
-    })
-    .catch((err) => {});
-  return obj;
-};
-const fetchTeachers = () => {
-  var obj = {};
-  getAllTeachers()
-    .then((fetchedData) => {
-      fetchedData.data.result.forEach((dataObj) => {
-        obj[dataObj.employeeId] = `${dataObj.firstName} ${dataObj.lastName}`;
-      });
-    })
-    .catch((err) => {});
-  return obj;
-};
-
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+const classDropdown = fetchDropDown(0);
+const timeZoneDropdown = fetchDropDown(1);
+const classStatusDropdown = fetchDropDown(2);
+const currencyDropdown = fetchDropDown(3);
+const countryDropdown = fetchDropDown(4);
+const teachersDropdown = fetchDropDown(5);
+const agentDropdown = fetchDropDown(6);
+
+const ColumnFilterDrawer = ({
+  drawerOpen,
+  setDrawerOpen,
+  columnFilters,
+  setColumnFilters,
+  classes,
+}) => (
+  <Drawer
+    anchor={"right"}
+    open={drawerOpen}
+    onClose={() => {
+      let arr = [];
+      Object.keys(columnFilters).forEach((column) => {
+        if (columnFilters[column].selected) {
+          arr.push(column);
+        }
+      });
+      console.log(arr);
+      let id = isAutheticated()._id
+      if(id){
+      updateSettings(id,{
+        columns:arr
+      })
+      }
+      setDrawerOpen(false);
+    }}
+  >
+    <div className={classes.list} role="presentation">
+      <h2 style={{ textAlign: "center", paddingTop: "10px" }}>
+        {" "}
+        Filter Columns{" "}
+      </h2>
+      <FormControl component="fieldset" className={classes.formControl}>
+        <FormGroup>
+          {Object.keys(columnFilters).map((column, i) => {
+            return (
+              <FormControlLabel
+                key={i}
+                onChange={() => {
+                  setColumnFilters((prev) => {
+                    return {
+                      ...prev,
+                      [column]: {
+                        selected: !prev[column].selected,
+                        name: prev[column].name,
+                      },
+                    };
+                  });
+                }}
+                control={<Checkbox checked={columnFilters[column].selected} />}
+                label={columnFilters[column].name}
+              />
+            );
+          })}
+        </FormGroup>
+      </FormControl>
+    </div>
+  </Drawer>
+);
 
 const CrmDetails = () => {
   const { height, width } = useWindowDimensions();
@@ -145,16 +219,11 @@ const CrmDetails = () => {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [success, setSuccess] = useState(false);
   const [response, setResponse] = useState("");
-  const classDropdown = fetchDropDown(0);
-  const timeZoneDropdown = fetchDropDown(1);
-  const classStatusDropdown = fetchDropDown(2);
-  const currencyDropdown = fetchDropDown(3);
-  const countryDropdown = fetchDropDown(4);
-  const teachersDropdown = fetchDropDown(5);
-  const agentDropdown = fetchDropDown(6);
   const [selectedRow, setSelectedRow] = useState(null);
-
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [columnFilters, setColumnFilters] = useState({});
+
   const handleDateChange = (date) => {
     const newDate = moment(date).format("YYYY-MM-DD");
     setSelectedDate(newDate);
@@ -169,9 +238,8 @@ const CrmDetails = () => {
   };
 
   useEffect(() => {
-    console.log(height, width);
-    fetchData();
-    setColumns([
+    if(Object.keys(columnFilters).length){
+          setColumns([
       {
         title: "Customer Status",
         field: "classStatusId",
@@ -179,6 +247,7 @@ const CrmDetails = () => {
         lookup: classStatusDropdown,
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
+        hidden: !columnFilters["classStatusId"].selected,
       },
       {
         title: "Time Zone",
@@ -187,6 +256,7 @@ const CrmDetails = () => {
         lookup: timeZoneDropdown,
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
+        hidden: !columnFilters["timeZoneId"].selected,
       },
       { title: "Id", field: "id", hidden: true },
       {
@@ -195,6 +265,7 @@ const CrmDetails = () => {
         width: "1%",
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
+        hidden: !columnFilters["firstName"].selected,
       },
       {
         title: "Guardian",
@@ -202,6 +273,7 @@ const CrmDetails = () => {
         width: "1%",
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
+        hidden: !columnFilters["lastName"].selected,
       },
       {
         title: "Class Name",
@@ -210,6 +282,7 @@ const CrmDetails = () => {
         lookup: classDropdown,
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
+        hidden: !columnFilters["classId"].selected,
       },
       {
         title: "Email",
@@ -217,6 +290,7 @@ const CrmDetails = () => {
         width: "1%",
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
+        hidden: !columnFilters["email"].selected,
       },
       {
         title: "Whatsapp",
@@ -224,6 +298,7 @@ const CrmDetails = () => {
         width: "1%",
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
+        hidden: !columnFilters["whatsAppnumber"].selected,
       },
       {
         title: "Group",
@@ -232,6 +307,7 @@ const CrmDetails = () => {
         width: "1%",
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
+        hidden: !columnFilters["oneToOne"].selected,
         editComponent: (props) => (
           <Checkbox
             labelstyle={{ color: "green" }}
@@ -244,35 +320,36 @@ const CrmDetails = () => {
         ),
       },
       {
-        title: "Teacher Id",
+        title: "Teacher",
         field: "teacherId",
         width: "1%",
         lookup: teachersDropdown,
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
+        hidden: !columnFilters["teacherId"].selected,
       },
-      {
-        title: "Age",
-        field: "age",
-        type: "numeric",
-        width: "1%",
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-        editComponent: (props) => (
-          <TextField
-            type="number"
-            inputProps={{ min: "0", step: "1" }}
-            value={props.value}
-            onChange={(e) => {
-              if (e.target.value < 0) {
-                return props.onChange(0);
-              } else {
-                return props.onChange(e.target.value);
-              }
-            }}
-          />
-        ),
-      },
+      // {
+      //   title: "Age",
+      //   field: "age",
+      //   type: "numeric",
+      //   width: "1%",
+      //   cellStyle: { whiteSpace: "nowrap" },
+      //   headerStyle: { whiteSpace: "nowrap" },
+      //   editComponent: (props) => (
+      //     <TextField
+      //       type="number"
+      //       inputProps={{ min: "0", step: "1" }}
+      //       value={props.value}
+      //       onChange={(e) => {
+      //         if (e.target.value < 0) {
+      //           return props.onChange(0);
+      //         } else {
+      //           return props.onChange(e.target.value);
+      //         }
+      //       }}
+      //     />
+      //   ),
+      // },
       {
         title: "Country",
         field: "countryId",
@@ -280,12 +357,14 @@ const CrmDetails = () => {
         width: "1%",
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
+        hidden: !columnFilters["countryId"].selected,
       },
       {
         title: "No of Students",
         field: "numberOfStudents",
         type: "numeric",
         width: "1%",
+        hidden: !columnFilters["numberOfStudents"].selected,
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
         editComponent: (props) => (
@@ -308,6 +387,7 @@ const CrmDetails = () => {
         field: "proposedAmount",
         type: "numeric",
         width: "1%",
+        hidden: !columnFilters["proposedAmount"].selected,
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
         editComponent: (props) => (
@@ -328,6 +408,7 @@ const CrmDetails = () => {
       {
         title: "Proposed Currency",
         field: "proposedCurrencyId",
+        hidden: !columnFilters["proposedCurrencyId"].selected,
         width: "1%",
         lookup: currencyDropdown,
         cellStyle: { whiteSpace: "nowrap" },
@@ -336,6 +417,7 @@ const CrmDetails = () => {
       {
         title: "Place Of Stay",
         field: "placeOfStay",
+        hidden: !columnFilters["placeOfStay"].selected,
         width: "1%",
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
@@ -345,6 +427,7 @@ const CrmDetails = () => {
         field: "agentId",
         width: "1%",
         lookup: agentDropdown,
+        hidden: !columnFilters["agentId"].selected,
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
       },
@@ -352,56 +435,59 @@ const CrmDetails = () => {
         title: "Schedule Description",
         field: "scheduleDescription",
         width: "1%",
+        hidden: !columnFilters["scheduleDescription"].selected,
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
       },
-      {
-        title: "Zoom Color",
-        field: "zoomColor",
-        width: "1%",
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-      },
+      // {
+      //   title: "Zoom Color",
+      //   field: "zoomColor",
+      //   width: "1%",
+      //   cellStyle: { whiteSpace: "nowrap" },
+      //   headerStyle: { whiteSpace: "nowrap" },
+      // },
       {
         title: "Meeting Link",
         field: "meetingLink",
+        hidden: !columnFilters["meetingLink"].selected,
         width: "1%",
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
       },
-      {
-        title: "Customer Id",
-        field: "customerId",
-        editable: "never",
-        width: "1%",
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-      },
-      {
-        title: "Joining Date",
-        field: "joindate",
-        width: "1%",
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-        editComponent: (props) => (
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              margin="normal"
-              format="MM/dd/yyyy"
-              style={{ width: "140px" }}
-              value={selectedDate}
-              onChange={handleDateChange}
-              KeyboardButtonProps={{
-                "aria-label": "change date",
-              }}
-            />
-          </MuiPickersUtilsProvider>
-        ),
-      },
+      // {
+      //   title: "Customer Id",
+      //   field: "customerId",
+      //   editable: "never",
+      //   width: "1%",
+      //   cellStyle: { whiteSpace: "nowrap" },
+      //   headerStyle: { whiteSpace: "nowrap" },
+      // },
+      // {
+      //   title: "Joining Date",
+      //   field: "joindate",
+      //   width: "1%",
+      //   cellStyle: { whiteSpace: "nowrap" },
+      //   headerStyle: { whiteSpace: "nowrap" },
+      //   editComponent: (props) => (
+      //     <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      //       <KeyboardDatePicker
+      //         margin="normal"
+      //         format="MM/dd/yyyy"
+      //         style={{ width: "140px" }}
+      //         value={selectedDate}
+      //         onChange={handleDateChange}
+      //         KeyboardButtonProps={{
+      //           "aria-label": "change date",
+      //         }}
+      //       />
+      //     </MuiPickersUtilsProvider>
+      //   ),
+      // },
       {
         title: "Phone No",
         field: "phone",
         width: "1%",
+        hidden: !columnFilters["phone"].selected,
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
       },
@@ -410,6 +496,7 @@ const CrmDetails = () => {
         field: "studyMaterialSent",
         type: "boolean",
         width: "1%",
+        hidden: !columnFilters["studyMaterialSent"].selected,
         cellStyle: { whiteSpace: "nowrap" },
         headerStyle: { whiteSpace: "nowrap" },
         editComponent: (props) => (
@@ -424,6 +511,36 @@ const CrmDetails = () => {
         ),
       },
     ]);
+    }
+  }, [columnFilters]);
+
+  useEffect(() => {
+    getSettings(isAutheticated()._id)
+    .then(data => {
+      let settings = data.data.result.columns
+      setColumnFilters({
+    classStatusId: { selected: settings.includes("classStatusId"), name: "Customer Status" },
+    timeZoneId: { selected: settings.includes("timeZoneId"), name: "Time Zone" },
+    firstName: { selected: settings.includes("firstName"), name: "Student Name" },
+    lastName: { selected: settings.includes("lastName"), name: "Gaurdian" },
+    classId: { selected: settings.includes("classId"), name: "ClassName" },
+    email: { selected: settings.includes("email"), name: "Email" },
+    whatsAppnumber: { selected: settings.includes("whatsAppnumber"), name: "Whatsapp" },
+    oneToOne: { selected: settings.includes("oneToOne"), name: "Group" },
+    teacherId: { selected: settings.includes("teacherId"), name: "Teacher" },
+    countryId: { selected: settings.includes("countryId"), name: "Country" },
+    numberOfStudents: { selected: settings.includes("numberOfStudents"), name: "No of Students" },
+    proposedAmount: { selected: settings.includes("proposedAmount"), name: "Proposed Amount" },
+    proposedCurrencyId: { selected: settings.includes("proposedCurrencyId"), name: "Proposed Currency" },
+    placeOfStay: { selected: settings.includes("placeOfStay"), name: "Place Of Stay" },
+    agentId: { selected: settings.includes("agentId"), name: "Agent Id" },
+    scheduleDescription: { selected: settings.includes("scheduleDescription"), name: "scheduleDescription" },
+    meetingLink: { selected: settings.includes("meetingLink"), name: "Meeting Link" },
+    phone: { selected: settings.includes("phone"), name: "Phone No" },
+    studyMaterialSent: { selected: settings.includes("studyMaterialSent"), name: "Study Material Sent" },
+  })
+    })
+    fetchData();
   }, []);
 
   const fetchData = async () => {
@@ -446,6 +563,13 @@ const CrmDetails = () => {
 
   return (
     <>
+      <ColumnFilterDrawer
+        classes={classes}
+        drawerOpen={drawerOpen}
+        columnFilters={columnFilters}
+        setColumnFilters={setColumnFilters}
+        setDrawerOpen={setDrawerOpen}
+      />
       <Snackbar
         open={snackBarOpen}
         autoHideDuration={6000}
@@ -504,13 +628,19 @@ const CrmDetails = () => {
                 setId(rowData._id);
               },
             }),
+            {
+              icon: () => <TableChartOutlinedIcon />,
+              tooltip: "Filter Columns",
+              isFreeAction: true,
+              onClick: (event) => setDrawerOpen(true),
+            },
           ]}
           components={{
             Row: (props) => (
               <MTableBodyRow
                 {...props}
                 onDoubleClick={(e) => {
-                  props.actions[2]().onClick(e, props.data);
+                  props.actions[3]().onClick(e, props.data);
                 }}
               />
             ),

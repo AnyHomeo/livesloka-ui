@@ -10,7 +10,7 @@ export const login = (userId, password) => {
     password,
   };
   console.log(postData);
-  return Axios.post(`${API.main}${API.login}`,postData,{
+  return Axios.post(`${API.main}${API.login}`, postData, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -129,9 +129,7 @@ export const getAllCustomerDetails = () => {
 };
 
 export const getData = (name) => {
-  if (name === "Teacher") {
-    console.log(`${API.main}${API[name]}`);
-  }
+  console.log(name);
   return Axios.get(`${API.main}${API[name]}`);
 };
 
@@ -144,7 +142,6 @@ export const editCustomer = (data) => {
 };
 
 export const addInField = (name, data) => {
-  // console.log(`${API.main}${API[name]}`)
   return Axios.post(`${API.main}${API[name]}`, data);
 };
 
@@ -186,8 +183,15 @@ export const getInvoices = (data) =>
 export const deleteInvoice = (data) =>
   axios.post(`${API.main}${API.deleteInvoice}`, data);
 
-export const getUsers = () => axios.get(`${API.main}/customer/data?params=userId,username,customerId`);
+export const getUsers = () =>
+  axios.get(`${API.main}/customer/data?params=userId,username,customerId`);
 
-export const getUserAttendance = (id,date) => axios.get(`${API.main}/admin/attendance/${id}?date=${date}`)
+export const getUserAttendance = (id, date) =>
+  axios.get(`${API.main}/admin/attendance/${id}?date=${date}`);
 
-export const deleteUser = (id) => axios.get(`${API.main}${API.deleteCustomer}/${id}`)
+export const deleteUser = (id) =>
+  axios.get(`${API.main}${API.deleteCustomer}/${id}`);
+
+export const getSettings = (id) => axios.get(`${API.main}/settings/${id}`)
+
+export const updateSettings = (id,data) => axios.post(`${API.main}/settings/${id}`,data)
