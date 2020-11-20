@@ -18,7 +18,8 @@ import Generator from "../Pages/invoice/Generator";
 import Invoices from "../Pages/invoice/Invoices";
 import Attedance from "../Pages/Admin/Crm/Attedance";
 import SideNav from "../Components/SideNav";
-import CustomTabs from "../Components/CustomTabs"
+import CustomTabs from "../Components/CustomTabs";
+import TeacherScheduler from "../Pages/Scheduler/TeacherScheduler";
 
 function Routes() {
   return (
@@ -41,11 +42,16 @@ function Routes() {
             component={MeetingDetails}
           />
           <SideNav>
-          <AdminRoute path="/customer-data" exact component={CustomerData} />
-          <AdminRoute path="/add-fields" exact component={CustomTabs} />
-          <AdminRoute path="/attendance" exact component={Attedance} />
-          <AdminRoute path="/manual-invoice" exact component={Invoice} />
-          <AdminRoute path="/invoices" exact component={Invoices} />
+            <AdminRoute path="/customer-data" exact component={CustomerData} />
+            <AdminRoute path="/add-fields" exact component={CustomTabs} />
+            <AdminRoute path="/attendance" exact component={Attedance} />
+            <AdminRoute path="/manual-invoice" exact component={Invoice} />
+            <AdminRoute path="/invoices" exact component={Invoices} />
+            <Route
+              path="/teacher-scheduler"
+              exact
+              component={TeacherScheduler}
+            />
           </SideNav>
         </Switch>
       </Router>
