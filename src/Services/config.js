@@ -54,7 +54,6 @@ exports.services = {
     addComment: "/admin/addcomment",
     updateComment: "/admin/updatecomment",
     deleteComment: "/admin/deletecomment",
-
     getAllAdmins: "/employee/admins",
     getAllTeachers: "/employee/teachers",
 
