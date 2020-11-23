@@ -13,7 +13,6 @@ import {
 } from "@material-ui/core/";
 import SaveIcon from "@material-ui/icons/Save";
 import { makeStyles } from "@material-ui/core/styles";
-import Adminsidebar from "../Adminsidebar";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import {
   getAllTeachers,
@@ -120,7 +119,6 @@ const Admin = () => {
   const classes = useStyles();
   return (
     <>
-      <Adminsidebar />
       <Snackbar
         open={successOpen}
         autoHideDuration={6000}
