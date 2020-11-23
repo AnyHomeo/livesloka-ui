@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -8,9 +7,9 @@ import Card from "@material-ui/core/Card";
 import { CardActionArea } from "@material-ui/core";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -31,12 +30,6 @@ function TabPanel(props) {
   );
 }
 
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
 function a11yProps(index) {
   return {
     id: `scrollable-auto-tab-${index}`,
@@ -48,13 +41,13 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "block",
     margin: "0 auto",
-    width: "75%",
+    width: "95vw",
     marginTop: "30px",
   },
   cardWidth: {
     display: "block",
     margin: "0 auto",
-    width: "75%",
+    width: "95%",
     marginTop: "30px",
   },
   media: {
@@ -67,88 +60,110 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const TimeCard = ({ time }) => (
+  <Card
+    style={{
+      width: "150px",
+      backgroundColor: ![
+        "12:00 AM - 12:30 AM",
+        "03:00 AM - 03:30 AM",
+        "07:30 AM - 08:00 AM",
+        "08:30 AM - 09:00 AM",
+        "10:00 PM - 10:30 PM",
+        "01:00 PM - 01:30 PM",
+        "08:30 PM - 09:00 PM",
+      ].includes(time)
+        ? [
+            "08:00 AM - 08:30 AM",
+            "04:00 PM - 04:30 PM",
+            "09:00 PM - 09:30 PM",
+          ].includes(time)
+          ? "#3F51B5"
+          : "#FFF"
+        : "#1dd1a1",
+      margin: "20px",
+    }}
+  >
+    <CardActionArea>
+      <p
+        style={{
+          textAlign: "center",
+          fontWeight: "bold",
+          padding: "10px",
+          fontsize: "20px",
+          color: ![
+            "12:00 AM - 12:30 AM",
+            "03:00 AM - 03:30 AM",
+            "07:30 AM - 08:00 AM",
+            "08:30 AM - 09:00 AM",
+            "10:00 PM - 10:30 PM",
+            "01:00 PM - 01:30 PM",
+            "08:30 PM - 09:00 PM",
+            "08:00 AM - 08:30 AM",
+            "04:00 PM - 04:30 PM",
+            "09:00 PM - 09:30 PM",
+          ].includes(time)
+            ? "#000"
+            : "#fff",
+        }}
+      >
+        {time}
+      </p>
+    </CardActionArea>
+  </Card>
+);
+
 function MediaCard() {
-  const classes = useStyles();
-
-  const [selected, setSelected] = useState(false);
-
   const times = [
-    "1:00 AM",
-    "1:30 AM",
-    "2:00 AM",
-    "2:30 AM",
-    "3:00 AM",
-    "3:30 AM",
-    "4:00 AM",
-    "4:30 AM",
-    "5:00 AM",
-    "5:30 AM",
-    "6:00 AM",
-    "6:30 AM",
-    "7:00 AM",
-    "7:30 AM",
-    "8:00 AM",
-    "8:30 AM",
-    "9:00 AM",
-    "9:30 AM",
-    "10:00 AM",
-    "10:30 AM",
-    "11:00 AM",
-    "11:30 AM",
-    "12:00 AM",
-    "12:30 AM",
-    "1:00 PM",
-    "1:30 PM",
-    "2:00 PM",
-    "2:30 PM",
-    "3:00 PM",
-    "3:30 PM",
-    "4:00 PM",
-    "4:30 PM",
-    "5:00 PM",
-    "5:30 PM",
-    "6:00 PM",
-    "6:30 PM",
-    "7:00 PM",
-    "7:30 PM",
-    "8:00 PM",
-    "8:30 PM",
-    "9:00 PM",
-    "9:30 PM",
-    "10:00 PM",
-    "10:30 PM",
-    "11:00 PM",
-    "11:30 PM",
-    "12:00 PM",
-    "12:30 PM",
+    "12:00 AM - 12:30 AM",
+    "12:30 AM - 01:00 AM",
+    "01:00 AM - 01:30 AM",
+    "01:30 AM - 02:00 AM",
+    "02:00 AM - 02:30 AM",
+    "02:30 AM - 03:00 AM",
+    "03:00 AM - 03:30 AM",
+    "03:30 AM - 04:00 AM",
+    "04:00 AM - 04:30 AM",
+    "04:30 AM - 05:00 AM",
+    "05:00 AM - 05:30 AM",
+    "05:30 AM - 06:00 AM",
+    "06:00 AM - 06:30 AM",
+    "06:30 AM - 07:00 AM",
+    "07:00 AM - 07:30 AM",
+    "07:30 AM - 08:00 AM",
+    "08:00 AM - 08:30 AM",
+    "08:30 AM - 09:00 AM",
+    "09:00 AM - 09:30 AM",
+    "09:30 AM - 10:00 AM",
+    "10:00 AM - 10:30 AM",
+    "10:30 AM - 11:00 AM",
+    "11:00 AM - 11:30 AM",
+    "11:30 AM - 12:00 PM",
+    "12:00 PM - 12:30 PM",
+    "12:30 PM - 01:00 PM",
+    "01:00 PM - 01:30 PM",
+    "01:30 PM - 02:00 PM",
+    "02:00 PM - 02:30 PM",
+    "02:30 PM - 03:00 PM",
+    "03:00 PM - 03:30 PM",
+    "03:30 PM - 04:00 PM",
+    "04:00 PM - 04:30 PM",
+    "04:30 PM - 05:00 PM",
+    "05:00 PM - 05:30 PM",
+    "05:30 PM - 06:00 PM",
+    "06:00 PM - 06:30 PM",
+    "06:30 PM - 07:00 PM",
+    "07:00 PM - 07:30 PM",
+    "07:30 PM - 08:00 PM",
+    "08:00 PM - 08:30 PM",
+    "08:30 PM - 09:00 PM",
+    "09:00 PM - 09:30 PM",
+    "09:30 PM - 10:00 PM",
+    "10:00 PM - 10:30 PM",
+    "10:30 PM - 11:00 PM",
+    "11:00 PM - 11:30 PM",
+    "11:30 PM - 12:00 PM",
   ];
-
-  const TimeCard = ({ time }) => (
-    <Card
-      style={{
-        height: "60px",
-        width: "70px",
-        backgroundColor: "#1dd1a1",
-        margin: "20px",
-      }}
-    >
-      <CardActionArea>
-        <p
-          style={{
-            textAlign: "center",
-            paddingTop: "10px",
-            paddingBottom: "10px",
-            fontWeight: "bold",
-            fontsize: "20px",
-            color: "white",
-          }}
-        >
-          {time}
-        </p>
-      </CardActionArea>
-    </Card>
-  );
-
   return (
     <>
       <Card>
@@ -222,13 +237,7 @@ function ScrollableTabsButtonAuto() {
 }
 
 const Timeslot = () => {
-  const classes = useStyles();
-
-  const [age, setAge] = useState("");
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
+  const [teacher, setTeacher] = useState("");
 
   return (
     <div>
@@ -247,13 +256,13 @@ const Timeslot = () => {
           <Select
             labelId="demo-simple-select-outlined-label"
             id="demo-simple-select-outlined"
-            value={age}
-            onChange={handleChange}
-            label="Age"
+            value={teacher}
+            onChange={(e) => setTeacher(e.target.value)}
+            label="Select Teacher"
           >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            <MenuItem value={10}>Teacher 1</MenuItem>
+            <MenuItem value={20}>Teacher 2</MenuItem>
+            <MenuItem value={30}>Teacher 3</MenuItem>
           </Select>
         </FormControl>
       </div>
