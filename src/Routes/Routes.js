@@ -12,6 +12,7 @@ import Invoices from "../Pages/invoice/Invoices";
 import Attedance from "../Pages/Admin/Crm/Attedance";
 import SideNav from "../Components/SideNav";
 import CustomTabs from "../Components/CustomTabs";
+import Timeslot from "../Pages/Admin/Crm/Timeslot";
 
 function Routes() {
   return (
@@ -36,7 +37,8 @@ function Routes() {
           <SideNav>
             <AdminRoute path="/customer-data" exact component={CustomerData} />
             <AdminRoute path="/add-fields" exact component={CustomTabs} />
-            <AdminRoute path="/attendance" exact component={Attedance} />
+            <Route path="/attendance" exact component={Attedance} />
+            <Route path="/time-slot" exact component={Timeslot} />
             <AdminRoute path="/manual-invoice" exact component={Invoice} />
             <AdminRoute path="/invoices" exact component={Invoices} />
           </SideNav>
