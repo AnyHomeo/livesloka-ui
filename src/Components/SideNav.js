@@ -152,7 +152,7 @@ export default function PersistentDrawerLeft({ children }) {
             { title: "Customer Data", link: "/customer-data" },
             { title: "Add Fields", link: "/add-fields" },
             { title: "Attendance", link: "/attendance" },
-            { title: "Time Slots", link: "/time-slot" },
+            { title: "Time Slots", link: "/time-slots" },
             { title: "Meeting Schedule", link: "/meeting-scheduler" },
           ].map((navItem, index) => (
             <Link

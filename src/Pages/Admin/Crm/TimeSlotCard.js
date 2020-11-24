@@ -101,22 +101,20 @@ const TimeSlotCard = ({ day, teacher }) => {
     };
 
     try {
-      const newData = await axios.post(
+      await axios.post(
         `https://livekumon-development-services.herokuapp.com/teacher/add/available/${teacher}`,
         formData
       );
-      console.log(newData);
     } catch (error) {
       console.log(error.response);
     }
   };
 
   useEffect(() => {
-    console.log(teacher);
     if (teacher) {
       getTimeSlots();
     }
-  }, [teacher]);
+  }, [teacher, availableTimeSlots]);
 
   const getTimeSlots = async () => {
     const timeSlotsData = await axios.get(
@@ -158,7 +156,6 @@ const TimeSlotCard = ({ day, teacher }) => {
           availableTimeSlots.map((availableTimeSlot) => (
             <ul>
               <li>{availableTimeSlot}</li>
-              {console.log(availableTimeSlot)}
             </ul>
           ))
         ) : (

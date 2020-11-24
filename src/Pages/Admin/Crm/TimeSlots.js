@@ -75,33 +75,35 @@ const TimeSlots = () => {
           </Select>
         </FormControl>
       </div>
-      <Grid
-        container
-        spacing={3}
-        style={{ margin: "0 auto", marginTop: "20px", marginLeft: "20px" }}
-      >
-        <Grid item xs={12} sm={4} md={3}>
-          <TimeSlotCard day="MONDAY" teacher={teacher} />
+      <div style={{ marginLeft: "30px" }}>
+        <Grid
+          container
+          spacing={3}
+          style={{ margin: "0 auto", marginTop: "20px" }}
+        >
+          <Grid item xs={12} sm={4} md={3}>
+            <TimeSlotCard day="MONDAY" teacher={teacher} />
+          </Grid>
+          <Grid item xs={12} sm={4} md={3}>
+            <TimeSlotCard day="TUESDAY" teacher={teacher} />
+          </Grid>
+          <Grid item xs={12} sm={4} md={3}>
+            <TimeSlotCard day="WEDNESDAY" teacher={teacher} />
+          </Grid>
+          <Grid item xs={12} sm={4} md={3}>
+            <TimeSlotCard day="THURSDAY" teacher={teacher} />
+          </Grid>
+          <Grid item xs={12} sm={4} md={3}>
+            <TimeSlotCard day="FRIDAY" teacher={teacher} />
+          </Grid>
+          <Grid item xs={12} sm={4} md={3}>
+            <TimeSlotCard day="SATURDAY" teacher={teacher} />
+          </Grid>
+          <Grid item xs={12} sm={4} md={3}>
+            <TimeSlotCard day="SUNDAY" teacher={teacher} />
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={4} md={3}>
-          <TimeSlotCard day="TUESDAY" teacher={teacher} />
-        </Grid>
-        <Grid item xs={12} sm={4} md={3}>
-          <TimeSlotCard day="WEDNESDAY" teacher={teacher} />
-        </Grid>
-        <Grid item xs={12} sm={4} md={3}>
-          <TimeSlotCard day="THURSDAY" teacher={teacher} />
-        </Grid>
-        <Grid item xs={12} sm={4} md={3}>
-          <TimeSlotCard day="FRIDAY" teacher={teacher} />
-        </Grid>
-        <Grid item xs={12} sm={4} md={3}>
-          <TimeSlotCard day="SATURDAY" teacher={teacher} />
-        </Grid>
-        <Grid item xs={12} sm={4} md={3}>
-          <TimeSlotCard day="SUNDAY" teacher={teacher} />
-        </Grid>
-      </Grid>
+      </div>
     </div>
   );
 };

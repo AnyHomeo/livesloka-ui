@@ -1,7 +1,7 @@
 exports.services = {
   prod: {
     // main: "https://live-kumon-services.herokuapp.com",
-    main: "https://livekumon-development-services.herokuapp.com",
+    main: process.env.REACT_APP_API_KEY,
     // main: "http://localhost:5000",
     login: "/login",
     changePassword: "/ChangePassword",
