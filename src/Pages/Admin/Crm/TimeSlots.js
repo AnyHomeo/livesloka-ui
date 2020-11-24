@@ -40,7 +40,7 @@ const TimeSlots = () => {
   }, []);
   const getTeachers = async () => {
     const teacherNames = await axios.get(
-      "https://livekumon-development-services.herokuapp.com/teacher?params=id,TeacherName"
+      `${process.env.REACT_APP_API_KEY}/teacher?params=id,TeacherName`
     );
     setTeacherName(teacherNames.data.result);
   };

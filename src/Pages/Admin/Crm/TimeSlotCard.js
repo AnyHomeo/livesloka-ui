@@ -102,7 +102,7 @@ const TimeSlotCard = ({ day, teacher }) => {
 
     try {
       await axios.post(
-        `https://livekumon-development-services.herokuapp.com/teacher/add/available/${teacher}`,
+        `${process.env.REACT_APP_API_KEY}/teacher/add/available/${teacher}`,
         formData
       );
     } catch (error) {
@@ -118,7 +118,7 @@ const TimeSlotCard = ({ day, teacher }) => {
 
   const getTimeSlots = async () => {
     const timeSlotsData = await axios.get(
-      `https://livekumon-development-services.herokuapp.com/teacher/available/${teacher}?day=${day}`
+      `${process.env.REACT_APP_API_KEY}/teacher/available/${teacher}?day=${day}`
     );
     setAvailableTimeSlots(timeSlotsData.data.result);
   };
