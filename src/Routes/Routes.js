@@ -13,6 +13,8 @@ import Attedance from "../Pages/Admin/Crm/Attedance";
 import SideNav from "../Components/SideNav";
 import CustomTabs from "../Components/CustomTabs";
 import Timeslot from "../Pages/Admin/Crm/Timeslot";
+import MeetingScheduler from "../Pages/Admin/Crm/MeetingScheduler";
+import TimeSlots from "../Pages/Admin/Crm/TimeSlots";
 
 function Routes() {
   return (
@@ -39,6 +41,12 @@ function Routes() {
             <AdminRoute path="/add-fields" exact component={CustomTabs} />
             <Route path="/attendance" exact component={Attedance} />
             <Route path="/time-slot" exact component={Timeslot} />
+            <Route path="/time-slots" exact component={TimeSlots} />
+            <Route
+              path="/meeting-scheduler"
+              exact
+              component={MeetingScheduler}
+            />
             <AdminRoute path="/manual-invoice" exact component={Invoice} />
             <AdminRoute path="/invoices" exact component={Invoices} />
           </SideNav>
