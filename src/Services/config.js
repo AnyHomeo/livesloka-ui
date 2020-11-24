@@ -35,7 +35,7 @@ exports.services = {
     "Add Status": "/admin/addstatus",
     "Update Status": "/admin/update/status",
 
-    Teacher: "/admin/get/Teachers",
+    Teacher: "/teacher?params=id,TeacherDesc,TeacherName,TeacherStatus,-_id",
     "Add Teacher": "/admin/addTeacher",
     "Update Teacher": "/admin/update/Teacher",
     "Delete Teacher": "/admin/delete/Teacher",
@@ -61,6 +61,5 @@ exports.services = {
     addInvoice: "/admin/addinvoice",
     getInvoices: "/admin/getinvoices",
     deleteInvoice: "/admin/deleteinvoice",
-
   },
 };
