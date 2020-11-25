@@ -10,6 +10,7 @@ import {
   TextField,
   FormControlLabel,
   Checkbox,
+  Grid,
 } from "@material-ui/core/";
 import SaveIcon from "@material-ui/icons/Save";
 import { makeStyles } from "@material-ui/core/styles";
@@ -27,19 +28,11 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "1.5rem",
     marginBottom: "2rem",
   },
-  nested: {
-    paddingLeft: "2rem",
-  },
   Startdate: {
     marginRight: "10px",
   },
   Starttime: {
     marginRight: "10px",
-  },
-  content: {
-    flexGrow: 1,
-    marginTop: "-10px",
-    textAlign: "center",
   },
 }));
 const MeetingScheduler = () => {
@@ -129,235 +122,244 @@ const MeetingScheduler = () => {
           Meeting added successfully
         </Alert>
       </Snackbar>
-      <form className={classes.content} onSubmit={submitForm}>
-        <div className={classes.toolbar} />
-        <h1 className="heading" style={{ fontSize: "20px", marginTop: "20px" }}>
-          Schedule Meeting
+      <form onSubmit={submitForm}>
+        <h1
+          className="heading"
+          style={{ fontSize: "20px", marginTop: "20px", textAlign: "center" }}
+        >
+          Schedule A Meeting
         </h1>
-        <div className="textgroup">
-          <Autocomplete
-            freeSolo
-            onChange={(event, value) =>
-              value &&
-              setInputTeacher(
-                value.split("(")[1].substring(0, value.split("(")[1].length - 1)
-              )
-            }
-            options={teachers}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Teacher Name"
-                margin="normal"
-                variant="outlined"
-                required
-                fullWidth={false}
-                style={{ width: "15%" }}
-              />
-            )}
-          />
-          <Autocomplete
-            freeSolo
-            onChange={(event, value) =>
-              value &&
-              setInputStudent(
-                value.split("(")[1].substring(0, value.split("(")[1].length - 1)
-              )
-            }
-            options={students}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Student Name"
-                margin="normal"
-                variant="outlined"
-                required
-                fullWidth={false}
-                style={{ width: "15%" }}
-              />
-            )}
-          />
-        </div>
-
-        <label htmlFor="student" className="date">
-          Dates:{" "}
-        </label>
-        <div className="date-checkbox">
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={day.monday}
-                onChange={handleChange}
-                name="monday"
-                color="primary"
-              />
-            }
-            label="M"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={day.tuesday}
-                onChange={handleChange}
-                name="tuesday"
-                color="primary"
-              />
-            }
-            label="T"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={day.wednesday}
-                onChange={handleChange}
-                name="wednesday"
-                color="primary"
-              />
-            }
-            label="W"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={day.thursday}
-                onChange={handleChange}
-                name="thursday"
-                color="primary"
-              />
-            }
-            label="T"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={day.friday}
-                onChange={handleChange}
-                name="friday"
-                color="primary"
-              />
-            }
-            label="F"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={day.saturday}
-                onChange={handleChange}
-                name="saturday"
-                color="primary"
-              />
-            }
-            label="S"
-          />
-        </div>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <div>
-            <KeyboardDatePicker
-              className={classes.Startdate}
-              margin="normal"
-              id="start-date-picker-dialog"
-              label="Start Date"
-              format="MM/dd/yyyy"
-              value={startDate}
-              onChange={handleStartDateChange}
-              KeyboardButtonProps={{
-                "aria-label": "change date",
-              }}
+        <Grid container style={{ width: "100vw" }}>
+          <Grid item xs={false} md={4} />
+          <Grid item xs={12} md={4}>
+            <Autocomplete
+              fullWidth
+              onChange={(event, value) =>
+                value &&
+                setInputTeacher(
+                  value
+                    .split("(")[1]
+                    .substring(0, value.split("(")[1].length - 1)
+                )
+              }
+              options={teachers}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Teacher Name"
+                  margin="normal"
+                  variant="outlined"
+                  required
+                />
+              )}
             />
-            <KeyboardDatePicker
-              margin="normal"
-              id="end-date-picker-dialog"
-              label="End Date"
-              format="MM/dd/yyyy"
-              value={endDate}
-              onChange={handleEndDateChange}
-              KeyboardButtonProps={{
-                "aria-label": "change date",
-              }}
+          </Grid>
+          <Grid item xs={12} md={4} />
+          <Grid item xs={12} md={4} />
+          <Grid item xs={12} md={4}>
+            <Autocomplete
+              fullWidth
+              onChange={(event, value) => value && setInputStudent(value)}
+              options={students}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Student Name"
+                  margin="normal"
+                  variant="outlined"
+                  required
+                />
+              )}
             />
-          </div>
-
-          <div>
-            <KeyboardTimePicker
-              className={classes.Starttime}
-              margin="normal"
-              id="start-time-picker"
-              label="StartTime"
-              value={startTime}
-              onChange={handleStartTimeChange}
-              KeyboardButtonProps={{
-                "aria-label": "change time",
-              }}
-            />
-
-            <KeyboardTimePicker
-              margin="normal"
-              id="end-time-picker"
-              label="End Time"
-              value={endTime}
-              onChange={handleEndTimeChange}
-              KeyboardButtonProps={{
-                "aria-label": "change time",
-              }}
-            />
-          </div>
-        </MuiPickersUtilsProvider>
-
+          </Grid>
+          <Grid item xs={12} md={4} />
+        </Grid>
+        <h1 style={{ textAlign: "center" }}>Dates: </h1>
         <div
           style={{
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "column",
             alignItems: "center",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
-          <TextField
-            id="outlined-basic"
-            label="Zoom Account"
-            variant="outlined"
-            fullWidth={false}
-            style={{
-              width: "17%",
-              marginTop: "10px",
-            }}
-          />
-
-          <TextField
-            id="outlined-basic"
-            label="Zoom Link"
-            variant="outlined"
-            fullWidth={false}
-            style={{
-              width: "17%",
-              marginTop: "10px",
-            }}
-          />
-
-          <FormControlLabel
-            style={{ marginTop: "20px" }}
-            control={
-              <Checkbox
-                checked={day.friday}
-                onChange={handleChange}
-                name="friday"
-                color="primary"
+          <div className="date-checkbox">
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={day.monday}
+                  onChange={handleChange}
+                  name="monday"
+                  color="primary"
+                />
+              }
+              label="M"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={day.tuesday}
+                  onChange={handleChange}
+                  name="tuesday"
+                  color="primary"
+                />
+              }
+              label="T"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={day.wednesday}
+                  onChange={handleChange}
+                  name="wednesday"
+                  color="primary"
+                />
+              }
+              label="W"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={day.thursday}
+                  onChange={handleChange}
+                  name="thursday"
+                  color="primary"
+                />
+              }
+              label="T"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={day.friday}
+                  onChange={handleChange}
+                  name="friday"
+                  color="primary"
+                />
+              }
+              label="F"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={day.saturday}
+                  onChange={handleChange}
+                  name="saturday"
+                  color="primary"
+                />
+              }
+              label="S"
+            />
+          </div>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <div>
+              <KeyboardDatePicker
+                className={classes.Startdate}
+                margin="normal"
+                id="start-date-picker-dialog"
+                label="Start Date"
+                format="MM/dd/yyyy"
+                value={startDate}
+                onChange={handleStartDateChange}
+                KeyboardButtonProps={{
+                  "aria-label": "change date",
+                }}
               />
-            }
-            label="DEMO"
-          />
-        </div>
+              <KeyboardDatePicker
+                margin="normal"
+                id="end-date-picker-dialog"
+                label="End Date"
+                format="MM/dd/yyyy"
+                value={endDate}
+                onChange={handleEndDateChange}
+                KeyboardButtonProps={{
+                  "aria-label": "change date",
+                }}
+              />
+            </div>
 
-        <div className={classes.saveButton}>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            type="submit"
-            className={classes.button}
-            startIcon={<SaveIcon />}
+            <div>
+              <KeyboardTimePicker
+                className={classes.Starttime}
+                margin="normal"
+                id="start-time-picker"
+                label="StartTime"
+                value={startTime}
+                onChange={handleStartTimeChange}
+                KeyboardButtonProps={{
+                  "aria-label": "change time",
+                }}
+              />
+
+              <KeyboardTimePicker
+                margin="normal"
+                id="end-time-picker"
+                label="End Time"
+                value={endTime}
+                onChange={handleEndTimeChange}
+                KeyboardButtonProps={{
+                  "aria-label": "change time",
+                }}
+              />
+            </div>
+          </MuiPickersUtilsProvider>
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
           >
-            Save
-          </Button>
+            <TextField
+              id="outlined-basic"
+              label="Zoom Account"
+              variant="outlined"
+              fullWidth
+              style={{
+                maxWidth: "400px",
+                minWidth: "300px",
+                marginTop: "10px",
+              }}
+            />
+
+            <TextField
+              id="outlined-basic"
+              label="Zoom Link"
+              variant="outlined"
+              style={{
+                maxWidth: "400px",
+                minWidth: "300px",
+                marginTop: "10px",
+              }}
+            />
+
+            <FormControlLabel
+              style={{ marginTop: "20px" }}
+              control={
+                <Checkbox
+                  checked={day.friday}
+                  onChange={handleChange}
+                  name="friday"
+                  color="primary"
+                />
+              }
+              label="DEMO"
+            />
+          </div>
+
+          <div className={classes.saveButton}>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              type="submit"
+              className={classes.button}
+              startIcon={<SaveIcon />}
+            >
+              Save
+            </Button>
+          </div>
         </div>
       </form>
     </>

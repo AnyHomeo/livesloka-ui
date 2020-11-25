@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { makeStyles } from "@material-ui/core/styles";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 import {
   Card,
-  Grid,
   InputLabel,
   MenuItem,
   FormControl,
   Select,
   IconButton,
-} from "@material-ui/core/";
-import AddBoxIcon from "@material-ui/icons/AddBox";
+  Button,
+  List,
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemText,
+} from "@material-ui/core";
 const times = [
   "12:00 AM - 12:30 AM",
   "12:30 AM - 01:00 AM",
@@ -63,30 +66,7 @@ const times = [
   "11:30 PM - 12:00 PM",
 ];
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    maxWidth: 345,
-  },
-  media: {
-    height: 140,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-}));
-
 const TimeSlotCard = ({ day, teacher }) => {
-  const classes = useStyles();
-
   const [time, setTime] = useState("");
 
   const handleTime = (event) => {
@@ -124,7 +104,7 @@ const TimeSlotCard = ({ day, teacher }) => {
   };
 
   return (
-    <Card className={classes.root}>
+    <Card style={{ height: "100%" }}>
       <h3 style={{ textAlign: "center" }}>{day}</h3>
       <div
         style={{
@@ -134,30 +114,43 @@ const TimeSlotCard = ({ day, teacher }) => {
           margin: "10px",
         }}
       >
-        <div>
-          <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel id="demo-simple-select-outlined-label">Time</InputLabel>
-            <Select value={time} onChange={handleTime} label="Time Slots">
-              {times.map((time) => (
-                <MenuItem value={time}>{time}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </div>
-        <div>
-          <IconButton>
-            <AddBoxIcon style={{ color: "black" }} onClick={postTimeSlots} />
-          </IconButton>
-        </div>
+        <FormControl style={{ width: "70%" }} variant="outlined">
+          <InputLabel id="demo-simple-select-outlined-label">Time</InputLabel>
+          <Select
+            value={time}
+            fullWidth
+            onChange={handleTime}
+            label="Time Slots"
+          >
+            {times.map((time) => (
+              <MenuItem value={time}>{time}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ height: "50px", width: "30%" }}
+          onClick={postTimeSlots}
+        >
+          Add
+        </Button>
       </div>
       <div>
         <h3 style={{ marginLeft: "20px" }}>Available Time Slots</h3>
         {availableTimeSlots.length !== 0 ? (
-          availableTimeSlots.map((availableTimeSlot) => (
-            <ul>
-              <li>{availableTimeSlot}</li>
-            </ul>
-          ))
+          <List>
+            {availableTimeSlots.map((availableTimeSlot) => (
+              <ListItem button>
+                <ListItemText primary={availableTimeSlot} />
+                <ListItemSecondaryAction>
+                  <IconButton edge="end" aria-label="delete">
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))}
+          </List>
         ) : (
           <p style={{ textAlign: "center", fontSize: "16px" }}>No time slots</p>
         )}
