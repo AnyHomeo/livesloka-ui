@@ -1,22 +1,12 @@
 import React, { useState, useEffect } from "react";
-import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
+
 import {
   Button,
   TextField,
   FormControlLabel,
   Checkbox,
   Grid,
-  Input,
-  InputLabel,
-  MenuItem,
   FormControl,
-  Select,
-  Chip,
   Radio,
   RadioGroup,
   FormLabel,
@@ -25,11 +15,7 @@ import {
 import SaveIcon from "@material-ui/icons/Save";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import {
-  getAllTeachers,
-  getAllStudents,
-  postMeeting,
-} from "../../../Services/Services";
+
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import Axios from "axios";
@@ -55,42 +41,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function getStyles(name, personName, theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
-
 const MeetingScheduler = () => {
   const theme = useTheme();
 
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
-    },
-  };
 
   const [personName, setPersonName] = useState();
 
-  console.log(personName);
-
-  const [day, setDay] = useState({
-    MONDAY: false,
-    TUESDAY: false,
-    WEDNESDAY: false,
-    THURSDAY: false,
-    FRIDAY: false,
-    SATURDAY: false,
-    SUNDAY: false,
-  });
   const time = new Date();
   const [startDate, setStartDate] = useState(time);
   const [endDate, setEndDate] = useState(time);
@@ -108,40 +66,12 @@ const MeetingScheduler = () => {
     setRadioday(event.target.value);
   };
 
-  const handleStartDateChange = (date) => {
-    setStartDate(date);
-  };
-  const handleEndDateChange = (date) => {
-    setEndDate(date);
-  };
-  const handleStartTimeChange = (data) => {
-    setStartTime(data);
-  };
-  const handleEndTimeChange = (data) => {
-    setEndTime(data);
-  };
-  const handleChange = (event) => {
-    setDay({ ...day, [event.target.name]: event.target.checked });
-  };
   const handleSuccessClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
     setSuccessOpen(false);
   };
-
-  useEffect(() => {
-    getAllStudents().then((data) =>
-      setStudents(
-        data.data.map((name) => `${name.STUDENT_NAME}(${name.STUDENT_ID})`)
-      )
-    );
-    getAllTeachers().then((data) =>
-      setTeachers(
-        data.data.map((name) => `${name.TEACHER_NAME}(${name.TEACHER_ID})`)
-      )
-    );
-  }, []);
 
   // Serice calls
 
@@ -372,41 +302,6 @@ const MeetingScheduler = () => {
             md={4}
             style={{ display: "flex", justifyContent: "center" }}
           >
-            {/* <FormControl className={classes.formControl}>
-              <InputLabel id="demo-mutiple-chip-label">Students</InputLabel>
-              <Select
-                style={{ width: "300px" }}
-                variant="outlined"
-                multiple
-                value={personName}
-                onChange={handleChipChange}
-                input={<Input id="select-multiple-chip" />}
-                renderValue={(selected) => (
-                  <div className={classes.chips}>
-                    {selected.map((value) => (
-                      <Chip
-                        key={value}
-                        label={value}
-                        className={classes.chip}
-                      />
-                    ))}
-                  </div>
-                )}
-                MenuProps={MenuProps}
-              >
-                {studentName &&
-                  studentName.map((name) => (
-                    <MenuItem
-                      key={name._id}
-                      value={`${name.firstName} ${name.lastName}`}
-                      // value={name._id}
-                      style={getStyles(name, personName, theme)}
-                    >
-                      {name.firstName} {name.lastName}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl> */}
             {studentName && (
               <Autocomplete
                 multiple
@@ -443,85 +338,6 @@ const MeetingScheduler = () => {
           }}
         >
           <div className="date-checkbox">
-            {/* <FormControlLabel
-              control={
-                <Checkbox
-                  checked={day.monday}
-                  onChange={handleChange}
-                  name="MONDAY"
-                  color="primary"
-                />
-              }
-              label="M"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={day.tuesday}
-                  onChange={handleChange}
-                  name="TUESDAY"
-                  color="primary"
-                />
-              }
-              label="T"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={day.wednesday}
-                  onChange={handleChange}
-                  name="WEDNESDAY"
-                  color="primary"
-                />
-              }
-              label="W"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={day.thursday}
-                  onChange={handleChange}
-                  name="THURSDAY"
-                  color="primary"
-                />
-              }
-              label="T"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={day.friday}
-                  onChange={handleChange}
-                  name="FRIDAY"
-                  color="primary"
-                />
-              }
-              label="F"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={day.saturday}
-                  onChange={handleChange}
-                  name="SATURDAY"
-                  color="primary"
-                />
-              }
-              label="S"
-            />
-
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={day.sunday}
-                  onChange={handleChange}
-                  name="SUNDAY"
-                  color="primary"
-                />
-              }
-              label="S"
-            /> */}
-
             <FormControl component="fieldset" style={{ marginTop: "50px" }}>
               <FormLabel component="legend">Dates</FormLabel>
               <RadioGroup
@@ -571,58 +387,6 @@ const MeetingScheduler = () => {
             </FormControl>
             {console.log(radioday)}
           </div>
-          {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <div>
-              <KeyboardDatePicker
-                className={classes.Startdate}
-                margin="normal"
-                id="start-date-picker-dialog"
-                label="Start Date"
-                format="MM/dd/yyyy"
-                value={startDate}
-                onChange={handleStartDateChange}
-                KeyboardButtonProps={{
-                  "aria-label": "change date",
-                }}
-              />
-              <KeyboardDatePicker
-                margin="normal"
-                id="end-date-picker-dialog"
-                label="End Date"
-                format="MM/dd/yyyy"
-                value={endDate}
-                onChange={handleEndDateChange}
-                KeyboardButtonProps={{
-                  "aria-label": "change date",
-                }}
-              />
-            </div>
-
-            <div>
-              <KeyboardTimePicker
-                className={classes.Starttime}
-                margin="normal"
-                id="start-time-picker"
-                label="StartTime"
-                value={startTime}
-                onChange={handleStartTimeChange}
-                KeyboardButtonProps={{
-                  "aria-label": "change time",
-                }}
-              />
-
-              <KeyboardTimePicker
-                margin="normal"
-                id="end-time-picker"
-                label="End Time"
-                value={endTime}
-                onChange={handleEndTimeChange}
-                KeyboardButtonProps={{
-                  "aria-label": "change time",
-                }}
-              />
-            </div>
-          </MuiPickersUtilsProvider> */}
 
           <div
             style={{
@@ -630,7 +394,6 @@ const MeetingScheduler = () => {
               justifyContent: "center",
               flexDirection: "column",
               alignItems: "center",
-              // width: "100%",
             }}
           >
             {radioday === "MONDAY" ? (
