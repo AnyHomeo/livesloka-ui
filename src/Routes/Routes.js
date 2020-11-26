@@ -39,10 +39,10 @@ function Routes() {
           <SideNav>
             <AdminRoute path="/customer-data" exact component={CustomerData} />
             <AdminRoute path="/add-fields" exact component={CustomTabs} />
-            <Route path="/attendance" exact component={Attedance} />
-            <Route path="/time-slot" exact component={Timeslot} />
-            <Route path="/time-slots" exact component={TimeSlots} />
-            <Route
+            <AdminRoute path="/attendance" exact component={Attedance} />
+            <AdminRoute path="/time-slot" exact component={Timeslot} />
+            <AdminRoute path="/time-slots" exact component={TimeSlots} />
+            <AdminRoute
               path="/meeting-scheduler"
               exact
               component={MeetingScheduler}
