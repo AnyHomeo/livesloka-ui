@@ -10,7 +10,6 @@ import {
   Select,
   IconButton,
 } from "@material-ui/core/";
-import AddBoxIcon from "@material-ui/icons/AddBox";
 import TimeSlotCard from "./TimeSlotCard";
 
 const TimeSlots = () => {

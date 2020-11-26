@@ -14,7 +14,10 @@ import {
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
+  CircularProgress,
+  Snackbar,
 } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 const times = [
   "12:00 AM - 12:30 AM",
   "12:30 AM - 01:00 AM",
@@ -69,25 +72,40 @@ const times = [
 const TimeSlotCard = ({ day, teacher }) => {
   const [time, setTime] = useState("");
 
+  const [loading, setLoading] = useState(false);
   const handleTime = (event) => {
     setTime(event.target.value);
   };
 
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
 
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [alertColor, setAlertColor] = useState("");
+
+  const [alert, setalert] = useState("");
   const postTimeSlots = async () => {
     const formData = {
       slot: `${day}-${time}`,
     };
-
+    setLoading(true);
     try {
-      await axios.post(
+      const res = await axios.post(
         `${process.env.REACT_APP_API_KEY}/teacher/add/available/${teacher}`,
         formData
       );
+      if (res.status === 200) {
+        setSuccessOpen(true);
+        setalert(res.data.message);
+        setAlertColor("success");
+      }
     } catch (error) {
       console.log(error.response);
+      setSuccessOpen(true);
+      setalert(error.response.data.error);
+      setAlertColor("error");
     }
+
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -103,59 +121,85 @@ const TimeSlotCard = ({ day, teacher }) => {
     setAvailableTimeSlots(timeSlotsData.data.result);
   };
 
+  const handleSuccessClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSuccessOpen(false);
+  };
+
   return (
-    <Card style={{ height: "100%" }}>
-      <h3 style={{ textAlign: "center" }}>{day}</h3>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          margin: "10px",
-        }}
+    <>
+      <Snackbar
+        open={successOpen}
+        autoHideDuration={6000}
+        onClose={handleSuccessClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
-        <FormControl style={{ width: "70%" }} variant="outlined">
-          <InputLabel id="demo-simple-select-outlined-label">Time</InputLabel>
-          <Select
-            value={time}
-            fullWidth
-            onChange={handleTime}
-            label="Time Slots"
-          >
-            {times.map((time) => (
-              <MenuItem value={time}>{time}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ height: "50px", width: "30%" }}
-          onClick={postTimeSlots}
+        <Alert onClose={handleSuccessClose} severity={alertColor}>
+          {alert}
+        </Alert>
+      </Snackbar>
+
+      <Card style={{ height: "100%" }}>
+        <h3 style={{ textAlign: "center" }}>{day}</h3>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            margin: "10px",
+          }}
         >
-          Add
-        </Button>
-      </div>
-      <div>
-        <h3 style={{ marginLeft: "20px" }}>Available Time Slots</h3>
-        {availableTimeSlots.length !== 0 ? (
-          <List>
-            {availableTimeSlots.map((availableTimeSlot) => (
-              <ListItem button>
-                <ListItemText primary={availableTimeSlot} />
-                <ListItemSecondaryAction>
-                  <IconButton edge="end" aria-label="delete">
-                    <DeleteIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
-          </List>
-        ) : (
-          <p style={{ textAlign: "center", fontSize: "16px" }}>No time slots</p>
-        )}
-      </div>
-    </Card>
+          <FormControl style={{ width: "65%" }} variant="outlined">
+            <InputLabel id="demo-simple-select-outlined-label">Time</InputLabel>
+            <Select
+              value={time}
+              fullWidth
+              onChange={handleTime}
+              label="Time Slots"
+            >
+              {times.map((time) => (
+                <MenuItem value={time}>{time}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ height: "50px", width: "30%" }}
+              onClick={postTimeSlots}
+            >
+              Add
+            </Button>
+          )}
+        </div>
+        <div>
+          <h3 style={{ marginLeft: "20px" }}>Available Time Slots</h3>
+          {availableTimeSlots.length !== 0 ? (
+            <List>
+              {availableTimeSlots.map((availableTimeSlot) => (
+                <ListItem button>
+                  <ListItemText primary={availableTimeSlot} />
+                  <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="delete">
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              ))}
+            </List>
+          ) : (
+            <p style={{ textAlign: "center", fontSize: "16px" }}>
+              No time slots
+            </p>
+          )}
+        </div>
+      </Card>
+    </>
   );
 };
 
