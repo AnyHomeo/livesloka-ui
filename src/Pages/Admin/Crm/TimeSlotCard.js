@@ -94,6 +94,7 @@ const TimeSlotCard = ({ day, teacher }) => {
         formData
       );
       if (res.status === 200) {
+        getTimeSlots();
         setSuccessOpen(true);
         setalert(res.data.message);
         setAlertColor("success");
@@ -112,7 +113,7 @@ const TimeSlotCard = ({ day, teacher }) => {
     if (teacher) {
       getTimeSlots();
     }
-  }, [teacher, availableTimeSlots]);
+  }, [teacher]);
 
   const getTimeSlots = async () => {
     const timeSlotsData = await axios.get(
@@ -186,7 +187,23 @@ const TimeSlotCard = ({ day, teacher }) => {
                   <ListItemText primary={availableTimeSlot} />
                   <ListItemSecondaryAction>
                     <IconButton edge="end" aria-label="delete">
-                      <DeleteIcon />
+                      <DeleteIcon
+                        onClick={async () => {
+                          try {
+                            const formData = {
+                              slot: availableTimeSlot,
+                            };
+                            const data = await axios.post(
+                              `${process.env.REACT_APP_API_KEY}/teacher/delete/slot/${teacher}`,
+                              formData
+                            );
+                            getTimeSlots();
+                            console.log(data);
+                          } catch (error) {
+                            console.log(error.response);
+                          }
+                        }}
+                      />
                     </IconButton>
                   </ListItemSecondaryAction>
                 </ListItem>
