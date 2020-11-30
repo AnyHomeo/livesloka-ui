@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DeleteIcon from "@material-ui/icons/Delete";
+import FaceIcon from "@material-ui/icons/Face";
 
 import {
   Card,
@@ -16,6 +17,7 @@ import {
   ListItemText,
   CircularProgress,
   Snackbar,
+  Chip,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 const times = [
@@ -180,7 +182,35 @@ const TimeSlotCard = ({ day, teacher }) => {
         </div>
         <div>
           <h3 style={{ marginLeft: "20px" }}>Available Time Slots</h3>
-          {availableTimeSlots.length !== 0 ? (
+
+          {availableTimeSlots.map((availableTimeSlot) => (
+            <Chip
+              style={{ marginLeft: "10px", marginBottom: "10px" }}
+              label={`${availableTimeSlot.split("-")[1]}-${
+                availableTimeSlot.split("-")[2]
+              }`}
+              //  onClick={handleClick}
+              color="primary"
+              variant="outlined"
+              onDelete={async () => {
+                try {
+                  const formData = {
+                    slot: availableTimeSlot,
+                  };
+                  const data = await axios.post(
+                    `${process.env.REACT_APP_API_KEY}/teacher/delete/slot/${teacher}`,
+                    formData
+                  );
+                  getTimeSlots();
+                  console.log(data);
+                  console.log("hello");
+                } catch (error) {
+                  console.log(error.response);
+                }
+              }}
+            />
+          ))}
+          {/* {availableTimeSlots.length !== 0 ? (
             <List>
               {availableTimeSlots.map((availableTimeSlot) => (
                 <ListItem button>
@@ -213,7 +243,7 @@ const TimeSlotCard = ({ day, teacher }) => {
             <p style={{ textAlign: "center", fontSize: "16px" }}>
               No time slots
             </p>
-          )}
+          )} */}
         </div>
       </Card>
     </>
