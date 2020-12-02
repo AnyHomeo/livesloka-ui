@@ -35,7 +35,6 @@ const Attedance = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const handleDateChange = (date) => {
     const newDate = moment(date).format("YYYY-MM-DD");
-    console.log(newDate, user);
     setSelectedDate(newDate);
   };
 
@@ -46,22 +45,20 @@ const Attedance = () => {
   const getAttendance = () => {
     getUserAttendance(user.customerId, selectedDate)
       .then((data) => {
-        console.log(data.data.result);
         setTableData(data.data.result);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
 
   useEffect(() => {
     getUsers()
       .then((result) => {
-        console.log(result.data.result);
         setNames(result.data.result);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   }, []);
 
@@ -116,7 +113,10 @@ const Attedance = () => {
           Get Attedance
         </Button>
       </div>
-            <h3 style={{textAlign:"center",marginTop:"20px"}} > Classes Attended: { tableData.length } </h3>
+      <h3 style={{ textAlign: "center", marginTop: "20px" }}>
+        {" "}
+        Classes Attended: {tableData.length}{" "}
+      </h3>
       <TableContainer
         component={Paper}
         style={{ width: "800px", margin: "0 auto", marginTop: "40px" }}

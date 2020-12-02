@@ -88,6 +88,7 @@ const names = [
   "Country",
   "Teacher",
   "Agent",
+  "Category",
 ];
 
 const status = [
@@ -98,6 +99,7 @@ const status = [
   "countryName",
   "TeacherName",
   "AgentName",
+  "categoryName",
 ];
 
 const fetchDropDown = (index) => {
@@ -109,7 +111,7 @@ const fetchDropDown = (index) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
     });
   return obj;
 };
@@ -125,6 +127,7 @@ const currencyDropdown = fetchDropDown(3);
 const countryDropdown = fetchDropDown(4);
 const teachersDropdown = fetchDropDown(5);
 const agentDropdown = fetchDropDown(6);
+const categoryDropdown = fetchDropDown(7);
 
 const ColumnFilterDrawer = ({
   drawerOpen,
@@ -143,7 +146,6 @@ const ColumnFilterDrawer = ({
           arr.push(column);
         }
       });
-      console.log(arr);
       let id = isAutheticated()._id;
       if (id) {
         updateSettings(id, {
@@ -322,28 +324,28 @@ const CrmDetails = () => {
           headerStyle: { whiteSpace: "nowrap" },
           hidden: !columnFilters["teacherId"].selected,
         },
-        // {
-        //   title: "Age",
-        //   field: "age",
-        //   type: "numeric",
-        //   width: "1%",
-        //   cellStyle: { whiteSpace: "nowrap" },
-        //   headerStyle: { whiteSpace: "nowrap" },
-        //   editComponent: (props) => (
-        //     <TextField
-        //       type="number"
-        //       inputProps={{ min: "0", step: "1" }}
-        //       value={props.value}
-        //       onChange={(e) => {
-        //         if (e.target.value < 0) {
-        //           return props.onChange(0);
-        //         } else {
-        //           return props.onChange(e.target.value);
-        //         }
-        //       }}
-        //     />
-        //   ),
-        // },
+        {
+          title: "Age",
+          field: "age",
+          type: "numeric",
+          width: "1%",
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          editComponent: (props) => (
+            <TextField
+              type="number"
+              inputProps={{ min: "0", step: "1" }}
+              value={props.value}
+              onChange={(e) => {
+                if (e.target.value < 0) {
+                  return props.onChange(0);
+                } else {
+                  return props.onChange(e.target.value);
+                }
+              }}
+            />
+          ),
+        },
         {
           title: "Country",
           field: "countryId",
@@ -432,6 +434,15 @@ const CrmDetails = () => {
           hidden: !columnFilters["scheduleDescription"].selected,
           cellStyle: { whiteSpace: "nowrap" },
           headerStyle: { whiteSpace: "nowrap" },
+        },
+        {
+          title: "Category",
+          field: "categoryId",
+          width: "1%",
+          lookup: categoryDropdown,
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          hidden: !columnFilters["categoryId"].selected,
         },
         // {
         //   title: "Zoom Color",
@@ -525,6 +536,10 @@ const CrmDetails = () => {
           selected: settings.includes("timeZoneId"),
           name: "Time Zone",
         },
+        categoryId: {
+          selected: settings.includes("categoryId"),
+          name: "Category",
+        },
         firstName: {
           selected: settings.includes("firstName"),
           name: "Student Name",
@@ -587,7 +602,7 @@ const CrmDetails = () => {
       setData(details);
       setLoading(false);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -645,9 +660,6 @@ const CrmDetails = () => {
           onRowClick={(evt, selectedRow) =>
             setSelectedRow(selectedRow.tableData.id)
           }
-          onColumnDragged={(sourceIndex, destinationIndex) => {
-            console.log(sourceIndex, destinationIndex);
-          }}
           actions={[
             (rowData) => ({
               icon: () => (
@@ -686,7 +698,6 @@ const CrmDetails = () => {
             onRowAdd: (newData) => {
               return AddCustomer(newData)
                 .then((fetchedData) => {
-                  console.log(fetchedData);
                   if (fetchedData.data.status === "OK") {
                     setData([fetchedData.data.result, ...data]);
                     setSuccess(true);
@@ -699,7 +710,7 @@ const CrmDetails = () => {
                   }
                 })
                 .catch((err) => {
-                  console.log(err, err.response);
+                  console.error(err, err.response);
                   setSuccess(false);
                   if (err.response && err.response.error) {
                     setResponse(err.response.error);
@@ -730,7 +741,7 @@ const CrmDetails = () => {
                   }
                 })
                 .catch((err) => {
-                  console.log(err);
+                  console.error(err);
                   setSuccess(false);
                   setResponse("Something went wrong,Try again later");
                   setSnackBarOpen(true);
@@ -748,7 +759,7 @@ const CrmDetails = () => {
                   setSnackBarOpen(true);
                 })
                 .catch((err) => {
-                  console.log(err, err.response);
+                  console.error(err, err.response);
                   setSuccess(false);
                   setResponse("unable to delete customer, Try again");
                   setSnackBarOpen(true);

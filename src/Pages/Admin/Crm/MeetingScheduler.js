@@ -124,7 +124,6 @@ const MeetingScheduler = () => {
       `${process.env.REACT_APP_API_KEY}/teacher/available/${teacher}?day=MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY`
     );
     setAvailableTimeSlots(timeSlotsData.data.result);
-    console.log(timeSlotsData.data);
 
     let MonSlotData = [];
     let TuesSlotData = [];
@@ -225,19 +224,17 @@ const MeetingScheduler = () => {
     setZoomLink("");
     setPersonName("");
 
-    console.log(formData);
     setLoading(true);
     try {
       const res = await Axios.post(
         `${process.env.REACT_APP_API_KEY}/schedule`,
         formData
       );
-      console.log(res);
       setSuccessOpen(true);
       setAlert(res.data.message);
       setAlertColor("success");
     } catch (error) {
-      console.log(error.response);
+      console.error(error.response);
       if (error.response) {
         setSuccessOpen(true);
         setAlert(error.response.data.message);

@@ -64,7 +64,8 @@ const CustomTabs = () => {
     "Status",
     "Country",
     "Teacher",
-    "Agent"
+    "Agent",
+    "Category",
   ];
 
   const status = [
@@ -75,7 +76,8 @@ const CustomTabs = () => {
     "",
     "countryStatus",
     "TeacherStatus",
-    "AgentStatus"
+    "AgentStatus",
+    "categoryStatus",
   ];
 
   const handleChange = (event, newValue) => {
@@ -84,7 +86,6 @@ const CustomTabs = () => {
 
   useEffect(() => {
     getData("Status").then((data) => {
-      console.log(data)
       data.data.result.forEach((data) => {
         setLookup((prev) => {
           return { ...prev, [data.statusId]: data.statusName };
@@ -95,19 +96,19 @@ const CustomTabs = () => {
 
   return (
     <div className={classes.root}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="auto"
-          aria-label="scrollable auto tabs"
-        >
-          {tabs.map((item, index) => {
-            return <Tab label={item} {...a11yProps(index)} key={index} />;
-          })}
-        </Tabs>
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        indicatorColor="primary"
+        textColor="primary"
+        variant="scrollable"
+        scrollButtons="auto"
+        aria-label="scrollable auto tabs"
+      >
+        {tabs.map((item, index) => {
+          return <Tab label={item} {...a11yProps(index)} key={index} />;
+        })}
+      </Tabs>
       {tabs.map((item, index) => (
         <TabPanel value={value} key={index} index={index}>
           <MaterialTableAddFields
