@@ -458,6 +458,25 @@ const CrmDetails = () => {
           width: "1%",
           cellStyle: { whiteSpace: "nowrap" },
           headerStyle: { whiteSpace: "nowrap" },
+          render: (rowData) => (
+            <>
+              {rowData.meetingLink ? (
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Tooltip title={`Copy to Clipboard`}>
+                    <FileCopyOutlinedIcon
+                      style={{
+                        marginRight: "10px",
+                      }}
+                      onClick={() => copyToClipboard(rowData.meetingLink)}
+                    />
+                  </Tooltip>
+                  {rowData.meetingLink}
+                </div>
+              ) : (
+                <span />
+              )}
+            </>
+          ),
         },
         // {
         //   title: "Customer Id",
@@ -575,6 +594,10 @@ const CrmDetails = () => {
         placeOfStay: {
           selected: settings.includes("placeOfStay"),
           name: "Place Of Stay",
+        },
+        age: {
+          selected: settings.includes("age"),
+          name: "Age",
         },
         agentId: { selected: settings.includes("agentId"), name: "Agent Id" },
         scheduleDescription: {
