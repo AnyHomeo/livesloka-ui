@@ -53,7 +53,7 @@ const DropdownEditor = ({ onChange, value }) => {
   );
 };
 
-const MaterialTableAddFields = ({ name, status, lookup }) => {
+const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
   const [column, setColumn] = useState([]);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -92,8 +92,18 @@ const MaterialTableAddFields = ({ name, status, lookup }) => {
   useEffect(() => {
     getData(name)
       .then((data) => {
+        let lengths = data.data.result.map((item) => Object.keys(item).length);
         setColumn(
-          Object.keys(data.data.result[0]).map((key) => {
+          Object.keys(
+            data.data.result[lengths.indexOf(Math.max(...lengths))]
+          ).map((key) => {
+            if (name === "Teacher" && key === "category") {
+              return {
+                title: "Category",
+                field: key,
+                lookup: categoryLookup,
+              };
+            }
             if (key === "id" || key === "statusId") {
               return { title: humanReadable(key), field: key, hidden: true };
             } else if (key === "TeacherSubjectsId") {

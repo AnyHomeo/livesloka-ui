@@ -95,10 +95,6 @@ function SingleComment(props) {
       });
   };
 
-  // const deleteThisComment = () => {
-  //   console.log("is it requiresww")
-  // }
-
   return (
     <Grid item sm={12} xs={12} md={4}>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

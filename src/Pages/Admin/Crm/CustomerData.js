@@ -257,6 +257,7 @@ const CrmDetails = () => {
           field: "age",
           type: "numeric",
           width: "1%",
+          hidden: !columnFilters["age"].selected,
           cellStyle: { whiteSpace: "nowrap" },
           headerStyle: { whiteSpace: "nowrap" },
           editComponent: (props) => (

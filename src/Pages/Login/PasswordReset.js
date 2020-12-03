@@ -68,12 +68,6 @@ const PasswordReset = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     setUser({ ...user, isLoading: true, error: false });
-    console.log(
-      currentPassword,
-      newPassword,
-      confirmPassword,
-      isAutheticated().token
-    );
 
     try {
       const result = await updatePassword(
@@ -82,8 +76,6 @@ const PasswordReset = () => {
         confirmPassword,
         isAutheticated().userId
       );
-      console.log(result);
-      console.log("HEllo");
       if (result.data.error) {
         setUser({ ...user, isLoading: false, error: result.data.error });
       } else {
@@ -95,7 +87,7 @@ const PasswordReset = () => {
         });
       }
     } catch (error) {
-      if (error.status === 4000) {
+      if (error.status === 400) {
         console.log(error.response);
       }
     }
@@ -193,4 +185,3 @@ const PasswordReset = () => {
 };
 
 export default PasswordReset;
-

@@ -38,7 +38,8 @@ exports.services = {
     "Add Status": "/admin/add/Status",
     "Update Status": "/admin/update/status",
 
-    Teacher: "/teacher?params=id,TeacherDesc,TeacherName,TeacherStatus,-_id",
+    Teacher:
+      "/teacher?params=id,TeacherDesc,TeacherName,TeacherStatus,-_id,category",
     "Add Teacher": "/admin/add/Teacher",
     "Update Teacher": "/admin/update/Teacher",
     "Delete Teacher": "/admin/delete/Teacher",

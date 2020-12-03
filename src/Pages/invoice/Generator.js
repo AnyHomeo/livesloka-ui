@@ -7,11 +7,7 @@ import coinify from "coinify";
 class InvoiceGenerator extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = this.getOb();
-
-    console.log(this.state);
-
     if (this.state == null) {
       this.props.history.push({
         pathname: "/manual-invoice",

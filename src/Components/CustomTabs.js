@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
@@ -28,12 +27,6 @@ const TabPanel = (props) => {
   );
 };
 
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
 function a11yProps(index) {
   return {
     id: `scrollable-auto-tab-${index}`,
@@ -55,6 +48,7 @@ const CustomTabs = () => {
   const [value, setValue] = useState(0);
   // eslint-disable-next-line no-unused-vars
   const [lookup, setLookup] = useState({});
+  const [categoryLookup, setCategoryLookup] = useState({});
 
   const tabs = [
     "Class",
@@ -92,6 +86,15 @@ const CustomTabs = () => {
         });
       });
     });
+    if (value === 6) {
+      getData("Category").then((data) => {
+        data.data.result.forEach((data) => {
+          setCategoryLookup((prev) => {
+            return { ...prev, [data.id]: data.categoryName };
+          });
+        });
+      });
+    }
   }, [value]);
 
   return (
@@ -115,6 +118,7 @@ const CustomTabs = () => {
             name={item}
             status={status[index]}
             lookup={lookup}
+            categoryLookup={categoryLookup}
           />
         </TabPanel>
       ))}

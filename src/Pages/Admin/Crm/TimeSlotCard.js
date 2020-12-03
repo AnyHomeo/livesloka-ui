@@ -202,10 +202,8 @@ const TimeSlotCard = ({ day, teacher }) => {
                     formData
                   );
                   getTimeSlots();
-                  console.log(data);
-                  console.log("hello");
                 } catch (error) {
-                  console.log(error.response);
+                  console.error(error.response);
                 }
               }}
             />
@@ -228,7 +226,6 @@ const TimeSlotCard = ({ day, teacher }) => {
                               formData
                             );
                             getTimeSlots();
-                            console.log(data);
                           } catch (error) {
                             console.log(error.response);
                           }

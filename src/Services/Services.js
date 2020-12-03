@@ -9,7 +9,6 @@ export const login = (userId, password) => {
     userId,
     password,
   };
-  console.log(postData);
   return Axios.post(`${API.main}${API.login}`, postData, {
     headers: {
       "Content-Type": "application/json",
@@ -100,7 +99,6 @@ export const updatePassword = (
   confirmPassword,
   userId
 ) => {
-  console.log(userId);
   return axios.post(
     `${API.main}${API.changePassword}`,
     { userId, password, newPassword, confirmPassword },
@@ -129,7 +127,6 @@ export const getAllCustomerDetails = () => {
 };
 
 export const getData = (name) => {
-  console.log(name);
   return Axios.get(`${API.main}${API[name]}`);
 };
 
@@ -157,7 +154,6 @@ export const getComments = (id) => {
 };
 
 export const addComments = (formData) => {
-  console.log(formData);
   return axios.post(`${API.main}${API.addComment}`, formData);
 };
 
@@ -192,6 +188,7 @@ export const getUserAttendance = (id, date) =>
 export const deleteUser = (id) =>
   axios.get(`${API.main}${API.deleteCustomer}/${id}`);
 
-export const getSettings = (id) => axios.get(`${API.main}/settings/${id}`)
+export const getSettings = (id) => axios.get(`${API.main}/settings/${id}`);
 
-export const updateSettings = (id,data) => axios.post(`${API.main}/settings/${id}`,data)
+export const updateSettings = (id, data) =>
+  axios.post(`${API.main}/settings/${id}`, data);

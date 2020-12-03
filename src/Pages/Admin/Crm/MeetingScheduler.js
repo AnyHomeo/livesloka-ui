@@ -382,7 +382,6 @@ const MeetingScheduler = () => {
                 />
               </RadioGroup>
             </FormControl>
-            {console.log(radioday)}
           </div>
 
           <div

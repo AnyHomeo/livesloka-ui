@@ -40,7 +40,6 @@ import MaterialTable from "material-table";
 //   useEffect(() => {
 //     getComments(id)
 //       .then((fetchedData) => {
-//         console.log(fetchedData);
 //         setComments(fetchedData.data.result);
 //       })
 //       .catch((err) => {

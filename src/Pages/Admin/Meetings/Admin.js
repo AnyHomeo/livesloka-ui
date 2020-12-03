@@ -99,7 +99,6 @@ const Admin = () => {
 
   const submitForm = (e) => {
     e.preventDefault();
-    console.log(teacher, student, startDate, endDate, startTime, endTime, day);
     postMeeting(
       teacher,
       student,
@@ -110,7 +109,6 @@ const Admin = () => {
       day
     ).then((data) => {
       if (data.data.success) {
-        console.log(data.data.success);
         setSuccessOpen(data.data.success);
       }
     });

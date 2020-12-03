@@ -112,7 +112,6 @@ const Login = () => {
     setUser({ ...user, isLoading: true, errors: false });
     login(userId, password)
       .then((data) => {
-        console.log(data);
         if (data.data.result.token && data.data.result.roleId === 3) {
           authenticate(data.data.result, remember, () => {
             setUser({
@@ -123,7 +122,6 @@ const Login = () => {
             });
           });
         } else if (data.data.result && data.data.result.roleId !== 3) {
-          console.log(data);
           setUser({
             ...user,
             errors: "you had no admin access",
@@ -144,7 +142,6 @@ const Login = () => {
   };
   const performRedirect = () => {
     if (isAutheticated()) {
-      console.log(isAutheticated());
       if (isAutheticated() && isAutheticated().roleId === 1) {
         setUser((prev) => ({
           ...prev,
