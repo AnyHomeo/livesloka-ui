@@ -253,6 +253,37 @@ const CrmDetails = () => {
           hidden: !columnFilters["lastName"].selected,
         },
         {
+          title: "Age",
+          field: "age",
+          type: "numeric",
+          width: "1%",
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          editComponent: (props) => (
+            <TextField
+              type="number"
+              inputProps={{ min: "0", step: "1" }}
+              value={props.value}
+              onChange={(e) => {
+                if (e.target.value < 0) {
+                  return props.onChange(0);
+                } else {
+                  return props.onChange(e.target.value);
+                }
+              }}
+            />
+          ),
+        },
+        {
+          title: "Gender",
+          field: "gender",
+          width: "1%",
+          lookup: { male: "Male", female: "Female" },
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          hidden: !columnFilters["gender"].selected,
+        },
+        {
           title: "Class Name",
           field: "classId",
           width: "1%",
@@ -323,28 +354,6 @@ const CrmDetails = () => {
           cellStyle: { whiteSpace: "nowrap" },
           headerStyle: { whiteSpace: "nowrap" },
           hidden: !columnFilters["teacherId"].selected,
-        },
-        {
-          title: "Age",
-          field: "age",
-          type: "numeric",
-          width: "1%",
-          cellStyle: { whiteSpace: "nowrap" },
-          headerStyle: { whiteSpace: "nowrap" },
-          editComponent: (props) => (
-            <TextField
-              type="number"
-              inputProps={{ min: "0", step: "1" }}
-              value={props.value}
-              onChange={(e) => {
-                if (e.target.value < 0) {
-                  return props.onChange(0);
-                } else {
-                  return props.onChange(e.target.value);
-                }
-              }}
-            />
-          ),
         },
         {
           title: "Country",
@@ -566,6 +575,7 @@ const CrmDetails = () => {
         lastName: { selected: settings.includes("lastName"), name: "Gaurdian" },
         classId: { selected: settings.includes("classId"), name: "ClassName" },
         email: { selected: settings.includes("email"), name: "Email" },
+        gender: { selected: settings.includes("gender"), name: "Gender" },
         whatsAppnumber: {
           selected: settings.includes("whatsAppnumber"),
           name: "Whatsapp",
