@@ -26,7 +26,6 @@ function Routes() {
           <Route path="/password-reset" exact component={PasswordReset} />
           {/* <Route path="/comments" exact component={Comments} />
           <AdminRoute path="/meeting-schedule" exact component={Scheduler} />
-          <AdminRoute path="/invoice-generator" exact component={Generator} />
           <AdminRoute path="/admin" exact component={Adminsidebar} />
           <AdminRoute path="/admin-meeting" exact component={Admin} />
           <AdminRoute path="/add-teacher" exact component={AddTeachers} />
@@ -47,6 +46,7 @@ function Routes() {
               exact
               component={MeetingScheduler}
             />
+            <AdminRoute path="/invoice-generator" exact component={Generator} />
             <AdminRoute path="/manual-invoice" exact component={Invoice} />
             <AdminRoute path="/invoices" exact component={Invoices} />
           </SideNav>

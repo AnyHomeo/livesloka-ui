@@ -1,25 +1,20 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import MaterialTable, { MTableBodyRow } from "material-table";
 import { makeStyles } from "@material-ui/core/styles";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import SmsOutlinedIcon from "@material-ui/icons/SmsOutlined";
 import useWindowDimensions from "../../../Components/useWindowDimensions";
-import clsx from "clsx";
+import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 import {
   getAllCustomerDetails,
   AddCustomer,
   getData,
   editCustomer,
-  getAllAdmins,
-  getAllTeachers,
   deleteUser,
 } from "../../../Services/Services";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import MuiAlert from "@material-ui/lab/Alert";
+import Tooltip from "@material-ui/core/Tooltip";
 import {
   AppBar,
   Toolbar,
@@ -31,42 +26,26 @@ import {
   Checkbox,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
-import { ClipLoader } from "react-spinners";
-import { css } from "@emotion/core";
 import Comments from "./Comments";
 
 import "date-fns";
-import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
 import moment from "moment";
 import TableChartOutlinedIcon from "@material-ui/icons/TableChartOutlined";
 import Drawer from "@material-ui/core/Drawer";
-import List from "@material-ui/core/List";
-import Divider from "@material-ui/core/Divider";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import { isAutheticated } from "../../../auth"
-import { getSettings,updateSettings } from "../../../Services/Services"
+import { isAutheticated } from "../../../auth";
+import { getSettings, updateSettings } from "../../../Services/Services";
 
-
-const loaderCss = css`
-  margin-top: 25px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
-`;
+const copyToClipboard = (text) => {
+  var textField = document.createElement("textarea");
+  textField.innerText = text;
+  document.body.appendChild(textField);
+  textField.select();
+  document.execCommand("copy");
+  textField.remove();
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -109,6 +88,7 @@ const names = [
   "Country",
   "Teacher",
   "Agent",
+  "Category",
 ];
 
 const status = [
@@ -119,6 +99,7 @@ const status = [
   "countryName",
   "TeacherName",
   "AgentName",
+  "categoryName",
 ];
 
 const fetchDropDown = (index) => {
@@ -130,7 +111,7 @@ const fetchDropDown = (index) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
     });
   return obj;
 };
@@ -146,6 +127,7 @@ const currencyDropdown = fetchDropDown(3);
 const countryDropdown = fetchDropDown(4);
 const teachersDropdown = fetchDropDown(5);
 const agentDropdown = fetchDropDown(6);
+const categoryDropdown = fetchDropDown(7);
 
 const ColumnFilterDrawer = ({
   drawerOpen,
@@ -164,12 +146,11 @@ const ColumnFilterDrawer = ({
           arr.push(column);
         }
       });
-      console.log(arr);
-      let id = isAutheticated()._id
-      if(id){
-      updateSettings(id,{
-        columns:arr
-      })
+      let id = isAutheticated()._id;
+      if (id) {
+        updateSettings(id, {
+          columns: arr,
+        });
       }
       setDrawerOpen(false);
     }}
@@ -233,318 +214,407 @@ const CrmDetails = () => {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   useEffect(() => {
-    if(Object.keys(columnFilters).length){
-          setColumns([
-      {
-        title: "Customer Status",
-        field: "classStatusId",
-        width: "1%",
-        lookup: classStatusDropdown,
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-        hidden: !columnFilters["classStatusId"].selected,
-      },
-      {
-        title: "Time Zone",
-        field: "timeZoneId",
-        width: "1%",
-        lookup: timeZoneDropdown,
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-        hidden: !columnFilters["timeZoneId"].selected,
-      },
-      { title: "Id", field: "id", hidden: true },
-      {
-        title: "Student Name",
-        field: "firstName",
-        width: "1%",
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-        hidden: !columnFilters["firstName"].selected,
-      },
-      {
-        title: "Guardian",
-        field: "lastName",
-        width: "1%",
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-        hidden: !columnFilters["lastName"].selected,
-      },
-      {
-        title: "Class Name",
-        field: "classId",
-        width: "1%",
-        lookup: classDropdown,
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-        hidden: !columnFilters["classId"].selected,
-      },
-      {
-        title: "Email",
-        field: "email",
-        width: "1%",
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-        hidden: !columnFilters["email"].selected,
-      },
-      {
-        title: "Whatsapp",
-        field: "whatsAppnumber",
-        width: "1%",
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-        hidden: !columnFilters["whatsAppnumber"].selected,
-      },
-      {
-        title: "Group",
-        field: "oneToOne",
-        type: "boolean",
-        width: "1%",
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-        hidden: !columnFilters["oneToOne"].selected,
-        editComponent: (props) => (
-          <Checkbox
-            labelstyle={{ color: "green" }}
-            iconstyle={{ fill: "green" }}
-            inputstyle={{ color: "green" }}
-            style={{ color: "green" }}
-            checked={props.value}
-            onChange={(e) => props.onChange(!props.value)}
-          />
-        ),
-      },
-      {
-        title: "Teacher",
-        field: "teacherId",
-        width: "1%",
-        lookup: teachersDropdown,
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-        hidden: !columnFilters["teacherId"].selected,
-      },
-      // {
-      //   title: "Age",
-      //   field: "age",
-      //   type: "numeric",
-      //   width: "1%",
-      //   cellStyle: { whiteSpace: "nowrap" },
-      //   headerStyle: { whiteSpace: "nowrap" },
-      //   editComponent: (props) => (
-      //     <TextField
-      //       type="number"
-      //       inputProps={{ min: "0", step: "1" }}
-      //       value={props.value}
-      //       onChange={(e) => {
-      //         if (e.target.value < 0) {
-      //           return props.onChange(0);
-      //         } else {
-      //           return props.onChange(e.target.value);
-      //         }
-      //       }}
-      //     />
-      //   ),
-      // },
-      {
-        title: "Country",
-        field: "countryId",
-        lookup: countryDropdown,
-        width: "1%",
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-        hidden: !columnFilters["countryId"].selected,
-      },
-      {
-        title: "No of Students",
-        field: "numberOfStudents",
-        type: "numeric",
-        width: "1%",
-        hidden: !columnFilters["numberOfStudents"].selected,
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-        editComponent: (props) => (
-          <TextField
-            type="number"
-            inputProps={{ min: "0", step: "1" }}
-            value={props.value}
-            onChange={(e) => {
-              if (e.target.value < 0) {
-                return props.onChange(0);
-              } else {
-                return props.onChange(e.target.value);
-              }
-            }}
-          />
-        ),
-      },
-      {
-        title: "Proposed Amount",
-        field: "proposedAmount",
-        type: "numeric",
-        width: "1%",
-        hidden: !columnFilters["proposedAmount"].selected,
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-        editComponent: (props) => (
-          <TextField
-            type="number"
-            inputProps={{ min: "0", step: "1" }}
-            value={props.value}
-            onChange={(e) => {
-              if (e.target.value < 0) {
-                return props.onChange(0);
-              } else {
-                return props.onChange(e.target.value);
-              }
-            }}
-          />
-        ),
-      },
-      {
-        title: "Proposed Currency",
-        field: "proposedCurrencyId",
-        hidden: !columnFilters["proposedCurrencyId"].selected,
-        width: "1%",
-        lookup: currencyDropdown,
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-      },
-      {
-        title: "Place Of Stay",
-        field: "placeOfStay",
-        hidden: !columnFilters["placeOfStay"].selected,
-        width: "1%",
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-      },
-      {
-        title: "Agent Id",
-        field: "agentId",
-        width: "1%",
-        lookup: agentDropdown,
-        hidden: !columnFilters["agentId"].selected,
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-      },
-      {
-        title: "Schedule Description",
-        field: "scheduleDescription",
-        width: "1%",
-        hidden: !columnFilters["scheduleDescription"].selected,
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-      },
-      // {
-      //   title: "Zoom Color",
-      //   field: "zoomColor",
-      //   width: "1%",
-      //   cellStyle: { whiteSpace: "nowrap" },
-      //   headerStyle: { whiteSpace: "nowrap" },
-      // },
-      {
-        title: "Meeting Link",
-        field: "meetingLink",
-        hidden: !columnFilters["meetingLink"].selected,
-        width: "1%",
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-      },
-      // {
-      //   title: "Customer Id",
-      //   field: "customerId",
-      //   editable: "never",
-      //   width: "1%",
-      //   cellStyle: { whiteSpace: "nowrap" },
-      //   headerStyle: { whiteSpace: "nowrap" },
-      // },
-      // {
-      //   title: "Joining Date",
-      //   field: "joindate",
-      //   width: "1%",
-      //   cellStyle: { whiteSpace: "nowrap" },
-      //   headerStyle: { whiteSpace: "nowrap" },
-      //   editComponent: (props) => (
-      //     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      //       <KeyboardDatePicker
-      //         margin="normal"
-      //         format="MM/dd/yyyy"
-      //         style={{ width: "140px" }}
-      //         value={selectedDate}
-      //         onChange={handleDateChange}
-      //         KeyboardButtonProps={{
-      //           "aria-label": "change date",
-      //         }}
-      //       />
-      //     </MuiPickersUtilsProvider>
-      //   ),
-      // },
-      {
-        title: "Phone No",
-        field: "phone",
-        width: "1%",
-        hidden: !columnFilters["phone"].selected,
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-      },
-      {
-        title: "Study material Sent",
-        field: "studyMaterialSent",
-        type: "boolean",
-        width: "1%",
-        hidden: !columnFilters["studyMaterialSent"].selected,
-        cellStyle: { whiteSpace: "nowrap" },
-        headerStyle: { whiteSpace: "nowrap" },
-        editComponent: (props) => (
-          <Checkbox
-            labelstyle={{ color: "green" }}
-            iconstyle={{ fill: "green" }}
-            inputstyle={{ color: "green" }}
-            style={{ color: "green" }}
-            checked={props.value}
-            onChange={(e) => props.onChange(!props.value)}
-          />
-        ),
-      },
-    ]);
+    if (Object.keys(columnFilters).length) {
+      setColumns([
+        {
+          title: "Customer Status",
+          field: "classStatusId",
+          width: "1%",
+          lookup: classStatusDropdown,
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          hidden: !columnFilters["classStatusId"].selected,
+        },
+        {
+          title: "Time Zone",
+          field: "timeZoneId",
+          width: "1%",
+          lookup: timeZoneDropdown,
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          hidden: !columnFilters["timeZoneId"].selected,
+        },
+        { title: "Id", field: "id", hidden: true },
+        {
+          title: "Student Name",
+          field: "firstName",
+          width: "1%",
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          hidden: !columnFilters["firstName"].selected,
+        },
+        {
+          title: "Guardian",
+          field: "lastName",
+          width: "1%",
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          hidden: !columnFilters["lastName"].selected,
+        },
+        {
+          title: "Class Name",
+          field: "classId",
+          width: "1%",
+          lookup: classDropdown,
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          hidden: !columnFilters["classId"].selected,
+        },
+        {
+          title: "Email",
+          field: "email",
+          width: "1%",
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          hidden: !columnFilters["email"].selected,
+          render: (rowData) => (
+            <>
+              {rowData.email ? (
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Tooltip title={`Copy to Clipboard`}>
+                    <FileCopyOutlinedIcon
+                      style={{
+                        marginRight: "10px",
+                      }}
+                      onClick={() => copyToClipboard(rowData.email)}
+                    />
+                  </Tooltip>
+                  {rowData.email}
+                </div>
+              ) : (
+                <span />
+              )}
+            </>
+          ),
+        },
+        {
+          title: "Whatsapp",
+          field: "whatsAppnumber",
+          width: "1%",
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          hidden: !columnFilters["whatsAppnumber"].selected,
+        },
+        {
+          title: "Group",
+          field: "oneToOne",
+          type: "boolean",
+          width: "1%",
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          hidden: !columnFilters["oneToOne"].selected,
+          editComponent: (props) => (
+            <Checkbox
+              labelstyle={{ color: "green" }}
+              iconstyle={{ fill: "green" }}
+              inputstyle={{ color: "green" }}
+              style={{ color: "green" }}
+              checked={props.value}
+              onChange={(e) => props.onChange(!props.value)}
+            />
+          ),
+        },
+        {
+          title: "Teacher",
+          field: "teacherId",
+          width: "1%",
+          lookup: teachersDropdown,
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          hidden: !columnFilters["teacherId"].selected,
+        },
+        {
+          title: "Age",
+          field: "age",
+          type: "numeric",
+          width: "1%",
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          editComponent: (props) => (
+            <TextField
+              type="number"
+              inputProps={{ min: "0", step: "1" }}
+              value={props.value}
+              onChange={(e) => {
+                if (e.target.value < 0) {
+                  return props.onChange(0);
+                } else {
+                  return props.onChange(e.target.value);
+                }
+              }}
+            />
+          ),
+        },
+        {
+          title: "Country",
+          field: "countryId",
+          lookup: countryDropdown,
+          width: "1%",
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          hidden: !columnFilters["countryId"].selected,
+        },
+        {
+          title: "No of Students",
+          field: "numberOfStudents",
+          type: "numeric",
+          width: "1%",
+          hidden: !columnFilters["numberOfStudents"].selected,
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          editComponent: (props) => (
+            <TextField
+              type="number"
+              inputProps={{ min: "0", step: "1" }}
+              value={props.value}
+              onChange={(e) => {
+                if (e.target.value < 0) {
+                  return props.onChange(0);
+                } else {
+                  return props.onChange(e.target.value);
+                }
+              }}
+            />
+          ),
+        },
+        {
+          title: "Proposed Amount",
+          field: "proposedAmount",
+          type: "numeric",
+          width: "1%",
+          hidden: !columnFilters["proposedAmount"].selected,
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          editComponent: (props) => (
+            <TextField
+              type="number"
+              inputProps={{ min: "0", step: "1" }}
+              value={props.value}
+              onChange={(e) => {
+                if (e.target.value < 0) {
+                  return props.onChange(0);
+                } else {
+                  return props.onChange(e.target.value);
+                }
+              }}
+            />
+          ),
+        },
+        {
+          title: "Proposed Currency",
+          field: "proposedCurrencyId",
+          hidden: !columnFilters["proposedCurrencyId"].selected,
+          width: "1%",
+          lookup: currencyDropdown,
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+        },
+        {
+          title: "Place Of Stay",
+          field: "placeOfStay",
+          hidden: !columnFilters["placeOfStay"].selected,
+          width: "1%",
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+        },
+        {
+          title: "Agent Id",
+          field: "agentId",
+          width: "1%",
+          lookup: agentDropdown,
+          hidden: !columnFilters["agentId"].selected,
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+        },
+        {
+          title: "Schedule Description",
+          field: "scheduleDescription",
+          width: "1%",
+          hidden: !columnFilters["scheduleDescription"].selected,
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+        },
+        {
+          title: "Category",
+          field: "categoryId",
+          width: "1%",
+          lookup: categoryDropdown,
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          hidden: !columnFilters["categoryId"].selected,
+        },
+        // {
+        //   title: "Zoom Color",
+        //   field: "zoomColor",
+        //   width: "1%",
+        //   cellStyle: { whiteSpace: "nowrap" },
+        //   headerStyle: { whiteSpace: "nowrap" },
+        // },
+        {
+          title: "Meeting Link",
+          field: "meetingLink",
+          hidden: !columnFilters["meetingLink"].selected,
+          width: "1%",
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          render: (rowData) => (
+            <>
+              {rowData.meetingLink ? (
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Tooltip title={`Copy to Clipboard`}>
+                    <FileCopyOutlinedIcon
+                      style={{
+                        marginRight: "10px",
+                      }}
+                      onClick={() => copyToClipboard(rowData.meetingLink)}
+                    />
+                  </Tooltip>
+                  {rowData.meetingLink}
+                </div>
+              ) : (
+                <span />
+              )}
+            </>
+          ),
+        },
+        // {
+        //   title: "Customer Id",
+        //   field: "customerId",
+        //   editable: "never",
+        //   width: "1%",
+        //   cellStyle: { whiteSpace: "nowrap" },
+        //   headerStyle: { whiteSpace: "nowrap" },
+        // },
+        // {
+        //   title: "Joining Date",
+        //   field: "joindate",
+        //   width: "1%",
+        //   cellStyle: { whiteSpace: "nowrap" },
+        //   headerStyle: { whiteSpace: "nowrap" },
+        //   editComponent: (props) => (
+        //     <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        //       <KeyboardDatePicker
+        //         margin="normal"
+        //         format="MM/dd/yyyy"
+        //         style={{ width: "140px" }}
+        //         value={selectedDate}
+        //         onChange={handleDateChange}
+        //         KeyboardButtonProps={{
+        //           "aria-label": "change date",
+        //         }}
+        //       />
+        //     </MuiPickersUtilsProvider>
+        //   ),
+        // },
+        {
+          title: "Phone No",
+          field: "phone",
+          width: "1%",
+          hidden: !columnFilters["phone"].selected,
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+        },
+        {
+          title: "Study material Sent",
+          field: "studyMaterialSent",
+          type: "boolean",
+          width: "1%",
+          hidden: !columnFilters["studyMaterialSent"].selected,
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          editComponent: (props) => (
+            <Checkbox
+              labelstyle={{ color: "green" }}
+              iconstyle={{ fill: "green" }}
+              inputstyle={{ color: "green" }}
+              style={{ color: "green" }}
+              checked={props.value}
+              onChange={(e) => props.onChange(!props.value)}
+            />
+          ),
+        },
+      ]);
     }
   }, [columnFilters]);
 
   useEffect(() => {
-    getSettings(isAutheticated()._id)
-    .then(data => {
-      let settings
-      if(data.data.result.columns){
-      settings = data.data.result.columns
+    getSettings(isAutheticated()._id).then((data) => {
+      let settings;
+      if (data.data.result.columns) {
+        settings = data.data.result.columns;
       } else {
-        settings = []
+        settings = [];
       }
       setColumnFilters({
-    classStatusId: { selected: settings.includes("classStatusId"), name: "Customer Status" },
-    timeZoneId: { selected: settings.includes("timeZoneId"), name: "Time Zone" },
-    firstName: { selected: settings.includes("firstName"), name: "Student Name" },
-    lastName: { selected: settings.includes("lastName"), name: "Gaurdian" },
-    classId: { selected: settings.includes("classId"), name: "ClassName" },
-    email: { selected: settings.includes("email"), name: "Email" },
-    whatsAppnumber: { selected: settings.includes("whatsAppnumber"), name: "Whatsapp" },
-    oneToOne: { selected: settings.includes("oneToOne"), name: "Group" },
-    teacherId: { selected: settings.includes("teacherId"), name: "Teacher" },
-    countryId: { selected: settings.includes("countryId"), name: "Country" },
-    numberOfStudents: { selected: settings.includes("numberOfStudents"), name: "No of Students" },
-    proposedAmount: { selected: settings.includes("proposedAmount"), name: "Proposed Amount" },
-    proposedCurrencyId: { selected: settings.includes("proposedCurrencyId"), name: "Proposed Currency" },
-    placeOfStay: { selected: settings.includes("placeOfStay"), name: "Place Of Stay" },
-    agentId: { selected: settings.includes("agentId"), name: "Agent Id" },
-    scheduleDescription: { selected: settings.includes("scheduleDescription"), name: "scheduleDescription" },
-    meetingLink: { selected: settings.includes("meetingLink"), name: "Meeting Link" },
-    phone: { selected: settings.includes("phone"), name: "Phone No" },
-    studyMaterialSent: { selected: settings.includes("studyMaterialSent"), name: "Study Material Sent" },
-  })
-    })
+        classStatusId: {
+          selected: settings.includes("classStatusId"),
+          name: "Customer Status",
+        },
+        timeZoneId: {
+          selected: settings.includes("timeZoneId"),
+          name: "Time Zone",
+        },
+        categoryId: {
+          selected: settings.includes("categoryId"),
+          name: "Category",
+        },
+        firstName: {
+          selected: settings.includes("firstName"),
+          name: "Student Name",
+        },
+        lastName: { selected: settings.includes("lastName"), name: "Gaurdian" },
+        classId: { selected: settings.includes("classId"), name: "ClassName" },
+        email: { selected: settings.includes("email"), name: "Email" },
+        whatsAppnumber: {
+          selected: settings.includes("whatsAppnumber"),
+          name: "Whatsapp",
+        },
+        oneToOne: { selected: settings.includes("oneToOne"), name: "Group" },
+        teacherId: {
+          selected: settings.includes("teacherId"),
+          name: "Teacher",
+        },
+        countryId: {
+          selected: settings.includes("countryId"),
+          name: "Country",
+        },
+        numberOfStudents: {
+          selected: settings.includes("numberOfStudents"),
+          name: "No of Students",
+        },
+        proposedAmount: {
+          selected: settings.includes("proposedAmount"),
+          name: "Proposed Amount",
+        },
+        proposedCurrencyId: {
+          selected: settings.includes("proposedCurrencyId"),
+          name: "Proposed Currency",
+        },
+        placeOfStay: {
+          selected: settings.includes("placeOfStay"),
+          name: "Place Of Stay",
+        },
+        age: {
+          selected: settings.includes("age"),
+          name: "Age",
+        },
+        agentId: { selected: settings.includes("agentId"), name: "Agent Id" },
+        scheduleDescription: {
+          selected: settings.includes("scheduleDescription"),
+          name: "scheduleDescription",
+        },
+        meetingLink: {
+          selected: settings.includes("meetingLink"),
+          name: "Meeting Link",
+        },
+        phone: { selected: settings.includes("phone"), name: "Phone No" },
+        studyMaterialSent: {
+          selected: settings.includes("studyMaterialSent"),
+          name: "Study Material Sent",
+        },
+      });
+    });
     fetchData();
   }, []);
 
@@ -555,7 +625,7 @@ const CrmDetails = () => {
       setData(details);
       setLoading(false);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -613,9 +683,6 @@ const CrmDetails = () => {
           onRowClick={(evt, selectedRow) =>
             setSelectedRow(selectedRow.tableData.id)
           }
-          onColumnDragged={(sourceIndex, destinationIndex) => {
-            console.log(sourceIndex, destinationIndex);
-          }}
           actions={[
             (rowData) => ({
               icon: () => (
@@ -652,10 +719,8 @@ const CrmDetails = () => {
           }}
           editable={{
             onRowAdd: (newData) => {
-              console.log(newData);
               return AddCustomer(newData)
                 .then((fetchedData) => {
-                  console.log(fetchedData);
                   if (fetchedData.data.status === "OK") {
                     setData([fetchedData.data.result, ...data]);
                     setSuccess(true);
@@ -668,7 +733,7 @@ const CrmDetails = () => {
                   }
                 })
                 .catch((err) => {
-                  console.log(err, err.response);
+                  console.error(err, err.response);
                   setSuccess(false);
                   if (err.response && err.response.error) {
                     setResponse(err.response.error);
@@ -699,7 +764,7 @@ const CrmDetails = () => {
                   }
                 })
                 .catch((err) => {
-                  console.log(err);
+                  console.error(err);
                   setSuccess(false);
                   setResponse("Something went wrong,Try again later");
                   setSnackBarOpen(true);
@@ -717,7 +782,7 @@ const CrmDetails = () => {
                   setSnackBarOpen(true);
                 })
                 .catch((err) => {
-                  console.log(err, err.response);
+                  console.error(err, err.response);
                   setSuccess(false);
                   setResponse("unable to delete customer, Try again");
                   setSnackBarOpen(true);
@@ -729,7 +794,7 @@ const CrmDetails = () => {
       <Dialog
         open={open}
         fullScreen
-        onClose={handleClose}
+        onClose={() => setOpen(false)}
         aria-labelledby="form-dialog-title"
         TransitionComponent={Transition}
       >
@@ -738,7 +803,7 @@ const CrmDetails = () => {
             <IconButton
               edge="start"
               color="inherit"
-              onClick={handleClose}
+              onClick={() => setOpen(false)}
               aria-label="close"
             >
               <CloseIcon />
@@ -746,7 +811,7 @@ const CrmDetails = () => {
             <Typography variant="h6" className={classes.title}>
               See all {name}'s Comments here
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
+            <Button autoFocus color="inherit" onClick={() => setOpen(false)}>
               Cancel
             </Button>
           </Toolbar>

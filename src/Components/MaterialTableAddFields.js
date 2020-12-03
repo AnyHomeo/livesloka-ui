@@ -128,7 +128,7 @@ const MaterialTableAddFields = ({ name, status, lookup }) => {
       })
       .catch((err) => {
         setLoading(true);
-        console.log(err, err.response);
+        console.error(err, err.response);
         setLoading(false);
       });
   }, [lookup]);
@@ -158,7 +158,6 @@ const MaterialTableAddFields = ({ name, status, lookup }) => {
             <MTableBodyRow
               {...props}
               onDoubleClick={(e) => {
-                console.log(props.actions);
                 props.actions[1]().onClick(e, props.data);
               }}
             />
@@ -169,11 +168,9 @@ const MaterialTableAddFields = ({ name, status, lookup }) => {
           isDeleteHidden: (rowData) =>
             (rowData && rowData.statusId) || data.length === 1,
           onRowAdd: (newData) => {
-            console.log(newData);
             return addInField(`Add ${name}`, newData)
               .then((fetchedData) => {
                 if (fetchedData.data.status === "ok") {
-                  console.log("inside");
                   if (fetchedData.data.result.classesStatus) {
                     fetchedData.data.result.status =
                       fetchedData.data.result.classesStatus;
@@ -192,11 +189,10 @@ const MaterialTableAddFields = ({ name, status, lookup }) => {
               })
 
               .catch((e) => {
-                console.log(e, e.response);
+                console.error(e, e.response);
               });
           },
           onRowUpdate: (newData, oldData) => {
-            console.log(newData);
             return editField(`Update ${name}`, newData).then((fetchedData) => {
               if (fetchedData.data.status === "OK") {
                 const dataUpdate = [...data];
@@ -234,7 +230,7 @@ const MaterialTableAddFields = ({ name, status, lookup }) => {
                 }
               })
               .catch((err) => {
-                console.log(err, err.response);
+                console.error(err, err.response);
                 setSuccess(false);
                 setResponse("Something went wrong,Try again later");
                 setOpen(true);

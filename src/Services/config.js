@@ -1,47 +1,50 @@
 exports.services = {
   prod: {
-    // main: "https://live-kumon-services.herokuapp.com",
     main: process.env.REACT_APP_API_KEY,
-    // main: "http://localhost:5000",
     login: "/login",
     changePassword: "/ChangePassword",
 
-    "Time Zone": "/admin/get/timezones",
-    "Add Time Zone": "/admin/addtimezone",
+    "Time Zone": "/admin/get/timeZone",
+    "Add Time Zone": "/admin/add/timeZone",
     "Update Time Zone": "/admin/update/timeZone",
     "Delete Time Zone": "/admin/delete/timeZone",
 
     Class: "/admin/get/classes",
-    "Add Class": "/admin/addclass",
+    "Add Class": "/admin/add/classes",
     "Update Class": "/admin/update/classes",
     "Delete Class": "/admin/delete/classes",
 
+    Category: "/admin/get/Category",
+    "Add Category": "/admin/add/Category",
+    "Update Category": "/admin/update/Category",
+    "Delete Category": "/admin/delete/category",
+
     "Class Status": "/admin/get/ClassStatuses",
-    "Add Class Status": "/admin/addclassstatus",
+    "Add Class Status": "/admin/add/ClassStatuses",
     "Update Class Status": "/admin/update/ClassStatuses",
     "Delete Class Status": "/admin/delete/classstatus",
 
-    Currency: "/admin/get/currencies",
-    "Add Currency": "/admin/addcurrency",
+    Currency: "/admin/get/Currency",
+    "Add Currency": "/admin/add/Currency",
     "Update Currency": "/admin/update/Currency",
     "Delete Currency": "/admin/delete/Currency",
 
-    Country: "/admin/get/countries",
-    "Add Country": "/admin/addcountry",
+    Country: "/admin/get/Country",
+    "Add Country": "/admin/add/Country",
     "Update Country": "/admin/update/Country",
     "Delete Country": "/admin/delete/Country",
 
-    Status: "/admin/get/statuses",
-    "Add Status": "/admin/addstatus",
+    Status: "/admin/get/Status",
+    "Add Status": "/admin/add/Status",
     "Update Status": "/admin/update/status",
 
     Teacher: "/teacher?params=id,TeacherDesc,TeacherName,TeacherStatus,-_id",
-    "Add Teacher": "/admin/addTeacher",
+    "Add Teacher": "/admin/add/Teacher",
     "Update Teacher": "/admin/update/Teacher",
     "Delete Teacher": "/admin/delete/Teacher",
 
-    Agent: "/admin/get/Agents",
-    "Add Agent": "/admin/addAgent",
+    Agent: "/admin/get/Agent",
+    "Add Agent": "/admin/add/Agent",
     "Update Agent": "/admin/update/Agent",
     "Delete Agent": "/admin/delete/Agent",
 

@@ -1,5 +1,4 @@
 export const authenticate = (data, remember, next) => {
-  console.log(data)
   if (typeof window !== "undefined") {
     let expiry = new Date().getTime + 24 * 60 * 60 * 1000;
     if (remember) {
@@ -8,11 +7,9 @@ export const authenticate = (data, remember, next) => {
     document.cookie = `user=${JSON.stringify(data)};expires=${new Date(
       expiry
     )}path=/`;
-    console.log("hello")
-    console.log(document.cookie);
     next();
   }
-}; 
+};
 
 export const isAutheticated = () => {
   let data = document.cookie.split(";");
