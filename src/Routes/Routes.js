@@ -2,17 +2,14 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Login from "../Pages/Login/Login";
 import PasswordReset from "../Pages/Login/PasswordReset";
-import Admin from "../Pages/Admin/Meetings/Admin";
 import AdminRoute from "../auth/AdminRoutes";
 import CustomerData from "../Pages/Admin/Crm/CustomerData";
-import Comments from "../Pages/Admin/Crm/Comments";
 import Invoice from "../Pages/invoice/Invoice";
 import Generator from "../Pages/invoice/Generator";
 import Invoices from "../Pages/invoice/Invoices";
 import Attedance from "../Pages/Admin/Crm/Attedance";
 import SideNav from "../Components/SideNav";
 import CustomTabs from "../Components/CustomTabs";
-import Timeslot from "../Pages/Admin/Crm/Timeslot";
 import MeetingScheduler from "../Pages/Admin/Crm/MeetingScheduler";
 import TimeSlots from "../Pages/Admin/Crm/TimeSlots";
 
@@ -39,7 +36,6 @@ function Routes() {
             <AdminRoute path="/customer-data" exact component={CustomerData} />
             <AdminRoute path="/add-fields" exact component={CustomTabs} />
             <AdminRoute path="/attendance" exact component={Attedance} />
-            <AdminRoute path="/time-slot" exact component={Timeslot} />
             <AdminRoute path="/time-slots" exact component={TimeSlots} />
             <AdminRoute
               path="/meeting-scheduler"

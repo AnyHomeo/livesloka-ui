@@ -18,8 +18,11 @@ import {
   CircularProgress,
   Snackbar,
   Chip,
+  Typography,
+  Divider,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
+import { FileCopy } from "@material-ui/icons";
 const times = [
   "12:00 AM - 12:30 AM",
   "12:30 AM - 01:00 AM",
@@ -182,7 +185,69 @@ const TimeSlotCard = ({ day, teacher }) => {
         </div>
         <div>
           <h3 style={{ marginLeft: "20px" }}>Available Time Slots</h3>
-
+          <Chip
+            color="primary"
+            style={{ marginLeft: "10px", marginBottom: "10px" }}
+            variant="outlined"
+            onDelete={() => {}}
+            label={"2:00PM-02:30PM"}
+          />
+          <Chip
+            color="primary"
+            style={{ marginLeft: "10px", marginBottom: "10px" }}
+            variant="outlined"
+            onDelete={() => {}}
+            label={"4:30PM-5:00PM"}
+          />
+          <h3 style={{ marginLeft: "20px" }}>Scheduled Time Slots</h3>
+          <List>
+            <ListItem button>
+              <ListItemText
+                primary="09:00AM - 10:30AM"
+                secondary={
+                  <React.Fragment>
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      className={{ display: "inline" }}
+                      color="textPrimary"
+                    >
+                      Mary,Tison
+                    </Typography>
+                    {" — meeting every monday and tuesday"}
+                  </React.Fragment>
+                }
+              />
+              <ListItemSecondaryAction>
+                <IconButton edge="end" aria-label="comments">
+                  <DeleteIcon color="secondary" />
+                </IconButton>
+                <IconButton edge="end" aria-label="comments">
+                  <FileCopy />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+            <Divider variant="inset" component="li" />
+            <ListItem button>
+              <ListItemText
+                primary="09:00AM - 10:30AM"
+                secondary={
+                  <React.Fragment>
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      className={{ display: "inline" }}
+                      color="textPrimary"
+                    >
+                      Mary,Tison
+                    </Typography>
+                    {" — meeting every monday and tuesday"}
+                  </React.Fragment>
+                }
+              />
+            </ListItem>
+            <Divider variant="inset" component="li" />
+          </List>
           {availableTimeSlots.map((availableTimeSlot) => (
             <Chip
               style={{ marginLeft: "10px", marginBottom: "10px" }}
@@ -197,7 +262,7 @@ const TimeSlotCard = ({ day, teacher }) => {
                   const formData = {
                     slot: availableTimeSlot,
                   };
-                  const data = await axios.post(
+                  await axios.post(
                     `${process.env.REACT_APP_API_KEY}/teacher/delete/slot/${teacher}`,
                     formData
                   );

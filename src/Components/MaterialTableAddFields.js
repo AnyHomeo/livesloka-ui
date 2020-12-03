@@ -1,8 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import MaterialTable, { MTableBodyRow } from "material-table";
-import { css } from "@emotion/core";
-import { ClipLoader } from "react-spinners";
 import MuiAlert from "@material-ui/lab/Alert";
 import {
   getData,
@@ -53,6 +51,27 @@ const DropdownEditor = ({ onChange, value }) => {
   );
 };
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+function humanReadable(name) {
+  var words = name.match(/[A-Za-z][^_\-A-Z]*|[0-9]+/g) || [];
+
+  return words.map(capitalize).join(" ");
+}
+
+function capitalize(word) {
+  return word.charAt(0).toUpperCase() + word.substring(1);
+}
+
+const handleClose = (setOpen) => (event, reason) => {
+  if (reason === "clickaway") {
+    return;
+  }
+  setOpen(false);
+};
+
 const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
   const [column, setColumn] = useState([]);
   const [data, setData] = useState([]);
@@ -61,102 +80,73 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
   const [success, setSuccess] = useState(false);
   const [response, setResponse] = useState("");
 
-  function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-  }
-
-  const loaderCss = css`
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  `;
-
-  function humanReadable(name) {
-    var words = name.match(/[A-Za-z][^_\-A-Z]*|[0-9]+/g) || [];
-
-    return words.map(capitalize).join(" ");
-  }
-
-  function capitalize(word) {
-    return word.charAt(0).toUpperCase() + word.substring(1);
-  }
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-  };
+  useEffect(() => {
+    getData(name).then((response) => {
+      setData(response.data.result);
+      setLoading(false);
+    });
+  }, []);
 
   useEffect(() => {
-    getData(name)
-      .then((data) => {
-        let lengths = data.data.result.map((item) => Object.keys(item).length);
-        setColumn(
-          Object.keys(
-            data.data.result[lengths.indexOf(Math.max(...lengths))]
-          ).map((key) => {
-            if (name === "Teacher" && key === "category") {
-              return {
-                title: "Category",
-                field: key,
-                lookup: categoryLookup,
-              };
-            }
-            if (key === "id" || key === "statusId") {
-              return { title: humanReadable(key), field: key, hidden: true };
-            } else if (key === "TeacherSubjectsId") {
-              return {
-                title: humanReadable(key),
-                field: key,
-                render: (rowData) =>
-                  rowData[key] &&
-                  rowData[key].map((subject) => (
-                    <Chip
-                      variant="outlined"
-                      key={subject._id}
-                      label={subject.className}
-                    />
-                  )),
-                editComponent: (props) => (
-                  <DropdownEditor
-                    {...props}
-                    value={[{ _id: "2345455", className: "CLASS OLD" }]}
+    if (data.length) {
+      console.log("yes i am");
+      let lengths = data.map((item) => Object.keys(item).length);
+      let v = Object.keys(data[lengths.indexOf(Math.max(...lengths))]).map(
+        (key) => {
+          if (name === "Teacher" && key === "category") {
+            return {
+              title: "Category",
+              field: key,
+              lookup: categoryLookup,
+            };
+          }
+          if (key === "id" || key === "statusId" || key === "tableData") {
+            return { title: humanReadable(key), field: key, hidden: true };
+          } else if (key === "TeacherSubjectsId") {
+            return {
+              title: humanReadable(key),
+              field: key,
+              render: (rowData) =>
+                rowData[key] &&
+                rowData[key].map((subject) => (
+                  <Chip
+                    variant="outlined"
+                    key={subject._id}
+                    label={subject.className}
                   />
-                ),
-              };
-            } else if (key === status) {
-              return { title: humanReadable(key), field: key, lookup };
-            } else {
-              return { title: humanReadable(key), field: key };
-            }
-          })
-        );
-        setData(data.data.result);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setLoading(true);
-        console.error(err, err.response);
-        setLoading(false);
-      });
-  }, [lookup]);
-
-  if (loading) {
-    return <ClipLoader size={48} color="blue" css={loaderCss} loading={true} />;
-  }
+                )),
+              editComponent: (props) => (
+                <DropdownEditor
+                  {...props}
+                  value={[{ _id: "2345455", className: "CLASS OLD" }]}
+                />
+              ),
+            };
+          } else if (key === status) {
+            return { title: humanReadable(key), field: key, lookup };
+          } else {
+            return { title: humanReadable(key), field: key };
+          }
+        }
+      );
+      setColumn(v);
+    }
+  }, [lookup, categoryLookup, data]);
 
   return (
     <>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={success ? "success" : "warning"}>
+        <Alert
+          onClose={() => handleClose(setOpen)}
+          severity={success ? "success" : "warning"}
+        >
           {response}
         </Alert>
       </Snackbar>
       <MaterialTable
         title={`${name} Table`}
         columns={column}
+        isLoading={loading}
         options={{
           paging: false,
           maxBodyHeight: 400,

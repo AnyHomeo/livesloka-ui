@@ -2,12 +2,35 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Grid,
-  InputLabel,
-  MenuItem,
-  FormControl,
-  Select,
+  Card,
+  CardContent,
+  Typography,
+  Chip,
+  Box,
+  LinearProgress,
+  List,
+  ListItem,
 } from "@material-ui/core/";
 import TimeSlotCard from "./TimeSlotCard";
+
+function LinearProgressWithLabel(props) {
+  return (
+    <Box display="flex" width="100%" alignItems="center">
+      <Box width="65%" mr={1}>
+        <LinearProgress
+          variant="determinate"
+          color={props.value >= 70 ? "secondary" : "primary"}
+          {...props}
+        />
+      </Box>
+      <Box width="35%">
+        <Typography variant="body2" color="textSecondary">{`${Math.round(
+          props.value
+        )}% Occupied`}</Typography>
+      </Box>
+    </Box>
+  );
+}
 
 const TimeSlots = () => {
   const [teacherName, setTeacherName] = useState();
@@ -23,49 +46,235 @@ const TimeSlots = () => {
   const [teacher, setTeacher] = useState("");
 
   return (
-    <div>
+    <>
       <Grid
         container
         spacing={3}
         style={{ margin: "0 auto", marginTop: "20px" }}
       >
-        <Grid item xs={false} sm={3} />
-        <Grid item xs={12} sm={6}>
-          <FormControl variant="outlined" style={{ width: "100%" }}>
-            <InputLabel id="selectTeacher">Select Teacher</InputLabel>
-            <Select
-              labelId="selectTeacher"
-              id="selectTeachermain"
-              fullWidth
-              value={teacher}
-              onChange={(e) => setTeacher(e.target.value)}
-              label="Select Teacher"
-            >
-              {teacherName &&
-                teacherName.map((teacher) => (
-                  <MenuItem value={teacher.id}>{teacher.TeacherName}</MenuItem>
-                ))}
-            </Select>
-          </FormControl>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <Card style={{ height: "100%" }}>
+            <CardContent>
+              <Typography variant="h4" align={"center"}>
+                Dance
+              </Typography>
+              <List>
+                <ListItem
+                  button
+                  onClick={() => setTeacher("Kamal")}
+                  style={{ flexDirection: "column" }}
+                >
+                  <Typography
+                    color="textSecondary"
+                    style={{ width: "100%" }}
+                    gutterBottom
+                  >
+                    Kamal
+                  </Typography>
+                  <LinearProgressWithLabel value={40} />
+                </ListItem>
+                <ListItem
+                  button
+                  onClick={() => setTeacher("Karthik")}
+                  style={{ flexDirection: "column" }}
+                >
+                  <Typography
+                    color="textSecondary"
+                    style={{ width: "100%" }}
+                    gutterBottom
+                  >
+                    Karthik
+                  </Typography>
+                  <LinearProgressWithLabel value={90} />
+                </ListItem>
+                <ListItem
+                  button
+                  onClick={() => setTeacher("Ram Kishore")}
+                  style={{ flexDirection: "column" }}
+                >
+                  <Typography
+                    color="textSecondary"
+                    style={{ width: "100%" }}
+                    gutterBottom
+                  >
+                    Ram
+                  </Typography>
+                  <LinearProgressWithLabel value={20} />
+                </ListItem>
+              </List>
+            </CardContent>
+          </Card>
         </Grid>
-        <Grid item xs={false} sm={3} />
-        {[
-          "MONDAY",
-          "TUESDAY",
-          "WEDNESDAY",
-          "THURSDAY",
-          "FRIDAY",
-          "SATURDAY",
-          "SUNDAY",
-        ].map((day) => {
-          return (
-            <Grid item xs={12} sm={4} md={3}>
-              <TimeSlotCard day={day} teacher={teacher} />
-            </Grid>
-          );
-        })}
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <Card style={{ height: "100%" }}>
+            <CardContent>
+              <Typography variant="h4" align={"center"}>
+                Songs
+              </Typography>
+              <List>
+                <ListItem
+                  button
+                  onClick={() => setTeacher("Kamal")}
+                  style={{ flexDirection: "column" }}
+                >
+                  <Typography
+                    color="textSecondary"
+                    style={{ width: "100%" }}
+                    gutterBottom
+                  >
+                    Kamal
+                  </Typography>
+                  <LinearProgressWithLabel value={40} />
+                </ListItem>
+                <ListItem
+                  button
+                  onClick={() => setTeacher("Karthik")}
+                  style={{ flexDirection: "column" }}
+                >
+                  <Typography
+                    color="textSecondary"
+                    style={{ width: "100%" }}
+                    gutterBottom
+                  >
+                    Karthik
+                  </Typography>
+                  <LinearProgressWithLabel value={70} />
+                </ListItem>
+                <ListItem button style={{ flexDirection: "column" }}>
+                  <Typography
+                    color="textSecondary"
+                    style={{ width: "100%" }}
+                    gutterBottom
+                  >
+                    Ram
+                  </Typography>
+                  <LinearProgressWithLabel value={60} />
+                </ListItem>
+                <ListItem
+                  button
+                  onClick={() => setTeacher("Ram Kishore")}
+                  style={{ flexDirection: "column" }}
+                >
+                  <Typography
+                    color="textSecondary"
+                    style={{ width: "100%" }}
+                    gutterBottom
+                  >
+                    Ram Kishore
+                  </Typography>
+                  <LinearProgressWithLabel value={20} />
+                </ListItem>
+              </List>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <Card style={{ height: "100%" }}>
+            <CardContent>
+              <Typography variant="h4" align={"center"}>
+                Sloka
+              </Typography>
+              <List>
+                <ListItem
+                  button
+                  onClick={() => setTeacher("Kamal")}
+                  style={{ flexDirection: "column" }}
+                >
+                  <Typography
+                    color="textSecondary"
+                    style={{ width: "100%" }}
+                    gutterBottom
+                  >
+                    Kamal
+                  </Typography>
+                  <LinearProgressWithLabel value={80} />
+                </ListItem>
+                <ListItem
+                  button
+                  onClick={() => setTeacher("Karthik")}
+                  style={{ flexDirection: "column" }}
+                >
+                  <Typography
+                    color="textSecondary"
+                    style={{ width: "100%" }}
+                    gutterBottom
+                  >
+                    Karthik
+                  </Typography>
+                  <LinearProgressWithLabel value={90} />
+                </ListItem>
+                <ListItem button style={{ flexDirection: "column" }}>
+                  <Typography
+                    color="textSecondary"
+                    style={{ width: "100%" }}
+                    gutterBottom
+                  >
+                    Ram
+                  </Typography>
+                  <LinearProgressWithLabel value={20} />
+                </ListItem>
+              </List>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <Card style={{ height: "100%" }}>
+            <CardContent>
+              <Typography variant="h4" align={"center"}>
+                Languages
+              </Typography>
+              <List>
+                <ListItem
+                  button
+                  onClick={() => setTeacher("Bhargavan")}
+                  style={{ flexDirection: "column" }}
+                >
+                  <Typography
+                    color="textSecondary"
+                    style={{ width: "100%" }}
+                    gutterBottom
+                  >
+                    Bhargavan
+                  </Typography>
+                  <LinearProgressWithLabel value={80} />
+                </ListItem>
+              </List>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
-    </div>
+      {teacher ? (
+        <>
+          <h1 style={{ textAlign: "center", margin: "20px 0" }}>
+            {" "}
+            {teacher} Availability slots{" "}
+          </h1>
+          <Grid
+            container
+            spacing={3}
+            style={{ margin: "0 auto", marginTop: "20px" }}
+          >
+            {[
+              "MONDAY",
+              "TUESDAY",
+              "WEDNESDAY",
+              "THURSDAY",
+              "FRIDAY",
+              "SATURDAY",
+              "SUNDAY",
+            ].map((day) => {
+              return (
+                <Grid item xs={12} sm={4} md={3}>
+                  <TimeSlotCard day={day} teacher={teacher} />
+                </Grid>
+              );
+            })}
+          </Grid>
+        </>
+      ) : (
+        <span></span>
+      )}
+    </>
   );
 };
 

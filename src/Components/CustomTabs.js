@@ -80,19 +80,19 @@ const CustomTabs = () => {
 
   useEffect(() => {
     getData("Status").then((data) => {
+      let dummyLookup = {};
       data.data.result.forEach((data) => {
-        setLookup((prev) => {
-          return { ...prev, [data.statusId]: data.statusName };
-        });
+        dummyLookup[data.statusId] = data.statusName;
       });
+      setLookup(dummyLookup);
     });
     if (value === 6) {
       getData("Category").then((data) => {
+        let dummyLookup = {};
         data.data.result.forEach((data) => {
-          setCategoryLookup((prev) => {
-            return { ...prev, [data.id]: data.categoryName };
-          });
+          dummyLookup[data.id] = data.categoryName;
         });
+        setCategoryLookup(dummyLookup);
       });
     }
   }, [value]);
