@@ -65,13 +65,6 @@ function capitalize(word) {
   return word.charAt(0).toUpperCase() + word.substring(1);
 }
 
-const handleClose = (setOpen) => (event, reason) => {
-  if (reason === "clickaway") {
-    return;
-  }
-  setOpen(false);
-};
-
 const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
   const [column, setColumn] = useState([]);
   const [data, setData] = useState([]);
@@ -133,11 +126,22 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
     }
   }, [lookup, categoryLookup, data]);
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
   return (
     <>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={() => handleClose()}
+      >
         <Alert
-          onClose={() => handleClose(setOpen)}
+          onClose={() => handleClose()}
           severity={success ? "success" : "warning"}
         >
           {response}
@@ -175,7 +179,9 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
                     fetchedData.data.result.status =
                       fetchedData.data.result.classesStatus;
                   }
-                  setData([...data, fetchedData.data.result]);
+                  const { id, _id } = fetchedData.data.result;
+                  newData = { ...newData, id, _id };
+                  setData([...data, newData]);
                   setSuccess(true);
                   setResponse(fetchedData.data.message);
                   setOpen(true);

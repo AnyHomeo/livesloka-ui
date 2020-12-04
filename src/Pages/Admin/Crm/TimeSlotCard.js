@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DeleteIcon from "@material-ui/icons/Delete";
-import FaceIcon from "@material-ui/icons/Face";
 
 import {
   Card,
@@ -20,6 +19,7 @@ import {
   Chip,
   Typography,
   Divider,
+  Grid,
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import { FileCopy } from "@material-ui/icons";
@@ -74,7 +74,7 @@ const times = [
   "11:30 PM - 12:00 PM",
 ];
 
-const TimeSlotCard = ({ day, teacher }) => {
+const TimeSlotCard = ({ day, teacher, available, scheduledSlots }) => {
   const [time, setTime] = useState("");
 
   const [loading, setLoading] = useState(false);
@@ -83,14 +83,13 @@ const TimeSlotCard = ({ day, teacher }) => {
   };
 
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
-
+  const [scheduledTimeSlots, setScheduledTimeSlots] = useState([]);
   const [successOpen, setSuccessOpen] = useState(false);
   const [alertColor, setAlertColor] = useState("");
-
   const [alert, setalert] = useState("");
   const postTimeSlots = async () => {
     const formData = {
-      slot: `${day}-${time}`,
+      slot: `${day.toUpperCase()}-${time}`,
     };
     setLoading(true);
     try {
@@ -99,7 +98,7 @@ const TimeSlotCard = ({ day, teacher }) => {
         formData
       );
       if (res.status === 200) {
-        getTimeSlots();
+        setAvailableTimeSlots((prev) => [...prev, formData.slot]);
         setSuccessOpen(true);
         setalert(res.data.message);
         setAlertColor("success");
@@ -114,25 +113,20 @@ const TimeSlotCard = ({ day, teacher }) => {
     setLoading(false);
   };
 
-  useEffect(() => {
-    if (teacher) {
-      getTimeSlots();
-    }
-  }, [teacher]);
-
-  const getTimeSlots = async () => {
-    const timeSlotsData = await axios.get(
-      `${process.env.REACT_APP_API_KEY}/teacher/available/${teacher}?day=${day}`
-    );
-    setAvailableTimeSlots(timeSlotsData.data.result);
-  };
-
   const handleSuccessClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
     setSuccessOpen(false);
   };
+
+  useEffect(() => {
+    setAvailableTimeSlots(available);
+  }, [available]);
+
+  useEffect(() => {
+    setScheduledTimeSlots(scheduledSlots);
+  }, [scheduledSlots]);
 
   return (
     <>
@@ -148,131 +142,122 @@ const TimeSlotCard = ({ day, teacher }) => {
       </Snackbar>
 
       <Card style={{ height: "100%" }}>
-        <h3 style={{ textAlign: "center" }}>{day}</h3>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            margin: "10px",
-          }}
-        >
-          <FormControl style={{ width: "65%" }} variant="outlined">
-            <InputLabel id="demo-simple-select-outlined-label">Time</InputLabel>
-            <Select
-              value={time}
-              fullWidth
-              onChange={handleTime}
-              label="Time Slots"
-            >
-              {times.map((time) => (
-                <MenuItem value={time}>{time}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          {loading ? (
-            <CircularProgress />
-          ) : (
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ height: "50px", width: "30%" }}
-              onClick={postTimeSlots}
-            >
-              Add
-            </Button>
-          )}
-        </div>
+        <h3 style={{ textAlign: "center" }}>{day.toUpperCase()}</h3>
         <div>
-          <h3 style={{ marginLeft: "20px" }}>Available Time Slots</h3>
-          <Chip
-            color="primary"
-            style={{ marginLeft: "10px", marginBottom: "10px" }}
-            variant="outlined"
-            onDelete={() => {}}
-            label={"2:00PM-02:30PM"}
-          />
-          <Chip
-            color="primary"
-            style={{ marginLeft: "10px", marginBottom: "10px" }}
-            variant="outlined"
-            onDelete={() => {}}
-            label={"4:30PM-5:00PM"}
-          />
-          <h3 style={{ marginLeft: "20px" }}>Scheduled Time Slots</h3>
-          <List>
-            <ListItem button>
-              <ListItemText
-                primary="09:00AM - 10:30AM"
-                secondary={
-                  <React.Fragment>
-                    <Typography
-                      component="span"
-                      variant="body2"
-                      className={{ display: "inline" }}
-                      color="textPrimary"
-                    >
-                      Mary,Tison
-                    </Typography>
-                    {" — meeting every monday and tuesday"}
-                  </React.Fragment>
-                }
-              />
-              <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="comments">
-                  <DeleteIcon color="secondary" />
-                </IconButton>
-                <IconButton edge="end" aria-label="comments">
-                  <FileCopy />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <Divider variant="inset" component="li" />
-            <ListItem button>
-              <ListItemText
-                primary="09:00AM - 10:30AM"
-                secondary={
-                  <React.Fragment>
-                    <Typography
-                      component="span"
-                      variant="body2"
-                      className={{ display: "inline" }}
-                      color="textPrimary"
-                    >
-                      Mary,Tison
-                    </Typography>
-                    {" — meeting every monday and tuesday"}
-                  </React.Fragment>
-                }
-              />
-            </ListItem>
-            <Divider variant="inset" component="li" />
-          </List>
-          {availableTimeSlots.map((availableTimeSlot) => (
-            <Chip
-              style={{ marginLeft: "10px", marginBottom: "10px" }}
-              label={`${availableTimeSlot.split("-")[1]}-${
-                availableTimeSlot.split("-")[2]
-              }`}
-              //  onClick={handleClick}
-              color="primary"
-              variant="outlined"
-              onDelete={async () => {
-                try {
-                  const formData = {
-                    slot: availableTimeSlot,
-                  };
-                  await axios.post(
-                    `${process.env.REACT_APP_API_KEY}/teacher/delete/slot/${teacher}`,
-                    formData
-                  );
-                  getTimeSlots();
-                } catch (error) {
-                  console.error(error.response);
-                }
-              }}
-            />
-          ))}
+          <Grid container>
+            <Grid xs={12} sm={6}>
+              <h3 style={{ marginLeft: "20px" }}>Available Time Slots</h3>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  margin: "10px",
+                }}
+              >
+                <FormControl style={{ width: "65%" }} variant="outlined">
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Time
+                  </InputLabel>
+                  <Select
+                    value={time}
+                    fullWidth
+                    onChange={handleTime}
+                    label="Time Slots"
+                  >
+                    {times.map((time) => (
+                      <MenuItem value={time}>{time}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                {loading ? (
+                  <CircularProgress />
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ height: "50px", width: "30%" }}
+                    onClick={postTimeSlots}
+                  >
+                    Add
+                  </Button>
+                )}
+              </div>
+
+              {availableTimeSlots.map((availableTimeSlot) => (
+                <Chip
+                  style={{ marginLeft: "10px", marginBottom: "10px" }}
+                  label={`${availableTimeSlot.split("-")[1]}-${
+                    availableTimeSlot.split("-")[2]
+                  }`}
+                  //  onClick={handleClick}
+                  color="primary"
+                  variant="outlined"
+                  onDelete={() => {
+                    axios
+                      .post(
+                        `${process.env.REACT_APP_API_KEY}/teacher/delete/slot/${teacher}`,
+                        {
+                          slot: availableTimeSlot,
+                        }
+                      )
+                      .then((data) => {
+                        let index = availableTimeSlots.indexOf(
+                          availableTimeSlot
+                        );
+                        setAvailableTimeSlots((prev) => {
+                          let data = [...prev];
+                          data.splice(index, 1);
+                          return data;
+                        });
+                        setSuccessOpen(true);
+                        setalert("Slot deleted Successfully");
+                        setAlertColor("success");
+                      })
+                      .catch((err) => {
+                        console.error(err);
+                      });
+                  }}
+                />
+              ))}
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <h3 style={{ marginLeft: "20px" }}>Scheduled Time Slots</h3>
+              <List>
+                {scheduledSlots.map((slot) => (
+                  <>
+                    <Divider variant="middle" component="li" />
+                    <ListItem button>
+                      <ListItemText
+                        primary="09:00AM - 10:30AM"
+                        secondary={
+                          <React.Fragment>
+                            <Typography
+                              component="span"
+                              variant="body2"
+                              className={{ display: "inline" }}
+                              color="textPrimary"
+                            >
+                              Mary,Tison
+                            </Typography>
+                            {" — meeting every monday and tuesday"}
+                          </React.Fragment>
+                        }
+                      />
+                      <ListItemSecondaryAction>
+                        <IconButton edge="end" aria-label="comments">
+                          <DeleteIcon color="secondary" />
+                        </IconButton>
+                        <IconButton edge="end" aria-label="comments">
+                          <FileCopy />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  </>
+                ))}
+              </List>
+            </Grid>
+          </Grid>
           {/* {availableTimeSlots.length !== 0 ? (
             <List>
               {availableTimeSlots.map((availableTimeSlot) => (

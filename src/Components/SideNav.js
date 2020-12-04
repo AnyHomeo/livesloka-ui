@@ -173,6 +173,7 @@ export default function PersistentDrawerLeft({ children }) {
             { title: "Invoices", link: "/invoices" },
           ].map((navItem, index) => (
             <Link
+              key={index}
               style={{ textDecoration: "none", color: "black" }}
               to={navItem.link}
             >
