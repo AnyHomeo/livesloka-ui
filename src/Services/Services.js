@@ -192,3 +192,8 @@ export const getSettings = (id) => axios.get(`${API.main}/settings/${id}`);
 
 export const updateSettings = (id, data) =>
   axios.post(`${API.main}/settings/${id}`, data);
+
+export const getTeachersStudents = () => {
+  console.log("from services")
+  return axios.get(`${API.main}/teacher/getTeacherStudents`);
+}

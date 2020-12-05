@@ -12,6 +12,7 @@ import SideNav from "../Components/SideNav";
 import CustomTabs from "../Components/CustomTabs";
 import MeetingScheduler from "../Pages/Admin/Crm/MeetingScheduler";
 import TimeSlots from "../Pages/Admin/Crm/TimeSlots";
+import TeachersStudents from '../Pages/TeachersStudents'
 
 function Routes() {
   return (
@@ -45,6 +46,7 @@ function Routes() {
             <AdminRoute path="/invoice-generator" exact component={Generator} />
             <AdminRoute path="/manual-invoice" exact component={Invoice} />
             <AdminRoute path="/invoices" exact component={Invoices} />
+            <AdminRoute path="/TeachersStudents" exact component={TeachersStudents} />
           </SideNav>
         </Switch>
       </Router>
