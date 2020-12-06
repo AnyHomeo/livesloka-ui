@@ -683,7 +683,7 @@ const CrmDetails = () => {
             paging: false,
             actionsColumnIndex: 0,
             addRowPosition: "first",
-            maxBodyHeight: height,
+            maxBodyHeight: height - 250,
             grouping: true,
             rowStyle: (rowData) => ({
               backgroundColor:

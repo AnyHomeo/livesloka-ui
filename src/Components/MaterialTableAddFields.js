@@ -82,7 +82,6 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
 
   useEffect(() => {
     if (data.length) {
-      console.log("yes i am");
       let lengths = data.map((item) => Object.keys(item).length);
       let v = Object.keys(data[lengths.indexOf(Math.max(...lengths))]).map(
         (key) => {

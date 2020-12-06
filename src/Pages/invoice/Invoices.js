@@ -56,7 +56,7 @@ class Invoices extends React.Component {
     };
     this.setState(change);
 
-    let res = await deleteInvoice(row);
+    await deleteInvoice(row);
   }
 
   dialogHandle(row) {

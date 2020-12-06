@@ -197,3 +197,9 @@ export const getOccupancy = () => axios.get(`${API.main}/teacher/occupancy`);
 
 export const getAllSlots = (id) =>
   axios.get(`${API.main}/teacher/all/slots/${id}`);
+
+export const addAvailableTimeSlot = (id, slot) =>
+  axios.post(`${API.main}/teacher/add/available/${id}`, { slot });
+
+export const deleteAvailableTimeSlot = (id, slot) =>
+  axios.post(`${API.main}/teacher/delete/slot/${id}`, { slot });
