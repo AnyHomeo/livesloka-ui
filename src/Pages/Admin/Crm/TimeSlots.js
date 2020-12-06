@@ -12,6 +12,7 @@ import {
   ListItem,
 } from "@material-ui/core/";
 import TimeSlotCard from "./TimeSlotCard";
+import { getOccupancy, getAllSlots } from "../../../Services/Services";
 
 function LinearProgressWithLabel(props) {
   return (
@@ -33,17 +34,27 @@ function LinearProgressWithLabel(props) {
 }
 
 const TimeSlots = () => {
-  const [teacherName, setTeacherName] = useState();
-  useEffect(() => {
-    getTeachers();
-  }, []);
-  const getTeachers = async () => {
-    const teacherNames = await axios.get(
-      `${process.env.REACT_APP_API_KEY}/teacher?params=id,TeacherName`
-    );
-    setTeacherName(teacherNames.data.result);
-  };
   const [teacher, setTeacher] = useState("");
+  const [teacherName, setTeacherName] = useState("");
+  const [categorizedData, setCategorizedData] = useState({});
+  const [slotsData, setSlotsData] = useState({});
+  useEffect(() => {
+    getOccupancy().then((data) => {
+      setCategorizedData(data.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (teacher) {
+      getAllSlots(teacher)
+        .then((data) => {
+          setSlotsData(data.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [teacher]);
 
   return (
     <>
@@ -52,220 +63,95 @@ const TimeSlots = () => {
         spacing={3}
         style={{ margin: "0 auto", marginTop: "20px" }}
       >
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Card style={{ height: "100%" }}>
-            <CardContent>
-              <Typography variant="h4" align={"center"}>
-                Dance
-              </Typography>
-              <List>
-                <ListItem
-                  button
-                  onClick={() => setTeacher("Kamal")}
-                  style={{ flexDirection: "column" }}
-                >
-                  <Typography
-                    color="textSecondary"
-                    style={{ width: "100%" }}
-                    gutterBottom
-                  >
-                    Kamal
-                  </Typography>
-                  <LinearProgressWithLabel value={40} />
-                </ListItem>
-                <ListItem
-                  button
-                  onClick={() => setTeacher("Karthik")}
-                  style={{ flexDirection: "column" }}
-                >
-                  <Typography
-                    color="textSecondary"
-                    style={{ width: "100%" }}
-                    gutterBottom
-                  >
-                    Karthik
-                  </Typography>
-                  <LinearProgressWithLabel value={90} />
-                </ListItem>
-                <ListItem
-                  button
-                  onClick={() => setTeacher("Ram Kishore")}
-                  style={{ flexDirection: "column" }}
-                >
-                  <Typography
-                    color="textSecondary"
-                    style={{ width: "100%" }}
-                    gutterBottom
-                  >
-                    Ram
-                  </Typography>
-                  <LinearProgressWithLabel value={20} />
-                </ListItem>
-              </List>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Card style={{ height: "100%" }}>
-            <CardContent>
-              <Typography variant="h4" align={"center"}>
-                Songs
-              </Typography>
-              <List>
-                <ListItem
-                  button
-                  onClick={() => setTeacher("Kamal")}
-                  style={{ flexDirection: "column" }}
-                >
-                  <Typography
-                    color="textSecondary"
-                    style={{ width: "100%" }}
-                    gutterBottom
-                  >
-                    Kamal
-                  </Typography>
-                  <LinearProgressWithLabel value={40} />
-                </ListItem>
-                <ListItem
-                  button
-                  onClick={() => setTeacher("Karthik")}
-                  style={{ flexDirection: "column" }}
-                >
-                  <Typography
-                    color="textSecondary"
-                    style={{ width: "100%" }}
-                    gutterBottom
-                  >
-                    Karthik
-                  </Typography>
-                  <LinearProgressWithLabel value={70} />
-                </ListItem>
-                <ListItem button style={{ flexDirection: "column" }}>
-                  <Typography
-                    color="textSecondary"
-                    style={{ width: "100%" }}
-                    gutterBottom
-                  >
-                    Ram
-                  </Typography>
-                  <LinearProgressWithLabel value={60} />
-                </ListItem>
-                <ListItem
-                  button
-                  onClick={() => setTeacher("Ram Kishore")}
-                  style={{ flexDirection: "column" }}
-                >
-                  <Typography
-                    color="textSecondary"
-                    style={{ width: "100%" }}
-                    gutterBottom
-                  >
-                    Ram Kishore
-                  </Typography>
-                  <LinearProgressWithLabel value={20} />
-                </ListItem>
-              </List>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Card style={{ height: "100%" }}>
-            <CardContent>
-              <Typography variant="h4" align={"center"}>
-                Sloka
-              </Typography>
-              <List>
-                <ListItem
-                  button
-                  onClick={() => setTeacher("Kamal")}
-                  style={{ flexDirection: "column" }}
-                >
-                  <Typography
-                    color="textSecondary"
-                    style={{ width: "100%" }}
-                    gutterBottom
-                  >
-                    Kamal
-                  </Typography>
-                  <LinearProgressWithLabel value={80} />
-                </ListItem>
-                <ListItem
-                  button
-                  onClick={() => setTeacher("Karthik")}
-                  style={{ flexDirection: "column" }}
-                >
-                  <Typography
-                    color="textSecondary"
-                    style={{ width: "100%" }}
-                    gutterBottom
-                  >
-                    Karthik
-                  </Typography>
-                  <LinearProgressWithLabel value={90} />
-                </ListItem>
-                <ListItem button style={{ flexDirection: "column" }}>
-                  <Typography
-                    color="textSecondary"
-                    style={{ width: "100%" }}
-                    gutterBottom
-                  >
-                    Ram
-                  </Typography>
-                  <LinearProgressWithLabel value={20} />
-                </ListItem>
-              </List>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Card style={{ height: "100%" }}>
-            <CardContent>
-              <Typography variant="h4" align={"center"}>
-                Languages
-              </Typography>
-              <List>
-                <ListItem
-                  button
-                  onClick={() => setTeacher("Bhargavan")}
-                  style={{ flexDirection: "column" }}
-                >
-                  <Typography
-                    color="textSecondary"
-                    style={{ width: "100%" }}
-                    gutterBottom
-                  >
-                    Bhargavan
-                  </Typography>
-                  <LinearProgressWithLabel value={80} />
-                </ListItem>
-              </List>
-            </CardContent>
-          </Card>
-        </Grid>
+        {Object.keys(categorizedData).map((category) => {
+          return (
+            <React.Fragment key={category}>
+              {Object.keys(categorizedData[category]).length ? (
+                <Grid item xs={12} sm={6} md={4} lg={3}>
+                  <Card style={{ height: "100%" }}>
+                    <CardContent>
+                      <Typography
+                        variant="h4"
+                        align={"center"}
+                        style={{ textTransform: "uppercase" }}
+                      >
+                        {category}
+                      </Typography>
+                      <List>
+                        {Object.keys(categorizedData[category]).map(
+                          (teacher) => {
+                            let val;
+                            let {
+                              availableSlots,
+                              scheduledSlots,
+                              id,
+                              TeacherName,
+                            } = categorizedData[category][teacher];
+                            if (
+                              !availableSlots.length &&
+                              !scheduledSlots.length
+                            ) {
+                              val = 0;
+                            } else {
+                              val =
+                                (scheduledSlots.length /
+                                  (scheduledSlots.length +
+                                    availableSlots.length)) *
+                                100;
+                            }
+                            return (
+                              <ListItem
+                                button
+                                key={teacher}
+                                onClick={() => {
+                                  console.log(TeacherName);
+                                  setTeacher(id);
+                                  setTeacherName(teacher);
+                                }}
+                                style={{ flexDirection: "column" }}
+                              >
+                                <Typography
+                                  color="textSecondary"
+                                  style={{ width: "100%" }}
+                                >
+                                  {teacher}
+                                </Typography>
+                                <LinearProgressWithLabel value={val} />
+                              </ListItem>
+                            );
+                          }
+                        )}
+                      </List>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ) : (
+                <span />
+              )}
+            </React.Fragment>
+          );
+        })}
       </Grid>
       {teacher ? (
         <>
           <h1 style={{ textAlign: "center", margin: "20px 0" }}>
             {" "}
-            {teacher} Availability slots{" "}
+            {teacherName} Availability slots{" "}
           </h1>
           <Grid
             container
             spacing={3}
             style={{ margin: "0 auto", marginTop: "20px" }}
           >
-            {[
-              "MONDAY",
-              "TUESDAY",
-              "WEDNESDAY",
-              "THURSDAY",
-              "FRIDAY",
-              "SATURDAY",
-              "SUNDAY",
-            ].map((day) => {
+            {Object.keys(slotsData).map((day) => {
               return (
-                <Grid item xs={12} sm={4} md={3}>
-                  <TimeSlotCard day={day} teacher={teacher} />
+                <Grid item xs={12} sm={6}>
+                  <TimeSlotCard
+                    day={day}
+                    available={slotsData[day].availableSlots}
+                    scheduledSlots={slotsData[day].scheduledSlots}
+                    teacher={teacher}
+                  />
                 </Grid>
               );
             })}

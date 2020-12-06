@@ -197,3 +197,7 @@ export const getTeachersStudents = () => {
   console.log("from services")
   return axios.get(`${API.main}/teacher/getTeacherStudents`);
 }
+export const getOccupancy = () => axios.get(`${API.main}/teacher/occupancy`);
+
+export const getAllSlots = (id) =>
+  axios.get(`${API.main}/teacher/all/slots/${id}`);
