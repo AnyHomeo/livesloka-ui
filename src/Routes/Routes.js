@@ -12,6 +12,7 @@ import SideNav from "../Components/SideNav";
 import CustomTabs from "../Components/CustomTabs";
 import MeetingScheduler from "../Pages/Admin/Crm/MeetingScheduler";
 import Scheduler from "../Pages/Admin/Scheduler/Scheduler";
+import FinancialAnalytics from "../Pages/Analytics/FinancialAnalytics";
 
 function Routes() {
   return (
@@ -34,6 +35,7 @@ function Routes() {
             <AdminRoute path="/manual-invoice" exact component={Invoice} />
             <AdminRoute path="/invoices" exact component={Invoices} />
             <Route path="/scheduler" exact component={Scheduler} />
+            <Route path="/Analytics" exact component={FinancialAnalytics} />
           </SideNav>
         </Switch>
       </Router>

@@ -179,6 +179,22 @@ export default function PersistentDrawerLeft({ children }) {
             </Link>
           ))}
         </List>
+        <Divider />
+        <List>
+          {[{ title: "Financial Analytics", link: "/Analytics" }].map(
+            (navItem, index) => (
+              <Link
+                key={index}
+                style={{ textDecoration: "none", color: "black" }}
+                to={navItem.link}
+              >
+                <ListItem button key={navItem.link}>
+                  <ListItemText primary={navItem.title} />
+                </ListItem>
+              </Link>
+            )
+          )}
+        </List>
       </Drawer>
       <main
         className={clsx(classes.content, {

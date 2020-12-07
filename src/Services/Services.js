@@ -1,4 +1,4 @@
-import axios from "axios";
+ticsimport axios from "axios";
 import { isAutheticated } from "../auth";
 import { services } from "./config";
 import Axios from "axios";
@@ -203,3 +203,6 @@ export const addAvailableTimeSlot = (id, slot) =>
 
 export const deleteAvailableTimeSlot = (id, slot) =>
   axios.post(`${API.main}/teacher/delete/slot/${id}`, { slot });
+
+export const getFinancialStatistics = () =>
+  axios.get(`${API.main}/teacher/finance`);
