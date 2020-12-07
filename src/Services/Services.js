@@ -1,4 +1,4 @@
-ticsimport axios from "axios";
+import axios from "axios";
 import { isAutheticated } from "../auth";
 import { services } from "./config";
 import Axios from "axios";
