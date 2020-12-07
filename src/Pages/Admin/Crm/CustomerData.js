@@ -691,9 +691,9 @@ const CrmDetails = () => {
               color: selectedRow === rowData.tableData.id ? "#fff" : "#000",
             }),
           }}
-          onRowClick={(evt, selectedRow) =>
-            setSelectedRow(selectedRow.tableData.id)
-          }
+          // onRowClick={(evt, selectedRow) =>
+          //   setSelectedRow(selectedRow.tableData.id)
+          // }
           actions={[
             (rowData) => ({
               icon: () => (
