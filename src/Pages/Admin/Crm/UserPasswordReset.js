@@ -56,7 +56,13 @@ function UserPasswordReset() {
           style={{ width: "60%", margin: "0 auto" }}
           options={studentsData}
           getOptionLabel={(name) =>
-            name.customerId ? name.customerId.firstName : ""
+            name.customerId && name.customerId.firstName
+              ? `${name.customerId.firstName}${
+                  name.customerId.email ? "(" + name.customerId.email + ")" : ""
+                }`
+              : name.customerId && name.customerId.email
+              ? name.customerId.email
+              : "no data available for this user"
           }
           onChange={(event, value) => {
             console.log(event, value);
