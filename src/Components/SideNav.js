@@ -150,6 +150,7 @@ export default function PersistentDrawerLeft({ children }) {
             { title: "Attendance", link: "/attendance" },
             { title: "Teacher Timetable", link: "/scheduler" },
             { title: "Meeting Schedule", link: "/meeting-scheduler" },
+            { title: "Reset Password", link: "/reset/password" },
           ].map((navItem, index) => (
             <Link
               style={{ textDecoration: "none", color: "black" }}
