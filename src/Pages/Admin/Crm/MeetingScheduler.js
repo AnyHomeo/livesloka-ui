@@ -49,15 +49,7 @@ const MeetingScheduler = () => {
 
   const [personName, setPersonName] = useState();
 
-  const time = new Date();
-  const [startDate, setStartDate] = useState(time);
-  const [endDate, setEndDate] = useState(time);
-  const [startTime, setStartTime] = useState(time);
-  const [endTime, setEndTime] = useState(time);
-  const [teachers, setTeachers] = useState([""]);
-  const [students, setStudents] = useState([""]);
   const [teacher, setInputTeacher] = useState("");
-  const [student, setInputStudent] = useState("");
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [demo, setDemo] = useState(false);
   const [radioday, setRadioday] = useState("");
