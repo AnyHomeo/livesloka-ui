@@ -7,6 +7,25 @@ import {
   deleteAvailableTimeSlot,
   getOccupancy,
 } from "../../../Services/Services";
+import {
+  Button,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  FormGroup,
+  IconButton,
+  InputAdornment,
+  Slide,
+  Switch,
+  TextField,
+} from "@material-ui/core";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { FileCopyOutlined } from "@material-ui/icons";
+import MeetingScheduler from "../Crm/MeetingScheduler";
 
 const times = [
   "12:00 AM-12:30 AM",
@@ -94,17 +113,35 @@ const days = [
   "sunday",
 ];
 
+const copyToClipboard = () => {
+  var textField = document.getElementById("meeting-link");
+  textField.select();
+  document.execCommand("copy");
+};
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 function Scheduler() {
   const [teacher, setTeacher] = useState("");
   const [teacherId, setTeacherId] = useState("");
   const [category, setCategory] = useState("");
   const { width } = useWindowDimensions();
   const [categorizedData, setCategorizedData] = useState({});
+  const [allSchedules, setAllSchedules] = useState([]);
+  const [availableSlotsEditingMode, setAvailableSlotsEditingMode] = useState(
+    false
+  );
+  const [scheduleId, setScheduleId] = useState("");
+  const [selectedSchedule, setSelectedSchedule] = useState({});
+  const [addScheduleMode, setAddScheduleMode] = useState(false);
 
   useEffect(() => {
     getOccupancy().then((data) => {
       console.log(data.data);
-      setCategorizedData(data.data);
+      setCategorizedData(data.data.data);
+      setAllSchedules(data.data.allSchedules);
     });
   }, []);
 
@@ -147,6 +184,12 @@ function Scheduler() {
     }
   };
 
+  useEffect(() => {
+    setSelectedSchedule(
+      allSchedules.filter((schedule) => schedule._id === scheduleId)[0]
+    );
+  }, [scheduleId, allSchedules]);
+
   return (
     <>
       <OccupancyBars
@@ -155,12 +198,114 @@ function Scheduler() {
         setTeacherId={setTeacherId}
         setCategory={setCategory}
       />
+      <Dialog
+        open={!!scheduleId}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={() => setScheduleId("")}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">
+          Schedule Details
+        </DialogTitle>
+        <DialogContent>
+          <h3>Students:</h3>
+          <span
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              flexWrap: "wrap",
+            }}
+          >
+            {selectedSchedule ? (
+              <>
+                {selectedSchedule.students
+                  ? selectedSchedule.students.map((student) => (
+                      <Chip
+                        color="primary"
+                        style={{ margin: "0 5px" }}
+                        label={student.firstName}
+                      />
+                    ))
+                  : ""}
+                <TextField
+                  style={{ margin: "20px 0" }}
+                  fullWidth
+                  readOnly
+                  id="meeting-link"
+                  label="Meeting Link"
+                  variant="outlined"
+                  value={selectedSchedule.meetingLink}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() =>
+                            copyToClipboard(selectedSchedule.meetingLink)
+                          }
+                        >
+                          <FileCopyOutlined />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </>
+            ) : (
+              ""
+            )}
+          </span>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setScheduleId("")}
+            variant="outlined"
+            color="primary"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => setScheduleId("")}
+            variant="outlined"
+            color="primary"
+            startIcon={<EditIcon />}
+          >
+            Edit
+          </Button>
+          <Button
+            onClick={() => setScheduleId("")}
+            variant="outlined"
+            color="secondary"
+            startIcon={<DeleteIcon />}
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
       {teacher && teacherId ? (
         <>
           <h1 style={{ textAlign: "center", textTransform: "capitalize" }}>
             {" "}
             {teacher} Week Schedule{" "}
           </h1>
+          <div
+            style={{ display: "flex", flexDirection: "row", padding: "20px" }}
+          >
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={availableSlotsEditingMode}
+                    onChange={() =>
+                      setAvailableSlotsEditingMode((prev) => !prev)
+                    }
+                  />
+                }
+                label="Adjust Slots"
+              />
+            </FormGroup>
+          </div>
           <div
             style={{
               height: "50px",
@@ -234,21 +379,46 @@ function Scheduler() {
                             key={j}
                             className={`day-time-intersection-box `}
                             style={{
+                              cursor:
+                                categorizedData[category][teacher]
+                                  .scheduledSlots[
+                                  `${day.toUpperCase()}-${time}`
+                                ] || availableSlotsEditingMode
+                                  ? "pointer"
+                                  : "not-allowed",
                               borderBottom:
                                 i % 2 !== 0 ? "1px solid rgba(0,0,0,0.5)" : "",
                               backgroundColor: categorizedData[category][
                                 teacher
-                              ].availableSlots.includes(
-                                `${day.toUpperCase()}-${time}`
-                              )
+                              ].scheduledSlots[`${day.toUpperCase()}-${time}`]
+                                ? "#EA7773"
+                                : categorizedData[category][
+                                    teacher
+                                  ].availableSlots.includes(
+                                    `${day.toUpperCase()}-${time}`
+                                  )
                                 ? "#04E46C"
                                 : undefined,
                             }}
-                            onClick={() =>
-                              addOrRemoveAvailableSlot(
-                                `${day.toUpperCase()}-${time}`
-                              )
-                            }
+                            onClick={() => {
+                              if (availableSlotsEditingMode) {
+                                addOrRemoveAvailableSlot(
+                                  `${day.toUpperCase()}-${time}`
+                                );
+                              } else if (
+                                categorizedData[category][teacher]
+                                  .scheduledSlots[
+                                  `${day.toUpperCase()}-${time}`
+                                ]
+                              ) {
+                                setScheduleId(
+                                  categorizedData[category][teacher]
+                                    .scheduledSlots[
+                                    `${day.toUpperCase()}-${time}`
+                                  ]
+                                );
+                              }
+                            }}
                           >
                             {categorizedData[category][
                               teacher
@@ -256,6 +426,11 @@ function Scheduler() {
                               `${day.toUpperCase()}-${time}`
                             )
                               ? "available"
+                              : categorizedData[category][teacher]
+                                  .scheduledSlots[
+                                  `${day.toUpperCase()}-${time}`
+                                ]
+                              ? "Scheduled"
                               : ""}
                           </div>
                         );

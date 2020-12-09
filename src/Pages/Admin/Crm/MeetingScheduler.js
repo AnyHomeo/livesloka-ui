@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MeetingScheduler = () => {
+const MeetingScheduler = ({ noSlot }) => {
   const theme = useTheme();
 
   const ITEM_HEIGHT = 48;
@@ -326,56 +326,109 @@ const MeetingScheduler = () => {
             flexDirection: "column",
           }}
         >
-          <div className="date-checkbox">
-            <FormControl component="fieldset" style={{ marginTop: "50px" }}>
-              <FormLabel component="legend">Dates</FormLabel>
-              <RadioGroup
-                color="primary"
-                aria-label="Dates"
-                name="gender1"
-                value={radioday}
-                onChange={handleDayChange}
-                style={{ display: "flex", flexDirection: "row" }}
-              >
-                <FormControlLabel
-                  value="MONDAY"
-                  control={<Radio color="primary" />}
-                  label="M"
-                />
-                <FormControlLabel
-                  value="TUESDAY"
-                  control={<Radio color="primary" />}
-                  label="T"
-                />
-                <FormControlLabel
-                  value="WEDNESDAY"
-                  control={<Radio color="primary" />}
-                  label="W"
-                />
-                <FormControlLabel
-                  value="THURSDAY"
-                  control={<Radio color="primary" />}
-                  label="T"
-                />
-                <FormControlLabel
-                  value="FRIDAY"
-                  control={<Radio color="primary" />}
-                  label="F"
-                />
-                <FormControlLabel
-                  value="SATURDAY"
-                  control={<Radio color="primary" />}
-                  label="S"
-                />
-                <FormControlLabel
-                  value="SUNDAY"
-                  control={<Radio color="primary" />}
-                  label="S"
-                />
-              </RadioGroup>
-            </FormControl>
-          </div>
+          {noSlot ? (
+            ""
+          ) : (
+            <>
+              <div className="date-checkbox">
+                <FormControl component="fieldset" style={{ marginTop: "50px" }}>
+                  <FormLabel component="legend">Dates</FormLabel>
+                  <RadioGroup
+                    color="primary"
+                    aria-label="Dates"
+                    name="gender1"
+                    value={radioday}
+                    onChange={handleDayChange}
+                    style={{ display: "flex", flexDirection: "row" }}
+                  >
+                    <FormControlLabel
+                      value="MONDAY"
+                      control={<Radio color="primary" />}
+                      label="M"
+                    />
+                    <FormControlLabel
+                      value="TUESDAY"
+                      control={<Radio color="primary" />}
+                      label="T"
+                    />
+                    <FormControlLabel
+                      value="WEDNESDAY"
+                      control={<Radio color="primary" />}
+                      label="W"
+                    />
+                    <FormControlLabel
+                      value="THURSDAY"
+                      control={<Radio color="primary" />}
+                      label="T"
+                    />
+                    <FormControlLabel
+                      value="FRIDAY"
+                      control={<Radio color="primary" />}
+                      label="F"
+                    />
+                    <FormControlLabel
+                      value="SATURDAY"
+                      control={<Radio color="primary" />}
+                      label="S"
+                    />
+                    <FormControlLabel
+                      value="SUNDAY"
+                      control={<Radio color="primary" />}
+                      label="S"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </div>
 
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                {radioday === "MONDAY" ? (
+                  <AvailableTimeSlotChip
+                    data={mondayData}
+                    getPropData={getPropData}
+                  />
+                ) : radioday === "TUESDAY" ? (
+                  <AvailableTimeSlotChip
+                    data={tuesdayData}
+                    getPropData={getPropData}
+                  />
+                ) : radioday === "WEDNESDAY" ? (
+                  <AvailableTimeSlotChip
+                    data={wednesdayData}
+                    getPropData={getPropData}
+                  />
+                ) : radioday === "THURSDAY" ? (
+                  <AvailableTimeSlotChip
+                    data={thursdayData}
+                    getPropData={getPropData}
+                  />
+                ) : radioday === "FRIDAY" ? (
+                  <AvailableTimeSlotChip
+                    data={fridayData}
+                    getPropData={getPropData}
+                  />
+                ) : radioday === "SATURDAY" ? (
+                  <AvailableTimeSlotChip
+                    data={saturdayData}
+                    getPropData={getPropData}
+                  />
+                ) : radioday === "SUNDAY" ? (
+                  <AvailableTimeSlotChip
+                    data={sundayData}
+                    getPropData={getPropData}
+                  />
+                ) : (
+                  <AvailableTimeSlotChip />
+                )}
+              </div>
+            </>
+          )}
           <div
             style={{
               display: "flex",
@@ -384,45 +437,6 @@ const MeetingScheduler = () => {
               alignItems: "center",
             }}
           >
-            {radioday === "MONDAY" ? (
-              <AvailableTimeSlotChip
-                data={mondayData}
-                getPropData={getPropData}
-              />
-            ) : radioday === "TUESDAY" ? (
-              <AvailableTimeSlotChip
-                data={tuesdayData}
-                getPropData={getPropData}
-              />
-            ) : radioday === "WEDNESDAY" ? (
-              <AvailableTimeSlotChip
-                data={wednesdayData}
-                getPropData={getPropData}
-              />
-            ) : radioday === "THURSDAY" ? (
-              <AvailableTimeSlotChip
-                data={thursdayData}
-                getPropData={getPropData}
-              />
-            ) : radioday === "FRIDAY" ? (
-              <AvailableTimeSlotChip
-                data={fridayData}
-                getPropData={getPropData}
-              />
-            ) : radioday === "SATURDAY" ? (
-              <AvailableTimeSlotChip
-                data={saturdayData}
-                getPropData={getPropData}
-              />
-            ) : radioday === "SUNDAY" ? (
-              <AvailableTimeSlotChip
-                data={sundayData}
-                getPropData={getPropData}
-              />
-            ) : (
-              <AvailableTimeSlotChip />
-            )}
-
             <TextField
               id="outlined-basic"
               label="Zoom Account"
