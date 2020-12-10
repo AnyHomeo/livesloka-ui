@@ -14,6 +14,7 @@ import MeetingScheduler from "../Pages/Admin/Crm/MeetingScheduler";
 import Scheduler from "../Pages/Admin/Scheduler/Scheduler";
 import FinancialAnalytics from "../Pages/Analytics/FinancialAnalytics";
 import UserPasswordReset from "../Pages/Admin/Crm/UserPasswordReset";
+import EditSchedule from "../Pages/Admin/Crm/EditSchedule";
 
 function Routes() {
   return (
@@ -36,8 +37,9 @@ function Routes() {
             <AdminRoute path="/manual-invoice" exact component={Invoice} />
             <AdminRoute path="/invoices" exact component={Invoices} />
             <Route path="/scheduler" exact component={Scheduler} />
-            <Route path="/Analytics" exact component={FinancialAnalytics} />
+            <Route path="/analytics" exact component={FinancialAnalytics} />
             <Route path="/reset/password" exact component={UserPasswordReset} />
+            <Route path="/edit-schedule/:id" exact component={EditSchedule} />
           </SideNav>
         </Switch>
       </Router>

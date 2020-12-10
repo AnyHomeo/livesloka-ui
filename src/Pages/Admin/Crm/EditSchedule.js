@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MeetingScheduler = ({ noSlot }) => {
+const EditSchedule = ({ noSlot, match }) => {
   const theme = useTheme();
 
   const ITEM_HEIGHT = 48;
@@ -57,6 +57,24 @@ const MeetingScheduler = ({ noSlot }) => {
   const handleDayChange = (event) => {
     setRadioday(event.target.value);
   };
+
+  //   useEffect(() => {
+  //     getEditedFields();
+  //   }, []);
+
+  //    const getEditedFields = async () => {
+  //     try {
+  //         const editedData = await Axios.get(
+  //           `${process.env.REACT_APP_API_KEY}/schedule/${match.params.id}`
+  //         );
+
+  //         setNewEditedData(editedData.data);
+
+  //         setZoomEmail(editedData.data.result.meetingAccount);
+  //         setZoomLink(editedData.data.result.meetingLink);
+  //         setDemo(editedData.data.result.demo);
+  //       } catch (error) {}
+  //       };
 
   const handleSuccessClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -84,6 +102,10 @@ const MeetingScheduler = ({ noSlot }) => {
   const [zoomEmail, setZoomEmail] = useState("");
   const [zoomLink, setZoomLink] = useState("");
 
+  const [newEditedData, setNewEditedData] = useState();
+
+  const [setNewTeacherName, setSetNewTeacherName] = useState([]);
+
   useEffect(() => {
     getTeachers();
     getStudents();
@@ -94,13 +116,32 @@ const MeetingScheduler = ({ noSlot }) => {
       getTimeSlots();
     }
   }, [teacher]);
-
   // Get teachers
+
   const getTeachers = async () => {
     const teacherNames = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/teacher?params=id,TeacherName`
     );
     setTeacherName(teacherNames.data.result);
+
+    console.log(teacherNames);
+
+    const editedData = await Axios.get(
+      `${process.env.REACT_APP_API_KEY}/schedule/${match.params.id}`
+    );
+
+    setNewEditedData(editedData.data);
+
+    setZoomEmail(editedData.data.result.meetingAccount);
+    setZoomLink(editedData.data.result.meetingLink);
+    setDemo(editedData.data.result.demo);
+
+    console.log(teacherNames);
+    teacherNames.data.result.map((teacher) => {
+      if (teacher.id === editedData.data.result.teacher) {
+        setSetNewTeacherName(teacher);
+      }
+    });
   };
 
   // Get Students
@@ -242,6 +283,7 @@ const MeetingScheduler = ({ noSlot }) => {
   };
 
   const classes = useStyles();
+  console.log(setNewTeacherName);
   return (
     <>
       <Snackbar
@@ -260,7 +302,7 @@ const MeetingScheduler = ({ noSlot }) => {
           className="heading"
           style={{ fontSize: "20px", marginTop: "20px", textAlign: "center" }}
         >
-          Schedule A Meeting
+          Edit Schedule
         </h1>
         <Grid container style={{ width: "100%" }}>
           <Grid item xs={false} md={4} />
@@ -271,6 +313,7 @@ const MeetingScheduler = ({ noSlot }) => {
                 options={teacherName}
                 getOptionLabel={(option) => option.TeacherName}
                 onChange={(event, value) => value && setInputTeacher(value.id)}
+                defaultValue={setNewTeacherName[0]}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -456,11 +499,11 @@ const MeetingScheduler = ({ noSlot }) => {
 
             <TextField
               fullWidth
+              required
               id="outlined-basic"
               label="Zoom Link"
               variant="outlined"
               value={zoomLink}
-              required
               onChange={(e) => setZoomLink(e.target.value)}
               style={{
                 maxWidth: "400px",
@@ -504,4 +547,4 @@ const MeetingScheduler = ({ noSlot }) => {
   );
 };
 
-export default MeetingScheduler;
+export default EditSchedule;

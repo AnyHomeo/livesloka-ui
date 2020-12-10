@@ -26,6 +26,8 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { FileCopyOutlined } from "@material-ui/icons";
 import MeetingScheduler from "../Crm/MeetingScheduler";
+import { Link } from "react-router-dom";
+import Axios from "axios";
 
 const times = [
   "12:00 AM-12:30 AM",
@@ -138,12 +140,29 @@ function Scheduler() {
   const [addScheduleMode, setAddScheduleMode] = useState(false);
 
   useEffect(() => {
+    serviceCallDelete();
+  }, []);
+
+  const serviceCallDelete = () => {
     getOccupancy().then((data) => {
       console.log(data.data);
       setCategorizedData(data.data.data);
       setAllSchedules(data.data.allSchedules);
     });
-  }, []);
+  };
+
+  const deleteSchedule = async () => {
+    try {
+      const deleteddata = await Axios.get(
+        `${process.env.REACT_APP_API_KEY}/schedule/delete/${scheduleId}`
+      );
+      console.log(deleteddata);
+      serviceCallDelete();
+      setScheduleId("");
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
 
   const addOrRemoveAvailableSlot = (slot) => {
     if (!categorizedData[category][teacher].availableSlots.includes(slot)) {
@@ -265,16 +284,21 @@ function Scheduler() {
           >
             Cancel
           </Button>
-          <Button
-            onClick={() => setScheduleId("")}
-            variant="outlined"
-            color="primary"
-            startIcon={<EditIcon />}
+          <Link
+            style={{ textDecoration: "none" }}
+            to={`/edit-schedule/${scheduleId}`}
           >
-            Edit
-          </Button>
+            <Button
+              // onClick={() => setScheduleId("")}
+              variant="outlined"
+              color="primary"
+              startIcon={<EditIcon />}
+            >
+              Edit
+            </Button>
+          </Link>
           <Button
-            onClick={() => setScheduleId("")}
+            onClick={() => deleteSchedule()}
             variant="outlined"
             color="secondary"
             startIcon={<DeleteIcon />}

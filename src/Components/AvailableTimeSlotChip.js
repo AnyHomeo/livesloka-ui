@@ -66,6 +66,7 @@ export default function AvailableTimeSlotChip({ data, getPropData }) {
           labelId="demo-mutiple-chip-label"
           id="demo-mutiple-chip"
           multiple
+          required
           value={personName}
           onChange={handleChange}
           input={<Input id="select-multiple-chip" />}
