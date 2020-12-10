@@ -108,7 +108,9 @@ const MeetingScheduler = ({ noSlot }) => {
     const studentNames = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/customers/all?params=firstName,lastName`
     );
+    console.log(studentNames)
     setStudentName(studentNames.data.result);
+
   };
 
   const getTimeSlots = async () => {
@@ -439,6 +441,48 @@ const MeetingScheduler = ({ noSlot }) => {
               alignItems: "center",
             }}
           >
+<<<<<<< HEAD
+            {radioday === "MONDAY" ? (
+              <AvailableTimeSlotChip
+                data={mondayData}
+                getPropData={getPropData}
+              />
+            ) : radioday === "TUESDAY" ? (
+              <AvailableTimeSlotChip
+                data={tuesdayData}
+                getPropData={getPropData}
+              />
+            ) : radioday === "WEDNESDAY" ? (
+              <AvailableTimeSlotChip
+                data={wednesdayData}
+                getPropData={getPropData}
+              />
+            ) : radioday === "THURSDAY" ? (
+              <AvailableTimeSlotChip
+                data={thursdayData}
+                getPropData={getPropData}
+              />
+            ) : radioday === "FRIDAY" ? (
+              <AvailableTimeSlotChip
+                data={fridayData}
+                getPropData={getPropData}
+              />
+            ) : radioday === "SATURDAY" ? (
+              <AvailableTimeSlotChip
+                data={saturdayData}
+                getPropData={getPropData}
+              />
+            ) : radioday === "SUNDAY" ? (
+              <AvailableTimeSlotChip
+                data={sundayData}
+                getPropData={getPropData}
+              />
+            ) : (
+                            <AvailableTimeSlotChip />
+                          )}
+
+=======
+>>>>>>> 63c4031f7eaef9523f68a4bd07d41ae085f83300
             <TextField
               id="outlined-basic"
               label="Zoom Account"
@@ -486,17 +530,17 @@ const MeetingScheduler = ({ noSlot }) => {
             {loading ? (
               <CircularProgress />
             ) : (
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                type="submit"
-                className={classes.button}
-                startIcon={<SaveIcon />}
-              >
-                Save
-              </Button>
-            )}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  type="submit"
+                  className={classes.button}
+                  startIcon={<SaveIcon />}
+                >
+                  Save
+                </Button>
+              )}
           </div>
         </div>
       </form>

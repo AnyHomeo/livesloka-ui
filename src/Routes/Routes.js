@@ -13,7 +13,10 @@ import CustomTabs from "../Components/CustomTabs";
 import MeetingScheduler from "../Pages/Admin/Crm/MeetingScheduler";
 import Scheduler from "../Pages/Admin/Scheduler/Scheduler";
 import FinancialAnalytics from "../Pages/Analytics/FinancialAnalytics";
+import TeacherDetails from "../Pages/Admin/Crm/TeacherDetails";
+
 import UserPasswordReset from "../Pages/Admin/Crm/UserPasswordReset";
+
 import EditSchedule from "../Pages/Admin/Crm/EditSchedule";
 
 function Routes() {
@@ -28,6 +31,11 @@ function Routes() {
             <AdminRoute path="/customer-data" exact component={CustomerData} />
             <AdminRoute path="/add-fields" exact component={CustomTabs} />
             <AdminRoute path="/attendance" exact component={Attedance} />
+            <AdminRoute
+              path="/teacherDetails"
+              exact
+              component={TeacherDetails}
+            />
             <AdminRoute
               path="/meeting-scheduler"
               exact
