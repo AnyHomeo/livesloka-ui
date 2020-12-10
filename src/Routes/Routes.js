@@ -13,7 +13,11 @@ import CustomTabs from "../Components/CustomTabs";
 import MeetingScheduler from "../Pages/Admin/Crm/MeetingScheduler";
 import Scheduler from "../Pages/Admin/Scheduler/Scheduler";
 import FinancialAnalytics from "../Pages/Analytics/FinancialAnalytics";
+<<<<<<< HEAD
 import TeacherDetails from "../Pages/Admin/Crm/TeacherDetails"
+=======
+import UserPasswordReset from "../Pages/Admin/Crm/UserPasswordReset";
+>>>>>>> 63c4031f7eaef9523f68a4bd07d41ae085f83300
 
 function Routes() {
   return (
@@ -38,6 +42,7 @@ function Routes() {
             <AdminRoute path="/invoices" exact component={Invoices} />
             <Route path="/scheduler" exact component={Scheduler} />
             <Route path="/Analytics" exact component={FinancialAnalytics} />
+            <Route path="/reset/password" exact component={UserPasswordReset} />
           </SideNav>
         </Switch>
       </Router>

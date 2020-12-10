@@ -9,6 +9,8 @@ import {
   Box,
   Grid,
   Typography,
+  InputAdornment,
+  IconButton,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -18,6 +20,7 @@ import { Redirect } from "react-router-dom";
 import { authenticate, isAutheticated } from "../../auth/index";
 import Background from "../../Images/Captureblue_buuble.PNG";
 import Copyright from "../../Components/Copyright";
+import { Visibility, VisibilityOff } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -98,6 +101,7 @@ const Login = () => {
     errors: false,
     didRedirect: false,
   });
+  const [visible, setVisible] = useState(false);
 
   const { userId, password, remember, isLoading, errors, didRedirect } = user;
 
@@ -230,16 +234,28 @@ const Login = () => {
             />
             <TextField
               variant="outlined"
-              margin="normal"
               required
               fullWidth
               name="password"
               label="Password"
-              type="password"
+              type={visible ? "text" : "password"}
               id="password"
               autoComplete="current-password"
               value={password}
               onChange={onChange}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setVisible((prev) => !prev)}
+                      edge="end"
+                    >
+                      {visible ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
             <Grid container>
               <Grid item xs>

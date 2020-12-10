@@ -69,8 +69,8 @@ const OccupancyBars = ({
                                 val = 0;
                               } else {
                                 val =
-                                  (scheduledSlots.length /
-                                    (scheduledSlots.length +
+                                  (Object.keys(scheduledSlots).length /
+                                    (Object.keys(scheduledSlots).length +
                                       availableSlots.length)) *
                                   100;
                               }
