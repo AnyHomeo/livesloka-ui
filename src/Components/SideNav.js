@@ -138,8 +138,8 @@ export default function PersistentDrawerLeft({ children }) {
             {theme.direction === "ltr" ? (
               <ChevronLeftIcon />
             ) : (
-                <ChevronRightIcon />
-              )}
+              <ChevronRightIcon />
+            )}
           </IconButton>
         </div>
         <Divider />
@@ -150,11 +150,7 @@ export default function PersistentDrawerLeft({ children }) {
             { title: "Attendance", link: "/attendance" },
             { title: "Teacher Timetable", link: "/scheduler" },
             { title: "Meeting Schedule", link: "/meeting-scheduler" },
-<<<<<<< HEAD
-            { title: "TeacherDetails", link: "/teacherDetails" },
-=======
             { title: "Reset Password", link: "/reset/password" },
->>>>>>> 63c4031f7eaef9523f68a4bd07d41ae085f83300
           ].map((navItem, index) => (
             <Link
               style={{ textDecoration: "none", color: "black" }}
