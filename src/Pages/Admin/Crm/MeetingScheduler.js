@@ -116,7 +116,9 @@ const MeetingScheduler = () => {
     const studentNames = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/customers/all?params=firstName,lastName`
     );
+    console.log(studentNames)
     setStudentName(studentNames.data.result);
+
   };
 
   const getTimeSlots = async () => {
@@ -428,8 +430,8 @@ const MeetingScheduler = () => {
                 getPropData={getPropData}
               />
             ) : (
-              <AvailableTimeSlotChip />
-            )}
+                            <AvailableTimeSlotChip />
+                          )}
 
             <TextField
               id="outlined-basic"
@@ -476,17 +478,17 @@ const MeetingScheduler = () => {
             {loading ? (
               <CircularProgress />
             ) : (
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                type="submit"
-                className={classes.button}
-                startIcon={<SaveIcon />}
-              >
-                Save
-              </Button>
-            )}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  type="submit"
+                  className={classes.button}
+                  startIcon={<SaveIcon />}
+                >
+                  Save
+                </Button>
+              )}
           </div>
         </div>
       </form>
