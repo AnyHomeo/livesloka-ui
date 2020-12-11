@@ -17,12 +17,20 @@ import {
 import SaveIcon from "@material-ui/icons/Save";
 import { makeStyles } from "@material-ui/core/styles";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import moment from "moment";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import Axios from "axios";
 import AvailableTimeSlotChip from "../../../Components/AvailableTimeSlotChip";
 import { getData } from "../../../Services/Services";
+import "date-fns";
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
 
 let days = [
   "MONDAY",
@@ -56,6 +64,13 @@ const useStyles = makeStyles((theme) => ({
 
 const MeetingScheduler = () => {
   const classes = useStyles();
+
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
   const [personName, setPersonName] = useState([]);
   const [teacher, setInputTeacher] = useState("");
   const [successOpen, setSuccessOpen] = React.useState(false);
@@ -73,6 +88,9 @@ const MeetingScheduler = () => {
   const [alert, setAlert] = useState("");
   const [alertColor, setAlertColor] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [subjectNames, setSubjectNames] = useState();
+  const [subjectNameId, setSubjectNameId] = useState();
 
   const handleDayChange = (event) => {
     setRadioday(event.target.value);
@@ -98,6 +116,7 @@ const MeetingScheduler = () => {
     getTeachers();
     getStudents();
     getZoomAccounts();
+    getSubjectNames();
   }, []);
 
   useEffect(() => {
@@ -134,6 +153,13 @@ const MeetingScheduler = () => {
         console.log(err);
       });
   };
+
+  const getSubjectNames = async () => {
+    const subjectName = await Axios.get(
+      `${process.env.REACT_APP_API_KEY}/admin/get/Subject`
+    );
+    setSubjectNames(subjectName.data.result);
+  };
   const submitForm = async (e) => {
     setLoading(true);
     e.preventDefault();
@@ -150,6 +176,8 @@ const MeetingScheduler = () => {
       teacher: teacher,
       students: personName,
       demo: demo,
+      subject: subjectNameId,
+      startDate: moment(selectedDate).format("DD-MM-YYYY"),
     };
     try {
       const res = await Axios.post(
@@ -326,6 +354,47 @@ const MeetingScheduler = () => {
               alignItems: "center",
             }}
           >
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                disableToolbar
+                variant="inline"
+                format="dd-mm-yyyy"
+                margin="normal"
+                label="Start Date"
+                value={selectedDate}
+                onChange={handleDateChange}
+                KeyboardButtonProps={{
+                  "aria-label": "change date",
+                }}
+              />
+            </MuiPickersUtilsProvider>
+            <FormControl
+              style={{
+                maxWidth: "400px",
+                minWidth: "300px",
+                marginTop: "10px",
+              }}
+              variant="outlined"
+              className={classes.formControl}
+            >
+              <InputLabel id="Select-label">Select Subjects</InputLabel>
+              <Select
+                fullWidth
+                labelId="Select-label"
+                id="demo-simple-select-outlined"
+                value={subjectNameId}
+                onChange={(e) => setSubjectNameId(e.target.value)}
+                label="Select Zoom Account"
+              >
+                {subjectNames &&
+                  subjectNames.map((subject) => (
+                    <MenuItem value={subject._id}>
+                      {subject.subjectName}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+
             <FormControl
               style={{
                 maxWidth: "400px",
