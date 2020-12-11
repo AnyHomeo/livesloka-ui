@@ -64,12 +64,15 @@ const MeetingScheduler = () => {
   const [teacherName, setTeacherName] = useState([]);
   const [studentName, setStudentName] = useState([]);
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
-  const [timeSlotState, setTimeSlotState] = useState();
+  const [timeSlotState, setTimeSlotState] = useState([]);
   const [zoomEmail, setZoomEmail] = useState("");
   const [zoomLink, setZoomLink] = useState("");
   const [zoomAccounts, setZoomAccounts] = useState([]);
   const [teacherNameFullObject, setTeacherNameFullObject] = useState({});
   const [studentNamesFullObject, setStudentNamesFullObject] = useState([]);
+  const [alert, setAlert] = useState("");
+  const [alertColor, setAlertColor] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleDayChange = (event) => {
     setRadioday(event.target.value);
@@ -86,6 +89,7 @@ const MeetingScheduler = () => {
     const timeSlotsData = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/teacher/available/${teacher}?day=MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY`
     );
+    console.log(timeSlotsData.data);
     setAvailableTimeSlots(timeSlotsData.data.result);
   };
 
@@ -99,6 +103,7 @@ const MeetingScheduler = () => {
   useEffect(() => {
     if (teacher) {
       getTimeSlots();
+      setTimeSlotState([]);
     }
   }, [teacher]);
 
@@ -107,6 +112,7 @@ const MeetingScheduler = () => {
     const teacherNames = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/teacher?params=id,TeacherName`
     );
+    console.log(teacherNames.data);
     setTeacherName(teacherNames.data.result);
   };
 
@@ -128,10 +134,6 @@ const MeetingScheduler = () => {
         console.log(err);
       });
   };
-
-  const [alert, setAlert] = useState("");
-  const [alertColor, setAlertColor] = useState("");
-  const [loading, setLoading] = useState(false);
   const submitForm = async (e) => {
     setLoading(true);
     e.preventDefault();
@@ -142,6 +144,7 @@ const MeetingScheduler = () => {
       );
     });
     formData = {
+      ...formData,
       meetingLink: zoomLink,
       meetingAccount: zoomEmail,
       teacher: teacher,
@@ -232,7 +235,7 @@ const MeetingScheduler = () => {
             md={4}
             style={{ display: "flex", justifyContent: "center" }}
           >
-            {studentName.length ? (
+            {studentName.length && studentName[0].firstName ? (
               <Autocomplete
                 multiple
                 style={{ width: "60%", margin: "0 auto" }}
@@ -305,9 +308,11 @@ const MeetingScheduler = () => {
           >
             {
               <AvailableTimeSlotChip
-                data={availableTimeSlots.filter((slot) =>
-                  slot.startsWith(radioday)
-                )}
+                data={
+                  availableTimeSlots.filter((slot) =>
+                    slot.startsWith(radioday)
+                  ) || []
+                }
                 timeSlotState={timeSlotState}
                 setTimeSlotState={setTimeSlotState}
               />
