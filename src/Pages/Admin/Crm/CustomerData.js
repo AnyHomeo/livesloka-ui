@@ -276,6 +276,29 @@ const CrmDetails = () => {
           ),
         },
         {
+          title: "Number of Classes",
+          field: "noOfClasses",
+          type: "numeric",
+          width: "1%",
+          hidden: !columnFilters["noOfClasses"].selected,
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          editComponent: (props) => (
+            <TextField
+              type="number"
+              inputProps={{ min: "0", step: "1" }}
+              value={props.value}
+              onChange={(e) => {
+                if (e.target.value < 0) {
+                  return props.onChange(0);
+                } else {
+                  return props.onChange(e.target.value);
+                }
+              }}
+            />
+          ),
+        },
+        {
           title: "Gender",
           field: "gender",
           width: "1%",
@@ -449,9 +472,7 @@ const CrmDetails = () => {
         {
           title: "Schedule Description",
           field: "scheduleDescription",
-          width: "1%",
           hidden: !columnFilters["scheduleDescription"].selected,
-          cellStyle: { whiteSpace: "nowrap" },
           headerStyle: { whiteSpace: "nowrap" },
         },
         {
@@ -463,13 +484,6 @@ const CrmDetails = () => {
           headerStyle: { whiteSpace: "nowrap" },
           hidden: !columnFilters["categoryId"].selected,
         },
-        // {
-        //   title: "Zoom Color",
-        //   field: "zoomColor",
-        //   width: "1%",
-        //   cellStyle: { whiteSpace: "nowrap" },
-        //   headerStyle: { whiteSpace: "nowrap" },
-        // },
         {
           title: "Meeting Link",
           field: "meetingLink",
@@ -497,35 +511,6 @@ const CrmDetails = () => {
             </>
           ),
         },
-        // {
-        //   title: "Customer Id",
-        //   field: "customerId",
-        //   editable: "never",
-        //   width: "1%",
-        //   cellStyle: { whiteSpace: "nowrap" },
-        //   headerStyle: { whiteSpace: "nowrap" },
-        // },
-        // {
-        //   title: "Joining Date",
-        //   field: "joindate",
-        //   width: "1%",
-        //   cellStyle: { whiteSpace: "nowrap" },
-        //   headerStyle: { whiteSpace: "nowrap" },
-        //   editComponent: (props) => (
-        //     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        //       <KeyboardDatePicker
-        //         margin="normal"
-        //         format="MM/dd/yyyy"
-        //         style={{ width: "140px" }}
-        //         value={selectedDate}
-        //         onChange={handleDateChange}
-        //         KeyboardButtonProps={{
-        //           "aria-label": "change date",
-        //         }}
-        //       />
-        //     </MuiPickersUtilsProvider>
-        //   ),
-        // },
         {
           title: "Phone No",
           field: "phone",
@@ -593,6 +578,10 @@ const CrmDetails = () => {
         whatsAppnumber: {
           selected: settings.includes("whatsAppnumber"),
           name: "Whatsapp",
+        },
+        noOfClasses: {
+          selected: settings.includes("oneToOne"),
+          name: "Number of Classes",
         },
         oneToOne: { selected: settings.includes("oneToOne"), name: "Group" },
         teacherId: {
