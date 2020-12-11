@@ -45,14 +45,16 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function AvailableTimeSlotChip({ data, getPropData }) {
+export default function AvailableTimeSlotChip({
+  data,
+  timeSlotState,
+  setTimeSlotState,
+}) {
   const classes = useStyles();
   const theme = useTheme();
-  const [personName, setPersonName] = React.useState([]);
 
   const handleChange = (event) => {
-    setPersonName(event.target.value);
-    getPropData(event.target.value);
+    setTimeSlotState(event.target.value);
   };
 
   return (
@@ -66,7 +68,7 @@ export default function AvailableTimeSlotChip({ data, getPropData }) {
           labelId="demo-mutiple-chip-label"
           id="demo-mutiple-chip"
           multiple
-          value={personName}
+          value={timeSlotState}
           onChange={handleChange}
           input={<Input id="select-multiple-chip" />}
           renderValue={(selected) => (
@@ -83,7 +85,7 @@ export default function AvailableTimeSlotChip({ data, getPropData }) {
               <MenuItem
                 key={name}
                 value={name}
-                style={getStyles(name, personName, theme)}
+                style={getStyles(name, timeSlotState, theme)}
               >
                 {name}
               </MenuItem>

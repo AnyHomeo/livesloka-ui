@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import {
   Button,
   TextField,
@@ -11,15 +10,29 @@ import {
   RadioGroup,
   FormLabel,
   CircularProgress,
+  Select,
+  InputLabel,
+  MenuItem,
 } from "@material-ui/core/";
 import SaveIcon from "@material-ui/icons/Save";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import Axios from "axios";
 import AvailableTimeSlotChip from "../../../Components/AvailableTimeSlotChip";
+import { getData } from "../../../Services/Services";
+
+let days = [
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY",
+  "SUNDAY",
+];
 
 const useStyles = makeStyles((theme) => ({
   saveButton: {
@@ -41,18 +54,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MeetingScheduler = ({ noSlot }) => {
-  const theme = useTheme();
-
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-
-  const [personName, setPersonName] = useState();
-
+const MeetingScheduler = () => {
+  const classes = useStyles();
+  const [personName, setPersonName] = useState([]);
   const [teacher, setInputTeacher] = useState("");
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [demo, setDemo] = useState(false);
   const [radioday, setRadioday] = useState("");
+  const [teacherName, setTeacherName] = useState([]);
+  const [studentName, setStudentName] = useState([]);
+  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+  const [timeSlotState, setTimeSlotState] = useState();
+  const [zoomEmail, setZoomEmail] = useState("");
+  const [zoomLink, setZoomLink] = useState("");
+  const [zoomAccounts, setZoomAccounts] = useState([]);
+  const [teacherNameFullObject, setTeacherNameFullObject] = useState({});
+  const [studentNamesFullObject, setStudentNamesFullObject] = useState([]);
 
   const handleDayChange = (event) => {
     setRadioday(event.target.value);
@@ -65,28 +82,18 @@ const MeetingScheduler = ({ noSlot }) => {
     setSuccessOpen(false);
   };
 
+  const getTimeSlots = async () => {
+    const timeSlotsData = await Axios.get(
+      `${process.env.REACT_APP_API_KEY}/teacher/available/${teacher}?day=MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY`
+    );
+    setAvailableTimeSlots(timeSlotsData.data.result);
+  };
+
   // Serice calls
-
-  const [teacherName, setTeacherName] = useState();
-  const [studentName, setStudentName] = useState();
-  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
-
-  const [mondayData, setMondayData] = useState([]);
-  const [tuesdayData, setTuesdayData] = useState([]);
-  const [wednesdayData, setWednesdayData] = useState([]);
-  const [thursdayData, setThursdayData] = useState([]);
-  const [fridayData, setFridayData] = useState([]);
-  const [saturdayData, setSaturdayData] = useState([]);
-  const [sundayData, setSundayData] = useState([]);
-
-  const [timeSlotState, setTimeSlotState] = useState();
-
-  const [zoomEmail, setZoomEmail] = useState("");
-  const [zoomLink, setZoomLink] = useState("");
-
   useEffect(() => {
     getTeachers();
     getStudents();
+    getZoomAccounts();
   }, []);
 
   useEffect(() => {
@@ -111,50 +118,13 @@ const MeetingScheduler = ({ noSlot }) => {
     setStudentName(studentNames.data.result);
   };
 
-  const getTimeSlots = async () => {
-    const timeSlotsData = await Axios.get(
-      `${process.env.REACT_APP_API_KEY}/teacher/available/${teacher}?day=MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY`
-    );
-    setAvailableTimeSlots(timeSlotsData.data.result);
-
-    let MonSlotData = [];
-    let TuesSlotData = [];
-    let WedSlotData = [];
-    let ThurSlotData = [];
-    let FrilotData = [];
-    let SatSlotData = [];
-    let SunSlotData = [];
-
-    timeSlotsData &&
-      timeSlotsData.data.result.forEach((timeslot) => {
-        if (timeslot.startsWith("MONDAY")) {
-          MonSlotData.push(timeslot);
-          setMondayData(MonSlotData);
-        }
-        if (timeslot.startsWith("TUESDAY")) {
-          TuesSlotData.push(timeslot);
-          setTuesdayData(TuesSlotData);
-        }
-        if (timeslot.startsWith("WEDNESDAY")) {
-          WedSlotData.push(timeslot);
-          setWednesdayData(WedSlotData);
-        }
-        if (timeslot.startsWith("THURSDAY")) {
-          ThurSlotData.push(timeslot);
-          setThursdayData(ThurSlotData);
-        }
-        if (timeslot.startsWith("FRIDAY")) {
-          FrilotData.push(timeslot);
-          setFridayData(FrilotData);
-        }
-        if (timeslot.startsWith("SATURDAY")) {
-          SatSlotData.push(timeslot);
-          setSaturdayData(SatSlotData);
-        }
-        if (timeslot.startsWith("SUNDAY")) {
-          SunSlotData.push(timeslot);
-          setSundayData(SunSlotData);
-        }
+  const getZoomAccounts = async () => {
+    getData("Zoom Account")
+      .then((data) => {
+        setZoomAccounts(data.data.result);
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 
@@ -162,86 +132,50 @@ const MeetingScheduler = ({ noSlot }) => {
   const [alertColor, setAlertColor] = useState("");
   const [loading, setLoading] = useState(false);
   const submitForm = async (e) => {
+    setLoading(true);
     e.preventDefault();
-
-    let MonSlotData = [];
-    let TuesSlotData = [];
-    let WedSlotData = [];
-    let ThurSlotData = [];
-    let FrilotData = [];
-    let SatSlotData = [];
-    let SunSlotData = [];
-
-    timeSlotState.forEach((timeslot) => {
-      if (timeslot.startsWith("MONDAY")) {
-        MonSlotData.push(timeslot);
-      }
-      if (timeslot.startsWith("TUESDAY")) {
-        TuesSlotData.push(timeslot);
-      }
-      if (timeslot.startsWith("WEDNESDAY")) {
-        WedSlotData.push(timeslot);
-      }
-      if (timeslot.startsWith("THURSDAY")) {
-        ThurSlotData.push(timeslot);
-      }
-      if (timeslot.startsWith("FRIDAY")) {
-        FrilotData.push(timeslot);
-      }
-      if (timeslot.startsWith("SATURDAY")) {
-        SatSlotData.push(timeslot);
-      }
-      if (timeslot.startsWith("SUNDAY")) {
-        SunSlotData.push(timeslot);
-      }
+    let formData = {};
+    days.forEach((day) => {
+      formData[day.toLowerCase()] = timeSlotState.filter((slot) =>
+        slot.startsWith(day)
+      );
     });
-
-    const formData = {
-      monday: MonSlotData,
-      tuesday: TuesSlotData,
-      wednesday: WedSlotData,
-      thursday: ThurSlotData,
-      friday: FrilotData,
-      saturday: SatSlotData,
-      sunday: SunSlotData,
+    formData = {
       meetingLink: zoomLink,
       meetingAccount: zoomEmail,
       teacher: teacher,
       students: personName,
       demo: demo,
     };
-    setDemo(false);
-    setPersonName("");
-    setZoomEmail("");
-    setZoomLink("");
-    setPersonName("");
-
-    setLoading(true);
     try {
       const res = await Axios.post(
         `${process.env.REACT_APP_API_KEY}/schedule`,
         formData
       );
+      setDemo(false);
+      setPersonName("");
+      setZoomEmail("");
+      setZoomLink("");
+      setPersonName("");
       setSuccessOpen(true);
       setAlert(res.data.message);
       setAlertColor("success");
+      setLoading(false);
+      setTeacherNameFullObject({});
+      setStudentNamesFullObject([]);
+      setRadioday("");
+      setTimeSlotState([]);
     } catch (error) {
       console.error(error.response);
       if (error.response) {
         setSuccessOpen(true);
         setAlert(error.response.data.message);
         setAlertColor("error");
+        setLoading(false);
       }
     }
-
-    setLoading(false);
   };
 
-  const getPropData = (val) => {
-    setTimeSlotState(val);
-  };
-
-  const classes = useStyles();
   return (
     <>
       <Snackbar
@@ -265,12 +199,16 @@ const MeetingScheduler = ({ noSlot }) => {
         <Grid container style={{ width: "100%" }}>
           <Grid item xs={false} md={4} />
           <Grid item xs={12} md={4}>
-            {teacherName && (
+            {teacherName.length ? (
               <Autocomplete
                 style={{ width: "60%", margin: "0 auto" }}
                 options={teacherName}
+                value={teacherNameFullObject}
                 getOptionLabel={(option) => option.TeacherName}
-                onChange={(event, value) => value && setInputTeacher(value.id)}
+                onChange={(event, value) => {
+                  value && setInputTeacher(value.id);
+                  value && setTeacherNameFullObject(value);
+                }}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -281,7 +219,9 @@ const MeetingScheduler = ({ noSlot }) => {
                   />
                 )}
               />
-            )}
+            ) : (
+              ""
+            )}{" "}
           </Grid>
           <Grid item xs={12} md={4} />
           <Grid item xs={12} md={4} />
@@ -291,16 +231,18 @@ const MeetingScheduler = ({ noSlot }) => {
             md={4}
             style={{ display: "flex", justifyContent: "center" }}
           >
-            {studentName && (
+            {studentName.length ? (
               <Autocomplete
                 multiple
                 style={{ width: "60%", margin: "0 auto" }}
                 options={studentName}
+                value={studentNamesFullObject}
                 getOptionLabel={(name) => `${name.firstName} ${name.lastName}`}
                 onChange={(event, value) => {
                   let tempData = [];
+                  setStudentNamesFullObject(value);
                   value &&
-                    value.map((val) => {
+                    value.forEach((val) => {
                       tempData.push(val._id);
                       setPersonName(tempData);
                     });
@@ -314,6 +256,8 @@ const MeetingScheduler = ({ noSlot }) => {
                   />
                 )}
               />
+            ) : (
+              ""
             )}
           </Grid>
 
@@ -326,109 +270,30 @@ const MeetingScheduler = ({ noSlot }) => {
             flexDirection: "column",
           }}
         >
-          {noSlot ? (
-            ""
-          ) : (
-            <>
-              <div className="date-checkbox">
-                <FormControl component="fieldset" style={{ marginTop: "50px" }}>
-                  <FormLabel component="legend">Dates</FormLabel>
-                  <RadioGroup
-                    color="primary"
-                    aria-label="Dates"
-                    name="gender1"
-                    value={radioday}
-                    onChange={handleDayChange}
-                    style={{ display: "flex", flexDirection: "row" }}
-                  >
-                    <FormControlLabel
-                      value="MONDAY"
-                      control={<Radio color="primary" />}
-                      label="M"
-                    />
-                    <FormControlLabel
-                      value="TUESDAY"
-                      control={<Radio color="primary" />}
-                      label="T"
-                    />
-                    <FormControlLabel
-                      value="WEDNESDAY"
-                      control={<Radio color="primary" />}
-                      label="W"
-                    />
-                    <FormControlLabel
-                      value="THURSDAY"
-                      control={<Radio color="primary" />}
-                      label="T"
-                    />
-                    <FormControlLabel
-                      value="FRIDAY"
-                      control={<Radio color="primary" />}
-                      label="F"
-                    />
-                    <FormControlLabel
-                      value="SATURDAY"
-                      control={<Radio color="primary" />}
-                      label="S"
-                    />
-                    <FormControlLabel
-                      value="SUNDAY"
-                      control={<Radio color="primary" />}
-                      label="S"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
+          <div className="date-checkbox">
+            <FormControl component="fieldset" style={{ marginTop: "50px" }}>
+              <FormLabel component="legend" style={{ textAlign: "center" }}>
+                Dates
+              </FormLabel>
+              <RadioGroup
+                color="primary"
+                aria-label="Dates"
+                name="gender1"
+                value={radioday}
+                onChange={handleDayChange}
+                style={{ display: "flex", flexDirection: "row" }}
               >
-                {radioday === "MONDAY" ? (
-                  <AvailableTimeSlotChip
-                    data={mondayData}
-                    getPropData={getPropData}
+                {days.map((day) => (
+                  <FormControlLabel
+                    value={day}
+                    control={<Radio color="primary" />}
+                    label={day.slice(0, 3)}
                   />
-                ) : radioday === "TUESDAY" ? (
-                  <AvailableTimeSlotChip
-                    data={tuesdayData}
-                    getPropData={getPropData}
-                  />
-                ) : radioday === "WEDNESDAY" ? (
-                  <AvailableTimeSlotChip
-                    data={wednesdayData}
-                    getPropData={getPropData}
-                  />
-                ) : radioday === "THURSDAY" ? (
-                  <AvailableTimeSlotChip
-                    data={thursdayData}
-                    getPropData={getPropData}
-                  />
-                ) : radioday === "FRIDAY" ? (
-                  <AvailableTimeSlotChip
-                    data={fridayData}
-                    getPropData={getPropData}
-                  />
-                ) : radioday === "SATURDAY" ? (
-                  <AvailableTimeSlotChip
-                    data={saturdayData}
-                    getPropData={getPropData}
-                  />
-                ) : radioday === "SUNDAY" ? (
-                  <AvailableTimeSlotChip
-                    data={sundayData}
-                    getPropData={getPropData}
-                  />
-                ) : (
-                  <AvailableTimeSlotChip />
-                )}
-              </div>
-            </>
-          )}
+                ))}
+              </RadioGroup>
+            </FormControl>
+          </div>
+
           <div
             style={{
               display: "flex",
@@ -437,20 +302,49 @@ const MeetingScheduler = ({ noSlot }) => {
               alignItems: "center",
             }}
           >
-            <TextField
-              id="outlined-basic"
-              label="Zoom Account"
-              variant="outlined"
-              fullWidth
-              onChange={(e) => setZoomEmail(e.target.value)}
-              value={zoomEmail}
+            {
+              <AvailableTimeSlotChip
+                data={availableTimeSlots.filter((slot) =>
+                  slot.startsWith(radioday)
+                )}
+                timeSlotState={timeSlotState}
+                setTimeSlotState={setTimeSlotState}
+              />
+            }
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <FormControl
               style={{
                 maxWidth: "400px",
                 minWidth: "300px",
                 marginTop: "10px",
               }}
-            />
-
+              variant="outlined"
+              className={classes.formControl}
+            >
+              <InputLabel id="Select-label">Select Zoom Account</InputLabel>
+              <Select
+                fullWidth
+                labelId="Select-label"
+                id="demo-simple-select-outlined"
+                value={zoomEmail}
+                onChange={(e) => setZoomEmail(e.target.value)}
+                label="Select Zoom Account"
+              >
+                {zoomAccounts.map((account) => (
+                  <MenuItem value={account._id}>
+                    {account.ZoomAccountName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <TextField
               fullWidth
               id="outlined-basic"
@@ -464,7 +358,6 @@ const MeetingScheduler = ({ noSlot }) => {
                 marginTop: "10px",
               }}
             />
-
             <FormControlLabel
               style={{ marginTop: "20px" }}
               control={

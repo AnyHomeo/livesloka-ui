@@ -294,6 +294,15 @@ const CrmDetails = () => {
           hidden: !columnFilters["classId"].selected,
         },
         {
+          title: "New Class Name",
+          field: "className",
+          hidden: !columnFilters["className"].selected,
+          width: "1%",
+          editable: "never",
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+        },
+        {
           title: "Email",
           field: "email",
           width: "1%",
@@ -573,8 +582,12 @@ const CrmDetails = () => {
           selected: settings.includes("firstName"),
           name: "Student Name",
         },
+        className: {
+          selected: settings.includes("className"),
+          name: "new Class Name",
+        },
         lastName: { selected: settings.includes("lastName"), name: "Gaurdian" },
-        classId: { selected: settings.includes("classId"), name: "ClassName" },
+        classId: { selected: settings.includes("classId"), name: "Class Name" },
         email: { selected: settings.includes("email"), name: "Email" },
         gender: { selected: settings.includes("gender"), name: "Gender" },
         whatsAppnumber: {

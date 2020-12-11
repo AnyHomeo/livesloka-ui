@@ -139,7 +139,6 @@ function Scheduler() {
 
   useEffect(() => {
     getOccupancy().then((data) => {
-      console.log(data.data);
       setCategorizedData(data.data.data);
       setAllSchedules(data.data.allSchedules);
     });

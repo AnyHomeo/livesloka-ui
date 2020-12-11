@@ -14,6 +14,16 @@ exports.services = {
     "Update Class": "/admin/update/classes",
     "Delete Class": "/admin/delete/classes",
 
+    Subject: "/admin/get/Subject",
+    "Add Subject": "/admin/add/Subject",
+    "Update Subject": "/admin/update/Subject",
+    "Delete Subject": "/admin/delete/Subject",
+
+    "Zoom Account": "/admin/get/ZoomAccount",
+    "Add Zoom Account": "/admin/add/ZoomAccount",
+    "Update Zoom Account": "/admin/update/ZoomAccount",
+    "Delete Zoom Account": "/admin/delete/ZoomAccount",
+
     Category: "/admin/get/Category",
     "Add Category": "/admin/add/Category",
     "Update Category": "/admin/update/Category",

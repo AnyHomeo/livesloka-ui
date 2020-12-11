@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -38,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "block",
     margin: "0 auto",
-    width: "90%",
+    width: "90vw",
     backgroundColor: theme.palette.background.paper,
   },
 }));
@@ -46,13 +45,14 @@ const useStyles = makeStyles((theme) => ({
 const CustomTabs = () => {
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  // eslint-disable-next-line no-unused-vars
   const [lookup, setLookup] = useState({});
   const [categoryLookup, setCategoryLookup] = useState({});
 
   const tabs = [
     "Class",
     "Time Zone",
+    "Subject",
+    "Zoom Account",
     "Class Status",
     "Currency",
     "Status",
@@ -65,6 +65,8 @@ const CustomTabs = () => {
   const status = [
     "classesStatus",
     "timeZoneStatus",
+    "",
+    "",
     "status",
     "currencyStatus",
     "",

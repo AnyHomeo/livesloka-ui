@@ -92,7 +92,12 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
               lookup: categoryLookup,
             };
           }
-          if (key === "id" || key === "statusId" || key === "tableData") {
+          if (
+            key === "id" ||
+            key === "_id" ||
+            key === "statusId" ||
+            key === "tableData"
+          ) {
             return { title: humanReadable(key), field: key, hidden: true };
           } else if (key === "TeacherSubjectsId") {
             return {
