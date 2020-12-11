@@ -173,7 +173,7 @@ const MeetingScheduler = () => {
       console.error(error.response);
       if (error.response) {
         setSuccessOpen(true);
-        setAlert(error.response.data.message);
+        setAlert(error.response.data.error);
         setAlertColor("error");
         setLoading(false);
       }
