@@ -115,6 +115,7 @@ const MeetingScheduler = () => {
     const studentNames = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/customers/all?params=firstName,lastName`
     );
+    console.log(studentNames);
     setStudentName(studentNames.data.result);
   };
 
@@ -351,6 +352,7 @@ const MeetingScheduler = () => {
               label="Zoom Link"
               variant="outlined"
               value={zoomLink}
+              required
               onChange={(e) => setZoomLink(e.target.value)}
               style={{
                 maxWidth: "400px",
