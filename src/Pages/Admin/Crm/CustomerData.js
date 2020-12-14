@@ -488,9 +488,6 @@ const CrmDetails = () => {
           title: "Meeting Link",
           field: "meetingLink",
           hidden: !columnFilters["meetingLink"].selected,
-          width: "1%",
-          cellStyle: { whiteSpace: "nowrap" },
-          headerStyle: { whiteSpace: "nowrap" },
           render: (rowData) => (
             <>
               {rowData.meetingLink ? (

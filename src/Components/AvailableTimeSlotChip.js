@@ -6,6 +6,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Chip from "@material-ui/core/Chip";
+import { ChevronLeft } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -38,41 +39,67 @@ const MenuProps = {
 
 export default function AvailableTimeSlotChip({
   data,
-  timeSlotState,
-  setTimeSlotState,
+  state,
+  setState,
+  timeSlots,
+  valueFinder,
+  label,
+  labelFinder,
 }) {
   const classes = useStyles();
 
   const handleChange = (event) => {
-    setTimeSlotState(event.target.value);
+    setState(event.target.value);
   };
 
   return (
     <div>
       <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel id="label">Available Time Slots</InputLabel>
+        <InputLabel id="label">{label}</InputLabel>
         <Select
           style={{ width: "300px" }}
-          labelId="demo-mutiple-chip-label"
+          labelId="label"
           id="demo-mutiple-chip"
           multiple
-          value={timeSlotState}
+          value={state}
+          variant="outlined"
           onChange={handleChange}
           input={<Input id="select-multiple-chip" variant="outlined" />}
-          renderValue={(selected) => (
-            <div className={classes.chips}>
-              {selected &&
-                selected.map((value) => (
-                  <Chip key={value} label={value} className={classes.chip} />
-                ))}
-            </div>
-          )}
+          renderValue={(selected) => {
+            return (
+              <div className={classes.chips}>
+                {selected &&
+                  selected.map((value) => {
+                    return (
+                      <Chip
+                        key={value}
+                        label={
+                          timeSlots ? value : value.split("!@#$%^&*($%^")[0]
+                        }
+                        className={classes.chip}
+                      />
+                    );
+                  })}
+              </div>
+            );
+          }}
           MenuProps={MenuProps}
         >
           {data &&
-            data.map((name) => (
-              <MenuItem key={name} value={name}>
-                {name}
+            data.map((item) => (
+              <MenuItem
+                key={
+                  timeSlots
+                    ? valueFinder(item)
+                    : labelFinder(item) + "!@#$%^&*($%^" + valueFinder(item)
+                }
+                value={
+                  timeSlots
+                    ? valueFinder(item)
+                    : labelFinder(item) + "!@#$%^&*($%^" + valueFinder(item)
+                }
+              >
+                {labelFinder(item)}
               </MenuItem>
             ))}
         </Select>

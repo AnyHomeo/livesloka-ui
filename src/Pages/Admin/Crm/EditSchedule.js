@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import {
   Button,
   TextField,
@@ -11,15 +10,38 @@ import {
   RadioGroup,
   FormLabel,
   CircularProgress,
+  Select,
+  InputLabel,
+  MenuItem,
 } from "@material-ui/core/";
 import SaveIcon from "@material-ui/icons/Save";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import moment from "moment";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import Axios from "axios";
 import AvailableTimeSlotChip from "../../../Components/AvailableTimeSlotChip";
+import { getData } from "../../../Services/Services";
+import "date-fns";
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+import { useParams } from "react-router-dom";
+
+let days = [
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY",
+  "SUNDAY",
+];
 
 const useStyles = makeStyles((theme) => ({
   saveButton: {
@@ -41,40 +63,42 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const EditSchedule = ({ noSlot, match }) => {
-  const theme = useTheme();
+const EditSchedule = () => {
+  const classes = useStyles();
 
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
 
-  const [personName, setPersonName] = useState();
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
 
+  const [personName, setPersonName] = useState([]);
   const [teacher, setInputTeacher] = useState("");
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [demo, setDemo] = useState(false);
   const [radioday, setRadioday] = useState("");
+  const [teacherName, setTeacherName] = useState([]);
+  const [studentName, setStudentName] = useState([]);
+  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+  const [timeSlotState, setTimeSlotState] = useState([]);
+  const [zoomEmail, setZoomEmail] = useState("");
+  const [zoomLink, setZoomLink] = useState("");
+  const [zoomAccounts, setZoomAccounts] = useState([]);
+  const [teacherNameFullObject, setTeacherNameFullObject] = useState({});
+  const [studentNamesFullObject, setStudentNamesFullObject] = useState([]);
+  const [alert, setAlert] = useState("");
+  const [alertColor, setAlertColor] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [prevTeacher, setPrevTeacher] = useState("");
+  const [prevSlots, setPrevSlots] = useState([]);
+
+  const [subjectNames, setSubjectNames] = useState("");
+  const [subjectNameId, setSubjectNameId] = useState("");
+  const { id } = useParams();
 
   const handleDayChange = (event) => {
     setRadioday(event.target.value);
   };
-
-  //   useEffect(() => {
-  //     getEditedFields();
-  //   }, []);
-
-  //    const getEditedFields = async () => {
-  //     try {
-  //         const editedData = await Axios.get(
-  //           `${process.env.REACT_APP_API_KEY}/schedule/${match.params.id}`
-  //         );
-
-  //         setNewEditedData(editedData.data);
-
-  //         setZoomEmail(editedData.data.result.meetingAccount);
-  //         setZoomLink(editedData.data.result.meetingLink);
-  //         setDemo(editedData.data.result.demo);
-  //       } catch (error) {}
-  //       };
 
   const handleSuccessClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -83,65 +107,44 @@ const EditSchedule = ({ noSlot, match }) => {
     setSuccessOpen(false);
   };
 
+  const getTimeSlots = async (teacher, prevTeacher) => {
+    const timeSlotsData = await Axios.get(
+      `${process.env.REACT_APP_API_KEY}/teacher/available/${teacher}?day=MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY`
+    );
+    console.log(timeSlotsData.data);
+    console.log(teacher === prevTeacher);
+    if (teacher === prevTeacher) {
+      console.log(timeSlotsData.data.result, prevSlots);
+      setAvailableTimeSlots(timeSlotsData.data.result.concat(prevSlots));
+      setTimeSlotState(prevSlots);
+    } else {
+      setAvailableTimeSlots(timeSlotsData.data.result);
+    }
+  };
+
   // Serice calls
-
-  const [teacherName, setTeacherName] = useState();
-  const [studentName, setStudentName] = useState();
-  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
-
-  const [mondayData, setMondayData] = useState([]);
-  const [tuesdayData, setTuesdayData] = useState([]);
-  const [wednesdayData, setWednesdayData] = useState([]);
-  const [thursdayData, setThursdayData] = useState([]);
-  const [fridayData, setFridayData] = useState([]);
-  const [saturdayData, setSaturdayData] = useState([]);
-  const [sundayData, setSundayData] = useState([]);
-
-  const [timeSlotState, setTimeSlotState] = useState();
-
-  const [zoomEmail, setZoomEmail] = useState("");
-  const [zoomLink, setZoomLink] = useState("");
-
-  const [newEditedData, setNewEditedData] = useState();
-
-  const [setNewTeacherName, setSetNewTeacherName] = useState([]);
-
   useEffect(() => {
     getTeachers();
     getStudents();
+    getZoomAccounts();
+    getSubjectNames();
+    getScheduleData();
   }, []);
 
   useEffect(() => {
-    if (teacher) {
-      getTimeSlots();
+    if (teacher && prevTeacher) {
+      getTimeSlots(teacher, prevTeacher);
+      setTimeSlotState([]);
     }
-  }, [teacher]);
-  // Get teachers
+  }, [teacher, prevTeacher, prevSlots]);
 
+  // Get teachers
   const getTeachers = async () => {
     const teacherNames = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/teacher?params=id,TeacherName`
     );
+    console.log(teacherNames.data);
     setTeacherName(teacherNames.data.result);
-
-    console.log(teacherNames);
-
-    const editedData = await Axios.get(
-      `${process.env.REACT_APP_API_KEY}/schedule/${match.params.id}`
-    );
-
-    setNewEditedData(editedData.data);
-
-    setZoomEmail(editedData.data.result.meetingAccount);
-    setZoomLink(editedData.data.result.meetingLink);
-    setDemo(editedData.data.result.demo);
-
-    console.log(teacherNames);
-    teacherNames.data.result.map((teacher) => {
-      if (teacher.id === editedData.data.result.teacher) {
-        setSetNewTeacherName(teacher);
-      }
-    });
   };
 
   // Get Students
@@ -149,141 +152,137 @@ const EditSchedule = ({ noSlot, match }) => {
     const studentNames = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/customers/all?params=firstName,lastName`
     );
+    console.log(studentNames);
     setStudentName(studentNames.data.result);
   };
 
-  const getTimeSlots = async () => {
-    const timeSlotsData = await Axios.get(
-      `${process.env.REACT_APP_API_KEY}/teacher/available/${teacher}?day=MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY`
-    );
-    setAvailableTimeSlots(timeSlotsData.data.result);
-
-    let MonSlotData = [];
-    let TuesSlotData = [];
-    let WedSlotData = [];
-    let ThurSlotData = [];
-    let FrilotData = [];
-    let SatSlotData = [];
-    let SunSlotData = [];
-
-    timeSlotsData &&
-      timeSlotsData.data.result.forEach((timeslot) => {
-        if (timeslot.startsWith("MONDAY")) {
-          MonSlotData.push(timeslot);
-          setMondayData(MonSlotData);
-        }
-        if (timeslot.startsWith("TUESDAY")) {
-          TuesSlotData.push(timeslot);
-          setTuesdayData(TuesSlotData);
-        }
-        if (timeslot.startsWith("WEDNESDAY")) {
-          WedSlotData.push(timeslot);
-          setWednesdayData(WedSlotData);
-        }
-        if (timeslot.startsWith("THURSDAY")) {
-          ThurSlotData.push(timeslot);
-          setThursdayData(ThurSlotData);
-        }
-        if (timeslot.startsWith("FRIDAY")) {
-          FrilotData.push(timeslot);
-          setFridayData(FrilotData);
-        }
-        if (timeslot.startsWith("SATURDAY")) {
-          SatSlotData.push(timeslot);
-          setSaturdayData(SatSlotData);
-        }
-        if (timeslot.startsWith("SUNDAY")) {
-          SunSlotData.push(timeslot);
-          setSundayData(SunSlotData);
-        }
+  const getZoomAccounts = async () => {
+    getData("Zoom Account")
+      .then((data) => {
+        setZoomAccounts(data.data.result);
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 
-  const [alert, setAlert] = useState("");
-  const [alertColor, setAlertColor] = useState("");
-  const [loading, setLoading] = useState(false);
+  const getScheduleData = async () => {
+    try {
+      const schedule = await Axios.get(
+        `${process.env.REACT_APP_API_KEY}/schedule/${id}`
+      );
+      const {
+        teacher,
+        meetingLink,
+        meetingAccount,
+        demo,
+        subject,
+        startDate,
+        students,
+        slots: {
+          monday,
+          tuesday,
+          wednesday,
+          thursday,
+          friday,
+          saturday,
+          sunday,
+        },
+      } = schedule.data.result;
+      console.log(schedule.data.result);
+      setInputTeacher(teacher);
+      setPrevTeacher(teacher);
+      setZoomLink(meetingLink);
+      setZoomEmail(meetingAccount);
+      setDemo(demo);
+      setSubjectNameId(subject);
+      setSelectedDate(startDate);
+      setPersonName(
+        students.map(
+          (student) =>
+            `${student.firstName} ${student.lastName}` +
+            "!@#$%^&*($%^" +
+            student._id
+        )
+      );
+      setTimeSlotState([
+        ...monday,
+        ...tuesday,
+        ...wednesday,
+        ...thursday,
+        ...friday,
+        ...saturday,
+        ...sunday,
+      ]);
+      setPrevSlots([
+        ...monday,
+        ...tuesday,
+        ...wednesday,
+        ...thursday,
+        ...friday,
+        ...saturday,
+        ...sunday,
+      ]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getSubjectNames = async () => {
+    const subjectName = await Axios.get(
+      `${process.env.REACT_APP_API_KEY}/admin/get/Subject`
+    );
+    setSubjectNames(subjectName.data.result);
+  };
   const submitForm = async (e) => {
+    setLoading(true);
     e.preventDefault();
-
-    let MonSlotData = [];
-    let TuesSlotData = [];
-    let WedSlotData = [];
-    let ThurSlotData = [];
-    let FrilotData = [];
-    let SatSlotData = [];
-    let SunSlotData = [];
-
-    timeSlotState.forEach((timeslot) => {
-      if (timeslot.startsWith("MONDAY")) {
-        MonSlotData.push(timeslot);
-      }
-      if (timeslot.startsWith("TUESDAY")) {
-        TuesSlotData.push(timeslot);
-      }
-      if (timeslot.startsWith("WEDNESDAY")) {
-        WedSlotData.push(timeslot);
-      }
-      if (timeslot.startsWith("THURSDAY")) {
-        ThurSlotData.push(timeslot);
-      }
-      if (timeslot.startsWith("FRIDAY")) {
-        FrilotData.push(timeslot);
-      }
-      if (timeslot.startsWith("SATURDAY")) {
-        SatSlotData.push(timeslot);
-      }
-      if (timeslot.startsWith("SUNDAY")) {
-        SunSlotData.push(timeslot);
-      }
+    let formData = {};
+    days.forEach((day) => {
+      formData[day.toLowerCase()] = timeSlotState.filter((slot) =>
+        slot.startsWith(day)
+      );
     });
-
-    const formData = {
-      monday: MonSlotData,
-      tuesday: TuesSlotData,
-      wednesday: WedSlotData,
-      thursday: ThurSlotData,
-      friday: FrilotData,
-      saturday: SatSlotData,
-      sunday: SunSlotData,
+    formData = {
+      ...formData,
       meetingLink: zoomLink,
       meetingAccount: zoomEmail,
       teacher: teacher,
       students: personName,
       demo: demo,
+      subject: subjectNameId,
+      startDate: moment(selectedDate).format("DD-MM-YYYY"),
     };
-    setDemo(false);
-    setPersonName("");
-    setZoomEmail("");
-    setZoomLink("");
-    setPersonName("");
-
-    setLoading(true);
     try {
       const res = await Axios.post(
         `${process.env.REACT_APP_API_KEY}/schedule`,
         formData
       );
+      setDemo(false);
+      setPersonName("");
+      setZoomEmail("");
+      setZoomLink("");
+      setPersonName("");
+      setSubjectNameId("");
       setSuccessOpen(true);
       setAlert(res.data.message);
       setAlertColor("success");
+      setLoading(false);
+      setTeacherNameFullObject({});
+      setStudentNamesFullObject([]);
+      setRadioday("");
+      setTimeSlotState([]);
     } catch (error) {
       console.error(error.response);
       if (error.response) {
         setSuccessOpen(true);
-        setAlert(error.response.data.message);
+        setAlert(error.response.data.error);
         setAlertColor("error");
+        setLoading(false);
       }
     }
-
-    setLoading(false);
   };
 
-  const getPropData = (val) => {
-    setTimeSlotState(val);
-  };
-
-  const classes = useStyles();
-  console.log(setNewTeacherName);
   return (
     <>
       <Snackbar
@@ -302,29 +301,35 @@ const EditSchedule = ({ noSlot, match }) => {
           className="heading"
           style={{ fontSize: "20px", marginTop: "20px", textAlign: "center" }}
         >
-          Edit Schedule
+          Edit the Schedule
         </h1>
         <Grid container style={{ width: "100%" }}>
           <Grid item xs={false} md={4} />
-          <Grid item xs={12} md={4}>
-            {teacherName && (
-              <Autocomplete
-                style={{ width: "60%", margin: "0 auto" }}
-                options={teacherName}
-                getOptionLabel={(option) => option.TeacherName}
-                onChange={(event, value) => value && setInputTeacher(value.id)}
-                defaultValue={setNewTeacherName[0]}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Teachers"
-                    variant="outlined"
-                    margin="normal"
-                    required
-                  />
-                )}
-              />
-            )}
+          <Grid item xs={12} style={{ padding: "20px 50px" }} md={4}>
+            <FormControl
+              style={{
+                width: "100%",
+              }}
+              variant="outlined"
+              className={classes.formControl}
+            >
+              <InputLabel id="Select-subject-label">Select Teacher</InputLabel>
+              <Select
+                fullWidth
+                labelId="Select-subject-label"
+                id="select-subject"
+                value={teacher}
+                onChange={(e) => setInputTeacher(e.target.value)}
+                label="Select Subject"
+              >
+                {teacherName &&
+                  teacherName.map((teacher) => (
+                    <MenuItem value={teacher.id}>
+                      {teacher.TeacherName}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={12} md={4} />
           <Grid item xs={12} md={4} />
@@ -334,31 +339,24 @@ const EditSchedule = ({ noSlot, match }) => {
             md={4}
             style={{ display: "flex", justifyContent: "center" }}
           >
-            {studentName && (
-              <Autocomplete
-                multiple
-                style={{ width: "60%", margin: "0 auto" }}
-                options={studentName}
-                getOptionLabel={(name) => `${name.firstName} ${name.lastName}`}
-                onChange={(event, value) => {
-                  let tempData = [];
-                  value &&
-                    value.map((val) => {
-                      tempData.push(val._id);
-                      setPersonName(tempData);
-                    });
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Students"
-                    variant="outlined"
-                    margin="normal"
-                    required
-                  />
-                )}
-              />
-            )}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              {
+                <AvailableTimeSlotChip
+                  data={studentName}
+                  state={personName}
+                  setState={setPersonName}
+                  valueFinder={(item) => item._id}
+                  labelFinder={(item) => `${item.firstName} ${item.lastName}`}
+                />
+              }
+            </div>
           </Grid>
 
           <Grid item xs={12} md={4} />
@@ -370,110 +368,30 @@ const EditSchedule = ({ noSlot, match }) => {
             flexDirection: "column",
           }}
         >
-          {noSlot ? (
-            ""
-          ) : (
-            <>
-              <div className="date-checkbox">
-                <FormControl component="fieldset" style={{ marginTop: "50px" }}>
-                  <FormLabel component="legend">Dates</FormLabel>
-                  <RadioGroup
-                    required
-                    color="primary"
-                    aria-label="Dates"
-                    name="gender1"
-                    value={radioday}
-                    onChange={handleDayChange}
-                    style={{ display: "flex", flexDirection: "row" }}
-                  >
-                    <FormControlLabel
-                      value="MONDAY"
-                      control={<Radio color="primary" />}
-                      label="M"
-                    />
-                    <FormControlLabel
-                      value="TUESDAY"
-                      control={<Radio color="primary" />}
-                      label="T"
-                    />
-                    <FormControlLabel
-                      value="WEDNESDAY"
-                      control={<Radio color="primary" />}
-                      label="W"
-                    />
-                    <FormControlLabel
-                      value="THURSDAY"
-                      control={<Radio color="primary" />}
-                      label="T"
-                    />
-                    <FormControlLabel
-                      value="FRIDAY"
-                      control={<Radio color="primary" />}
-                      label="F"
-                    />
-                    <FormControlLabel
-                      value="SATURDAY"
-                      control={<Radio color="primary" />}
-                      label="S"
-                    />
-                    <FormControlLabel
-                      value="SUNDAY"
-                      control={<Radio color="primary" />}
-                      label="S"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
+          <div className="date-checkbox">
+            <FormControl component="fieldset" style={{ marginTop: "50px" }}>
+              <FormLabel component="legend" style={{ textAlign: "center" }}>
+                Dates
+              </FormLabel>
+              <RadioGroup
+                color="primary"
+                aria-label="Dates"
+                name="gender1"
+                value={radioday}
+                onChange={handleDayChange}
+                style={{ display: "flex", flexDirection: "row" }}
               >
-                {radioday === "MONDAY" ? (
-                  <AvailableTimeSlotChip
-                    data={mondayData}
-                    getPropData={getPropData}
+                {days.map((day) => (
+                  <FormControlLabel
+                    value={day}
+                    control={<Radio color="primary" />}
+                    label={day.slice(0, 3)}
                   />
-                ) : radioday === "TUESDAY" ? (
-                  <AvailableTimeSlotChip
-                    data={tuesdayData}
-                    getPropData={getPropData}
-                  />
-                ) : radioday === "WEDNESDAY" ? (
-                  <AvailableTimeSlotChip
-                    data={wednesdayData}
-                    getPropData={getPropData}
-                  />
-                ) : radioday === "THURSDAY" ? (
-                  <AvailableTimeSlotChip
-                    data={thursdayData}
-                    getPropData={getPropData}
-                  />
-                ) : radioday === "FRIDAY" ? (
-                  <AvailableTimeSlotChip
-                    data={fridayData}
-                    getPropData={getPropData}
-                  />
-                ) : radioday === "SATURDAY" ? (
-                  <AvailableTimeSlotChip
-                    data={saturdayData}
-                    getPropData={getPropData}
-                  />
-                ) : radioday === "SUNDAY" ? (
-                  <AvailableTimeSlotChip
-                    data={sundayData}
-                    getPropData={getPropData}
-                  />
-                ) : (
-                  <AvailableTimeSlotChip />
-                )}
-              </div>
-            </>
-          )}
+                ))}
+              </RadioGroup>
+            </FormControl>
+          </div>
+
           <div
             style={{
               display: "flex",
@@ -482,28 +400,101 @@ const EditSchedule = ({ noSlot, match }) => {
               alignItems: "center",
             }}
           >
-            <TextField
-              id="outlined-basic"
-              label="Zoom Account"
-              variant="outlined"
-              fullWidth
-              required
-              onChange={(e) => setZoomEmail(e.target.value)}
-              value={zoomEmail}
+            {
+              <AvailableTimeSlotChip
+                data={
+                  availableTimeSlots.filter((slot) =>
+                    slot.startsWith(radioday)
+                  ) || []
+                }
+                state={timeSlotState}
+                setState={setTimeSlotState}
+                timeSlots
+                valueFinder={(item) => item}
+                labelFinder={(item) => item}
+              />
+            }
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                variant="inline"
+                format="MM-dd-yyyy"
+                margin="normal"
+                label="Start Date"
+                value={selectedDate}
+                onChange={handleDateChange}
+                KeyboardButtonProps={{
+                  "aria-label": "change date",
+                }}
+              />
+            </MuiPickersUtilsProvider>
+            <FormControl
               style={{
                 maxWidth: "400px",
                 minWidth: "300px",
                 marginTop: "10px",
               }}
-            />
+              variant="outlined"
+              className={classes.formControl}
+            >
+              <InputLabel id="Select-subject-label">Select Subject</InputLabel>
+              <Select
+                fullWidth
+                labelId="Select-subject-label"
+                id="select-subject"
+                value={subjectNameId}
+                onChange={(e) => setSubjectNameId(e.target.value)}
+                label="Select Subject"
+              >
+                {subjectNames &&
+                  subjectNames.map((subject) => (
+                    <MenuItem value={subject._id}>
+                      {subject.subjectName}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
 
+            <FormControl
+              style={{
+                maxWidth: "400px",
+                minWidth: "300px",
+                marginTop: "10px",
+              }}
+              variant="outlined"
+              className={classes.formControl}
+            >
+              <InputLabel id="Select-label">Select Zoom Account</InputLabel>
+              <Select
+                fullWidth
+                labelId="Select-label"
+                id="demo-simple-select-outlined"
+                value={zoomEmail}
+                onChange={(e) => setZoomEmail(e.target.value)}
+                label="Select Zoom Account"
+              >
+                {zoomAccounts.map((account) => (
+                  <MenuItem value={account._id}>
+                    {account.ZoomAccountName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <TextField
               fullWidth
-              required
               id="outlined-basic"
               label="Zoom Link"
               variant="outlined"
               value={zoomLink}
+              required
               onChange={(e) => setZoomLink(e.target.value)}
               style={{
                 maxWidth: "400px",
@@ -511,14 +502,13 @@ const EditSchedule = ({ noSlot, match }) => {
                 marginTop: "10px",
               }}
             />
-
             <FormControlLabel
               style={{ marginTop: "20px" }}
               control={
                 <Checkbox
                   checked={demo}
                   onChange={(event) => setDemo(event.target.checked)}
-                  name="friday"
+                  name="Demo"
                   color="primary"
                 />
               }
@@ -537,7 +527,7 @@ const EditSchedule = ({ noSlot, match }) => {
                 className={classes.button}
                 startIcon={<SaveIcon />}
               >
-                Save
+                Save Changes
               </Button>
             )}
           </div>

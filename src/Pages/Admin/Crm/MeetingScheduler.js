@@ -83,14 +83,17 @@ const MeetingScheduler = () => {
   const [zoomEmail, setZoomEmail] = useState("");
   const [zoomLink, setZoomLink] = useState("");
   const [zoomAccounts, setZoomAccounts] = useState([]);
-  const [teacherNameFullObject, setTeacherNameFullObject] = useState({});
+  const [teacherNameFullObject, setTeacherNameFullObject] = useState({
+    id: "",
+    TeacherName: "",
+  });
   const [studentNamesFullObject, setStudentNamesFullObject] = useState([]);
   const [alert, setAlert] = useState("");
   const [alertColor, setAlertColor] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [subjectNames, setSubjectNames] = useState();
-  const [subjectNameId, setSubjectNameId] = useState();
+  const [subjectNames, setSubjectNames] = useState("");
+  const [subjectNameId, setSubjectNameId] = useState("");
 
   const handleDayChange = (event) => {
     setRadioday(event.target.value);
@@ -189,6 +192,7 @@ const MeetingScheduler = () => {
       setZoomEmail("");
       setZoomLink("");
       setPersonName("");
+      setSubjectNameId("");
       setSuccessOpen(true);
       setAlert(res.data.message);
       setAlertColor("success");
@@ -358,7 +362,7 @@ const MeetingScheduler = () => {
               <KeyboardDatePicker
                 disableToolbar
                 variant="inline"
-                format="dd-mm-yyyy"
+                format="MM-dd-yyyy"
                 margin="normal"
                 label="Start Date"
                 value={selectedDate}
@@ -377,14 +381,14 @@ const MeetingScheduler = () => {
               variant="outlined"
               className={classes.formControl}
             >
-              <InputLabel id="Select-label">Select Subjects</InputLabel>
+              <InputLabel id="Select-subject-label">Select Subject</InputLabel>
               <Select
                 fullWidth
-                labelId="Select-label"
-                id="demo-simple-select-outlined"
+                labelId="Select-subject-label"
+                id="select-subject"
                 value={subjectNameId}
                 onChange={(e) => setSubjectNameId(e.target.value)}
-                label="Select Zoom Account"
+                label="Select Subject"
               >
                 {subjectNames &&
                   subjectNames.map((subject) => (
@@ -440,7 +444,7 @@ const MeetingScheduler = () => {
                 <Checkbox
                   checked={demo}
                   onChange={(event) => setDemo(event.target.checked)}
-                  name="friday"
+                  name="Demo"
                   color="primary"
                 />
               }
