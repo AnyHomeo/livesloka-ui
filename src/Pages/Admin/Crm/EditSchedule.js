@@ -66,15 +66,10 @@ const useStyles = makeStyles((theme) => ({
 const EditSchedule = () => {
   const classes = useStyles();
 
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [personName, setPersonName] = useState([]);
   const [teacher, setInputTeacher] = useState("");
-  const [successOpen, setSuccessOpen] = React.useState(false);
+  const [successOpen, setSuccessOpen] = useState(false);
   const [demo, setDemo] = useState(false);
   const [radioday, setRadioday] = useState("");
   const [teacherName, setTeacherName] = useState([]);
@@ -84,18 +79,18 @@ const EditSchedule = () => {
   const [zoomEmail, setZoomEmail] = useState("");
   const [zoomLink, setZoomLink] = useState("");
   const [zoomAccounts, setZoomAccounts] = useState([]);
-  const [teacherNameFullObject, setTeacherNameFullObject] = useState({});
-  const [studentNamesFullObject, setStudentNamesFullObject] = useState([]);
   const [alert, setAlert] = useState("");
   const [alertColor, setAlertColor] = useState("");
   const [loading, setLoading] = useState(false);
   const [prevTeacher, setPrevTeacher] = useState("");
   const [prevSlots, setPrevSlots] = useState([]);
-
   const [subjectNames, setSubjectNames] = useState("");
   const [subjectNameId, setSubjectNameId] = useState("");
   const { id } = useParams();
 
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
   const handleDayChange = (event) => {
     setRadioday(event.target.value);
   };
@@ -237,50 +232,6 @@ const EditSchedule = () => {
   const submitForm = async (e) => {
     setLoading(true);
     e.preventDefault();
-    let formData = {};
-    days.forEach((day) => {
-      formData[day.toLowerCase()] = timeSlotState.filter((slot) =>
-        slot.startsWith(day)
-      );
-    });
-    formData = {
-      ...formData,
-      meetingLink: zoomLink,
-      meetingAccount: zoomEmail,
-      teacher: teacher,
-      students: personName,
-      demo: demo,
-      subject: subjectNameId,
-      startDate: moment(selectedDate).format("DD-MM-YYYY"),
-    };
-    try {
-      const res = await Axios.post(
-        `${process.env.REACT_APP_API_KEY}/schedule`,
-        formData
-      );
-      setDemo(false);
-      setPersonName("");
-      setZoomEmail("");
-      setZoomLink("");
-      setPersonName("");
-      setSubjectNameId("");
-      setSuccessOpen(true);
-      setAlert(res.data.message);
-      setAlertColor("success");
-      setLoading(false);
-      setTeacherNameFullObject({});
-      setStudentNamesFullObject([]);
-      setRadioday("");
-      setTimeSlotState([]);
-    } catch (error) {
-      console.error(error.response);
-      if (error.response) {
-        setSuccessOpen(true);
-        setAlert(error.response.data.error);
-        setAlertColor("error");
-        setLoading(false);
-      }
-    }
   };
 
   return (
