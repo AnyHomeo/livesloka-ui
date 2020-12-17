@@ -110,7 +110,7 @@ const MeetingScheduler = () => {
     const timeSlotsData = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/teacher/available/${teacher}?day=MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY`
     );
-    console.log(timeSlotsData.data);
+    console.log(timeSlotsData.data.result);
     setAvailableTimeSlots(timeSlotsData.data.result);
   };
 
@@ -345,8 +345,10 @@ const MeetingScheduler = () => {
                     slot.startsWith(radioday)
                   ) || []
                 }
-                timeSlotState={timeSlotState}
-                setTimeSlotState={setTimeSlotState}
+                valueFinder={(item) => item}
+                labelFinder={(item) => item}
+                state={timeSlotState}
+                setState={setTimeSlotState}
               />
             }
           </div>
