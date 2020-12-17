@@ -28,7 +28,6 @@ import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 
@@ -168,9 +167,9 @@ const MeetingScheduler = () => {
     e.preventDefault();
     let formData = {};
     days.forEach((day) => {
-      formData[day.toLowerCase()] = timeSlotState.filter((slot) =>
-        slot.startsWith(day)
-      );
+      formData[day.toLowerCase()] = timeSlotState
+        .filter((slot) => slot.startsWith(day))
+        .map((slot) => slot.split("!@#$%^&*($%^")[0]);
     });
     formData = {
       ...formData,
@@ -364,7 +363,7 @@ const MeetingScheduler = () => {
               <KeyboardDatePicker
                 disableToolbar
                 variant="inline"
-                format="MM-dd-yyyy"
+                format="dd-MM-yyyy"
                 margin="normal"
                 label="Start Date"
                 value={selectedDate}

@@ -19,34 +19,21 @@ Highcharts.setOptions({
   },
 });
 
-let totalAmount = 0;
-
-const addArray = (arr) => {
-  let numOr0 = (n) => (isNaN(n) ? 0 : n);
-  if (arr.length) {
-    console.log(arr.length);
-    totalAmount += arr.reduce((a, b) => numOr0(a) + numOr0(b));
-    return arr.reduce((a, b) => numOr0(a) + numOr0(b));
-  }
-  return 0;
-};
-
-let finaltotalStudent = [];
-const totalStudents = (students) => {
-  Object.keys(students.data.result).map((teacher) => {
-    students.data.result[teacher].map((student) => {
-      finaltotalStudent.push(student);
-    });
-  });
-};
-
 function FinancialAnalytics() {
   const [options, setOptions] = useState({});
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [totalStudents, setTotalStudents] = useState(0);
+  let numOr0 = (n) => (isNaN(n) ? 0 : n);
+  const addArray = (arr) => {
+    if (arr.length) {
+      return arr.reduce((a, b) => numOr0(a) + numOr0(b));
+    }
+    return 0;
+  };
 
   useEffect(() => {
     getFinancialStatistics()
       .then((data) => {
-        totalStudents(data);
         setOptions({
           chart: {
             type: "column",
@@ -144,6 +131,18 @@ function FinancialAnalytics() {
             })),
           },
         });
+        let totalSum = 0;
+        let totalStudentsSum = 0;
+        const { result } = data.data;
+        console.log(result);
+        Object.keys(result).forEach((teacher) => {
+          totalStudentsSum += result[teacher].length;
+          totalSum += result[teacher].length
+            ? addArray(result[teacher].map((student) => student.amount))
+            : 0;
+        });
+        setTotalAmount(totalSum);
+        setTotalStudents(totalStudentsSum);
       })
       .catch((err) => {
         console.log(err);
@@ -163,34 +162,30 @@ function FinancialAnalytics() {
       >
         <Card
           style={{
-            width: "200px",
-            marginRight: "10px",
+            margin: "10px",
+            padding: "30px 50px",
             backgroundColor: "#2ecc71",
           }}
         >
-          <h2 style={{ textAlign: "center", fontSize: "18px" }}>
-            Total Amount:
-          </h2>
+          <h5 style={{ textAlign: "center" }}>Total Amount:</h5>
 
-          <h3 style={{ textAlign: "center", fontSize: "20px" }}>
+          <h1 style={{ textAlign: "center" }}>
             ₹ <CountUp start={0} end={totalAmount} separator="," /> /-
-          </h3>
+          </h1>
         </Card>
 
         <Card
           style={{
-            width: "200px",
-            marginLeft: "10px",
+            margin: "10px",
+            padding: "30px 50px",
             backgroundColor: "#f1c40f",
           }}
         >
-          <h2 style={{ textAlign: "center", fontSize: "18px" }}>
-            Total Students:
-          </h2>
+          <h5 style={{ textAlign: "center" }}>Total Students:</h5>
 
-          <h3 style={{ textAlign: "center", fontSize: "20px" }}>
-            <CountUp start={0} end={finaltotalStudent.length} separator="," />
-          </h3>
+          <h1 style={{ textAlign: "center" }}>
+            <CountUp start={0} end={totalStudents} separator="," />
+          </h1>
         </Card>
       </div>
 

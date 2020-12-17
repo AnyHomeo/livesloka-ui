@@ -31,7 +31,7 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
-import { useParams } from "react-router-dom";
+import { Redirect, useParams } from "react-router-dom";
 
 let days = [
   "MONDAY",
@@ -86,6 +86,8 @@ const EditSchedule = () => {
   const [prevSlots, setPrevSlots] = useState([]);
   const [subjectNames, setSubjectNames] = useState("");
   const [subjectNameId, setSubjectNameId] = useState("");
+  const [redirect, setRedirect] = useState(false);
+
   const { id } = useParams();
 
   const handleDateChange = (date) => {
@@ -138,7 +140,6 @@ const EditSchedule = () => {
     const teacherNames = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/teacher?params=id,TeacherName`
     );
-    console.log(teacherNames.data);
     setTeacherName(teacherNames.data.result);
   };
 
@@ -191,7 +192,11 @@ const EditSchedule = () => {
       setZoomEmail(meetingAccount);
       setDemo(demo);
       setSubjectNameId(subject);
-      setSelectedDate(startDate);
+      setSelectedDate(
+        `${startDate.split("-")[1]}-${startDate.split("-")[0]}-${
+          startDate.split("-")[2]
+        }`
+      );
       setPersonName(
         students.map(
           (student) =>
@@ -232,7 +237,58 @@ const EditSchedule = () => {
   const submitForm = async (e) => {
     setLoading(true);
     e.preventDefault();
+    let formData = {
+      slots: {},
+    };
+    days.forEach((day) => {
+      formData["slots"][day.toLowerCase()] = timeSlotState
+        .filter((slot) => slot.startsWith(day))
+        .map((slot) => slot.split("!@#$%^&*($%^")[0]);
+    });
+    formData = {
+      ...formData,
+      meetingLink: zoomLink,
+      meetingAccount: zoomEmail,
+      teacher: teacher,
+      students: personName.map((student) => student.split("!@#$%^&*($%^")[1]),
+      demo: demo,
+      subject: subjectNameId,
+      startDate: moment(selectedDate).format("DD-MM-YYYY"),
+    };
+    console.log(formData);
+    try {
+      const res = await Axios.post(
+        `${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`,
+        formData
+      );
+      setDemo(false);
+      setPersonName([]);
+      setZoomEmail("");
+      setZoomLink("");
+      setSubjectNameId("");
+      setSuccessOpen(true);
+      setAlert(res.data.message);
+      setAlertColor("success");
+      setLoading(false);
+      setRadioday("");
+      setTimeSlotState([]);
+      setTimeout(() => {
+        setRedirect(true);
+      }, 2000);
+    } catch (error) {
+      console.error(error.response);
+      if (error.response) {
+        setSuccessOpen(true);
+        setAlert(error.response.data.error);
+        setAlertColor("error");
+        setLoading(false);
+      }
+    }
   };
+
+  if (redirect) {
+    return <Redirect to={"/scheduler"} />;
+  }
 
   return (
     <>
@@ -377,7 +433,7 @@ const EditSchedule = () => {
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
                 variant="inline"
-                format="MM-dd-yyyy"
+                format="dd-MM-yyyy"
                 margin="normal"
                 label="Start Date"
                 value={selectedDate}

@@ -424,11 +424,7 @@ function Scheduler() {
                                 : undefined,
                             }}
                             onClick={() => {
-                              if (availableSlotsEditingMode) {
-                                addOrRemoveAvailableSlot(
-                                  `${day.toUpperCase()}-${time}`
-                                );
-                              } else if (
+                              if (
                                 categorizedData[category][teacher]
                                   .scheduledSlots[
                                   `${day.toUpperCase()}-${time}`
@@ -439,6 +435,10 @@ function Scheduler() {
                                     .scheduledSlots[
                                     `${day.toUpperCase()}-${time}`
                                   ]
+                                );
+                              } else if (availableSlotsEditingMode) {
+                                addOrRemoveAvailableSlot(
+                                  `${day.toUpperCase()}-${time}`
                                 );
                               }
                             }}
