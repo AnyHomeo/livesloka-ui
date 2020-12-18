@@ -25,9 +25,9 @@ import {
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { FileCopyOutlined } from "@material-ui/icons";
-import MeetingScheduler from "../Crm/MeetingScheduler";
 import { Link } from "react-router-dom";
 import Axios from "axios";
+import SingleBlock from "./SingleBlock";
 
 const times = [
   "12:00 AM-12:30 AM",
@@ -137,7 +137,6 @@ function Scheduler() {
   );
   const [scheduleId, setScheduleId] = useState("");
   const [selectedSchedule, setSelectedSchedule] = useState({});
-  const [addScheduleMode, setAddScheduleMode] = useState(false);
 
   useEffect(() => {
     serviceCallDelete();
@@ -145,6 +144,7 @@ function Scheduler() {
 
   const serviceCallDelete = () => {
     getOccupancy().then((data) => {
+      console.log(data);
       setCategorizedData(data.data.data);
       setAllSchedules(data.data.allSchedules);
     });
@@ -398,64 +398,21 @@ function Scheduler() {
                     <React.Fragment key={i}>
                       {days.map((day, j) => {
                         return (
-                          <div
-                            key={j}
-                            className={`day-time-intersection-box `}
-                            style={{
-                              cursor:
-                                categorizedData[category][teacher]
-                                  .scheduledSlots[
-                                  `${day.toUpperCase()}-${time}`
-                                ] || availableSlotsEditingMode
-                                  ? "pointer"
-                                  : "not-allowed",
-                              borderBottom:
-                                i % 2 !== 0 ? "1px solid rgba(0,0,0,0.5)" : "",
-                              backgroundColor: categorizedData[category][
-                                teacher
-                              ].scheduledSlots[`${day.toUpperCase()}-${time}`]
-                                ? "#EA7773"
-                                : categorizedData[category][
-                                    teacher
-                                  ].availableSlots.includes(
-                                    `${day.toUpperCase()}-${time}`
-                                  )
-                                ? "#04E46C"
-                                : undefined,
-                            }}
-                            onClick={() => {
-                              if (
-                                categorizedData[category][teacher]
-                                  .scheduledSlots[
-                                  `${day.toUpperCase()}-${time}`
-                                ]
-                              ) {
-                                setScheduleId(
-                                  categorizedData[category][teacher]
-                                    .scheduledSlots[
-                                    `${day.toUpperCase()}-${time}`
-                                  ]
-                                );
-                              } else if (availableSlotsEditingMode) {
-                                addOrRemoveAvailableSlot(
-                                  `${day.toUpperCase()}-${time}`
-                                );
-                              }
-                            }}
-                          >
-                            {categorizedData[category][
-                              teacher
-                            ].availableSlots.includes(
-                              `${day.toUpperCase()}-${time}`
-                            )
-                              ? "available"
-                              : categorizedData[category][teacher]
-                                  .scheduledSlots[
-                                  `${day.toUpperCase()}-${time}`
-                                ]
-                              ? "Scheduled"
-                              : ""}
-                          </div>
+                          <SingleBlock
+                            allSchedules={allSchedules}
+                            day={day}
+                            time={time}
+                            i={i}
+                            j={j}
+                            category={category}
+                            teacher={teacher}
+                            categorizedData={categorizedData}
+                            availableSlotsEditingMode={
+                              availableSlotsEditingMode
+                            }
+                            setScheduleId={setScheduleId}
+                            addOrRemoveAvailableSlot={addOrRemoveAvailableSlot}
+                          />
                         );
                       })}
                     </React.Fragment>
