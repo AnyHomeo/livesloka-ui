@@ -108,10 +108,7 @@ const EditSchedule = () => {
     const timeSlotsData = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/teacher/available/${teacher}?day=MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY`
     );
-    console.log(timeSlotsData.data);
-    console.log(teacher === prevTeacher);
     if (teacher === prevTeacher) {
-      console.log(timeSlotsData.data.result, prevSlots);
       setAvailableTimeSlots(timeSlotsData.data.result.concat(prevSlots));
       setTimeSlotState(prevSlots);
     } else {
@@ -148,7 +145,6 @@ const EditSchedule = () => {
     const studentNames = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/customers/all?params=firstName,lastName`
     );
-    console.log(studentNames);
     setStudentName(studentNames.data.result);
   };
 
@@ -185,17 +181,18 @@ const EditSchedule = () => {
           sunday,
         },
       } = schedule.data.result;
-      console.log(schedule.data.result);
       setInputTeacher(teacher);
       setPrevTeacher(teacher);
-      setZoomLink(meetingLink);
-      setZoomEmail(meetingAccount);
+      setZoomLink(meetingLink || "");
+      setZoomEmail(meetingAccount || "");
       setDemo(demo);
-      setSubjectNameId(subject);
+      setSubjectNameId(subject || "");
       setSelectedDate(
-        `${startDate.split("-")[1]}-${startDate.split("-")[0]}-${
-          startDate.split("-")[2]
-        }`
+        startDate
+          ? `${startDate.split("-")[1]}-${startDate.split("-")[0]}-${
+              startDate.split("-")[2]
+            }`
+          : new Date()
       );
       setPersonName(
         students.map(
@@ -255,7 +252,6 @@ const EditSchedule = () => {
       subject: subjectNameId,
       startDate: moment(selectedDate).format("DD-MM-YYYY"),
     };
-    console.log(formData);
     try {
       const res = await Axios.post(
         `${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`,
