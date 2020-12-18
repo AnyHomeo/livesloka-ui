@@ -18,6 +18,8 @@ function SingleBlock({
       key={j}
       className={`day-time-intersection-box `}
       style={{
+        fontSize: "14px",
+        fontWeight: "bold",
         cursor:
           categorizedData[category][teacher].scheduledSlots[
             `${day.toUpperCase()}-${time}`
@@ -28,11 +30,11 @@ function SingleBlock({
         backgroundColor: categorizedData[category][teacher].scheduledSlots[
           `${day.toUpperCase()}-${time}`
         ]
-          ? "#EA7773"
+          ? "#e67e22"
           : categorizedData[category][teacher].availableSlots.includes(
               `${day.toUpperCase()}-${time}`
             )
-          ? "#04E46C"
+          ? "#2ecc71"
           : undefined,
       }}
       onClick={() => {
