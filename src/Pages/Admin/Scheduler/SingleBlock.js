@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 function SingleBlock({
   day,
@@ -13,6 +13,26 @@ function SingleBlock({
   availableSlotsEditingMode,
   allSchedules,
 }) {
+  const [schedule, setSchedule] = useState({});
+
+  useEffect(() => {
+    if (
+      categorizedData[category][teacher].scheduledSlots[
+        `${day.toUpperCase()}-${time}`
+      ]
+    ) {
+      setSchedule(
+        allSchedules.filter(
+          (schedule) =>
+            schedule._id ===
+            categorizedData[category][teacher].scheduledSlots[
+              `${day.toUpperCase()}-${time}`
+            ]
+        )[0]
+      );
+    }
+  }, [allSchedules, categorizedData, teacher, category, day, time]);
+
   return (
     <div
       key={j}
@@ -27,10 +47,10 @@ function SingleBlock({
             ? "pointer"
             : "not-allowed",
         borderBottom: i % 2 !== 0 ? "1px solid rgba(0,0,0,0.5)" : "",
-        backgroundColor: categorizedData[category][teacher].scheduledSlots[
-          `${day.toUpperCase()}-${time}`
-        ]
-          ? "#e67e22"
+        backgroundColor: Object.keys(schedule).length
+          ? schedule.demo
+            ? "#B73427"
+            : "#e67e22"
           : categorizedData[category][teacher].availableSlots.includes(
               `${day.toUpperCase()}-${time}`
             )
@@ -38,11 +58,7 @@ function SingleBlock({
           : undefined,
       }}
       onClick={() => {
-        if (
-          categorizedData[category][teacher].scheduledSlots[
-            `${day.toUpperCase()}-${time}`
-          ]
-        ) {
+        if (Object.keys(schedule).length) {
           setScheduleId(
             categorizedData[category][teacher].scheduledSlots[
               `${day.toUpperCase()}-${time}`
@@ -53,16 +69,8 @@ function SingleBlock({
         }
       }}
     >
-      {categorizedData[category][teacher].scheduledSlots[
-        `${day.toUpperCase()}-${time}`
-      ]
-        ? allSchedules.filter(
-            (schedule) =>
-              schedule._id ===
-              categorizedData[category][teacher].scheduledSlots[
-                `${day.toUpperCase()}-${time}`
-              ]
-          )[0].className
+      {Object.keys(schedule).length
+        ? schedule.className
         : categorizedData[category][teacher].availableSlots.includes(
             `${day.toUpperCase()}-${time}`
           )
