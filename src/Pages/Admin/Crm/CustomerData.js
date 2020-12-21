@@ -89,6 +89,7 @@ const names = [
   "Teacher",
   "Agent",
   "Category",
+  "Subject",
 ];
 
 const status = [
@@ -100,6 +101,7 @@ const status = [
   "TeacherName",
   "AgentName",
   "categoryName",
+  "subjectName",
 ];
 
 const fetchDropDown = (index) => {
@@ -128,6 +130,7 @@ const countryDropdown = fetchDropDown(4);
 const teachersDropdown = fetchDropDown(5);
 const agentDropdown = fetchDropDown(6);
 const categoryDropdown = fetchDropDown(7);
+const subjectDropdown = fetchDropDown(8);
 
 const ColumnFilterDrawer = ({
   drawerOpen,
@@ -315,6 +318,15 @@ const CrmDetails = () => {
           cellStyle: { whiteSpace: "nowrap" },
           headerStyle: { whiteSpace: "nowrap" },
           hidden: !columnFilters["classId"].selected,
+        },
+        {
+          title: "Subject Name",
+          field: "subjectId",
+          width: "1%",
+          lookup: subjectDropdown,
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          hidden: !columnFilters["subjectId"].selected,
         },
         {
           title: "New Class Name",
@@ -568,6 +580,10 @@ const CrmDetails = () => {
           selected: settings.includes("className"),
           name: "new Class Name",
         },
+        subjectId: {
+          selected: settings.includes("subjectId"),
+          name: "Subject name",
+        },
         lastName: { selected: settings.includes("lastName"), name: "Gaurdian" },
         classId: { selected: settings.includes("classId"), name: "Class Name" },
         email: { selected: settings.includes("email"), name: "Email" },
@@ -690,9 +706,6 @@ const CrmDetails = () => {
               color: selectedRow === rowData.tableData.id ? "#fff" : "#000",
             }),
           }}
-          // onRowClick={(evt, selectedRow) =>
-          //   setSelectedRow(selectedRow.tableData.id)
-          // }
           actions={[
             (rowData) => ({
               icon: () => (
