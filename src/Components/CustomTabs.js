@@ -88,9 +88,10 @@ const CustomTabs = () => {
       });
       setLookup(dummyLookup);
     });
-    if (value === 6) {
+    if (value === 8) {
       getData("Category").then((data) => {
         let dummyLookup = {};
+        console.log(data);
         data.data.result.forEach((data) => {
           dummyLookup[data.id] = data.categoryName;
         });

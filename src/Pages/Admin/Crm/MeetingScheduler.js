@@ -140,7 +140,7 @@ const MeetingScheduler = () => {
   // Get Students
   const getStudents = async () => {
     const studentNames = await Axios.get(
-      `${process.env.REACT_APP_API_KEY}/customers/all?params=firstName,lastName`
+      `${process.env.REACT_APP_API_KEY}/customers/all?params=firstName,lastName,subjectId`
     );
     console.log(studentNames);
     setStudentName(studentNames.data.result);
@@ -200,6 +200,7 @@ const MeetingScheduler = () => {
       setStudentNamesFullObject([]);
       setRadioday("");
       setTimeSlotState([]);
+      setAvailableTimeSlots([]);
     } catch (error) {
       console.error(error.response);
       if (error.response) {
@@ -272,7 +273,11 @@ const MeetingScheduler = () => {
                 style={{ width: "60%", margin: "0 auto" }}
                 options={studentName}
                 value={studentNamesFullObject}
-                getOptionLabel={(name) => `${name.firstName} ${name.lastName}`}
+                getOptionLabel={(name) =>
+                  `${name.firstName} ${name.lastName ? name.lastName : ""}${
+                    name.subject ? `(${name.subject.subjectName})` : ""
+                  }`
+                }
                 onChange={(event, value) => {
                   let tempData = [];
                   setStudentNamesFullObject(value);

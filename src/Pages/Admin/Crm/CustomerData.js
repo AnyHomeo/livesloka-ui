@@ -122,16 +122,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const classDropdown = fetchDropDown(0);
-const timeZoneDropdown = fetchDropDown(1);
-const classStatusDropdown = fetchDropDown(2);
-const currencyDropdown = fetchDropDown(3);
-const countryDropdown = fetchDropDown(4);
-const teachersDropdown = fetchDropDown(5);
-const agentDropdown = fetchDropDown(6);
-const categoryDropdown = fetchDropDown(7);
-const subjectDropdown = fetchDropDown(8);
-
 const ColumnFilterDrawer = ({
   drawerOpen,
   setDrawerOpen,
@@ -218,7 +208,109 @@ const CrmDetails = () => {
   }
 
   useEffect(() => {
+    getSettings(isAutheticated()._id).then((data) => {
+      let settings;
+      if (data.data.result.columns) {
+        settings = data.data.result.columns;
+      } else {
+        settings = [];
+      }
+      setColumnFilters({
+        classStatusId: {
+          selected: settings.includes("classStatusId"),
+          name: "Customer Status",
+        },
+        timeZoneId: {
+          selected: settings.includes("timeZoneId"),
+          name: "Time Zone",
+        },
+        categoryId: {
+          selected: settings.includes("categoryId"),
+          name: "Category",
+        },
+        firstName: {
+          selected: settings.includes("firstName"),
+          name: "Student Name",
+        },
+        className: {
+          selected: settings.includes("className"),
+          name: "new Class Name",
+        },
+        subjectId: {
+          selected: settings.includes("subjectId"),
+          name: "Subject name",
+        },
+        lastName: { selected: settings.includes("lastName"), name: "Gaurdian" },
+        classId: { selected: settings.includes("classId"), name: "Class Name" },
+        email: { selected: settings.includes("email"), name: "Email" },
+        gender: { selected: settings.includes("gender"), name: "Gender" },
+        whatsAppnumber: {
+          selected: settings.includes("whatsAppnumber"),
+          name: "Whatsapp",
+        },
+        noOfClasses: {
+          selected: settings.includes("oneToOne"),
+          name: "Number of Classes",
+        },
+        oneToOne: { selected: settings.includes("oneToOne"), name: "Group" },
+        teacherId: {
+          selected: settings.includes("teacherId"),
+          name: "Teacher",
+        },
+        countryId: {
+          selected: settings.includes("countryId"),
+          name: "Country",
+        },
+        numberOfStudents: {
+          selected: settings.includes("numberOfStudents"),
+          name: "No of Students",
+        },
+        proposedAmount: {
+          selected: settings.includes("proposedAmount"),
+          name: "Proposed Amount",
+        },
+        proposedCurrencyId: {
+          selected: settings.includes("proposedCurrencyId"),
+          name: "Proposed Currency",
+        },
+        placeOfStay: {
+          selected: settings.includes("placeOfStay"),
+          name: "Place Of Stay",
+        },
+        age: {
+          selected: settings.includes("age"),
+          name: "Age",
+        },
+        agentId: { selected: settings.includes("agentId"), name: "Agent Id" },
+        scheduleDescription: {
+          selected: settings.includes("scheduleDescription"),
+          name: "scheduleDescription",
+        },
+        meetingLink: {
+          selected: settings.includes("meetingLink"),
+          name: "Meeting Link",
+        },
+        phone: { selected: settings.includes("phone"), name: "Phone No" },
+        studyMaterialSent: {
+          selected: settings.includes("studyMaterialSent"),
+          name: "Study Material Sent",
+        },
+      });
+    });
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     if (Object.keys(columnFilters).length) {
+      const classDropdown = fetchDropDown(0);
+      const timeZoneDropdown = fetchDropDown(1);
+      const classStatusDropdown = fetchDropDown(2);
+      const currencyDropdown = fetchDropDown(3);
+      const countryDropdown = fetchDropDown(4);
+      const teachersDropdown = fetchDropDown(5);
+      const agentDropdown = fetchDropDown(6);
+      const categoryDropdown = fetchDropDown(7);
+      const subjectDropdown = fetchDropDown(8);
       setColumns([
         {
           title: "Customer Status",
@@ -550,99 +642,6 @@ const CrmDetails = () => {
       ]);
     }
   }, [columnFilters]);
-
-  useEffect(() => {
-    getSettings(isAutheticated()._id).then((data) => {
-      let settings;
-      if (data.data.result.columns) {
-        settings = data.data.result.columns;
-      } else {
-        settings = [];
-      }
-      setColumnFilters({
-        classStatusId: {
-          selected: settings.includes("classStatusId"),
-          name: "Customer Status",
-        },
-        timeZoneId: {
-          selected: settings.includes("timeZoneId"),
-          name: "Time Zone",
-        },
-        categoryId: {
-          selected: settings.includes("categoryId"),
-          name: "Category",
-        },
-        firstName: {
-          selected: settings.includes("firstName"),
-          name: "Student Name",
-        },
-        className: {
-          selected: settings.includes("className"),
-          name: "new Class Name",
-        },
-        subjectId: {
-          selected: settings.includes("subjectId"),
-          name: "Subject name",
-        },
-        lastName: { selected: settings.includes("lastName"), name: "Gaurdian" },
-        classId: { selected: settings.includes("classId"), name: "Class Name" },
-        email: { selected: settings.includes("email"), name: "Email" },
-        gender: { selected: settings.includes("gender"), name: "Gender" },
-        whatsAppnumber: {
-          selected: settings.includes("whatsAppnumber"),
-          name: "Whatsapp",
-        },
-        noOfClasses: {
-          selected: settings.includes("oneToOne"),
-          name: "Number of Classes",
-        },
-        oneToOne: { selected: settings.includes("oneToOne"), name: "Group" },
-        teacherId: {
-          selected: settings.includes("teacherId"),
-          name: "Teacher",
-        },
-        countryId: {
-          selected: settings.includes("countryId"),
-          name: "Country",
-        },
-        numberOfStudents: {
-          selected: settings.includes("numberOfStudents"),
-          name: "No of Students",
-        },
-        proposedAmount: {
-          selected: settings.includes("proposedAmount"),
-          name: "Proposed Amount",
-        },
-        proposedCurrencyId: {
-          selected: settings.includes("proposedCurrencyId"),
-          name: "Proposed Currency",
-        },
-        placeOfStay: {
-          selected: settings.includes("placeOfStay"),
-          name: "Place Of Stay",
-        },
-        age: {
-          selected: settings.includes("age"),
-          name: "Age",
-        },
-        agentId: { selected: settings.includes("agentId"), name: "Agent Id" },
-        scheduleDescription: {
-          selected: settings.includes("scheduleDescription"),
-          name: "scheduleDescription",
-        },
-        meetingLink: {
-          selected: settings.includes("meetingLink"),
-          name: "Meeting Link",
-        },
-        phone: { selected: settings.includes("phone"), name: "Phone No" },
-        studyMaterialSent: {
-          selected: settings.includes("studyMaterialSent"),
-          name: "Study Material Sent",
-        },
-      });
-    });
-    fetchData();
-  }, []);
 
   const fetchData = async () => {
     try {

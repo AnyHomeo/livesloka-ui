@@ -49,7 +49,7 @@ exports.services = {
     "Update Status": "/admin/update/status",
 
     Teacher:
-      "/teacher?params=id,TeacherDesc,TeacherName,TeacherStatus,-_id,category",
+      "/teacher?params=id,TeacherDesc,TeacherName,TeacherStatus,-_id,category,teacherMail",
     "Add Teacher": "/admin/add/Teacher",
     "Update Teacher": "/admin/update/Teacher",
     "Delete Teacher": "/admin/delete/Teacher",
