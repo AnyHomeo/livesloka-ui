@@ -194,14 +194,8 @@ const CrmDetails = () => {
   const [success, setSuccess] = useState(false);
   const [response, setResponse] = useState("");
   const [selectedRow, setSelectedRow] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(new Date());
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [columnFilters, setColumnFilters] = useState({});
-
-  const handleDateChange = (date) => {
-    const newDate = moment(date).format("YYYY-MM-DD");
-    setSelectedDate(newDate);
-  };
 
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -694,10 +688,14 @@ const CrmDetails = () => {
           columns={columns}
           data={data}
           options={{
-            paging: false,
+            // paging: false,
+            pageSize: 20,
+            pageSizeOptions: [20, 30, 40, 50],
+            paginationType: "stepped",
+            searchFieldVariant: "outlined",
             actionsColumnIndex: 0,
             addRowPosition: "first",
-            maxBodyHeight: height - 250,
+            maxBodyHeight: height - 300,
             grouping: true,
             rowStyle: (rowData) => ({
               backgroundColor:
