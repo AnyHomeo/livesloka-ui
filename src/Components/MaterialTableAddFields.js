@@ -160,6 +160,7 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
           maxBodyHeight: 400,
           addRowPosition: "first",
           actionsColumnIndex: -1,
+          exporting: true,
         }}
         components={{
           Row: (props) => (

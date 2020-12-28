@@ -243,8 +243,12 @@ const CrmDetails = () => {
           name: "Whatsapp",
         },
         noOfClasses: {
-          selected: settings.includes("oneToOne"),
+          selected: settings.includes("noOfClasses"),
           name: "Number of Classes",
+        },
+        paymentDate: {
+          selected: settings.includes("paymentDate"),
+          name: "Payment Date",
         },
         oneToOne: { selected: settings.includes("oneToOne"), name: "Group" },
         teacherId: {
@@ -386,6 +390,20 @@ const CrmDetails = () => {
               }}
             />
           ),
+        },
+        {
+          title: "Payment Date",
+          field: "paymentDate",
+          width: "1%",
+          lookup: Array.from(
+            { length: 31 },
+            (_, i) => i
+          ).reduce((prev, cur) => ({ ...prev, [cur]: cur })),
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          hidden: !columnFilters["paymentDate"].selected,
+          render: (rowData) =>
+            rowData.paymentDate ? `${rowData.paymentDate} of every month` : "",
         },
         {
           title: "Gender",
@@ -697,6 +715,7 @@ const CrmDetails = () => {
             addRowPosition: "first",
             maxBodyHeight: height - 300,
             grouping: true,
+            exportButton: true,
             rowStyle: (rowData) => ({
               backgroundColor:
                 selectedRow === rowData.tableData.id ? "#3F51B5" : "#FFF",
