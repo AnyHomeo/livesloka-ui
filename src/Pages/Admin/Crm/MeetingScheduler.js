@@ -93,6 +93,7 @@ const MeetingScheduler = () => {
 
   const [subjectNames, setSubjectNames] = useState("");
   const [subjectNameId, setSubjectNameId] = useState("");
+  const [className, setClassName] = useState("");
 
   const handleDayChange = (event) => {
     setRadioday(event.target.value);
@@ -162,6 +163,7 @@ const MeetingScheduler = () => {
     );
     setSubjectNames(subjectName.data.result);
   };
+
   const submitForm = async (e) => {
     setLoading(true);
     e.preventDefault();
@@ -180,7 +182,9 @@ const MeetingScheduler = () => {
       demo: demo,
       subject: subjectNameId,
       startDate: moment(selectedDate).format("DD-MM-YYYY"),
+      classname: className
     };
+    console.log(formData);
     try {
       const res = await Axios.post(
         `${process.env.REACT_APP_API_KEY}/schedule`,
@@ -199,6 +203,7 @@ const MeetingScheduler = () => {
       setTeacherNameFullObject({});
       setStudentNamesFullObject([]);
       setRadioday("");
+      setClassName("");
       setTimeSlotState([]);
       setAvailableTimeSlots([]);
     } catch (error) {
@@ -256,8 +261,8 @@ const MeetingScheduler = () => {
                 )}
               />
             ) : (
-              ""
-            )}{" "}
+                ""
+              )}{" "}
           </Grid>
           <Grid item xs={12} md={4} />
           <Grid item xs={12} md={4} />
@@ -274,8 +279,7 @@ const MeetingScheduler = () => {
                 options={studentName}
                 value={studentNamesFullObject}
                 getOptionLabel={(name) =>
-                  `${name.firstName} ${name.lastName ? name.lastName : ""}${
-                    name.subject ? `(${name.subject.subjectName})` : ""
+                  `${name.firstName} ${name.lastName ? name.lastName : ""}${name.subject ? `(${name.subject.subjectName})` : ""
                   }`
                 }
                 onChange={(event, value) => {
@@ -297,8 +301,8 @@ const MeetingScheduler = () => {
                 )}
               />
             ) : (
-              ""
-            )}
+                ""
+              )}
           </Grid>
 
           <Grid item xs={12} md={4} />
@@ -404,6 +408,30 @@ const MeetingScheduler = () => {
                   ))}
               </Select>
             </FormControl>
+            <FormControl
+              style={{
+                maxWidth: "400px",
+                minWidth: "300px",
+                marginTop: "10px",
+              }}
+              variant="outlined"
+            >
+
+              <TextField
+                fullWidth
+                id="outlined-basic"
+                label="Class Name "
+                variant="outlined"
+                value={className}
+                onChange={(e) => setClassName(e.target.value)}
+                style={{
+                  maxWidth: "400px",
+                  minWidth: "300px",
+                  marginTop: "10px",
+                }}
+              />
+
+            </FormControl>
 
             <FormControl
               style={{
@@ -461,17 +489,17 @@ const MeetingScheduler = () => {
             {loading ? (
               <CircularProgress />
             ) : (
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                type="submit"
-                className={classes.button}
-                startIcon={<SaveIcon />}
-              >
-                Save
-              </Button>
-            )}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  type="submit"
+                  className={classes.button}
+                  startIcon={<SaveIcon />}
+                >
+                  Save
+                </Button>
+              )}
           </div>
         </div>
       </form>
