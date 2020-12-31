@@ -127,7 +127,7 @@ export const getAllCustomerDetails = () => {
 };
 
 export const getData = (name) => {
-  console.log(name)
+  console.log(name);
   return Axios.get(`${API.main}${API[name]}`);
 };
 
@@ -207,3 +207,17 @@ export const deleteAvailableTimeSlot = (id, slot) =>
 
 export const getFinancialStatistics = () =>
   axios.get(`${API.main}/teacher/finance`);
+
+export const getClasses = () =>
+  axios.get(`${API.main}/schedule/data/all?params=className`);
+
+export const getAttendanceByScheduleId = (id) =>
+  axios.get(`${API.main}/attendance/all/${id}`);
+
+export const getStudentList = (id) => axios.get(`${API.main}/schedule/${id}`);
+
+export const getScheduleAndDateAttendance = (id, date) =>
+  axios.get(`${API.main}/attendance/${id}?date=${date}`);
+
+export const postStudentsAttendance = (data) =>
+  axios.post(`${API.main}/attendance`, data);

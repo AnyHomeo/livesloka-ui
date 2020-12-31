@@ -19,6 +19,8 @@ import UserPasswordReset from "../Pages/Admin/Crm/UserPasswordReset";
 
 import EditSchedule from "../Pages/Admin/Crm/EditSchedule";
 import AttedanceByClass from "../Pages/Admin/Crm/AttendanceByClass";
+import EditAttendance from "../Pages/Admin/Crm/EditAttendance";
+import AutocompleteMultipleCustom from "../Components/AutocompleteMultipleCustom";
 
 function Routes() {
   return (
@@ -32,6 +34,11 @@ function Routes() {
             <AdminRoute path="/customer-data" exact component={CustomerData} />
             <AdminRoute path="/add-fields" exact component={CustomTabs} />
             <AdminRoute path="/attendance" exact component={Attedance} />
+            <AdminRoute
+              path="/edit/attendance/:scheduleId/:date"
+              exact
+              component={EditAttendance}
+            />
             <AdminRoute
               path="/teacherDetails"
               exact
@@ -54,6 +61,7 @@ function Routes() {
             <Route path="/analytics" exact component={FinancialAnalytics} />
             <Route path="/reset/password" exact component={UserPasswordReset} />
             <Route path="/edit-schedule/:id" exact component={EditSchedule} />
+            <Route path="/test" exact component={AutocompleteMultipleCustom} />
           </SideNav>
         </Switch>
       </Router>
