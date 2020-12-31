@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import {
   Button,
@@ -85,6 +87,7 @@ const EditSchedule = () => {
   const [prevSlots, setPrevSlots] = useState([]);
   const [subjectNames, setSubjectNames] = useState("");
   const [subjectNameId, setSubjectNameId] = useState("");
+  const [ClassName, setClassName] = useState("");
   const [redirect, setRedirect] = useState(false);
 
   const { id } = useParams();
@@ -162,8 +165,10 @@ const EditSchedule = () => {
       const schedule = await Axios.get(
         `${process.env.REACT_APP_API_KEY}/schedule/${id}`
       );
+      console.log(schedule.data);
       const {
         teacher,
+        className,
         meetingLink,
         meetingAccount,
         demo,
@@ -181,6 +186,7 @@ const EditSchedule = () => {
         },
       } = schedule.data.result;
       setInputTeacher(teacher);
+      setClassName(className);
       setPrevTeacher(teacher);
       setZoomLink(meetingLink || "");
       setZoomEmail(meetingAccount || "");
@@ -188,9 +194,8 @@ const EditSchedule = () => {
       setSubjectNameId(subject || "");
       setSelectedDate(
         startDate
-          ? `${startDate.split("-")[1]}-${startDate.split("-")[0]}-${
-              startDate.split("-")[2]
-            }`
+          ? `${startDate.split("-")[1]}-${startDate.split("-")[0]}-${startDate.split("-")[2]
+          }`
           : new Date()
       );
       setPersonName(students);
@@ -236,6 +241,7 @@ const EditSchedule = () => {
     });
     formData = {
       ...formData,
+      className: ClassName,
       meetingLink: zoomLink,
       meetingAccount: zoomEmail,
       teacher: teacher,
@@ -244,6 +250,7 @@ const EditSchedule = () => {
       subject: subjectNameId,
       startDate: moment(selectedDate).format("DD-MM-YYYY"),
     };
+    console.log(ClassName);
     try {
       const res = await Axios.post(
         `${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`,
@@ -259,6 +266,7 @@ const EditSchedule = () => {
       setAlertColor("success");
       setLoading(false);
       setRadioday("");
+      setClassName("");
       setTimeSlotState([]);
       setTimeout(() => {
         setRedirect(true);
@@ -497,6 +505,20 @@ const EditSchedule = () => {
             <TextField
               fullWidth
               id="outlined-basic"
+              label="ClassName"
+              variant="outlined"
+              value={ClassName}
+              required
+              onChange={(e) => setClassName(e.target.value)}
+              style={{
+                maxWidth: "400px",
+                minWidth: "300px",
+                marginTop: "10px",
+              }}
+            />
+            <TextField
+              fullWidth
+              id="outlined-basic"
               label="Zoom Link"
               variant="outlined"
               value={zoomLink}
@@ -525,17 +547,17 @@ const EditSchedule = () => {
             {loading ? (
               <CircularProgress />
             ) : (
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                type="submit"
-                className={classes.button}
-                startIcon={<SaveIcon />}
-              >
-                Save Changes
-              </Button>
-            )}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  type="submit"
+                  className={classes.button}
+                  startIcon={<SaveIcon />}
+                >
+                  Save Changes
+                </Button>
+              )}
           </div>
         </div>
       </form>
