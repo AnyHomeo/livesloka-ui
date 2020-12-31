@@ -18,6 +18,7 @@ import TeacherDetails from "../Pages/Admin/Crm/TeacherDetails";
 import UserPasswordReset from "../Pages/Admin/Crm/UserPasswordReset";
 
 import EditSchedule from "../Pages/Admin/Crm/EditSchedule";
+import AttedanceByClass from "../Pages/Admin/Crm/AttendanceByClass";
 
 function Routes() {
   return (
@@ -40,6 +41,11 @@ function Routes() {
               path="/meeting-scheduler"
               exact
               component={MeetingScheduler}
+            />
+            <AdminRoute
+              path="/attendance/class"
+              exact
+              component={AttedanceByClass}
             />
             <AdminRoute path="/invoice-generator" exact component={Generator} />
             <AdminRoute path="/manual-invoice" exact component={Invoice} />
