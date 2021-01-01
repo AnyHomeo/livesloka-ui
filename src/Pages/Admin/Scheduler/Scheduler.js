@@ -167,7 +167,9 @@ function Scheduler() {
     let newLink = link.split("/");
     console.log(newLink[4].split("?")[0]);
     window.open(
-      `http://localhost:3001/meeting/${id}/${newLink[4].split("?")[0]}`,
+      `https://livekumonmeeting.netlify.app/meeting/${id}/${
+        newLink[4].split("?")[0]
+      }`,
       "_blank"
     );
   };
