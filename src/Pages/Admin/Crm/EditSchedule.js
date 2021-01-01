@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import {
   Button,
@@ -28,7 +30,6 @@ import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import { Redirect, useParams } from "react-router-dom";
@@ -86,6 +87,7 @@ const EditSchedule = () => {
   const [prevSlots, setPrevSlots] = useState([]);
   const [subjectNames, setSubjectNames] = useState("");
   const [subjectNameId, setSubjectNameId] = useState("");
+  const [ClassName, setClassName] = useState("");
   const [redirect, setRedirect] = useState(false);
 
   const { id } = useParams();
@@ -163,8 +165,10 @@ const EditSchedule = () => {
       const schedule = await Axios.get(
         `${process.env.REACT_APP_API_KEY}/schedule/${id}`
       );
+      console.log(schedule.data);
       const {
         teacher,
+        className,
         meetingLink,
         meetingAccount,
         demo,
@@ -182,6 +186,7 @@ const EditSchedule = () => {
         },
       } = schedule.data.result;
       setInputTeacher(teacher);
+      setClassName(className);
       setPrevTeacher(teacher);
       setZoomLink(meetingLink || "");
       setZoomEmail(meetingAccount || "");
@@ -189,19 +194,11 @@ const EditSchedule = () => {
       setSubjectNameId(subject || "");
       setSelectedDate(
         startDate
-          ? `${startDate.split("-")[1]}-${startDate.split("-")[0]}-${
-              startDate.split("-")[2]
-            }`
+          ? `${startDate.split("-")[1]}-${startDate.split("-")[0]}-${startDate.split("-")[2]
+          }`
           : new Date()
       );
-      setPersonName(
-        students.map(
-          (student) =>
-            `${student.firstName} ${student.lastName}` +
-            "!@#$%^&*($%^" +
-            student._id
-        )
-      );
+      setPersonName(students);
       setTimeSlotState([
         ...monday,
         ...tuesday,
@@ -244,14 +241,16 @@ const EditSchedule = () => {
     });
     formData = {
       ...formData,
+      className: ClassName,
       meetingLink: zoomLink,
       meetingAccount: zoomEmail,
       teacher: teacher,
-      students: personName.map((student) => student.split("!@#$%^&*($%^")[1]),
+      students: personName.map((student) => student._id),
       demo: demo,
       subject: subjectNameId,
       startDate: moment(selectedDate).format("DD-MM-YYYY"),
     };
+    console.log(ClassName);
     try {
       const res = await Axios.post(
         `${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`,
@@ -267,6 +266,7 @@ const EditSchedule = () => {
       setAlertColor("success");
       setLoading(false);
       setRadioday("");
+      setClassName("");
       setTimeSlotState([]);
       setTimeout(() => {
         setRedirect(true);
@@ -344,21 +344,32 @@ const EditSchedule = () => {
           >
             <div
               style={{
-                display: "flex",
-                justifyContent: "center",
-                flexDirection: "column",
-                alignItems: "center",
+                width: "100%",
+                margin: "0 20px",
               }}
             >
-              {
-                <AvailableTimeSlotChip
-                  data={studentName}
-                  state={personName}
-                  setState={setPersonName}
-                  valueFinder={(item) => item._id}
-                  labelFinder={(item) => `${item.firstName} ${item.lastName}`}
-                />
-              }
+              <Autocomplete
+                filterSelectedOptions
+                options={studentName}
+                getOptionSelected={(option, value) => option._id === value._id}
+                getOptionLabel={(option) =>
+                  `${option.firstName ? option.firstName : ""} ${
+                    option.lastName ? option.lastName : ""
+                  }`
+                }
+                multiple
+                onChange={(e, v) => setPersonName(v)}
+                value={personName}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    style={{ width: "100%" }}
+                    label="Students"
+                    variant="outlined"
+                    margin="normal"
+                  />
+                )}
+              />
             </div>
           </Grid>
 
@@ -494,6 +505,20 @@ const EditSchedule = () => {
             <TextField
               fullWidth
               id="outlined-basic"
+              label="ClassName"
+              variant="outlined"
+              value={ClassName}
+              required
+              onChange={(e) => setClassName(e.target.value)}
+              style={{
+                maxWidth: "400px",
+                minWidth: "300px",
+                marginTop: "10px",
+              }}
+            />
+            <TextField
+              fullWidth
+              id="outlined-basic"
               label="Zoom Link"
               variant="outlined"
               value={zoomLink}
@@ -522,17 +547,17 @@ const EditSchedule = () => {
             {loading ? (
               <CircularProgress />
             ) : (
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                type="submit"
-                className={classes.button}
-                startIcon={<SaveIcon />}
-              >
-                Save Changes
-              </Button>
-            )}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  type="submit"
+                  className={classes.button}
+                  startIcon={<SaveIcon />}
+                >
+                  Save Changes
+                </Button>
+              )}
           </div>
         </div>
       </form>

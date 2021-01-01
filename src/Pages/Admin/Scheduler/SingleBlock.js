@@ -30,6 +30,8 @@ function SingleBlock({
             ]
         )[0]
       );
+    } else {
+      setSchedule({});
     }
   }, [allSchedules, categorizedData, teacher, category, day, time]);
 
