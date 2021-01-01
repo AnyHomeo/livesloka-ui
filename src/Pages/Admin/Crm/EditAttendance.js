@@ -33,6 +33,7 @@ const EditAttendance = ({ match }) => {
   const [studentNameLists, setStudentNameLists] = useState([]);
   const [studentAttendance, setStudentAttendance] = useState([]);
   const [redirect, setRedirect] = useState(false);
+  const [absentees, setAbsentees] = useState([]);
   const [requestedStudents, setRequestedStudents] = useState([]);
 
   const studentListNAttendance = async () => {
@@ -57,6 +58,22 @@ const EditAttendance = ({ match }) => {
     );
   };
 
+  useEffect(() => {
+    setAbsentees((prev) => {
+      let tempAbsentees = [];
+      studentNameLists.forEach((student) => {
+        if (
+          !studentAttendance.includes(student._id) &&
+          !requestedStudents.includes(student._id)
+        ) {
+          tempAbsentees.push(student._id);
+        }
+      });
+      console.log(tempAbsentees);
+      return tempAbsentees;
+    });
+  }, [studentAttendance, studentNameLists, requestedStudents]);
+
   const handleChange = (state, setState, id, other) => {
     if (!other.includes(id)) {
       if (state.includes(id)) {
@@ -74,13 +91,14 @@ const EditAttendance = ({ match }) => {
 
   const postAttendance = async () => {
     try {
+      console.log(absentees);
       const formData = {
         date: match.params.date,
         scheduleId: match.params.scheduleId,
         customers: studentAttendance,
         requestedStudents,
+        absentees,
       };
-      console.log(formData);
       const data = await postStudentsAttendance(formData);
       console.log(data);
       if (data) {

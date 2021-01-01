@@ -95,6 +95,7 @@ const AttedanceByClass = () => {
               <TableCell align="center">Time</TableCell>
               <TableCell align="center">Attedended Students</TableCell>
               <TableCell align="center">Requested Students</TableCell>
+              <TableCell align="center">Absent Students</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -110,7 +111,13 @@ const AttedanceByClass = () => {
                     <Chip
                       key={student._id}
                       style={{ margin: "0 5px" }}
-                      label={student.firstName}
+                      label={
+                        student.firstName
+                          ? student.firstName
+                          : student.email
+                          ? student.email
+                          : "Noname"
+                      }
                       size="medium"
                     />
                   ))}
@@ -120,9 +127,32 @@ const AttedanceByClass = () => {
                     <Chip
                       key={student._id}
                       style={{ margin: "0 5px" }}
-                      label={student.firstName}
+                      label={
+                        student.firstName
+                          ? student.firstName
+                          : student.email
+                          ? student.email
+                          : "Noname"
+                      }
                       size="medium"
                       color="primary"
+                    />
+                  ))}
+                </TableCell>
+                <TableCell align="center">
+                  {data.absentees.map((student) => (
+                    <Chip
+                      key={student._id}
+                      style={{ margin: "0 5px" }}
+                      label={
+                        student.firstName
+                          ? student.firstName
+                          : student.email
+                          ? student.email
+                          : "Noname"
+                      }
+                      size="medium"
+                      color="secondary"
                     />
                   ))}
                 </TableCell>
@@ -131,7 +161,7 @@ const AttedanceByClass = () => {
                     to={`/edit/attendance/${data.scheduleId}/${data.date}`}
                     style={{ textDecoration: "none" }}
                   >
-                    <Button variant="contained" color="secondary">
+                    <Button variant="contained" color="primary">
                       Edit
                     </Button>
                   </Link>
