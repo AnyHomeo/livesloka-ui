@@ -251,6 +251,14 @@ const CrmDetails = () => {
           name: "Payment Date",
         },
         oneToOne: { selected: settings.includes("oneToOne"), name: "Group" },
+        numberOfClassesBought: {
+          selected: settings.includes("numberOfClassesBought"),
+          name: "Classes paid",
+        },
+        paidTill: {
+          selected: settings.includes("paidTill"),
+          name: "Paid Till",
+        },
         teacherId: {
           selected: settings.includes("teacherId"),
           name: "Teacher",
@@ -351,6 +359,37 @@ const CrmDetails = () => {
           type: "numeric",
           width: "1%",
           hidden: !columnFilters["age"].selected,
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          editComponent: (props) => (
+            <TextField
+              type="number"
+              inputProps={{ min: "0", step: "1" }}
+              value={props.value}
+              onChange={(e) => {
+                if (e.target.value < 0) {
+                  return props.onChange(0);
+                } else {
+                  return props.onChange(e.target.value);
+                }
+              }}
+            />
+          ),
+        },
+        {
+          title: "Paid Till (DD-MM-YYYY) ",
+          field: "paidTill",
+          width: "1%",
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          hidden: !columnFilters["paidTill"].selected,
+        },
+        {
+          title: "Classes Paid",
+          field: "numberOfClassesBought",
+          type: "numeric",
+          width: "1%",
+          hidden: !columnFilters["numberOfClassesBought"].selected,
           cellStyle: { whiteSpace: "nowrap" },
           headerStyle: { whiteSpace: "nowrap" },
           editComponent: (props) => (
