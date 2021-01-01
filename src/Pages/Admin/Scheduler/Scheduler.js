@@ -28,7 +28,7 @@ import { FileCopyOutlined } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import Axios from "axios";
 import SingleBlock from "./SingleBlock";
-
+import AdjustIcon from "@material-ui/icons/Adjust";
 const times = [
   "12:00 AM-12:30 AM",
   "12:30 AM-01:00 AM",
@@ -163,6 +163,14 @@ function Scheduler() {
     }
   };
 
+  const gotoZoomLink = (id, link) => {
+    let newLink = link.split("/");
+    console.log(newLink[4].split("?")[0]);
+    window.open(
+      `http://localhost:3001/meeting/${id}/${newLink[4].split("?")[0]}`,
+      "_blank"
+    );
+  };
   const addOrRemoveAvailableSlot = (slot) => {
     if (!categorizedData[category][teacher].availableSlots.includes(slot)) {
       addAvailableTimeSlot(teacherId, slot)
@@ -303,6 +311,20 @@ function Scheduler() {
             startIcon={<DeleteIcon />}
           >
             Delete
+          </Button>
+
+          <Button
+            onClick={() =>
+              gotoZoomLink(
+                selectedSchedule.meetingAccount,
+                selectedSchedule.meetingLink
+              )
+            }
+            variant="outlined"
+            style={{ backgroundColor: "#2ecc71", color: "white" }}
+            startIcon={<AdjustIcon />}
+          >
+            Join
           </Button>
         </DialogActions>
       </Dialog>

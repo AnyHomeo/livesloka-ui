@@ -19,6 +19,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import { makeStyles } from "@material-ui/core/styles";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import moment from "moment";
+import LinkIcon from "@material-ui/icons/Link";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
@@ -169,52 +170,79 @@ const MeetingScheduler = () => {
     setLoading(true);
     e.preventDefault();
     let formData = {};
+
     days.forEach((day) => {
       formData[day.toLowerCase()] = timeSlotState
         .filter((slot) => slot.startsWith(day))
         .map((slot) => slot.split("!@#$%^&*($%^")[0]);
     });
-    formData = {
-      ...formData,
-      meetingLink: zoomLink,
-      meetingAccount: zoomEmail,
-      teacher: teacher,
-      students: personName,
-      demo: demo,
-      subject: subjectNameId,
-      startDate: moment(selectedDate).format("DD-MM-YYYY"),
-      classname: className
-    };
-    console.log(formData);
+
+    let newZoomLink = "";
+    let newZoomJwt = "";
     try {
-      const res = await Axios.post(
-        `${process.env.REACT_APP_API_KEY}/schedule`,
-        formData
+      const getZoomLink = await Axios.post(
+        `${process.env.REACT_APP_API_KEY}/link/getzoomlink`,
+
+        timeSlotState
       );
-      setDemo(false);
-      setPersonName("");
-      setZoomEmail("");
-      setZoomLink("");
-      setPersonName("");
-      setSubjectNameId("");
-      setSuccessOpen(true);
-      setAlert(res.data.message);
-      setAlertColor("success");
-      setLoading(false);
-      setTeacherNameFullObject({});
-      setStudentNamesFullObject([]);
-      setRadioday("");
-      setClassName("");
-      setTimeSlotState([]);
-      setAvailableTimeSlots([]);
-    } catch (error) {
-      console.error(error.response);
-      if (error.response) {
-        setSuccessOpen(true);
-        setAlert(error.response.data.error);
-        setAlertColor("error");
-        setLoading(false);
+      newZoomLink = getZoomLink.data.result.link;
+      newZoomJwt = getZoomLink.data.result.id;
+      console.log(getZoomLink);
+
+      if (getZoomLink.status === 200) {
+        console.log("HEllo");
+        formData = {
+          ...formData,
+          meetingLink: newZoomLink,
+          meetingAccount: zoomEmail,
+          teacher: teacher,
+          students: personName,
+          demo: demo,
+          subject: subjectNameId,
+          startDate: moment(selectedDate).format("DD-MM-YYYY"),
+          classname: className,
+          Jwtid: newZoomJwt,
+          timeSlotState,
+        };
+        console.log(formData);
+
+        try {
+          const res = await Axios.post(
+            `${process.env.REACT_APP_API_KEY}/schedule`,
+            formData
+          );
+          setDemo(false);
+          setPersonName("");
+          setZoomEmail("");
+          setZoomLink("");
+          setPersonName("");
+          setSubjectNameId("");
+          setSuccessOpen(true);
+          setAlert(res.data.message);
+          setAlertColor("success");
+          setLoading(false);
+          setTeacherNameFullObject({});
+          setStudentNamesFullObject([]);
+          setRadioday("");
+          setClassName("");
+          setTimeSlotState([]);
+          setAvailableTimeSlots([]);
+        } catch (error) {
+          console.error(error.response);
+          if (error.response) {
+            setSuccessOpen(true);
+            setAlert(error.response.data.error);
+            setAlertColor("error");
+            setLoading(false);
+          }
+        }
       }
+    } catch (error) {
+      console.log(error.response);
+      setSuccessOpen(true);
+      setAlert(error.response.data.message);
+      setAlertColor("error");
+      setLoading(false);
     }
   };
 
@@ -262,8 +290,8 @@ const MeetingScheduler = () => {
                 )}
               />
             ) : (
-                ""
-              )}{" "}
+              ""
+            )}{" "}
           </Grid>
           <Grid item xs={12} md={4} />
           <Grid item xs={12} md={4} />
@@ -280,7 +308,8 @@ const MeetingScheduler = () => {
                 options={studentName}
                 value={studentNamesFullObject}
                 getOptionLabel={(name) =>
-                  `${name.firstName} ${name.lastName ? name.lastName : ""}${name.subject ? `(${name.subject.subjectName})` : ""
+                  `${name.firstName} ${name.lastName ? name.lastName : ""}${
+                    name.subject ? `(${name.subject.subjectName})` : ""
                   }`
                 }
                 onChange={(event, value) => {
@@ -302,8 +331,8 @@ const MeetingScheduler = () => {
                 )}
               />
             ) : (
-                ""
-              )}
+              ""
+            )}
           </Grid>
 
           <Grid item xs={12} md={4} />
@@ -417,7 +446,6 @@ const MeetingScheduler = () => {
               }}
               variant="outlined"
             >
-
               <TextField
                 fullWidth
                 id="outlined-basic"
@@ -431,7 +459,6 @@ const MeetingScheduler = () => {
                   marginTop: "10px",
                 }}
               />
-
             </FormControl>
 
             <FormControl
@@ -459,20 +486,42 @@ const MeetingScheduler = () => {
                 ))}
               </Select>
             </FormControl>
-            <TextField
-              fullWidth
-              id="outlined-basic"
-              label="Zoom Link"
-              variant="outlined"
-              value={zoomLink}
-              required
-              onChange={(e) => setZoomLink(e.target.value)}
+            {/* <div
               style={{
-                maxWidth: "400px",
-                minWidth: "300px",
-                marginTop: "10px",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
               }}
-            />
+            >
+              <TextField
+                fullWidth
+                id="outlined-basic"
+                label="Zoom Link"
+                variant="outlined"
+                value={zoomLink}
+                required
+                onChange={(e) => setZoomLink(e.target.value)}
+                style={{
+                  width: "220px",
+                  marginTop: "10px",
+                }}
+              />
+              {zoomLinkLoading ? (
+                <CircularProgress />
+              ) : (
+                <Button
+                  style={{
+                    height: "40px",
+                    marginLeft: "20px",
+                    marginTop: "10px",
+                  }}
+                  variant="contained"
+                  onClick={generateZoomLink}
+                >
+                  <LinkIcon onClick={generateZoomLink} />
+                </Button>
+              )}
+            </div> */}
             <FormControlLabel
               style={{ marginTop: "20px" }}
               control={
@@ -490,17 +539,17 @@ const MeetingScheduler = () => {
             {loading ? (
               <CircularProgress />
             ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  type="submit"
-                  className={classes.button}
-                  startIcon={<SaveIcon />}
-                >
-                  Save
-                </Button>
-              )}
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                type="submit"
+                className={classes.button}
+                startIcon={<SaveIcon />}
+              >
+                Save
+              </Button>
+            )}
           </div>
         </div>
       </form>
