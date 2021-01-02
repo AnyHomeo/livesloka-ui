@@ -134,7 +134,6 @@ function FinancialAnalytics() {
         let totalSum = 0;
         let totalStudentsSum = 0;
         const { result } = data.data;
-        console.log(result);
         Object.keys(result).forEach((teacher) => {
           totalStudentsSum += result[teacher].length;
           totalSum += result[teacher].length

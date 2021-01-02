@@ -16,6 +16,7 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import { Button } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import moment from "moment";
 import { getUsers, getUserAttendance } from "../../../Services/Services";
 
@@ -43,7 +44,6 @@ const Attedance = () => {
   const getAttendance = () => {
     getUserAttendance(user.customerId, selectedDate)
       .then((data) => {
-        console.log(data.data);
         setTableData(data.data.result);
       })
       .catch((err) => {
@@ -63,9 +63,19 @@ const Attedance = () => {
 
   return (
     <>
-      <p style={{ textAlign: "center", fontSize: 24, fontWeight: "bold" }}>
-        Attendance
-      </p>
+      <div style={{ textAlign: "center", marginTop: "30px" }}>
+        <Button
+          style={{ marginRight: "20px" }}
+          color="primary"
+          variant="contained"
+        >
+          Attendance By Student
+        </Button>
+        <Link to="/attendance/class" style={{ textDecoration: "none" }}>
+          <Button>Attendance By Class</Button>
+        </Link>
+      </div>
+
       <div
         style={{
           margin: "0 auto",
@@ -118,7 +128,7 @@ const Attedance = () => {
       </h3>
       <TableContainer
         component={Paper}
-        style={{ width: "800px", margin: "0 auto", marginTop: "40px" }}
+        style={{ width: "90vw", margin: "0 auto", marginTop: "40px" }}
       >
         <Table className={classes.table} aria-label="simple table">
           <TableHead>

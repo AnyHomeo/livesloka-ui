@@ -30,7 +30,6 @@ import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import { Redirect, useParams } from "react-router-dom";
@@ -166,7 +165,6 @@ const EditSchedule = () => {
       const schedule = await Axios.get(
         `${process.env.REACT_APP_API_KEY}/schedule/${id}`
       );
-      console.log(schedule.data);
       const {
         teacher,
         className,
@@ -195,18 +193,12 @@ const EditSchedule = () => {
       setSubjectNameId(subject || "");
       setSelectedDate(
         startDate
-          ? `${startDate.split("-")[1]}-${startDate.split("-")[0]}-${startDate.split("-")[2]
-          }`
+          ? `${startDate.split("-")[1]}-${startDate.split("-")[0]}-${
+              startDate.split("-")[2]
+            }`
           : new Date()
       );
-      setPersonName(
-        students.map(
-          (student) =>
-            `${student.firstName} ${student.lastName}` +
-            "!@#$%^&*($%^" +
-            student._id
-        )
-      );
+      setPersonName(students);
       setTimeSlotState([
         ...monday,
         ...tuesday,
@@ -253,12 +245,11 @@ const EditSchedule = () => {
       meetingLink: zoomLink,
       meetingAccount: zoomEmail,
       teacher: teacher,
-      students: personName.map((student) => student.split("!@#$%^&*($%^")[1]),
+      students: personName.map((student) => student._id),
       demo: demo,
       subject: subjectNameId,
       startDate: moment(selectedDate).format("DD-MM-YYYY"),
     };
-    console.log(ClassName);
     try {
       const res = await Axios.post(
         `${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`,
@@ -352,21 +343,32 @@ const EditSchedule = () => {
           >
             <div
               style={{
-                display: "flex",
-                justifyContent: "center",
-                flexDirection: "column",
-                alignItems: "center",
+                width: "100%",
+                margin: "0 20px",
               }}
             >
-              {
-                <AvailableTimeSlotChip
-                  data={studentName}
-                  state={personName}
-                  setState={setPersonName}
-                  valueFinder={(item) => item._id}
-                  labelFinder={(item) => `${item.firstName} ${item.lastName}`}
-                />
-              }
+              <Autocomplete
+                filterSelectedOptions
+                options={studentName}
+                getOptionSelected={(option, value) => option._id === value._id}
+                getOptionLabel={(option) =>
+                  `${option.firstName ? option.firstName : ""} ${
+                    option.lastName ? option.lastName : ""
+                  }`
+                }
+                multiple
+                onChange={(e, v) => setPersonName(v)}
+                value={personName}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    style={{ width: "100%" }}
+                    label="Students"
+                    variant="outlined"
+                    margin="normal"
+                  />
+                )}
+              />
             </div>
           </Grid>
 
@@ -544,17 +546,17 @@ const EditSchedule = () => {
             {loading ? (
               <CircularProgress />
             ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  type="submit"
-                  className={classes.button}
-                  startIcon={<SaveIcon />}
-                >
-                  Save Changes
-                </Button>
-              )}
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                type="submit"
+                className={classes.button}
+                startIcon={<SaveIcon />}
+              >
+                Save Changes
+              </Button>
+            )}
           </div>
         </div>
       </form>

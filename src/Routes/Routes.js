@@ -14,10 +14,10 @@ import MeetingScheduler from "../Pages/Admin/Crm/MeetingScheduler";
 import Scheduler from "../Pages/Admin/Scheduler/Scheduler";
 import FinancialAnalytics from "../Pages/Analytics/FinancialAnalytics";
 import TeacherDetails from "../Pages/Admin/Crm/TeacherDetails";
-
 import UserPasswordReset from "../Pages/Admin/Crm/UserPasswordReset";
-
 import EditSchedule from "../Pages/Admin/Crm/EditSchedule";
+import AttedanceByClass from "../Pages/Admin/Crm/AttendanceByClass";
+import EditAttendance from "../Pages/Admin/Crm/EditAttendance";
 
 function Routes() {
   return (
@@ -32,6 +32,11 @@ function Routes() {
             <AdminRoute path="/add-fields" exact component={CustomTabs} />
             <AdminRoute path="/attendance" exact component={Attedance} />
             <AdminRoute
+              path="/edit/attendance/:scheduleId/:date"
+              exact
+              component={EditAttendance}
+            />
+            <AdminRoute
               path="/teacherDetails"
               exact
               component={TeacherDetails}
@@ -40,6 +45,11 @@ function Routes() {
               path="/meeting-scheduler"
               exact
               component={MeetingScheduler}
+            />
+            <AdminRoute
+              path="/attendance/class"
+              exact
+              component={AttedanceByClass}
             />
             <AdminRoute path="/invoice-generator" exact component={Generator} />
             <AdminRoute path="/manual-invoice" exact component={Invoice} />

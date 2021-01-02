@@ -1,22 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Grid,
-  FormControl,
-  Radio,
-  RadioGroup,
-  FormLabel,
-  CircularProgress,
-} from "@material-ui/core/";
+import { Button, TextField, Grid, CircularProgress } from "@material-ui/core/";
 import SaveIcon from "@material-ui/icons/Save";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import Snackbar from "@material-ui/core/Snackbar";
-import Alert from "@material-ui/lab/Alert";
-import Axios from "axios";
 import { getData } from "../../../Services/Services";
 
 const useStyles = makeStyles((theme) => ({
@@ -65,7 +51,6 @@ export default function TeacherDetails() {
     getData("Status")
       .then((data) => {
         setStatus(data.data.result);
-        console.log(status);
       })
       .catch((err) => {
         console.log(err);
@@ -85,7 +70,6 @@ export default function TeacherDetails() {
   const getClasses = () => {
     getData("classes")
       .then((data) => {
-        console.log(data.data);
         setClasses(data.data.result);
       })
       .catch((err) => {
@@ -96,9 +80,6 @@ export default function TeacherDetails() {
   // submit function
   const submitForm = async (e) => {
     e.preventDefault();
-    console.log(teachername);
-    console.log(mail);
-
     setteacherName(" ");
     setmail(" ");
     setdesc(" ");
@@ -195,7 +176,6 @@ export default function TeacherDetails() {
                 options={classes}
                 getOptionLabel={(option) => option.className}
                 onChange={(event, value) => {
-                  console.log(value);
                   value && setId(value.id);
                 }}
                 renderInput={(params) => (
@@ -213,7 +193,6 @@ export default function TeacherDetails() {
                 options={status}
                 getOptionLabel={(option) => option.statusName}
                 onChange={(event, value) => {
-                  console.log(value);
                   value && setId(value.statusId);
                 }}
                 renderInput={(params) => (

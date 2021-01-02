@@ -21,6 +21,7 @@ import {
   Slide,
   Switch,
   TextField,
+  Typography,
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -28,7 +29,7 @@ import { FileCopyOutlined } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import Axios from "axios";
 import SingleBlock from "./SingleBlock";
-
+import AdjustIcon from "@material-ui/icons/Adjust";
 const times = [
   "12:00 AM-12:30 AM",
   "12:30 AM-01:00 AM",
@@ -144,7 +145,6 @@ function Scheduler() {
 
   const serviceCallDelete = () => {
     getOccupancy().then((data) => {
-      console.log(data);
       setCategorizedData(data.data.data);
       setAllSchedules(data.data.allSchedules);
     });
@@ -155,7 +155,6 @@ function Scheduler() {
       const deleteddata = await Axios.get(
         `${process.env.REACT_APP_API_KEY}/schedule/delete/${scheduleId}`
       );
-      console.log(deleteddata);
       serviceCallDelete();
       setScheduleId("");
     } catch (error) {
@@ -163,11 +162,19 @@ function Scheduler() {
     }
   };
 
+  const gotoZoomLink = (id, link) => {
+    let newLink = link.split("/");
+    window.open(
+      `https://livekumonmeeting.netlify.app/meeting/${id}/${
+        newLink[4].split("?")[0]
+      }`,
+      "_blank"
+    );
+  };
   const addOrRemoveAvailableSlot = (slot) => {
     if (!categorizedData[category][teacher].availableSlots.includes(slot)) {
       addAvailableTimeSlot(teacherId, slot)
         .then((data) => {
-          console.log(data);
           setCategorizedData((prev) => ({
             ...prev,
             [category]: {
@@ -186,7 +193,6 @@ function Scheduler() {
     } else {
       deleteAvailableTimeSlot(teacherId, slot)
         .then((data) => {
-          console.log(data);
           setCategorizedData((prev) => {
             let allData = { ...prev };
             let data = [...allData[category][teacher].availableSlots];
@@ -269,6 +275,23 @@ function Scheduler() {
                     ),
                   }}
                 />
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <h3>Zoom Account:</h3>
+                  <p
+                    style={{
+                      marginLeft: "20px",
+                    }}
+                  >
+                    {selectedSchedule.meetingAccount
+                      ? selectedSchedule.meetingAccount.ZoomAccountName
+                      : ""}
+                  </p>
+                </div>
               </>
             ) : (
               ""
@@ -303,6 +326,20 @@ function Scheduler() {
             startIcon={<DeleteIcon />}
           >
             Delete
+          </Button>
+
+          <Button
+            onClick={() =>
+              gotoZoomLink(
+                selectedSchedule.meetingAccount,
+                selectedSchedule.meetingLink
+              )
+            }
+            variant="outlined"
+            style={{ backgroundColor: "#2ecc71", color: "white" }}
+            startIcon={<AdjustIcon />}
+          >
+            Join
           </Button>
         </DialogActions>
       </Dialog>
