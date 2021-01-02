@@ -74,7 +74,7 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
   const [success, setSuccess] = useState(false);
   const [response, setResponse] = useState("");
 
-  const { width } = useWindowDimensions();
+  const { height } = useWindowDimensions();
 
   useEffect(() => {
     getData(name).then((response) => {
@@ -101,7 +101,7 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
               field: key,
               render: (rowData) => (
                 <span>
-                  {rowData.zoomJwt ? rowData.zoomJwt.slice(0, 3) : ""}
+                  {rowData.zoomJwt ? rowData.zoomJwt.slice(0, 20) + "...." : ""}
                 </span>
               ),
             };
@@ -172,7 +172,7 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
         isLoading={loading}
         options={{
           paging: false,
-          maxBodyHeight: width,
+          maxBodyHeight: height - 230,
           addRowPosition: "first",
           actionsColumnIndex: -1,
           exporting: true,
