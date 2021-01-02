@@ -44,7 +44,6 @@ const Attedance = () => {
   const getAttendance = () => {
     getUserAttendance(user.customerId, selectedDate)
       .then((data) => {
-        console.log(data.data);
         setTableData(data.data.result);
       })
       .catch((err) => {

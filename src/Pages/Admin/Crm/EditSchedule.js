@@ -165,7 +165,6 @@ const EditSchedule = () => {
       const schedule = await Axios.get(
         `${process.env.REACT_APP_API_KEY}/schedule/${id}`
       );
-      console.log(schedule.data);
       const {
         teacher,
         className,
@@ -194,8 +193,9 @@ const EditSchedule = () => {
       setSubjectNameId(subject || "");
       setSelectedDate(
         startDate
-          ? `${startDate.split("-")[1]}-${startDate.split("-")[0]}-${startDate.split("-")[2]
-          }`
+          ? `${startDate.split("-")[1]}-${startDate.split("-")[0]}-${
+              startDate.split("-")[2]
+            }`
           : new Date()
       );
       setPersonName(students);
@@ -250,7 +250,6 @@ const EditSchedule = () => {
       subject: subjectNameId,
       startDate: moment(selectedDate).format("DD-MM-YYYY"),
     };
-    console.log(ClassName);
     try {
       const res = await Axios.post(
         `${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`,
@@ -547,17 +546,17 @@ const EditSchedule = () => {
             {loading ? (
               <CircularProgress />
             ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  type="submit"
-                  className={classes.button}
-                  startIcon={<SaveIcon />}
-                >
-                  Save Changes
-                </Button>
-              )}
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                type="submit"
+                className={classes.button}
+                startIcon={<SaveIcon />}
+              >
+                Save Changes
+              </Button>
+            )}
           </div>
         </div>
       </form>

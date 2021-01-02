@@ -51,7 +51,6 @@ export default function TeacherDetails() {
     getData("Status")
       .then((data) => {
         setStatus(data.data.result);
-        console.log(status);
       })
       .catch((err) => {
         console.log(err);
@@ -71,7 +70,6 @@ export default function TeacherDetails() {
   const getClasses = () => {
     getData("classes")
       .then((data) => {
-        console.log(data.data);
         setClasses(data.data.result);
       })
       .catch((err) => {
@@ -82,9 +80,6 @@ export default function TeacherDetails() {
   // submit function
   const submitForm = async (e) => {
     e.preventDefault();
-    console.log(teachername);
-    console.log(mail);
-
     setteacherName(" ");
     setmail(" ");
     setdesc(" ");
@@ -181,7 +176,6 @@ export default function TeacherDetails() {
                 options={classes}
                 getOptionLabel={(option) => option.className}
                 onChange={(event, value) => {
-                  console.log(value);
                   value && setId(value.id);
                 }}
                 renderInput={(params) => (
@@ -199,7 +193,6 @@ export default function TeacherDetails() {
                 options={status}
                 getOptionLabel={(option) => option.statusName}
                 onChange={(event, value) => {
-                  console.log(value);
                   value && setId(value.statusId);
                 }}
                 renderInput={(params) => (

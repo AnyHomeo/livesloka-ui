@@ -38,14 +38,12 @@ const EditAttendance = ({ match }) => {
 
   const studentListNAttendance = async () => {
     const { data } = await getStudentList(match.params.scheduleId);
-    console.log(data.result.students);
     setStudentNameLists(data.result.students);
 
     const res = await getScheduleAndDateAttendance(
       match.params.scheduleId,
       match.params.date
     );
-    console.log(res.data.result);
     setStudentAttendance(
       res.data.result && res.data.result.customers
         ? res.data.result.customers
@@ -69,7 +67,6 @@ const EditAttendance = ({ match }) => {
           tempAbsentees.push(student._id);
         }
       });
-      console.log(tempAbsentees);
       return tempAbsentees;
     });
   }, [studentAttendance, studentNameLists, requestedStudents]);
@@ -91,7 +88,6 @@ const EditAttendance = ({ match }) => {
 
   const postAttendance = async () => {
     try {
-      console.log(absentees);
       const formData = {
         date: match.params.date,
         scheduleId: match.params.scheduleId,
@@ -100,7 +96,6 @@ const EditAttendance = ({ match }) => {
         absentees,
       };
       const data = await postStudentsAttendance(formData);
-      console.log(data);
       if (data) {
         setRedirect(true);
       }

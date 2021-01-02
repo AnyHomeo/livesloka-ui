@@ -127,7 +127,6 @@ export const getAllCustomerDetails = () => {
 };
 
 export const getData = (name) => {
-  console.log(name);
   return Axios.get(`${API.main}${API[name]}`);
 };
 

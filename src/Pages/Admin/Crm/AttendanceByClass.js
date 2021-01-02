@@ -34,7 +34,6 @@ const AttedanceByClass = () => {
         .then((data) => {
           setLoading(false);
           setTableData(data.data.result);
-          console.log(data.data.result);
         })
         .catch((err) => {
           console.log(err);

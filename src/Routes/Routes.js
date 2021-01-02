@@ -14,13 +14,10 @@ import MeetingScheduler from "../Pages/Admin/Crm/MeetingScheduler";
 import Scheduler from "../Pages/Admin/Scheduler/Scheduler";
 import FinancialAnalytics from "../Pages/Analytics/FinancialAnalytics";
 import TeacherDetails from "../Pages/Admin/Crm/TeacherDetails";
-
 import UserPasswordReset from "../Pages/Admin/Crm/UserPasswordReset";
-
 import EditSchedule from "../Pages/Admin/Crm/EditSchedule";
 import AttedanceByClass from "../Pages/Admin/Crm/AttendanceByClass";
 import EditAttendance from "../Pages/Admin/Crm/EditAttendance";
-import AutocompleteMultipleCustom from "../Components/AutocompleteMultipleCustom";
 
 function Routes() {
   return (
@@ -61,7 +58,6 @@ function Routes() {
             <Route path="/analytics" exact component={FinancialAnalytics} />
             <Route path="/reset/password" exact component={UserPasswordReset} />
             <Route path="/edit-schedule/:id" exact component={EditSchedule} />
-            <Route path="/test" exact component={AutocompleteMultipleCustom} />
           </SideNav>
         </Switch>
       </Router>

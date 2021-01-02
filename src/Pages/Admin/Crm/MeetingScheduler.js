@@ -112,7 +112,6 @@ const MeetingScheduler = () => {
     const timeSlotsData = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/teacher/available/${teacher}?day=MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY`
     );
-    console.log(timeSlotsData.data.result);
     setAvailableTimeSlots(timeSlotsData.data.result);
   };
 
@@ -136,7 +135,6 @@ const MeetingScheduler = () => {
     const teacherNames = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/teacher?params=id,TeacherName`
     );
-    console.log(teacherNames.data);
     setTeacherName(teacherNames.data.result);
   };
 
@@ -145,7 +143,6 @@ const MeetingScheduler = () => {
     const studentNames = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/customers/all?params=firstName,lastName,subjectId`
     );
-    console.log(studentNames);
     setStudentName(studentNames.data.result);
   };
 
@@ -187,10 +184,8 @@ const MeetingScheduler = () => {
       );
       newZoomLink = getZoomLink.data.result.link;
       newZoomJwt = getZoomLink.data.result.id;
-      console.log(getZoomLink);
 
       if (getZoomLink.status === 200) {
-        console.log("HEllo");
         formData = {
           ...formData,
           meetingLink: newZoomLink,
@@ -204,8 +199,6 @@ const MeetingScheduler = () => {
           Jwtid: newZoomJwt,
           timeSlotState,
         };
-        console.log(formData);
-
         try {
           const res = await Axios.post(
             `${process.env.REACT_APP_API_KEY}/schedule`,

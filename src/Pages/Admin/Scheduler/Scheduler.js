@@ -145,7 +145,6 @@ function Scheduler() {
 
   const serviceCallDelete = () => {
     getOccupancy().then((data) => {
-      console.log(data);
       setCategorizedData(data.data.data);
       setAllSchedules(data.data.allSchedules);
     });
@@ -156,7 +155,6 @@ function Scheduler() {
       const deleteddata = await Axios.get(
         `${process.env.REACT_APP_API_KEY}/schedule/delete/${scheduleId}`
       );
-      console.log(deleteddata);
       serviceCallDelete();
       setScheduleId("");
     } catch (error) {
@@ -166,7 +164,6 @@ function Scheduler() {
 
   const gotoZoomLink = (id, link) => {
     let newLink = link.split("/");
-    console.log(newLink[4].split("?")[0]);
     window.open(
       `https://livekumonmeeting.netlify.app/meeting/${id}/${
         newLink[4].split("?")[0]
@@ -178,7 +175,6 @@ function Scheduler() {
     if (!categorizedData[category][teacher].availableSlots.includes(slot)) {
       addAvailableTimeSlot(teacherId, slot)
         .then((data) => {
-          console.log(data);
           setCategorizedData((prev) => ({
             ...prev,
             [category]: {
@@ -197,7 +193,6 @@ function Scheduler() {
     } else {
       deleteAvailableTimeSlot(teacherId, slot)
         .then((data) => {
-          console.log(data);
           setCategorizedData((prev) => {
             let allData = { ...prev };
             let data = [...allData[category][teacher].availableSlots];
