@@ -10,6 +10,7 @@ import {
 } from "../Services/Services";
 import { Chip, Snackbar, TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
+import useWindowDimensions from "./useWindowDimensions";
 
 const DropdownEditor = ({ onChange, value }) => {
   const [arr, setArr] = useState(value);
@@ -73,6 +74,8 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
   const [success, setSuccess] = useState(false);
   const [response, setResponse] = useState("");
 
+  const { width } = useWindowDimensions();
+
   useEffect(() => {
     getData(name).then((response) => {
       setData(response.data.result);
@@ -92,7 +95,19 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
               lookup: categoryLookup,
             };
           }
+          if (key === "zoomJwt") {
+            return {
+              title: humanReadable(key),
+              field: key,
+              render: (rowData) => (
+                <span>
+                  {rowData.zoomJwt ? rowData.zoomJwt.slice(0, 3) : ""}
+                </span>
+              ),
+            };
+          }
           if (
+            key === "timeSlots" ||
             key === "id" ||
             key === "_id" ||
             key === "statusId" ||
@@ -157,7 +172,7 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
         isLoading={loading}
         options={{
           paging: false,
-          maxBodyHeight: 400,
+          maxBodyHeight: width,
           addRowPosition: "first",
           actionsColumnIndex: -1,
           exporting: true,

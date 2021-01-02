@@ -745,10 +745,10 @@ const CrmDetails = () => {
           columns={columns}
           data={data}
           options={{
-            // paging: false,
-            pageSize: 20,
-            pageSizeOptions: [20, 30, 40, 50],
-            paginationType: "stepped",
+            paging: false,
+            // pageSize: 20,
+            // pageSizeOptions: [20, 30, 40, 50],
+            // paginationType: "stepped",
             searchFieldVariant: "outlined",
             actionsColumnIndex: 0,
             addRowPosition: "first",
