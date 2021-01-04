@@ -95,19 +95,23 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
               lookup: categoryLookup,
             };
           }
-          if (key === "zoomJwt") {
+          if (key === "zoomJwt" || key === "zoomSecret" || key === "zoomApi") {
             return {
               title: humanReadable(key),
               field: key,
               render: (rowData) => (
                 <span>
-                  {rowData.zoomJwt ? rowData.zoomJwt.slice(0, 20) + "...." : ""}
+                  {rowData[key]
+                    ? rowData[key].slice(0, 3) +
+                      "...." +
+                      rowData[key].slice(-10)
+                    : ""}
                 </span>
               ),
             };
           }
           if (
-            key === "timeSlots" ||
+            // key === "timeSlots" ||
             key === "id" ||
             key === "_id" ||
             key === "statusId" ||

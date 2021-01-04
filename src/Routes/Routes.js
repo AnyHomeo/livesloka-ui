@@ -18,6 +18,7 @@ import UserPasswordReset from "../Pages/Admin/Crm/UserPasswordReset";
 import EditSchedule from "../Pages/Admin/Crm/EditSchedule";
 import AttedanceByClass from "../Pages/Admin/Crm/AttendanceByClass";
 import EditAttendance from "../Pages/Admin/Crm/EditAttendance";
+import MeetingDashboard from "../Pages/ZoomMeetings/MeetingDashboard";
 
 function Routes() {
   return (
@@ -58,6 +59,7 @@ function Routes() {
             <Route path="/analytics" exact component={FinancialAnalytics} />
             <Route path="/reset/password" exact component={UserPasswordReset} />
             <Route path="/edit-schedule/:id" exact component={EditSchedule} />
+            <Route path="/zoom/dashboard" exact component={MeetingDashboard} />
           </SideNav>
         </Switch>
       </Router>
