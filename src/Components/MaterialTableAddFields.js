@@ -111,7 +111,7 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
             };
           }
           if (
-            // key === "timeSlots" ||
+            key === "timeSlots" ||
             key === "id" ||
             key === "_id" ||
             key === "statusId" ||
