@@ -220,3 +220,6 @@ export const getScheduleAndDateAttendance = (id, date) =>
 
 export const postStudentsAttendance = (data) =>
   axios.post(`${API.main}/attendance`, data);
+
+export const getAllSchedulesByZoomAccountId = (id) =>
+  axios.get(`${API.main}/schedule/zoom/${id}`);

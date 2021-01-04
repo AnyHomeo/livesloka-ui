@@ -189,7 +189,7 @@ const MeetingScheduler = () => {
         formData = {
           ...formData,
           meetingLink: newZoomLink,
-          meetingAccount: zoomEmail,
+          meetingAccount: newZoomJwt,
           teacher: teacher,
           students: personName,
           demo: demo,
@@ -206,7 +206,6 @@ const MeetingScheduler = () => {
           );
           setDemo(false);
           setPersonName("");
-          setZoomEmail("");
           setZoomLink("");
           setPersonName("");
           setSubjectNameId("");
@@ -453,68 +452,6 @@ const MeetingScheduler = () => {
                 }}
               />
             </FormControl>
-
-            <FormControl
-              style={{
-                maxWidth: "400px",
-                minWidth: "300px",
-                marginTop: "10px",
-              }}
-              variant="outlined"
-              className={classes.formControl}
-            >
-              <InputLabel id="Select-label">Select Zoom Account</InputLabel>
-              <Select
-                fullWidth
-                labelId="Select-label"
-                id="demo-simple-select-outlined"
-                value={zoomEmail}
-                onChange={(e) => setZoomEmail(e.target.value)}
-                label="Select Zoom Account"
-              >
-                {zoomAccounts.map((account) => (
-                  <MenuItem value={account._id}>
-                    {account.ZoomAccountName}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            {/* <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <TextField
-                fullWidth
-                id="outlined-basic"
-                label="Zoom Link"
-                variant="outlined"
-                value={zoomLink}
-                required
-                onChange={(e) => setZoomLink(e.target.value)}
-                style={{
-                  width: "220px",
-                  marginTop: "10px",
-                }}
-              />
-              {zoomLinkLoading ? (
-                <CircularProgress />
-              ) : (
-                <Button
-                  style={{
-                    height: "40px",
-                    marginLeft: "20px",
-                    marginTop: "10px",
-                  }}
-                  variant="contained"
-                  onClick={generateZoomLink}
-                >
-                  <LinkIcon onClick={generateZoomLink} />
-                </Button>
-              )}
-            </div> */}
             <FormControlLabel
               style={{ marginTop: "20px" }}
               control={
