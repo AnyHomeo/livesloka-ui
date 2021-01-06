@@ -1,6 +1,6 @@
-import React from 'react';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
+import React from "react";
+import clsx from "clsx";
+import PropTypes from "prop-types";
 import {
   Avatar,
   Box,
@@ -9,56 +9,42 @@ import {
   Grid,
   Typography,
   colors,
-  makeStyles
-} from '@material-ui/core';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import MoneyIcon from '@material-ui/icons/Money';
+  makeStyles,
+} from "@material-ui/core";
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import MoneyIcon from "@material-ui/icons/Money";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: '100%'
+    height: "100%",
   },
   avatar: {
-    backgroundColor: colors.red[600],
+    backgroundColor: "#6ab04c",
     height: 56,
-    width: 56
+    width: 56,
   },
   differenceIcon: {
-    color: colors.red[900]
+    color: colors.red[900],
   },
   differenceValue: {
     color: colors.red[900],
-    marginRight: theme.spacing(1)
-  }
+    marginRight: theme.spacing(1),
+  },
 }));
 
-const Budget = ({ className, ...rest }) => {
+const Budget = ({ amount, className, ...rest }) => {
   const classes = useStyles();
 
   return (
-    <Card
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
+    <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
-        <Grid
-          container
-          justify="space-between"
-          spacing={3}
-        >
+        <Grid container justify="space-between" spacing={3}>
           <Grid item>
-            <Typography
-              color="textSecondary"
-              gutterBottom
-              variant="h6"
-            >
-              BUDGET
+            <Typography color="textSecondary" gutterBottom variant="h6">
+              TOTAL AMOUNT
             </Typography>
-            <Typography
-              color="textPrimary"
-              variant="h3"
-            >
-              $24,000
+            <Typography color="textPrimary" variant="h3">
+              ₹ {amount * 73.08}
             </Typography>
           </Grid>
           <Grid item>
@@ -67,32 +53,22 @@ const Budget = ({ className, ...rest }) => {
             </Avatar>
           </Grid>
         </Grid>
-        <Box
-          mt={2}
-          display="flex"
-          alignItems="center"
-        >
+        {/* <Box mt={2} display="flex" alignItems="center">
           <ArrowDownwardIcon className={classes.differenceIcon} />
-          <Typography
-            className={classes.differenceValue}
-            variant="body2"
-          >
+          <Typography className={classes.differenceValue} variant="body2">
             12%
           </Typography>
-          <Typography
-            color="textSecondary"
-            variant="caption"
-          >
+          <Typography color="textSecondary" variant="caption">
             Since last month
           </Typography>
-        </Box>
+        </Box> */}
       </CardContent>
     </Card>
   );
 };
 
 Budget.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
 };
 
 export default Budget;

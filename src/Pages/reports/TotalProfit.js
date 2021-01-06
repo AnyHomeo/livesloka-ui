@@ -1,6 +1,6 @@
-import React from 'react';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
+import React from "react";
+import clsx from "clsx";
+import PropTypes from "prop-types";
 import {
   Avatar,
   Card,
@@ -8,53 +8,39 @@ import {
   Grid,
   Typography,
   makeStyles,
-  colors
-} from '@material-ui/core';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+  colors,
+} from "@material-ui/core";
+import InsertChartIcon from "@material-ui/icons/InsertChartOutlined";
 
 const useStyles = makeStyles(() => ({
   root: {
-    height: '100%'
+    height: "100%",
   },
   avatar: {
-    backgroundColor: colors.indigo[600],
+    backgroundColor: "#c0392b",
     height: 56,
-    width: 56
-  }
+    width: 56,
+  },
 }));
 
-const TotalProfit = ({ className, ...rest }) => {
+const TotalProfit = ({ failed, className, ...rest }) => {
   const classes = useStyles();
 
   return (
-    <Card
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
+    <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
-        <Grid
-          container
-          justify="space-between"
-          spacing={3}
-        >
+        <Grid container justify="space-between" spacing={3}>
           <Grid item>
-            <Typography
-              color="textSecondary"
-              gutterBottom
-              variant="h6"
-            >
-              TOTAL PROFIT
+            <Typography color="textSecondary" gutterBottom variant="h6">
+              FAILED TRANSACTIONS
             </Typography>
-            <Typography
-              color="textPrimary"
-              variant="h3"
-            >
-              $23,200
+            <Typography color="textPrimary" variant="h3">
+              {failed}
             </Typography>
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>
-              <AttachMoneyIcon />
+              <InsertChartIcon />
             </Avatar>
           </Grid>
         </Grid>
@@ -64,7 +50,7 @@ const TotalProfit = ({ className, ...rest }) => {
 };
 
 TotalProfit.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
 };
 
 export default TotalProfit;

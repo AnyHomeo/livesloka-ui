@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
@@ -11,6 +11,7 @@ import {
   Typography,
   makeStyles,
 } from "@material-ui/core";
+import { isAutheticated } from "../../auth";
 import {
   Lock as LockIcon,
   Settings as SettingsIcon,
@@ -90,17 +91,25 @@ const useStyles = makeStyles(() => ({
     cursor: "pointer",
     width: 64,
     height: 64,
+    backgroundColor: "#f39c12",
   },
   name: {
     fontWeight: "bold",
     marginTop: "10px",
+    textTransform: "capitalize",
+  },
+  iconName: {
+    fontWeight: "bold",
+    textTransform: "capitalize",
+    fontSize: 20,
+    color: "white",
   },
 }));
 
 const NavBar = ({ onMobileClose, openMobile }) => {
   const classes = useStyles();
   const location = useLocation();
-
+  const [userDetails, setUserDetails] = useState();
   useEffect(() => {
     if (openMobile && onMobileClose) {
       onMobileClose();
@@ -108,6 +117,14 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
+  useEffect(() => {
+    getUserDetails();
+  }, []);
+
+  const getUserDetails = () => {
+    const data = isAutheticated();
+    setUserDetails(data);
+  };
   const content = (
     <Box
       height="100%"
@@ -119,18 +136,25 @@ const NavBar = ({ onMobileClose, openMobile }) => {
         <Avatar
           className={classes.avatar}
           component={RouterLink}
-          src={user.avatar}
-          to="/app/account"
-        />
+          to="/dashboard"
+        >
+          <Typography
+            color="textSecondary"
+            variant="body2"
+            className={classes.iconName}
+          >
+            {userDetails && userDetails.username[0]}
+          </Typography>
+        </Avatar>
         <Typography className={classes.name} color="textPrimary" variant="h5">
-          {user.name}
+          {userDetails && userDetails.username}
         </Typography>
         <Typography
           color="textSecondary"
           variant="body2"
           className={classes.name}
         >
-          {user.jobTitle}
+          Admin
         </Typography>
       </Box>
       <Divider />
