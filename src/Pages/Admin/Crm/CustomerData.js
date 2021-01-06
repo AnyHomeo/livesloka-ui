@@ -745,10 +745,10 @@ const CrmDetails = () => {
           columns={columns}
           data={data}
           options={{
-            paging: false,
-            // pageSize: 20,
-            // pageSizeOptions: [20, 30, 40, 50],
-            // paginationType: "stepped",
+            // paging: false,
+            pageSize: 20,
+            pageSizeOptions: [20, 30, 40, 50, data.length],
+            paginationType: "stepped",
             searchFieldVariant: "outlined",
             actionsColumnIndex: 0,
             addRowPosition: "first",
@@ -822,7 +822,13 @@ const CrmDetails = () => {
                 });
             },
             onRowUpdate: (newData, oldData) => {
-              return editCustomer(newData)
+              let requestBody = {};
+              Object.keys(oldData).forEach((key) => {
+                if (!(newData[key] === oldData[key])) {
+                  requestBody[key] = newData[key];
+                }
+              });
+              return editCustomer({ ...requestBody, _id: oldData._id })
                 .then((fetchedData) => {
                   if (fetchedData.data.status === "OK") {
                     const dataUpdate = [...data];

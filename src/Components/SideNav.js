@@ -183,19 +183,20 @@ export default function PersistentDrawerLeft({ children }) {
         </List>
         <Divider />
         <List>
-          {[{ title: "Financial Analytics", link: "/Analytics" }].map(
-            (navItem, index) => (
-              <Link
-                key={index}
-                style={{ textDecoration: "none", color: "black" }}
-                to={navItem.link}
-              >
-                <ListItem button key={navItem.link}>
-                  <ListItemText primary={navItem.title} />
-                </ListItem>
-              </Link>
-            )
-          )}
+          {[
+            { title: "Financial Analytics", link: "/Analytics" },
+            { title: "Zoom Dashboard", link: "/zoom/dashboard" },
+          ].map((navItem, index) => (
+            <Link
+              key={index}
+              style={{ textDecoration: "none", color: "black" }}
+              to={navItem.link}
+            >
+              <ListItem button key={navItem.link}>
+                <ListItemText primary={navItem.title} />
+              </ListItem>
+            </Link>
+          ))}
         </List>
       </Drawer>
       <main
