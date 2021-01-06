@@ -22,6 +22,7 @@ import {
   Trello,
   DollarSign,
   Info,
+  BarChart,
 } from "react-feather";
 import NavItem from "./NavItem";
 const user = {
@@ -75,6 +76,11 @@ const items = [
     href: "/invoices",
     icon: Info,
     title: "Invoices",
+  },
+  {
+    href: "/analytics",
+    icon: BarChart,
+    title: "Analytics",
   },
 ];
 

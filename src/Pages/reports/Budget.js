@@ -13,6 +13,7 @@ import {
 } from "@material-ui/core";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import MoneyIcon from "@material-ui/icons/Money";
+import CountUp from "react-countup";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,7 +45,13 @@ const Budget = ({ amount, className, ...rest }) => {
               TOTAL AMOUNT
             </Typography>
             <Typography color="textPrimary" variant="h3">
-              ₹ {amount * 73.08}
+              ₹{" "}
+              {isNaN(amount) ? (
+                amount
+              ) : (
+                <CountUp start={0} end={amount * 73.08} separator="," />
+              )}
+              {/* ₹ {amount * 73.08} */}
             </Typography>
           </Grid>
           <Grid item>

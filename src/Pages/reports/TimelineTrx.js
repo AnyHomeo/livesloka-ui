@@ -27,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TimelineTrx({ data }) {
   const classes = useStyles();
-  console.log(data);
   return (
     <>
       <Timeline align="alternate">
