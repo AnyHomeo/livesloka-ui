@@ -33,6 +33,7 @@ export default function TeacherDetails() {
     getStatus();
     getCat();
     getClasses();
+    getTeacher();
   }, []);
 
   //states
@@ -46,11 +47,25 @@ export default function TeacherDetails() {
   const [catId, setcatId] = useState();
   const [subj, setSubj] = useState();
   const [classess, setClasses] = useState();
+  const [classId, setclassId] = useState();
+  const [teachers, setTeachers] = useState();
+  const [tid, settid] = useState();
   // functions
   const getStatus = () => {
     getData("Status")
       .then((data) => {
         setStatus(data.data.result);
+        console.log(status);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const getTeacher = () => {
+    getData("Teacher")
+      .then((data) => {
+        setTeachers(data.data.result);
       })
       .catch((err) => {
         console.log(err);
@@ -68,7 +83,7 @@ export default function TeacherDetails() {
   };
 
   const getClasses = () => {
-    getData("classes")
+    getData("Class")
       .then((data) => {
         setClasses(data.data.result);
       })
@@ -79,6 +94,7 @@ export default function TeacherDetails() {
 
   // submit function
   const submitForm = async (e) => {
+    console.log(tid);
     e.preventDefault();
     setteacherName(" ");
     setmail(" ");
@@ -127,6 +143,24 @@ export default function TeacherDetails() {
               />
               <br></br>
 
+              <Autocomplete
+                style={{ maxWidth: "400px", minWidth: "300px" }}
+                options={teachers}
+                getOptionLabel={(option) => option.TeacherName}
+                onChange={(event, value) => {
+                  value && settid(value.id);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label=" Teachers"
+                    variant="outlined"
+                    margin="normal"
+                  />
+                )}
+              />
+              <br></br>
+
               <TextField
                 fullWidth
                 id="outlined-basic"
@@ -147,7 +181,7 @@ export default function TeacherDetails() {
                 id="outlined-basic"
                 label="Sujects"
                 variant="outlined"
-                value={tdesc}
+                value={subj}
                 onChange={(e) => setSubj(e.target.value)}
                 style={{
                   maxWidth: "400px",
@@ -173,10 +207,10 @@ export default function TeacherDetails() {
 
               <Autocomplete
                 style={{ maxWidth: "400px", minWidth: "300px" }}
-                options={classes}
+                options={classess}
                 getOptionLabel={(option) => option.className}
                 onChange={(event, value) => {
-                  value && setId(value.id);
+                  value && setclassId(value.id);
                 }}
                 renderInput={(params) => (
                   <TextField
@@ -227,17 +261,17 @@ export default function TeacherDetails() {
               {loading ? (
                 <CircularProgress />
               ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  type="submit"
-                  className={classes.button}
-                  startIcon={<SaveIcon />}
-                >
-                  Save
-                </Button>
-              )}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    type="submit"
+                    className={classes.button}
+                    startIcon={<SaveIcon />}
+                  >
+                    Save
+                  </Button>
+                )}
             </div>
           </div>
         </Grid>
