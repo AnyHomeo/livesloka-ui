@@ -275,14 +275,17 @@ export default function ZoomAccountDashboard() {
                                 alignItems: "center",
                                 borderLeft: "0.5px solid #34495ee5",
                                 borderTop: "1px solid #ccc",
+                                textAlign: "center",
                                 borderBottom:
                                   j % 2 !== 0
                                     ? "1px solid rgba(0,0,0,0.5)"
                                     : "",
                               }}
                             >
-                              {filteredArray.map(
-                                (schedule) => `${schedule.className}`
+                              {filteredArray.map((schedule, i) =>
+                                i !== filteredArray.length - 1
+                                  ? ` ${schedule.className} || `
+                                  : ` ${schedule.className}`
                               )}
                             </div>
                           );

@@ -56,12 +56,32 @@ function Routes() {
             <AdminRoute path="/invoice-generator" exact component={Generator} />
             <AdminRoute path="/manual-invoice" exact component={Invoice} />
             <AdminRoute path="/invoices" exact component={Invoices} />
-            <Route path="/scheduler" exact component={Scheduler} />
-            <Route path="/analytics" exact component={FinancialAnalytics} />
-            <Route path="/reset/password" exact component={UserPasswordReset} />
-            <Route path="/edit-schedule/:id" exact component={EditSchedule} />
-            <Route path="/zoom/dashboard" exact component={MeetingDashboard} />
-            <Route path="/test" exact component={ZoomAccountDashboard} />
+            <AdminRoute path="/scheduler" exact component={Scheduler} />
+            <AdminRoute
+              path="/analytics"
+              exact
+              component={FinancialAnalytics}
+            />
+            <AdminRoute
+              path="/reset/password"
+              exact
+              component={UserPasswordReset}
+            />
+            <AdminRoute
+              path="/edit-schedule/:id"
+              exact
+              component={EditSchedule}
+            />
+            <AdminRoute
+              path="/zoom/dashboard"
+              exact
+              component={MeetingDashboard}
+            />
+            <AdminRoute
+              path="/zoom/account/dashboard"
+              exact
+              component={ZoomAccountDashboard}
+            />
           </SideNav>
         </Switch>
       </Router>

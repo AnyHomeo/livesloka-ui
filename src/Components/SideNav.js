@@ -138,8 +138,8 @@ export default function PersistentDrawerLeft({ children }) {
             {theme.direction === "ltr" ? (
               <ChevronLeftIcon />
             ) : (
-                <ChevronRightIcon />
-              )}
+              <ChevronRightIcon />
+            )}
           </IconButton>
         </div>
         <Divider />
@@ -186,6 +186,7 @@ export default function PersistentDrawerLeft({ children }) {
           {[
             { title: "Financial Analytics", link: "/Analytics" },
             { title: "Zoom Dashboard", link: "/zoom/dashboard" },
+            { title: "Zoom Dashboard 2", link: "/zoom/account/dashboard" },
           ].map((navItem, index) => (
             <Link
               key={index}
