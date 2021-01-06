@@ -189,11 +189,17 @@ export default function ZoomAccountDashboard() {
               style={{
                 width: width < 700 ? "10%" : "5%",
                 backgroundColor: "#EAF0F1",
-                marginTop: "50px",
+                marginTop: "80px",
               }}
             >
               {hours.map((hour, i) => (
-                <div key={i} className="time-header">
+                <div
+                  key={i}
+                  className="time-header"
+                  style={{
+                    height: "160px",
+                  }}
+                >
                   {hour}
                 </div>
               ))}
@@ -223,8 +229,8 @@ export default function ZoomAccountDashboard() {
                       <div
                         key={i}
                         style={{
-                          width: "150px",
-                          height: "50px",
+                          width: "200px",
+                          height: "80px",
                           textAlign: "center",
                           padding: "15px 0",
                           backgroundColor:
@@ -242,7 +248,7 @@ export default function ZoomAccountDashboard() {
                       </div>
                       <div
                         style={{
-                          width: "150px",
+                          width: "200px",
                           height: "100%",
                         }}
                       >
@@ -260,7 +266,7 @@ export default function ZoomAccountDashboard() {
                                 backgroundColor: filteredArray.length
                                   ? schedulesOfTheDay[schedule].color
                                   : "white",
-                                height: "50px",
+                                height: "80px",
                                 width: "100%",
                                 color: "white",
                                 fontSize: "10px",
@@ -276,7 +282,7 @@ export default function ZoomAccountDashboard() {
                               }}
                             >
                               {filteredArray.map(
-                                (schedule) => `${schedule.className}, `
+                                (schedule) => `${schedule.className}`
                               )}
                             </div>
                           );
