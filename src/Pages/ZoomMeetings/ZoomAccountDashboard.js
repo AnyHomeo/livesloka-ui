@@ -5,6 +5,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import useWindowDimensions from "../../Components/useWindowDimensions";
+import { getSchedulesByDayForZoomAccountDashboard } from "../../Services/Services";
 const times = [
   "12:00 AM-12:30 AM",
   "12:30 AM-01:00 AM",
@@ -122,7 +123,6 @@ const useStyles = makeStyles((theme) => ({
 export default function ZoomAccountDashboard() {
   const classes = useStyles();
   const { width } = useWindowDimensions();
-  const [teacherMeetings, setTeacherMeetings] = useState([]);
   const [allDays] = useState([
     "sunday",
     "monday",
@@ -133,10 +133,23 @@ export default function ZoomAccountDashboard() {
     "saturday",
   ]);
   const [value, setValue] = useState(new Date().getDay());
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const [schedulesOfTheDay, setSchedulesOfTheDay] = useState({});
+
+  useEffect(() => {
+    getSchedulesByDayForZoomAccountDashboard(allDays[value])
+      .then((data) => {
+        console.log(data.data.result);
+        setSchedulesOfTheDay({
+          ...data.data.result,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [value]);
 
   return (
     <div className={classes.root}>
@@ -164,7 +177,14 @@ export default function ZoomAccountDashboard() {
       </div>
       {allDays.map((day, i) => (
         <TabPanel value={value} key={i} index={i}>
-          <div style={{ width: "100%", display: "flex", flexDirection: "row" }}>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "row",
+              marginTop: "35px",
+            }}
+          >
             <div
               style={{
                 width: width < 700 ? "10%" : "5%",
@@ -181,11 +201,91 @@ export default function ZoomAccountDashboard() {
             <div
               style={{
                 width: width < 700 ? "90%" : "95%",
-                marginTop: "50px",
-                border: "2px solid black",
+                display: "flex",
+                flexDirection: "row",
               }}
             >
-              {allDays[value]}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  flexWrap: "nowrap",
+                }}
+              >
+                {Object.keys(schedulesOfTheDay).map((schedule, i) => (
+                  <>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <div
+                        key={i}
+                        style={{
+                          width: "150px",
+                          height: "50px",
+                          textAlign: "center",
+                          padding: "15px 0",
+                          backgroundColor:
+                            schedulesOfTheDay[schedule].color || "#EAF0F1",
+                          color: "white",
+                          borderLeft: "1px solid #fff",
+                          boxShadow:
+                            "0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)",
+                        }}
+                      >
+                        {" "}
+                        {width < 700
+                          ? schedule.toUpperCase().slice(0, 3) + "..."
+                          : schedule.toUpperCase()}
+                      </div>
+                      <div
+                        style={{
+                          width: "150px",
+                          height: "100%",
+                        }}
+                      >
+                        {times.map((time, j) => {
+                          let filteredArray = schedulesOfTheDay[
+                            schedule
+                          ].schedules.filter((scheduleFromArr) =>
+                            scheduleFromArr.slots.includes(
+                              `${day.toUpperCase()}-${time}`
+                            )
+                          );
+                          return (
+                            <div
+                              style={{
+                                backgroundColor: filteredArray.length
+                                  ? schedulesOfTheDay[schedule].color
+                                  : "white",
+                                height: "50px",
+                                width: "100%",
+                                color: "white",
+                                fontSize: "10px",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                borderLeft: "0.5px solid #34495ee5",
+                                borderTop: "1px solid #ccc",
+                                borderBottom:
+                                  j % 2 !== 0
+                                    ? "1px solid rgba(0,0,0,0.5)"
+                                    : "",
+                              }}
+                            >
+                              {filteredArray.map(
+                                (schedule) => `${schedule.className}, `
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </>
+                ))}
+              </div>
             </div>
           </div>
         </TabPanel>
