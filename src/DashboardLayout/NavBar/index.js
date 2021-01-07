@@ -34,14 +34,14 @@ const user = {
 
 const items = [
   {
-    href: "/dashboard",
-    icon: DollarSign,
-    title: "Financial Dashboard",
-  },
-  {
     href: "/customer-data",
     icon: FileText,
     title: "Customers Data",
+  },
+  {
+    href: "/dashboard",
+    icon: DollarSign,
+    title: "Financial Dashboard",
   },
   {
     href: "/add-fields",

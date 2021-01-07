@@ -153,7 +153,7 @@ const Login = () => {
           error: "no admin access to login",
         }));
       } else if (isAutheticated() && isAutheticated().roleId === 3) {
-        return <Redirect to="/dashboard" />;
+        return <Redirect to="/customer-data" />;
       }
     }
     if (didRedirect) {
@@ -161,7 +161,7 @@ const Login = () => {
         return <Redirect to="/password-reset" />;
       }
       if (isAutheticated() && isAutheticated().roleId === 3) {
-        return <Redirect to="/dashboard" />;
+        return <Redirect to="/customer-data" />;
       }
     }
   };
