@@ -34,6 +34,11 @@ function Routes() {
           <Route path="/404" exact component={NotFoundView} />
           <DashboardLayout>
             <AdminRoute path="/dashboard" exact component={Dashboard} />
+            <AdminRoute
+              path="/zoom-dashboard"
+              exact
+              component={ZoomAccountDashboard}
+            />
             <AdminRoute path="/customer-data" exact component={CustomerData} />
             <AdminRoute path="/add-fields" exact component={CustomTabs} />
             <AdminRoute path="/attendance" exact component={Attedance} />

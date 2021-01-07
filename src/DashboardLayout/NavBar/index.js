@@ -23,6 +23,7 @@ import {
   DollarSign,
   Info,
   BarChart,
+  Video,
 } from "react-feather";
 import NavItem from "./NavItem";
 const user = {
@@ -81,6 +82,11 @@ const items = [
     href: "/analytics",
     icon: BarChart,
     title: "Analytics",
+  },
+  {
+    href: "/zoom-dashboard",
+    icon: Video,
+    title: "Zoom Dashboard",
   },
 ];
 
