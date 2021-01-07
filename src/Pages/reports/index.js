@@ -11,6 +11,7 @@ import TotalProfit from "./TotalProfit";
 import TrafficByDevice from "./TrafficByDevice";
 import axios from "axios";
 import TimelineTrx from "./TimelineTrx";
+import AmountChart from "./AmountChart";
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -74,15 +75,29 @@ const Dashboard = () => {
           <Grid item lg={3} sm={6} xl={3} xs={12}>
             <TotalProfit failed={failedTrx} />
           </Grid>
+          <Grid item lg={8} md={6} xl={3} xs={12}>
+            <AmountChart dataa={allData} />
+          </Grid>
+          <Grid item lg={4} md={6} xl={3} xs={12}>
+            <TrafficByDevice
+              totaltrx={totalTransactions}
+              failed={failedTrx}
+              success={successTrx}
+            />
+          </Grid>
           {/* <Grid item lg={12} sm={12} xl={3} xs={12}>
             <TimelineTrx data={allData} />
           </Grid> */}
-          <Grid item lg={8} md={12} xl={9} xs={12}>
+          <Grid item lg={12} md={12} xl={9} xs={12}>
             <LatestOrders data={allData} />
           </Grid>
-          <Grid item lg={4} md={6} xl={3} xs={12}>
-            <TrafficByDevice />
-          </Grid>
+          {/* <Grid item lg={4} md={6} xl={3} xs={12}>
+            <TrafficByDevice
+              totaltrx={totalTransactions}
+              failed={failedTrx}
+              success={successTrx}
+            />
+          </Grid> */}
         </Grid>
       </Container>
     </Page>
