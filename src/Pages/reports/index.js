@@ -74,15 +74,15 @@ const Dashboard = () => {
           <Grid item lg={3} sm={6} xl={3} xs={12}>
             <TotalProfit failed={failedTrx} />
           </Grid>
-          <Grid item lg={12} sm={12} xl={3} xs={12}>
+          {/* <Grid item lg={12} sm={12} xl={3} xs={12}>
             <TimelineTrx data={allData} />
+          </Grid> */}
+          <Grid item lg={8} md={12} xl={9} xs={12}>
+            <LatestOrders data={allData} />
           </Grid>
-          {/* <Grid item lg={12} md={12} xl={9} xs={12}>
-            <LatestOrders />
-          </Grid> */}
-          {/* <Grid item lg={4} md={6} xl={3} xs={12}>
+          <Grid item lg={4} md={6} xl={3} xs={12}>
             <TrafficByDevice />
-          </Grid> */}
+          </Grid>
         </Grid>
       </Container>
     </Page>

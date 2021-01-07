@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import {
@@ -14,7 +14,7 @@ import {
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import MoneyIcon from "@material-ui/icons/Money";
 import CountUp from "react-countup";
-
+import axios from "axios";
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "100%",
@@ -36,6 +36,19 @@ const useStyles = makeStyles((theme) => ({
 const Budget = ({ amount, className, ...rest }) => {
   const classes = useStyles();
 
+  const [usdVal, setUsdVal] = useState();
+
+  useEffect(() => {
+    getUsdVal();
+  }, []);
+
+  const getUsdVal = async () => {
+    const data = await axios.get(
+      "https://free.currconv.com/api/v7/convert?q=USD_INR,INR_USD&compact=ultra&apiKey=eaff87f1207bb43ddfa6"
+    );
+    setUsdVal(data);
+  };
+
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
@@ -49,7 +62,11 @@ const Budget = ({ amount, className, ...rest }) => {
               {isNaN(amount) ? (
                 amount
               ) : (
-                <CountUp start={0} end={amount * 73.08} separator="," />
+                <CountUp
+                  start={0}
+                  end={usdVal && usdVal.data.USD_INR * amount}
+                  separator=","
+                />
               )}
               {/* ₹ {amount * 73.08} */}
             </Typography>

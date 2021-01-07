@@ -16,9 +16,8 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  TableSortLabel,
-  Tooltip,
   makeStyles,
+  TablePagination,
 } from "@material-ui/core";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 
@@ -94,13 +93,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const LatestOrders = ({ className, ...rest }) => {
+const LatestOrders = ({ data, className, ...rest }) => {
   const classes = useStyles();
-  const [orders] = useState(data);
 
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
-      <CardHeader title="Latest Orders" />
+      <CardHeader title="Latest Transactions" />
       <Divider />
       <PerfectScrollbar>
         <Box minWidth={800}>
@@ -109,43 +107,78 @@ const LatestOrders = ({ className, ...rest }) => {
               <TableRow>
                 <TableCell>Order Ref</TableCell>
                 <TableCell>Customer</TableCell>
-                <TableCell sortDirection="desc">
-                  <Tooltip enterDelay={300} title="Sort">
-                    <TableSortLabel active direction="desc">
-                      Date
-                    </TableSortLabel>
-                  </Tooltip>
-                </TableCell>
+                <TableCell>Total Amount</TableCell>
+                <TableCell>Date</TableCell>
                 <TableCell>Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {orders.map((order) => (
-                <TableRow hover key={order.id}>
-                  <TableCell>{order.ref}</TableCell>
-                  <TableCell>{order.customer.name}</TableCell>
-                  <TableCell>
-                    {moment(order.createdAt).format("DD/MM/YYYY")}
-                  </TableCell>
-                  <TableCell>
-                    <Chip color="primary" label={order.status} size="small" />
-                  </TableCell>
-                </TableRow>
-              ))}
+              {data &&
+                data.data.result.map((dataa) => {
+                  if (dataa.paymentData !== null) {
+                    return (
+                      <TableRow hover key={dataa.paymentData.id}>
+                        <TableCell>{dataa.paymentData.id}</TableCell>
+                        <TableCell>
+                          {" "}
+                          {dataa.customerId.firstName}{" "}
+                          {dataa.customerId.lastName &&
+                            dataa.customerId.lastName}
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          {dataa.paymentData.transactions[0].amount.total}{" "}
+                          {dataa.paymentData.transactions[0].amount.currency}
+                        </TableCell>
+
+                        <TableCell>
+                          {moment(dataa.createdAt).format("MMM Do YYYY h:mm A")}
+                        </TableCell>
+                        <TableCell>
+                          <Chip
+                            style={{
+                              backgroundColor: "#27ae60",
+                              color: "white",
+                            }}
+                            label={dataa.status}
+                            size="small"
+                          />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  } else {
+                    return (
+                      <TableRow hover key={dataa._id}>
+                        <TableCell>{dataa._id}</TableCell>
+                        <TableCell>
+                          {" "}
+                          {dataa.customerId.firstName}{" "}
+                          {dataa.customerId.lastName &&
+                            dataa.customerId.lastName}
+                        </TableCell>
+                        <TableCell>Not available</TableCell>
+
+                        <TableCell>
+                          {moment(dataa.createdAt).format("MMM Do YYYY h:mm A")}
+                        </TableCell>
+                        <TableCell>
+                          <Chip
+                            style={{
+                              backgroundColor: "#c0392b",
+                              color: "white",
+                            }}
+                            label={dataa.status}
+                            size="small"
+                          />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  }
+                })}
             </TableBody>
           </Table>
         </Box>
       </PerfectScrollbar>
-      <Box display="flex" justifyContent="flex-end" p={2}>
-        <Button
-          color="primary"
-          endIcon={<ArrowRightIcon />}
-          size="small"
-          variant="text"
-        >
-          View all
-        </Button>
-      </Box>
     </Card>
   );
 };
