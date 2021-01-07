@@ -372,7 +372,7 @@ function Scheduler() {
               display: "flex",
               flexDirection: "row",
               position: "sticky",
-              top: "63px",
+              top: "0px",
               backgroundColor: "white",
             }}
           >

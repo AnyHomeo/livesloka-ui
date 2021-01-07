@@ -20,7 +20,9 @@ import AttedanceByClass from "../Pages/Admin/Crm/AttendanceByClass";
 import EditAttendance from "../Pages/Admin/Crm/EditAttendance";
 import MeetingDashboard from "../Pages/ZoomMeetings/MeetingDashboard";
 import ZoomAccountDashboard from "../Pages/ZoomMeetings/ZoomAccountDashboard";
-
+import DashboardLayout from "../DashboardLayout";
+import Dashboard from "../Pages/reports";
+import NotFoundView from "../Pages/NotFoundView";
 function Routes() {
   return (
     <>
@@ -29,7 +31,9 @@ function Routes() {
           <Route path="/" exact component={Login} />
           <Route path="/login" exact component={Login} />
           <Route path="/password-reset" exact component={PasswordReset} />
-          <SideNav>
+          <Route path="/404" exact component={NotFoundView} />
+          <DashboardLayout>
+            <AdminRoute path="/dashboard" exact component={Dashboard} />
             <AdminRoute path="/customer-data" exact component={CustomerData} />
             <AdminRoute path="/add-fields" exact component={CustomTabs} />
             <AdminRoute path="/attendance" exact component={Attedance} />
@@ -77,12 +81,9 @@ function Routes() {
               exact
               component={MeetingDashboard}
             />
-            <AdminRoute
-              path="/zoom/account/dashboard"
-              exact
-              component={ZoomAccountDashboard}
-            />
-          </SideNav>
+            <AdminRoute path="/test" exact component={ZoomAccountDashboard} />
+          </DashboardLayout>
+          <Route path="*" component={NotFoundView} />
         </Switch>
       </Router>
     </>
