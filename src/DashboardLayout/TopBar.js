@@ -32,40 +32,26 @@ const useStyles = makeStyles(() => ({
 
 const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
   const classes = useStyles();
-  const [notifications] = useState([]);
 
   return (
     <AppBar className={clsx(classes.root, className)} elevation={0} {...rest}>
       <Toolbar>
+        <IconButton color="inherit" onClick={onMobileNavOpen}>
+          <MenuIcon />
+        </IconButton>
         <Typography className={classes.name} color="textPrimary" variant="h4">
           Welcome Admin
         </Typography>
         <Box flexGrow={1} />
-        <Hidden mdDown>
-          <Link
-            to="/login"
-            onClick={() => logout(() => console.log("logout successful"))}
-            style={{ color: "white" }}
-          >
-            <IconButton color="inherit">
-              <InputIcon />
-            </IconButton>
-          </Link>
-        </Hidden>
-        <Hidden lgUp>
-          <IconButton color="inherit" onClick={onMobileNavOpen}>
-            <MenuIcon />
+        <Link
+          to="/login"
+          onClick={() => logout(() => console.log("logout successful"))}
+          style={{ color: "white" }}
+        >
+          <IconButton color="inherit">
+            <InputIcon />
           </IconButton>
-          <Link
-            to="/login"
-            onClick={() => logout(() => console.log("logout successful"))}
-            style={{ color: "white" }}
-          >
-            <IconButton color="inherit">
-              <InputIcon />
-            </IconButton>
-          </Link>
-        </Hidden>
+        </Link>
       </Toolbar>
     </AppBar>
   );

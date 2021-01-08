@@ -825,16 +825,6 @@ const CrmDetails = () => {
             Toolbar: (props) => (
               <div>
                 <MTableToolbar {...props} />
-                <div style={{ padding: "0px 10px" }}>
-                  {Object.keys(classStatusDropdown).map((status) => (
-                    <Chip
-                      label={classStatusDropdown[status]}
-                      color="primary"
-                      size="small"
-                      style={{ margin: 5, fontSize: 10 }}
-                    />
-                  ))}
-                </div>
               </div>
             ),
           }}
