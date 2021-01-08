@@ -4,6 +4,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import { makeStyles } from "@material-ui/core/styles";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { getData } from "../../../Services/Services";
+import MaterialTableAddFields from "../../../Components/MaterialTableAddFields";
 
 const useStyles = makeStyles((theme) => ({
   saveButton: {
@@ -25,257 +26,46 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const status = [
+  "TeacherStatus",
+];
+
 export default function TeacherDetails() {
   const classes = useStyles();
-
-  //UseEffect
-  useEffect(() => {
-    getStatus();
-    getCat();
-    getClasses();
-    getTeacher();
-  }, []);
-
   //states
   const [loading, setLoading] = useState(false);
   const [teachername, setteacherName] = useState("");
-  const [tdesc, setdesc] = useState("");
-  const [mail, setmail] = useState("");
-  const [status, setStatus] = useState();
-  const [cat, setcat] = useState();
-  const [statId, setId] = useState();
-  const [catId, setcatId] = useState();
-  const [subj, setSubj] = useState();
-  const [classess, setClasses] = useState();
-  const [classId, setclassId] = useState();
-  const [teachers, setTeachers] = useState();
-  const [tid, settid] = useState();
-  // functions
-  const getStatus = () => {
-    getData("Status")
-      .then((data) => {
-        setStatus(data.data.result);
-        console.log(status);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  const [value, setValue] = useState(0);
+  const [lookup, setLookup] = useState({});
+  const [categoryLookup, setCategoryLookup] = useState({});
+  const [item, setitem] = useState("Teacher");
 
-  const getTeacher = () => {
-    getData("Teacher")
-      .then((data) => {
-        setTeachers(data.data.result);
-      })
-      .catch((err) => {
-        console.log(err);
+  //UseEffect
+  useEffect(() => {
+    getData("Status").then((data) => {
+      let dummyLookup = {};
+      data.data.result.forEach((data) => {
+        dummyLookup[data.statusId] = data.statusName;
       });
-  };
-
-  const getCat = () => {
-    getData("Category")
-      .then((data) => {
-        setcat(data.data.result);
-      })
-      .catch((err) => {
-        console.log(err);
+      setLookup(dummyLookup);
+    });
+    getData("Category").then((data) => {
+      let dummyLookup = {};
+      data.data.result.forEach((data) => {
+        dummyLookup[data.id] = data.categoryName;
       });
-  };
-
-  const getClasses = () => {
-    getData("Class")
-      .then((data) => {
-        setClasses(data.data.result);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  // submit function
-  const submitForm = async (e) => {
-    console.log(tid);
-    e.preventDefault();
-    setteacherName(" ");
-    setmail(" ");
-    setdesc(" ");
-  };
+      setCategoryLookup(dummyLookup);
+    });
+  }, [value]);
 
   return (
     <>
-      <form onSubmit={submitForm}>
-        <h1
-          className="heading"
-          style={{ fontSize: "20px", marginTop: "20px", textAlign: "center" }}
-        >
-          Teacher-Details Page
-        </h1>
-        <Grid container style={{ width: "100%" }}>
-          <Grid item xs={12} md={4} />
-
-          <div
-            style={{
-              alignItems: "center",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <TextField
-                id="outlined-basic"
-                label="Teacher Name"
-                variant="outlined"
-                fullWidth
-                onChange={(e) => setteacherName(e.target.value)}
-                value={teachername}
-                style={{
-                  maxWidth: "400px",
-                  minWidth: "300px",
-                  marginTop: "10px",
-                }}
-              />
-              <br></br>
-
-              <Autocomplete
-                style={{ maxWidth: "400px", minWidth: "300px" }}
-                options={teachers}
-                getOptionLabel={(option) => option.TeacherName}
-                onChange={(event, value) => {
-                  value && settid(value.id);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label=" Teachers"
-                    variant="outlined"
-                    margin="normal"
-                  />
-                )}
-              />
-              <br></br>
-
-              <TextField
-                fullWidth
-                id="outlined-basic"
-                label="Email/teacherId"
-                variant="outlined"
-                value={mail}
-                onChange={(e) => setmail(e.target.value)}
-                style={{
-                  maxWidth: "400px",
-                  minWidth: "300px",
-                  marginTop: "10px",
-                }}
-              />
-              <br></br>
-
-              <TextField
-                fullWidth
-                id="outlined-basic"
-                label="Sujects"
-                variant="outlined"
-                value={subj}
-                onChange={(e) => setSubj(e.target.value)}
-                style={{
-                  maxWidth: "400px",
-                  minWidth: "300px",
-                  marginTop: "10px",
-                }}
-              />
-
-              <br></br>
-              <TextField
-                fullWidth
-                id="outlined-basic"
-                label="Teacher Description"
-                variant="outlined"
-                value={tdesc}
-                onChange={(e) => setdesc(e.target.value)}
-                style={{
-                  maxWidth: "400px",
-                  minWidth: "300px",
-                  marginTop: "10px",
-                }}
-              />
-
-              <Autocomplete
-                style={{ maxWidth: "400px", minWidth: "300px" }}
-                options={classess}
-                getOptionLabel={(option) => option.className}
-                onChange={(event, value) => {
-                  value && setclassId(value.id);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label=" Classes"
-                    variant="outlined"
-                    margin="normal"
-                  />
-                )}
-              />
-
-              <Autocomplete
-                style={{ maxWidth: "400px", minWidth: "300px" }}
-                options={status}
-                getOptionLabel={(option) => option.statusName}
-                onChange={(event, value) => {
-                  value && setId(value.statusId);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label=" Status"
-                    variant="outlined"
-                    margin="normal"
-                  />
-                )}
-              />
-
-              <Autocomplete
-                style={{ maxWidth: "400px", minWidth: "300px" }}
-                options={cat}
-                getOptionLabel={(option) => option.categoryName}
-                onChange={(event, value) => {
-                  value && setcatId(value.id);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label=" Category"
-                    variant="outlined"
-                    margin="normal"
-                  />
-                )}
-              />
-            </div>
-
-            <div className={classes.saveButton}>
-              {loading ? (
-                <CircularProgress />
-              ) : (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    type="submit"
-                    className={classes.button}
-                    startIcon={<SaveIcon />}
-                  >
-                    Save
-                  </Button>
-                )}
-            </div>
-          </div>
-        </Grid>
-      </form>
+      <MaterialTableAddFields
+        name={item}
+        status={status[0]}
+        lookup={lookup}
+        categoryLookup={categoryLookup}
+      />
     </>
   );
 }
