@@ -15,6 +15,8 @@ import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import MoneyIcon from "@material-ui/icons/Money";
 import CountUp from "react-countup";
 import axios from "axios";
+const moment = require("moment");
+
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "100%",
@@ -33,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Budget = ({ amount, className, ...rest }) => {
+const Budget = ({ dataa, amount, className, ...rest }) => {
   const classes = useStyles();
 
   const [usdVal, setUsdVal] = useState();
