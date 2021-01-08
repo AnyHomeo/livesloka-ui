@@ -69,21 +69,6 @@ const items = [
     title: "Reset Password",
   },
   {
-    href: "/manual-invoice",
-    icon: UserPlusIcon,
-    title: "Generate Invoice",
-  },
-  {
-    href: "/invoices",
-    icon: Info,
-    title: "Invoices",
-  },
-  {
-    href: "/analytics",
-    icon: BarChart,
-    title: "Analytics",
-  },
-  {
     href: "/zoom-dashboard",
     icon: Video,
     title: "Zoom Dashboard",
@@ -126,7 +111,6 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     if (openMobile && onMobileClose) {
       onMobileClose();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   useEffect(() => {
@@ -188,27 +172,15 @@ const NavBar = ({ onMobileClose, openMobile }) => {
 
   return (
     <>
-      <Hidden lgUp>
-        <Drawer
-          anchor="left"
-          classes={{ paper: classes.mobileDrawer }}
-          onClose={onMobileClose}
-          open={openMobile}
-          variant="temporary"
-        >
-          {content}
-        </Drawer>
-      </Hidden>
-      <Hidden mdDown>
-        <Drawer
-          anchor="left"
-          classes={{ paper: classes.desktopDrawer }}
-          open
-          variant="persistent"
-        >
-          {content}
-        </Drawer>
-      </Hidden>
+      <Drawer
+        anchor="left"
+        classes={{ paper: classes.mobileDrawer }}
+        onClose={onMobileClose}
+        open={openMobile}
+        variant="temporary"
+      >
+        {content}
+      </Drawer>
     </>
   );
 };
