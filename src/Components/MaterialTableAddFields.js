@@ -67,13 +67,13 @@ function capitalize(word) {
 }
 
 const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
+  console.log("categoryLookup", categoryLookup);
   const [column, setColumn] = useState([]);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [success, setSuccess] = useState(false);
   const [response, setResponse] = useState("");
-
   const { height } = useWindowDimensions();
 
   useEffect(() => {
@@ -103,8 +103,8 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
                 <span>
                   {rowData[key]
                     ? rowData[key].slice(0, 3) +
-                      "...." +
-                      rowData[key].slice(-10)
+                    "...." +
+                    rowData[key].slice(-10)
                     : ""}
                 </span>
               ),
@@ -254,7 +254,7 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
                   setSuccess(false);
                   setResponse(
                     fetchedData.data.message ||
-                      "Something went wrong,Try again later"
+                    "Something went wrong,Try again later"
                   );
                   setOpen(true);
                 }
