@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import MaterialTable, { MTableBodyRow } from "material-table";
+import MaterialTable, { MTableBodyRow, MTableToolbar } from "material-table";
 import { makeStyles } from "@material-ui/core/styles";
 import SmsOutlinedIcon from "@material-ui/icons/SmsOutlined";
 import useWindowDimensions from "../../../Components/useWindowDimensions";
@@ -24,12 +24,13 @@ import {
   TextField,
   Snackbar,
   Checkbox,
+  Switch,
+  Chip,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import Comments from "./Comments";
 
 import "date-fns";
-import moment from "moment";
 import TableChartOutlinedIcon from "@material-ui/icons/TableChartOutlined";
 import Drawer from "@material-ui/core/Drawer";
 import FormControl from "@material-ui/core/FormControl";
@@ -46,39 +47,6 @@ const copyToClipboard = (text) => {
   document.execCommand("copy");
   textField.remove();
 };
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-  },
-  formControl: {
-    margin: theme.spacing(3),
-  },
-  content: {
-    flexGrow: 1,
-    marginTop: "-10px",
-    textAlign: "center",
-  },
-  space: {
-    margin: "20px",
-  },
-  appBar: {
-    position: "relative",
-  },
-  title: {
-    marginLeft: theme.spacing(2),
-    flex: 1,
-  },
-  input: {
-    fullWidth: true,
-  },
-  list: {
-    width: 250,
-  },
-  fullList: {
-    width: "auto",
-  },
-}));
 
 const names = [
   "Class",
@@ -117,6 +85,49 @@ const fetchDropDown = (index) => {
     });
   return obj;
 };
+
+const classDropdown = fetchDropDown(0);
+const timeZoneDropdown = fetchDropDown(1);
+const classStatusDropdown = fetchDropDown(2);
+const currencyDropdown = fetchDropDown(3);
+const countryDropdown = fetchDropDown(4);
+const teachersDropdown = fetchDropDown(5);
+const agentDropdown = fetchDropDown(6);
+const categoryDropdown = fetchDropDown(7);
+const subjectDropdown = fetchDropDown(8);
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+  },
+  formControl: {
+    margin: theme.spacing(3),
+  },
+  content: {
+    flexGrow: 1,
+    marginTop: "-10px",
+    textAlign: "center",
+  },
+  space: {
+    margin: "20px",
+  },
+  appBar: {
+    position: "relative",
+  },
+  title: {
+    marginLeft: theme.spacing(2),
+    flex: 1,
+  },
+  input: {
+    fullWidth: true,
+  },
+  list: {
+    width: 250,
+  },
+  fullList: {
+    width: "auto",
+  },
+}));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -306,18 +317,49 @@ const CrmDetails = () => {
     fetchData();
   }, []);
 
+  const toggleJoinButton = async (rowData) => {
+    try {
+      await editCustomer({
+        isJoinButtonEnabledByAdmin: !rowData.isJoinButtonEnabledByAdmin,
+        _id: rowData._id,
+      });
+      setData((prev) => {
+        let index = rowData.tableData.id;
+        let prevData = [...prev];
+        prevData[index] = {
+          ...rowData,
+          isJoinButtonEnabledByAdmin: !rowData.isJoinButtonEnabledByAdmin,
+        };
+        return prevData;
+      });
+    } catch (error) {
+      console.log(error);
+      setSuccess(false);
+      setResponse("Error in toggling Join Button");
+      setSnackBarOpen(true);
+    }
+  };
+
   useEffect(() => {
     if (Object.keys(columnFilters).length) {
-      const classDropdown = fetchDropDown(0);
-      const timeZoneDropdown = fetchDropDown(1);
-      const classStatusDropdown = fetchDropDown(2);
-      const currencyDropdown = fetchDropDown(3);
-      const countryDropdown = fetchDropDown(4);
-      const teachersDropdown = fetchDropDown(5);
-      const agentDropdown = fetchDropDown(6);
-      const categoryDropdown = fetchDropDown(7);
-      const subjectDropdown = fetchDropDown(8);
       setColumns([
+        {
+          title: "Toggle Class Join",
+          width: "1%",
+          align: "center",
+          editable: "never",
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+          field: "isJoinButtonEnabledByAdmin",
+          render: (rowData) => (
+            <Switch
+              onChange={() => toggleJoinButton(rowData)}
+              checked={rowData.isJoinButtonEnabledByAdmin}
+              name="isJoinButtonEnabledByAdmin"
+              inputProps={{ "aria-label": "secondary checkbox" }}
+            />
+          ),
+        },
         {
           title: "Customer Status",
           field: "classStatusId",
@@ -392,20 +434,6 @@ const CrmDetails = () => {
           hidden: !columnFilters["numberOfClassesBought"].selected,
           cellStyle: { whiteSpace: "nowrap" },
           headerStyle: { whiteSpace: "nowrap" },
-          editComponent: (props) => (
-            <TextField
-              type="number"
-              inputProps={{ min: "0", step: "1" }}
-              value={props.value}
-              onChange={(e) => {
-                if (e.target.value < 0) {
-                  return props.onChange(0);
-                } else {
-                  return props.onChange(e.target.value);
-                }
-              }}
-            />
-          ),
         },
         {
           title: "Number of Classes",
@@ -698,6 +726,7 @@ const CrmDetails = () => {
     try {
       const data = await getAllCustomerDetails();
       let details = data.data.result;
+      console.log(details);
       setData(details);
       setLoading(false);
     } catch (error) {
@@ -745,7 +774,6 @@ const CrmDetails = () => {
           columns={columns}
           data={data}
           options={{
-            // paging: false,
             pageSize: 20,
             pageSizeOptions: [20, 30, 40, 50, data.length],
             paginationType: "stepped",
@@ -794,6 +822,11 @@ const CrmDetails = () => {
                 }}
               />
             ),
+            Toolbar: (props) => (
+              <div>
+                <MTableToolbar {...props} />
+              </div>
+            ),
           }}
           editable={{
             onRowAdd: (newData) => {
@@ -823,36 +856,49 @@ const CrmDetails = () => {
             },
             onRowUpdate: (newData, oldData) => {
               let requestBody = {};
-              Object.keys(oldData).forEach((key) => {
+              Object.keys(newData).forEach((key) => {
                 if (!(newData[key] === oldData[key])) {
                   requestBody[key] = newData[key];
                 }
               });
-              return editCustomer({ ...requestBody, _id: oldData._id })
-                .then((fetchedData) => {
-                  if (fetchedData.data.status === "OK") {
-                    const dataUpdate = [...data];
-                    const index = oldData.tableData.id;
-                    dataUpdate[index] = newData;
-                    setData([...dataUpdate]);
-                    setSuccess(true);
-                    setResponse(fetchedData.data.message);
-                    setSnackBarOpen(true);
-                  } else {
+              if (
+                !Object.keys(requestBody).includes("numberOfClassesBought") ||
+                window.confirm("Are you sure in updating Classes paid")
+              ) {
+                return editCustomer({ ...requestBody, _id: oldData._id })
+                  .then((fetchedData) => {
+                    if (fetchedData.data.status === "OK") {
+                      const dataUpdate = [...data];
+                      const index = oldData.tableData.id;
+                      dataUpdate[index] = newData;
+                      setData([...dataUpdate]);
+                      setSuccess(true);
+                      setResponse(fetchedData.data.message);
+                      setSnackBarOpen(true);
+                    } else {
+                      setSuccess(false);
+                      setResponse(
+                        fetchedData.data.error ||
+                          "Something went wrong,Try again later"
+                      );
+                      setSnackBarOpen(true);
+                    }
+                  })
+                  .catch((err) => {
+                    console.error(err);
                     setSuccess(false);
-                    setResponse(
-                      fetchedData.data.error ||
-                        "Something went wrong,Try again later"
-                    );
+                    setResponse("Something went wrong,Try again later");
                     setSnackBarOpen(true);
-                  }
-                })
-                .catch((err) => {
-                  console.error(err);
+                  });
+              } else {
+                return new Promise((resolutionFunc, rejectionFunc) => {
+                  rejectionFunc(null);
+                }).catch((err) => {
                   setSuccess(false);
-                  setResponse("Something went wrong,Try again later");
+                  setResponse("Customer not updated");
                   setSnackBarOpen(true);
                 });
+              }
             },
             onRowDelete: (oldData) =>
               deleteUser(oldData._id)

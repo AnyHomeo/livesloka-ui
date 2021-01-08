@@ -37,7 +37,8 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "block",
     margin: "0 auto",
-    width: "90vw",
+    width: "80vw",
+    marginTop: "40px",
     backgroundColor: theme.palette.background.paper,
   },
 }));

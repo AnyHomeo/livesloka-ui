@@ -128,7 +128,7 @@ const Attedance = () => {
       </h3>
       <TableContainer
         component={Paper}
-        style={{ width: "90vw", margin: "0 auto", marginTop: "40px" }}
+        style={{ width: "80vw", margin: "0 auto", marginTop: "40px" }}
       >
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
