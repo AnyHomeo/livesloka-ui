@@ -67,7 +67,7 @@ const items = [
   {
     href: "/teacherDetails",
     icon: Trello,
-    title: "add teacher Detailss",
+    title: "Teacher",
   },
   {
     href: "/teacherSalaries",
@@ -207,7 +207,7 @@ NavBar.propTypes = {
 };
 
 NavBar.defaultProps = {
-  onMobileClose: () => { },
+  onMobileClose: () => {},
   openMobile: false,
 };
 
