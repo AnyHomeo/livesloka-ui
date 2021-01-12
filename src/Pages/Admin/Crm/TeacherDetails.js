@@ -26,9 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const status = [
-  "TeacherStatus",
-];
+const status = ["TeacherStatus"];
 
 export default function TeacherDetails() {
   const classes = useStyles();
@@ -59,13 +57,14 @@ export default function TeacherDetails() {
   }, [value]);
 
   return (
-    <>
+    <div style={{ width: "95%", margin: "0 auto", marginTop: "20px" }}>
       <MaterialTableAddFields
+        style={{ height: "100vh !important" }}
         name={item}
         status={status[0]}
         lookup={lookup}
         categoryLookup={categoryLookup}
       />
-    </>
+    </div>
   );
 }
