@@ -14,6 +14,7 @@ import {
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import MuiAlert from "@material-ui/lab/Alert";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import Tooltip from "@material-ui/core/Tooltip";
 import {
   AppBar,
@@ -25,11 +26,9 @@ import {
   Snackbar,
   Checkbox,
   Switch,
-  Chip,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import Comments from "./Comments";
-
 import "date-fns";
 import TableChartOutlinedIcon from "@material-ui/icons/TableChartOutlined";
 import Drawer from "@material-ui/core/Drawer";
@@ -85,16 +84,6 @@ const fetchDropDown = (index) => {
     });
   return obj;
 };
-
-const classDropdown = fetchDropDown(0);
-const timeZoneDropdown = fetchDropDown(1);
-const classStatusDropdown = fetchDropDown(2);
-const currencyDropdown = fetchDropDown(3);
-const countryDropdown = fetchDropDown(4);
-const teachersDropdown = fetchDropDown(5);
-const agentDropdown = fetchDropDown(6);
-const categoryDropdown = fetchDropDown(7);
-const subjectDropdown = fetchDropDown(8);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -204,9 +193,18 @@ const CrmDetails = () => {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [success, setSuccess] = useState(false);
   const [response, setResponse] = useState("");
-  const [selectedRow, setSelectedRow] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [columnFilters, setColumnFilters] = useState({});
+  const [classDropdown, setClassDropdown] = useState({});
+  const [timeZoneDropdown, setTimeZoneDropdown] = useState({});
+  const [classStatusDropdown, setClassStatusDropdown] = useState({});
+  const [currencyDropdown, setCurrencyDropdown] = useState({});
+  const [countryDropdown, setCountryDropdown] = useState({});
+  const [teachersDropdown, setTeachersDropdown] = useState({});
+  const [agentDropdown, setAgentDropdown] = useState({});
+  const [categoryDropdown, setCategoryDropdown] = useState({});
+  const [subjectDropdown, setSubjectDropdown] = useState({});
+  const [dropDownFilters, setDropDownFilters] = useState({});
 
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -219,6 +217,17 @@ const CrmDetails = () => {
         settings = data.data.result.columns;
       } else {
         settings = [];
+      }
+      if (data.data.result.dropDownFilters) {
+        setDropDownFilters(data.data.result.dropDownFilters);
+      } else {
+        setDropDownFilters({
+          classStatus: [],
+          timeZone: [],
+          class: [],
+          teacher: [],
+          country: [],
+        });
       }
       setColumnFilters({
         classStatusId: {
@@ -339,6 +348,18 @@ const CrmDetails = () => {
       setSnackBarOpen(true);
     }
   };
+
+  useEffect(() => {
+    setClassDropdown(fetchDropDown(0));
+    setTimeZoneDropdown(fetchDropDown(1));
+    setClassStatusDropdown(fetchDropDown(2));
+    setCurrencyDropdown(fetchDropDown(3));
+    setCountryDropdown(fetchDropDown(4));
+    setTeachersDropdown(fetchDropDown(5));
+    setAgentDropdown(fetchDropDown(6));
+    setCategoryDropdown(fetchDropDown(7));
+    setSubjectDropdown(fetchDropDown(8));
+  }, []);
 
   useEffect(() => {
     if (Object.keys(columnFilters).length) {
@@ -720,7 +741,18 @@ const CrmDetails = () => {
         },
       ]);
     }
-  }, [columnFilters]);
+  }, [
+    columnFilters,
+    classDropdown,
+    timeZoneDropdown,
+    classStatusDropdown,
+    currencyDropdown,
+    countryDropdown,
+    teachersDropdown,
+    agentDropdown,
+    categoryDropdown,
+    subjectDropdown,
+  ]);
 
   const fetchData = async () => {
     try {
@@ -784,9 +816,8 @@ const CrmDetails = () => {
             grouping: true,
             exportButton: true,
             rowStyle: (rowData) => ({
-              backgroundColor:
-                selectedRow === rowData.tableData.id ? "#3F51B5" : "#FFF",
-              color: selectedRow === rowData.tableData.id ? "#fff" : "#000",
+              backgroundColor: "#FFF",
+              color: "#000",
             }),
           }}
           actions={[
@@ -794,8 +825,7 @@ const CrmDetails = () => {
               icon: () => (
                 <SmsOutlinedIcon
                   style={{
-                    color:
-                      selectedRow === rowData.tableData.id ? "#fff" : "#3f51B5",
+                    color: "#3f51B5",
                   }}
                 />
               ),
@@ -825,6 +855,76 @@ const CrmDetails = () => {
             Toolbar: (props) => (
               <div>
                 <MTableToolbar {...props} />
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                  }}
+                >
+                  {[
+                    classStatusDropdown,
+                    timeZoneDropdown,
+                    classDropdown,
+                    teachersDropdown,
+                    countryDropdown,
+                  ].map((dropdown, i) => (
+                    <div
+                      style={{
+                        width: "16%",
+                        margin: "6px",
+                        boxSizing: "border-box",
+                      }}
+                    >
+                      <Autocomplete
+                        multiple
+                        size="small"
+                        id="tags-standard"
+                        options={Object.keys(dropdown).map((id) => ({
+                          id,
+                          name: dropdown[id],
+                        }))}
+                        value={
+                          dropDownFilters[
+                            [
+                              "classStatus",
+                              "timeZone",
+                              "class",
+                              "teacher",
+                              "country",
+                            ][i]
+                          ]
+                        }
+                        onChange={(e, arr) => {
+                          console.log(arr);
+                        }}
+                        limitTags={1}
+                        getOptionLabel={(option) => option.name}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            variant="outlined"
+                            label={
+                              [
+                                "Class Status",
+                                "Time Zone",
+                                "Class",
+                                "Teacher",
+                                "Country",
+                              ][i]
+                            }
+                          />
+                        )}
+                      />
+                    </div>
+                  ))}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ margin: "5px" }}
+                  >
+                    Apply Filter
+                  </Button>
+                </div>
               </div>
             ),
           }}
@@ -923,7 +1023,7 @@ const CrmDetails = () => {
 
       <Dialog
         open={open}
-        fullScreen
+        fullWidth
         onClose={() => setOpen(false)}
         aria-labelledby="form-dialog-title"
         TransitionComponent={Transition}

@@ -24,6 +24,7 @@ import DashboardLayout from "../DashboardLayout";
 import Dashboard from "../Pages/reports";
 import NotFoundView from "../Pages/NotFoundView";
 import TeacherSalary from "../Pages/TeacherSalary";
+import TeacherSalaries from "../Pages/Admin/Crm/TeacherSalaries";
 function Routes() {
   return (
     <>
@@ -91,6 +92,11 @@ function Routes() {
               path="/zoom/dashboard"
               exact
               component={MeetingDashboard}
+            />
+            <AdminRoute
+              path="/teacherSalaries"
+              exact
+              component={TeacherSalaries}
             />
             <AdminRoute path="/test" exact component={ZoomAccountDashboard} />
           </DashboardLayout>
