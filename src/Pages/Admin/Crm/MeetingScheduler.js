@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   TextField,
@@ -14,49 +14,49 @@ import {
   Select,
   InputLabel,
   MenuItem,
-} from "@material-ui/core/";
-import SaveIcon from "@material-ui/icons/Save";
-import { makeStyles } from "@material-ui/core/styles";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import moment from "moment";
-import LinkIcon from "@material-ui/icons/Link";
+} from '@material-ui/core/';
+import SaveIcon from '@material-ui/icons/Save';
+import { makeStyles } from '@material-ui/core/styles';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import moment from 'moment';
+import LinkIcon from '@material-ui/icons/Link';
 
-import Snackbar from "@material-ui/core/Snackbar";
-import Alert from "@material-ui/lab/Alert";
-import Axios from "axios";
-import AvailableTimeSlotChip from "../../../Components/AvailableTimeSlotChip";
-import { getData } from "../../../Services/Services";
-import "date-fns";
-import DateFnsUtils from "@date-io/date-fns";
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
+import Axios from 'axios';
+import AvailableTimeSlotChip from '../../../Components/AvailableTimeSlotChip';
+import { getData } from '../../../Services/Services';
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
-} from "@material-ui/pickers";
+} from '@material-ui/pickers';
 
 let days = [
-  "MONDAY",
-  "TUESDAY",
-  "WEDNESDAY",
-  "THURSDAY",
-  "FRIDAY",
-  "SATURDAY",
-  "SUNDAY",
+  'MONDAY',
+  'TUESDAY',
+  'WEDNESDAY',
+  'THURSDAY',
+  'FRIDAY',
+  'SATURDAY',
+  'SUNDAY',
 ];
 
 const useStyles = makeStyles((theme) => ({
   saveButton: {
-    marginTop: "1.5rem",
-    marginBottom: "2rem",
+    marginTop: '1.5rem',
+    marginBottom: '2rem',
   },
   Startdate: {
-    marginRight: "10px",
+    marginRight: '10px',
   },
   Starttime: {
-    marginRight: "10px",
+    marginRight: '10px',
   },
   chips: {
-    display: "flex",
-    flexWrap: "wrap",
+    display: 'flex',
+    flexWrap: 'wrap',
   },
   chip: {
     margin: 2,
@@ -73,36 +73,38 @@ const MeetingScheduler = () => {
   };
 
   const [personName, setPersonName] = useState([]);
-  const [teacher, setInputTeacher] = useState("");
+  const [teacher, setInputTeacher] = useState('');
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [demo, setDemo] = useState(false);
-  const [radioday, setRadioday] = useState("");
+  const [onetoone, setonetoone] = useState(false);
+  const [onetomany, setonetomany] = useState(false);
+  const [radioday, setRadioday] = useState('');
   const [teacherName, setTeacherName] = useState([]);
   const [studentName, setStudentName] = useState([]);
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const [timeSlotState, setTimeSlotState] = useState([]);
-  const [zoomEmail, setZoomEmail] = useState("");
-  const [zoomLink, setZoomLink] = useState("");
+  const [zoomEmail, setZoomEmail] = useState('');
+  const [zoomLink, setZoomLink] = useState('');
   const [zoomAccounts, setZoomAccounts] = useState([]);
   const [teacherNameFullObject, setTeacherNameFullObject] = useState({
-    id: "",
-    TeacherName: "",
+    id: '',
+    TeacherName: '',
   });
   const [studentNamesFullObject, setStudentNamesFullObject] = useState([]);
-  const [alert, setAlert] = useState("");
-  const [alertColor, setAlertColor] = useState("");
+  const [alert, setAlert] = useState('');
+  const [alertColor, setAlertColor] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const [subjectNames, setSubjectNames] = useState("");
-  const [subjectNameId, setSubjectNameId] = useState("");
-  const [className, setClassName] = useState("");
+  const [subjectNames, setSubjectNames] = useState('');
+  const [subjectNameId, setSubjectNameId] = useState('');
+  const [className, setClassName] = useState('');
 
   const handleDayChange = (event) => {
     setRadioday(event.target.value);
   };
 
   const handleSuccessClose = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       return;
     }
     setSuccessOpen(false);
@@ -147,7 +149,7 @@ const MeetingScheduler = () => {
   };
 
   const getZoomAccounts = async () => {
-    getData("Zoom Account")
+    getData('Zoom Account')
       .then((data) => {
         setZoomAccounts(data.data.result);
       })
@@ -171,11 +173,11 @@ const MeetingScheduler = () => {
     days.forEach((day) => {
       formData[day.toLowerCase()] = timeSlotState
         .filter((slot) => slot.startsWith(day))
-        .map((slot) => slot.split("!@#$%^&*($%^")[0]);
+        .map((slot) => slot.split('!@#$%^&*($%^')[0]);
     });
 
-    let newZoomLink = "";
-    let newZoomJwt = "";
+    let newZoomLink = '';
+    let newZoomJwt = '';
     try {
       const getZoomLink = await Axios.post(
         `${process.env.REACT_APP_API_KEY}/link/getzoomlink`,
@@ -193,30 +195,35 @@ const MeetingScheduler = () => {
           teacher: teacher,
           students: personName,
           demo: demo,
+          OneToOne: onetoone,
+          OneToMany: onetomany,
           subject: subjectNameId,
-          startDate: moment(selectedDate).format("DD-MM-YYYY"),
+          startDate: moment(selectedDate).format('DD-MM-YYYY'),
           classname: className,
           Jwtid: newZoomJwt,
           timeSlotState,
         };
         try {
+          console.log(formData)
           const res = await Axios.post(
             `${process.env.REACT_APP_API_KEY}/schedule`,
             formData
           );
           setDemo(false);
-          setPersonName("");
-          setZoomLink("");
-          setPersonName("");
-          setSubjectNameId("");
+          setonetoone(false);
+          setonetomany(false);
+          setPersonName('');
+          setZoomLink('');
+          setPersonName('');
+          setSubjectNameId('');
           setSuccessOpen(true);
-          setAlert(res.data.message);
-          setAlertColor("success");
+          //setAlert(res.data.message);
+          setAlertColor('success');
           setLoading(false);
           setTeacherNameFullObject({});
           setStudentNamesFullObject([]);
-          setRadioday("");
-          setClassName("");
+          setRadioday('');
+          setClassName('');
           setTimeSlotState([]);
           setAvailableTimeSlots([]);
         } catch (error) {
@@ -224,7 +231,7 @@ const MeetingScheduler = () => {
           if (error.response) {
             setSuccessOpen(true);
             setAlert(error.response.data.error);
-            setAlertColor("error");
+            setAlertColor('error');
             setLoading(false);
           }
         }
@@ -233,7 +240,7 @@ const MeetingScheduler = () => {
       console.log(error.response);
       setSuccessOpen(true);
       setAlert(error.response.data.message);
-      setAlertColor("error");
+      setAlertColor('error');
       setLoading(false);
     }
   };
@@ -244,7 +251,7 @@ const MeetingScheduler = () => {
         open={successOpen}
         autoHideDuration={6000}
         onClose={handleSuccessClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
       >
         <Alert onClose={handleSuccessClose} severity={alertColor}>
           {alert}
@@ -254,16 +261,16 @@ const MeetingScheduler = () => {
       <form onSubmit={submitForm}>
         <h1
           className="heading"
-          style={{ fontSize: "20px", marginTop: "20px", textAlign: "center" }}
+          style={{ fontSize: '20px', marginTop: '20px', textAlign: 'center' }}
         >
           Schedule A Meeting
         </h1>
-        <Grid container style={{ width: "100%" }}>
+        <Grid container style={{ width: '100%' }}>
           <Grid item xs={false} md={4} />
           <Grid item xs={12} md={4}>
             {teacherName.length ? (
               <Autocomplete
-                style={{ width: "60%", margin: "0 auto" }}
+                style={{ width: '60%', margin: '0 auto' }}
                 options={teacherName}
                 value={teacherNameFullObject}
                 getOptionLabel={(option) => option.TeacherName}
@@ -282,8 +289,8 @@ const MeetingScheduler = () => {
                 )}
               />
             ) : (
-              ""
-            )}{" "}
+                ''
+              )}{' '}
           </Grid>
           <Grid item xs={12} md={4} />
           <Grid item xs={12} md={4} />
@@ -291,17 +298,16 @@ const MeetingScheduler = () => {
             item
             xs={12}
             md={4}
-            style={{ display: "flex", justifyContent: "center" }}
+            style={{ display: 'flex', justifyContent: 'center' }}
           >
             {studentName.length && studentName[0].firstName ? (
               <Autocomplete
                 multiple
-                style={{ width: "60%", margin: "0 auto" }}
+                style={{ width: '60%', margin: '0 auto' }}
                 options={studentName}
                 value={studentNamesFullObject}
                 getOptionLabel={(name) =>
-                  `${name.firstName} ${name.lastName ? name.lastName : ""}${
-                    name.subject ? `(${name.subject.subjectName})` : ""
+                  `${name.firstName} ${name.lastName ? name.lastName : ''}${name.subject ? `(${name.subject.subjectName})` : ''
                   }`
                 }
                 onChange={(event, value) => {
@@ -323,22 +329,22 @@ const MeetingScheduler = () => {
                 )}
               />
             ) : (
-              ""
-            )}
+                ''
+              )}
           </Grid>
 
           <Grid item xs={12} md={4} />
         </Grid>
         <div
           style={{
-            alignItems: "center",
-            display: "flex",
-            flexDirection: "column",
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
           <div className="date-checkbox">
-            <FormControl component="fieldset" style={{ marginTop: "50px" }}>
-              <FormLabel component="legend" style={{ textAlign: "center" }}>
+            <FormControl component="fieldset" style={{ marginTop: '50px' }}>
+              <FormLabel component="legend" style={{ textAlign: 'center' }}>
                 Dates
               </FormLabel>
               <RadioGroup
@@ -347,7 +353,7 @@ const MeetingScheduler = () => {
                 name="gender1"
                 value={radioday}
                 onChange={handleDayChange}
-                style={{ display: "flex", flexDirection: "row" }}
+                style={{ display: 'flex', flexDirection: 'row' }}
               >
                 {days.map((day) => (
                   <FormControlLabel
@@ -362,10 +368,10 @@ const MeetingScheduler = () => {
 
           <div
             style={{
-              display: "flex",
-              justifyContent: "center",
-              flexDirection: "column",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'center',
+              flexDirection: 'column',
+              alignItems: 'center',
             }}
           >
             {
@@ -384,10 +390,10 @@ const MeetingScheduler = () => {
           </div>
           <div
             style={{
-              display: "flex",
-              justifyContent: "center",
-              flexDirection: "column",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'center',
+              flexDirection: 'column',
+              alignItems: 'center',
             }}
           >
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -400,15 +406,15 @@ const MeetingScheduler = () => {
                 value={selectedDate}
                 onChange={handleDateChange}
                 KeyboardButtonProps={{
-                  "aria-label": "change date",
+                  'aria-label': 'change date',
                 }}
               />
             </MuiPickersUtilsProvider>
             <FormControl
               style={{
-                maxWidth: "400px",
-                minWidth: "300px",
-                marginTop: "10px",
+                maxWidth: '400px',
+                minWidth: '300px',
+                marginTop: '10px',
               }}
               variant="outlined"
               className={classes.formControl}
@@ -432,9 +438,9 @@ const MeetingScheduler = () => {
             </FormControl>
             <FormControl
               style={{
-                maxWidth: "400px",
-                minWidth: "300px",
-                marginTop: "10px",
+                maxWidth: '400px',
+                minWidth: '300px',
+                marginTop: '10px',
               }}
               variant="outlined"
             >
@@ -446,14 +452,40 @@ const MeetingScheduler = () => {
                 value={className}
                 onChange={(e) => setClassName(e.target.value)}
                 style={{
-                  maxWidth: "400px",
-                  minWidth: "300px",
-                  marginTop: "10px",
+                  maxWidth: '400px',
+                  minWidth: '300px',
+                  marginTop: '10px',
                 }}
               />
             </FormControl>
             <FormControlLabel
-              style={{ marginTop: "20px" }}
+              style={{ marginTop: '20px' }}
+              control={
+                <Checkbox
+                  checked={onetoone}
+                  onChange={(event) => setonetoone(event.target.checked)}
+                  name="OneToOne"
+                  color="primary"
+                />
+
+              }
+              label="OneToOne"
+            />
+            <FormControlLabel
+              style={{ marginTop: '20px' }}
+              control={
+                <Checkbox
+                  checked={onetomany}
+                  onChange={(event) => setonetomany(event.target.checked)}
+                  name="OneToMany"
+                  color="primary"
+                />
+
+              }
+              label="OneToMany"
+            />
+            <FormControlLabel
+              style={{ marginTop: '20px' }}
               control={
                 <Checkbox
                   checked={demo}
@@ -469,17 +501,17 @@ const MeetingScheduler = () => {
             {loading ? (
               <CircularProgress />
             ) : (
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                type="submit"
-                className={classes.button}
-                startIcon={<SaveIcon />}
-              >
-                Save
-              </Button>
-            )}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  type="submit"
+                  className={classes.button}
+                  startIcon={<SaveIcon />}
+                >
+                  Save
+                </Button>
+              )}
           </div>
         </div>
       </form>

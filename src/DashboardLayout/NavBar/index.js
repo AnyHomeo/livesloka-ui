@@ -64,6 +64,16 @@ const items = [
     title: "Scheduler",
   },
   {
+    href: "/teacherDetails",
+    icon: Trello,
+    title: "add teacher Detailss",
+  },
+  {
+    href: "/teacherSalaries",
+    icon: DollarSign,
+    title: "Teacher Salaries",
+  },
+  {
     href: "/reset/password",
     icon: LockIcon,
     title: "Reset Password",
@@ -191,7 +201,7 @@ NavBar.propTypes = {
 };
 
 NavBar.defaultProps = {
-  onMobileClose: () => {},
+  onMobileClose: () => { },
   openMobile: false,
 };
 
