@@ -49,29 +49,31 @@ const AmountChart = ({ dailyDataline, dataa, className, ...rest }) => {
   let lessthan1day = [];
 
   let tatalallamounttest = [];
-  console.log(dailyDataline);
   if (dailyDataline) {
     Object.keys(dailyDataline).map((data) => {
+      let testData = data;
       if (data.startsWith(formatedDate)) {
-        if (dailyDataline[data].responses.length > 1) {
-          dailyDataline[data].responses.map((data) => {
+        dailyDataline[data].responses.map((data) => {
+          if (testData === moment(data.createdAt).format("MMMM D YYYY")) {
             if (data.paymentData !== null) {
               morethan1day.push(
                 parseInt(data.paymentData.transactions[0].amount.total)
               );
+              console.log(morethan1day);
             }
-            newTestDates.push(moment(data.createdAt).format("MMM Do YYYY"));
-          });
-        } else {
-          dailyDataline[data].responses.map((data) => {
+          } else {
             if (data.paymentData !== null) {
               lessthan1day.push(
                 parseInt(data.paymentData.transactions[0].amount.total)
               );
             }
-            newTestDates.push(moment(data.createdAt).format("MMM Do YYYY"));
-          });
-        }
+          }
+          // if (dailyDataDay === moment(data.createdAt).format("MMMM D YYYY")) {
+          //   console.log(dailyDataDay);
+          // }
+
+          newTestDates.push(moment(data.createdAt).format("MMM Do YYYY"));
+        });
       }
     });
   }
