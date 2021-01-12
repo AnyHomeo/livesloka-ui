@@ -20,7 +20,8 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const AmountChart = ({ dataa, className, ...rest }) => {
+const AmountChart = ({ dailyDataline, dataa, className, ...rest }) => {
+  // console.log(dailyDataline);
   const classes = useStyles();
 
   const theme = useTheme();
@@ -37,36 +38,67 @@ const AmountChart = ({ dataa, className, ...rest }) => {
     setUsdVal(data);
   };
 
-  //   {moment(data.createdAt).format("MMM Do YYYY")}
+  const mydate = new Date();
+  let formatedDate = moment(mydate).format("MMMM");
 
-  let AmountArray = [];
-  let Dates = [];
-  if (dataa) {
-    dataa.data.result.map((data) => {
-      if (data.paymentData !== null) {
-        AmountArray.push(
-          parseInt(data.paymentData.transactions[0].amount.total) *
-            (usdVal && usdVal.data.USD_INR)
-        );
+  let newTestArray = [];
+  let newTestDates = [];
 
-        Dates.push(moment(data.createdAt).format("MMM Do YYYY"));
+  let morethan1day = [];
+
+  let lessthan1day = [];
+
+  let tatalallamounttest = [];
+  console.log(dailyDataline);
+  if (dailyDataline) {
+    Object.keys(dailyDataline).map((data) => {
+      if (data.startsWith(formatedDate)) {
+        if (dailyDataline[data].responses.length > 1) {
+          dailyDataline[data].responses.map((data) => {
+            if (data.paymentData !== null) {
+              morethan1day.push(
+                parseInt(data.paymentData.transactions[0].amount.total)
+              );
+            }
+            newTestDates.push(moment(data.createdAt).format("MMM Do YYYY"));
+          });
+        } else {
+          dailyDataline[data].responses.map((data) => {
+            if (data.paymentData !== null) {
+              lessthan1day.push(
+                parseInt(data.paymentData.transactions[0].amount.total)
+              );
+            }
+            newTestDates.push(moment(data.createdAt).format("MMM Do YYYY"));
+          });
+        }
       }
     });
   }
 
-  console.log(Dates);
+  let totaltestingsuum = morethan1day.reduce(function (a, b) {
+    return a + b;
+  }, 0);
+
+  let newtotaldates = newTestDates.filter(function (item, index, inputArray) {
+    return inputArray.indexOf(item) == index;
+  });
+
+  tatalallamounttest.push(totaltestingsuum);
+
+  let alllllnewww = tatalallamounttest.concat(lessthan1day);
 
   const data = {
     datasets: [
       {
-        data: AmountArray,
+        data: alllllnewww,
         // backgroundColor: ["#27ae60", "#27ae60", "#27ae60"],
         borderWidth: 4,
         borderColor: "#27ae60",
         hoverBorderColor: "#27ae60",
       },
     ],
-    labels: Dates,
+    labels: newtotaldates.reverse(),
   };
 
   const options = {

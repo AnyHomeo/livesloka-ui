@@ -7,6 +7,7 @@ import TasksProgress from "./TasksProgress";
 import TotalCustomers from "./TotalCustomers";
 import TotalProfit from "./TotalProfit";
 import TrafficByDevice from "./TrafficByDevice";
+import moment from "moment";
 import axios from "axios";
 import AmountChart from "./AmountChart";
 const useStyles = makeStyles((theme) => ({
@@ -30,6 +31,9 @@ const Dashboard = () => {
   const [totalTransactions, setTotalTransactions] = useState();
   const [successTrx, setSuccessTrx] = useState();
   const [failedTrx, setFailedTrx] = useState();
+
+  const [dailyDataLine, setDailyDataLine] = useState();
+
   const getAllTransactions = async () => {
     let amount = 0;
     let failedtransactions = 0;
@@ -38,22 +42,66 @@ const Dashboard = () => {
       `${process.env.REACT_APP_API_KEY}/payment/get/alltransactions/`
     );
     console.log(data);
-    setTotalTransactions(data && data.data.result.length);
 
     setAllData(data);
-    if (data) {
-      data.data.result.map((data) => {
-        if (data.paymentData !== null) {
-          successtransactions++;
-          setSuccessTrx(successtransactions);
-          amount += parseInt(data.paymentData.transactions[0].amount.total);
-          setTotalAmount(amount);
-        } else {
-          failedtransactions++;
-          setFailedTrx(failedtransactions);
+    // if (data) {
+    //   data.data.result.map((data) => {
+    //     if (data.paymentData !== null) {
+    //       successtransactions++;
+    //       setSuccessTrx(successtransactions);
+    //       amount += parseInt(data.paymentData.transactions[0].amount.total);
+    //       setTotalAmount(amount);
+    //     } else {
+    //       failedtransactions++;
+    //       setFailedTrx(failedtransactions);
+    //     }
+    //   });
+    // }
+
+    // Daily data and Monthly Data
+
+    let dailyData = {};
+    let monthlyData = {};
+
+    data &&
+      data.data.result.forEach((val) => {
+        let count = 0;
+        if (val.paymentData !== null) {
+          const date = moment(val.paymentData.create_time).format(
+            "MMMM D YYYY"
+          );
+          dailyData[date] = dailyData[date] || {
+            count: 0,
+            responses: [],
+          };
+          dailyData[date][val.type] = dailyData[date][val.type] || 0;
+          dailyData[date][val.type]++;
+          dailyData[date].responses.push(val);
         }
       });
-    }
+    setDailyDataLine(dailyData);
+
+    data &&
+      data.data.result.forEach((item) => {
+        let month = moment(item.createdAt).format("MMMM YYYY");
+        monthlyData[month] = monthlyData[month] || { count: 0, responses: [] };
+        monthlyData[month].count++;
+        monthlyData[month].responses.push(item);
+      });
+
+    monthlyData["January 2021"].responses.map((data) => {
+      if (data.paymentData !== null) {
+        successtransactions++;
+        setSuccessTrx(successtransactions);
+        amount += parseInt(data.paymentData.transactions[0].amount.total);
+        setTotalAmount(amount);
+      } else {
+        failedtransactions++;
+        setFailedTrx(failedtransactions);
+      }
+    });
+
+    setTotalTransactions(monthlyData["January 2021"].responses.length);
   };
 
   return (
@@ -61,7 +109,7 @@ const Dashboard = () => {
       <Container maxWidth={false}>
         <Grid container spacing={3}>
           <Grid item lg={3} sm={6} xl={3} xs={12}>
-            <Budget amount={totalAmount} />
+            <Budget dataa={allData} amount={totalAmount} />
           </Grid>
           <Grid item lg={3} sm={6} xl={3} xs={12}>
             <TotalCustomers total={totalTransactions} />
@@ -73,7 +121,7 @@ const Dashboard = () => {
             <TotalProfit failed={failedTrx} />
           </Grid>
           <Grid item lg={8} md={6} xl={3} xs={12}>
-            <AmountChart dataa={allData} />
+            <AmountChart dailyDataline={dailyDataLine} dataa={allData} />
           </Grid>
           <Grid item lg={4} md={6} xl={3} xs={12}>
             <TrafficByDevice
