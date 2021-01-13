@@ -458,32 +458,34 @@ const MeetingScheduler = () => {
                 }}
               />
             </FormControl>
-            <FormControlLabel
-              style={{ marginTop: '20px' }}
-              control={
-                <Checkbox
-                  checked={onetoone}
-                  onChange={(event) => setonetoone(event.target.checked)}
-                  name="OneToOne"
-                  color="primary"
-                />
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+              <FormControlLabel
+                style={{ marginTop: '20px' }}
+                control={
+                  <Checkbox
+                    checked={onetoone}
+                    onChange={(event) => setonetoone(event.target.checked)}
+                    name="OneToOne"
+                    color="primary"
+                  />
 
-              }
-              label="OneToOne"
-            />
-            <FormControlLabel
-              style={{ marginTop: '20px' }}
-              control={
-                <Checkbox
-                  checked={onetomany}
-                  onChange={(event) => setonetomany(event.target.checked)}
-                  name="OneToMany"
-                  color="primary"
-                />
+                }
+                label="One to one ?"
+              />
+              <FormControlLabel
+                style={{ marginTop: '20px' }}
+                control={
+                  <Checkbox
+                    checked={onetomany}
+                    onChange={(event) => setonetomany(event.target.checked)}
+                    name="OneToMany"
+                    color="primary"
+                  />
 
-              }
-              label="OneToMany"
-            />
+                }
+                label="One to many ?"
+              />
+            </div>
             <FormControlLabel
               style={{ marginTop: '20px' }}
               control={

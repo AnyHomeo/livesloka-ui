@@ -72,6 +72,8 @@ const EditSchedule = () => {
   const [teacher, setInputTeacher] = useState("");
   const [successOpen, setSuccessOpen] = useState(false);
   const [demo, setDemo] = useState(false);
+  const [onetoone, setonetoone] = useState(false);
+  const [onetomany, setonetomany] = useState(false);
   const [radioday, setRadioday] = useState("");
   const [teacherName, setTeacherName] = useState([]);
   const [studentName, setStudentName] = useState([]);
@@ -193,9 +195,8 @@ const EditSchedule = () => {
       setSubjectNameId(subject || "");
       setSelectedDate(
         startDate
-          ? `${startDate.split("-")[1]}-${startDate.split("-")[0]}-${
-              startDate.split("-")[2]
-            }`
+          ? `${startDate.split("-")[1]}-${startDate.split("-")[0]}-${startDate.split("-")[2]
+          }`
           : new Date()
       );
       setPersonName(students);
@@ -247,6 +248,8 @@ const EditSchedule = () => {
       teacher: teacher,
       students: personName.map((student) => student._id),
       demo: demo,
+      OneToOne: onetoone,
+      oneToMany: onetomany,
       subject: subjectNameId,
       startDate: moment(selectedDate).format("DD-MM-YYYY"),
     };
@@ -352,8 +355,7 @@ const EditSchedule = () => {
                 options={studentName}
                 getOptionSelected={(option, value) => option._id === value._id}
                 getOptionLabel={(option) =>
-                  `${option.firstName ? option.firstName : ""} ${
-                    option.lastName ? option.lastName : ""
+                  `${option.firstName ? option.firstName : ""} ${option.lastName ? option.lastName : ""
                   }`
                 }
                 multiple
@@ -529,6 +531,33 @@ const EditSchedule = () => {
                 marginTop: "10px",
               }}
             />
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+              <FormControlLabel
+                style={{ marginTop: '20px' }}
+                control={
+                  <Checkbox
+                    checked={onetoone}
+                    onChange={(event) => setonetoone(event.target.checked)}
+                    name="OneToOne"
+                    color="primary"
+                  />
+
+                }
+                label="One to one ?"
+              />
+              <FormControlLabel
+                style={{ marginTop: '20px' }}
+                control={
+                  <Checkbox
+                    checked={onetomany}
+                    onChange={(event) => setonetomany(event.target.checked)}
+                    name="OneToMany"
+                    color="primary"
+                  />
+
+                }
+                label="One to many ?"
+              /></div>
             <FormControlLabel
               style={{ marginTop: "20px" }}
               control={
@@ -546,17 +575,17 @@ const EditSchedule = () => {
             {loading ? (
               <CircularProgress />
             ) : (
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                type="submit"
-                className={classes.button}
-                startIcon={<SaveIcon />}
-              >
-                Save Changes
-              </Button>
-            )}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  type="submit"
+                  className={classes.button}
+                  startIcon={<SaveIcon />}
+                >
+                  Save Changes
+                </Button>
+              )}
           </div>
         </div>
       </form>
