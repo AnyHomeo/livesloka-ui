@@ -289,8 +289,8 @@ const MeetingScheduler = () => {
                 )}
               />
             ) : (
-              ""
-            )}{" "}
+                ""
+              )}{" "}
           </Grid>
           <Grid item xs={12} md={4} />
           <Grid item xs={12} md={4} />
@@ -307,8 +307,7 @@ const MeetingScheduler = () => {
                 options={studentName}
                 value={studentNamesFullObject}
                 getOptionLabel={(name) =>
-                  `${name.firstName} ${name.lastName ? name.lastName : ""}${
-                    name.subject ? `(${name.subject.subjectName})` : ""
+                  `${name.firstName} ${name.lastName ? name.lastName : ""}${name.subject ? `(${name.subject.subjectName})` : ""
                   }`
                 }
                 onChange={(event, value) => {
@@ -330,8 +329,8 @@ const MeetingScheduler = () => {
                 )}
               />
             ) : (
-              ""
-            )}
+                ""
+              )}
           </Grid>
 
           <Grid item xs={12} md={4} />
@@ -459,30 +458,34 @@ const MeetingScheduler = () => {
                 }}
               />
             </FormControl>
-            <FormControlLabel
-              style={{ marginTop: "20px" }}
-              control={
-                <Checkbox
-                  checked={onetoone}
-                  onChange={(event) => setonetoone(event.target.checked)}
-                  name="OneToOne"
-                  color="primary"
-                />
-              }
-              label="OneToOne"
-            />
-            <FormControlLabel
-              style={{ marginTop: "20px" }}
-              control={
-                <Checkbox
-                  checked={onetomany}
-                  onChange={(event) => setonetomany(event.target.checked)}
-                  name="OneToMany"
-                  color="primary"
-                />
-              }
-              label="OneToMany"
-            />
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+              <FormControlLabel
+                style={{ marginTop: '20px' }}
+                control={
+                  <Checkbox
+                    checked={onetoone}
+                    onChange={(event) => setonetoone(event.target.checked)}
+                    name="OneToOne"
+                    color="primary"
+                  />
+
+                }
+                label="One to one ?"
+              />
+              <FormControlLabel
+                style={{ marginTop: '20px' }}
+                control={
+                  <Checkbox
+                    checked={onetomany}
+                    onChange={(event) => setonetomany(event.target.checked)}
+                    name="OneToMany"
+                    color="primary"
+                  />
+
+                }
+                label="One to many ?"
+              />
+            </div>
             <FormControlLabel
               style={{ marginTop: "20px" }}
               control={
@@ -500,17 +503,17 @@ const MeetingScheduler = () => {
             {loading ? (
               <CircularProgress />
             ) : (
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                type="submit"
-                className={classes.button}
-                startIcon={<SaveIcon />}
-              >
-                Save
-              </Button>
-            )}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  type="submit"
+                  className={classes.button}
+                  startIcon={<SaveIcon />}
+                >
+                  Save
+                </Button>
+              )}
           </div>
         </div>
       </form>
