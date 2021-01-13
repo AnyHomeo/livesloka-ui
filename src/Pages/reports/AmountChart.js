@@ -25,80 +25,48 @@ const AmountChart = ({ dailyDataline, dataa, className, ...rest }) => {
   const classes = useStyles();
 
   const theme = useTheme();
-  const [usdVal, setUsdVal] = useState();
+  const [dailyChartdata, setDailyChartdata] = useState();
 
+  const [TotalSum, setTotalSum] = useState([]);
+  const [totalDates, setTotalDates] = useState([]);
+  const usdVal = localStorage.getItem("USD");
   useEffect(() => {
-    getUsdVal();
+    getDailyChartData();
   }, []);
 
-  const getUsdVal = async () => {
-    const data = await axios.get(
-      "https://free.currconv.com/api/v7/convert?q=USD_INR,INR_USD&compact=ultra&apiKey=eaff87f1207bb43ddfa6"
+  let finalTotalAmount = [];
+  let finalDates = [];
+
+  const getDailyChartData = async () => {
+    const {
+      data: { result },
+    } = await axios.get(
+      `${process.env.REACT_APP_API_KEY}/payment/get/dailydatagraph/`
     );
-    setUsdVal(data);
-  };
 
-  const mydate = new Date();
-  let formatedDate = moment(mydate).format("MMMM");
-
-  let newTestArray = [];
-  let newTestDates = [];
-
-  let morethan1day = [];
-
-  let lessthan1day = [];
-
-  let tatalallamounttest = [];
-  console.log(dailyDataline);
-  if (dailyDataline) {
-    Object.keys(dailyDataline).map((data) => {
-      if (data.startsWith(formatedDate)) {
-        if (dailyDataline[data].responses.length > 1) {
-          dailyDataline[data].responses.map((data) => {
-            if (data.paymentData !== null) {
-              morethan1day.push(
-                parseInt(data.paymentData.transactions[0].amount.total)
-              );
-            }
-            newTestDates.push(moment(data.createdAt).format("MMM Do YYYY"));
-          });
-        } else {
-          dailyDataline[data].responses.map((data) => {
-            if (data.paymentData !== null) {
-              lessthan1day.push(
-                parseInt(data.paymentData.transactions[0].amount.total)
-              );
-            }
-            newTestDates.push(moment(data.createdAt).format("MMM Do YYYY"));
-          });
-        }
-      }
+    Object.keys(result).map((data) => {
+      finalTotalAmount.push(result[data].totalSum);
+      finalDates.push(result[data].dates.toString());
     });
-  }
-
-  let totaltestingsuum = morethan1day.reduce(function (a, b) {
-    return a + b;
-  }, 0);
-
-  let newtotaldates = newTestDates.filter(function (item, index, inputArray) {
-    return inputArray.indexOf(item) == index;
-  });
-
-  tatalallamounttest.push(totaltestingsuum);
-
-  let alllllnewww = tatalallamounttest.concat(lessthan1day);
+    setTotalSum(finalTotalAmount);
+    setTotalDates(finalDates);
+  };
 
   const data = {
     datasets: [
       {
-        data: alllllnewww,
+        data:
+          TotalSum &&
+          TotalSum.map(function (x) {
+            return x * usdVal;
+          }),
         // backgroundColor: ["#27ae60", "#27ae60", "#27ae60"],
         borderWidth: 4,
         borderColor: "#27ae60",
         hoverBorderColor: "#27ae60",
       },
     ],
-    labels: newtotaldates.reverse(),
+    labels: totalDates && totalDates,
   };
 
   const options = {

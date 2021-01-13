@@ -24,6 +24,7 @@ import {
   Info,
   BarChart,
   Video,
+  BarChart2,
 } from "react-feather";
 import NavItem from "./NavItem";
 const user = {
@@ -66,7 +67,7 @@ const items = [
   {
     href: "/teacherDetails",
     icon: Trello,
-    title: "add teacher Detailss",
+    title: "Teacher",
   },
   {
     href: "/teacherSalaries",
@@ -82,6 +83,11 @@ const items = [
     href: "/zoom-dashboard",
     icon: Video,
     title: "Zoom Dashboard",
+  },
+  {
+    href: "/teacher-salary",
+    icon: BarChart2,
+    title: "Teachers Salary",
   },
 ];
 
@@ -201,7 +207,7 @@ NavBar.propTypes = {
 };
 
 NavBar.defaultProps = {
-  onMobileClose: () => { },
+  onMobileClose: () => {},
   openMobile: false,
 };
 

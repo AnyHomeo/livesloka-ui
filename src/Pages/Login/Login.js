@@ -14,14 +14,14 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MuiAlert from "@material-ui/lab/Alert";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { login } from "../../Services/Services";
 import { Redirect } from "react-router-dom";
 import { authenticate, isAutheticated } from "../../auth/index";
 import Background from "../../Images/Captureblue_buuble.PNG";
 import Copyright from "../../Components/Copyright";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
-
+import axios from "axios";
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "100vh",

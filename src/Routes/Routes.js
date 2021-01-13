@@ -23,7 +23,8 @@ import ZoomAccountDashboard from "../Pages/ZoomMeetings/ZoomAccountDashboard";
 import DashboardLayout from "../DashboardLayout";
 import Dashboard from "../Pages/reports";
 import NotFoundView from "../Pages/NotFoundView";
-import TeacherSalaries from '../Pages/Admin/Crm/TeacherSalaries'
+import TeacherSalary from "../Pages/TeacherSalary";
+import TeacherSalaries from "../Pages/Admin/Crm/TeacherSalaries";
 function Routes() {
   return (
     <>
@@ -41,6 +42,11 @@ function Routes() {
               component={ZoomAccountDashboard}
             />
             <AdminRoute path="/customer-data" exact component={CustomerData} />
+            <AdminRoute
+              path="/teacher-salary"
+              exact
+              component={TeacherSalary}
+            />
             <AdminRoute path="/add-fields" exact component={CustomTabs} />
             <AdminRoute path="/attendance" exact component={Attedance} />
             <AdminRoute

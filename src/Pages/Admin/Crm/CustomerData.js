@@ -37,7 +37,7 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { isAutheticated } from "../../../auth";
 import { getSettings, updateSettings } from "../../../Services/Services";
-
+import axios from "axios";
 const copyToClipboard = (text) => {
   var textField = document.createElement("textarea");
   textField.innerText = text;
@@ -324,7 +324,15 @@ const CrmDetails = () => {
       });
     });
     fetchData();
+    getUsdVal();
   }, []);
+
+  const getUsdVal = async () => {
+    const data = await axios.get(
+      "https://free.currconv.com/api/v7/convert?q=USD_INR,INR_USD&compact=ultra&apiKey=eaff87f1207bb43ddfa6"
+    );
+    localStorage.setItem("USD", JSON.stringify(data.data.USD_INR));
+  };
 
   const toggleJoinButton = async (rowData) => {
     try {
@@ -758,7 +766,6 @@ const CrmDetails = () => {
     try {
       const data = await getAllCustomerDetails();
       let details = data.data.result;
-      console.log(details);
       setData(details);
       setLoading(false);
     } catch (error) {
