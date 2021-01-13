@@ -44,6 +44,7 @@ const AmountChart = ({ dailyDataline, dataa, className, ...rest }) => {
       `${process.env.REACT_APP_API_KEY}/payment/get/dailydatagraph/`
     );
 
+    console.log(result);
     Object.keys(result).map((data) => {
       finalTotalAmount.push(result[data].totalSum);
       finalDates.push(result[data].dates.toString());
@@ -55,11 +56,7 @@ const AmountChart = ({ dailyDataline, dataa, className, ...rest }) => {
   const data = {
     datasets: [
       {
-        data:
-          TotalSum &&
-          TotalSum.map(function (x) {
-            return x * usdVal;
-          }),
+        data: TotalSum && TotalSum,
         // backgroundColor: ["#27ae60", "#27ae60", "#27ae60"],
         borderWidth: 4,
         borderColor: "#27ae60",

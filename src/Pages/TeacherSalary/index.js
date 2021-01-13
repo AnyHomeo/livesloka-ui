@@ -140,13 +140,15 @@ const TeacherSalary = () => {
   };
   const getSalaries = async () => {
     const data = await axios.get(
-      `${process.env.REACT_APP_API_KEY}/teacher/get/salary/${getDate}`
+      `${process.env.REACT_APP_API_KEY}/teacher/get/salary/${
+        getDate && getDate.title
+      }`
     );
     console.log(data);
     setSalaryData(data && data.data.finalObj);
   };
 
-  console.log(getDate);
+  console.log(getDate && getDate.title);
   return (
     <div
       style={{
