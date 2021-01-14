@@ -26,33 +26,6 @@ const useRowStyles = makeStyles({
   },
 });
 
-function createData(name, salary) {
-  return {
-    name,
-    salary,
-    details: [
-      {
-        ClassName: "Test",
-        NoDays: "10",
-        Commission: 100,
-        TotalSalary: 5000,
-      },
-      {
-        ClassName: "NOtest",
-        NoDays: "10",
-        Commission: 100,
-        TotalSalary: 5000,
-      },
-      {
-        ClassName: "Anytest",
-        NoDays: "10",
-        Commission: 100,
-        TotalSalary: 5000,
-      },
-    ],
-  };
-}
-
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
@@ -81,6 +54,27 @@ function Row(props) {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
+              <div
+                style={{
+                  marginBottom: "40px",
+                  marginTop: "20px",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <TextField
+                  id="outlined-basic"
+                  label="Add Amount"
+                  variant="outlined"
+                />
+
+                <Button color="primary" variant="contained">
+                  Finalize Amount
+                </Button>
+              </div>
+
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
@@ -123,14 +117,6 @@ function Row(props) {
   );
 }
 
-const rows = [
-  createData("Kamal", 1590),
-  createData("Kamal2", 2620),
-  createData("Kamal3", 2620),
-  createData("Kamal4", 3050),
-  createData("Kamal5", 3560),
-];
-
 const TeacherSalary = () => {
   const [salaryData, setSalaryData] = useState();
   const [getDate, setGetDate] = useState();
@@ -144,11 +130,9 @@ const TeacherSalary = () => {
         getDate && getDate.title
       }`
     );
-    console.log(data);
     setSalaryData(data && data.data.finalObj);
   };
 
-  console.log(getDate && getDate.title);
   return (
     <div
       style={{
@@ -195,7 +179,6 @@ const TeacherSalary = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {console.log(rows)}
               {salaryData &&
                 salaryData.map((row) => (
                   <Row key={row.TeacherName} row={row} />

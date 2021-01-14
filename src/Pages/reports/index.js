@@ -41,7 +41,6 @@ const Dashboard = () => {
     const data = await axios.get(
       `${process.env.REACT_APP_API_KEY}/payment/get/alltransactions/`
     );
-    console.log(data);
 
     setAllData(data);
     // if (data) {

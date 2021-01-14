@@ -44,7 +44,6 @@ const AmountChart = ({ dailyDataline, dataa, className, ...rest }) => {
       `${process.env.REACT_APP_API_KEY}/payment/get/dailydatagraph/`
     );
 
-    console.log(result);
     Object.keys(result).map((data) => {
       finalTotalAmount.push(result[data].totalSum);
       finalDates.push(result[data].dates.toString());

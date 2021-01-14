@@ -40,17 +40,6 @@ const Budget = ({ dataa, amount, className, ...rest }) => {
 
   const [usdVal, setUsdVal] = useState();
 
-  useEffect(() => {
-    getUsdVal();
-  }, []);
-
-  const getUsdVal = async () => {
-    const data = await axios.get(
-      "https://free.currconv.com/api/v7/convert?q=USD_INR,INR_USD&compact=ultra&apiKey=eaff87f1207bb43ddfa6"
-    );
-    setUsdVal(data);
-  };
-
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
@@ -60,15 +49,11 @@ const Budget = ({ dataa, amount, className, ...rest }) => {
               TOTAL AMOUNT
             </Typography>
             <Typography color="textPrimary" variant="h3">
-              ₹{" "}
+              ${" "}
               {isNaN(amount) ? (
                 amount
               ) : (
-                <CountUp
-                  start={0}
-                  end={usdVal && usdVal.data.USD_INR * amount}
-                  separator=","
-                />
+                <CountUp start={0} end={amount} separator="," />
               )}
               {/* ₹ {amount * 73.08} */}
             </Typography>
