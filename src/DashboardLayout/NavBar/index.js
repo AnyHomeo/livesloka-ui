@@ -64,16 +64,12 @@ const items = [
     icon: SettingsIcon,
     title: "Scheduler",
   },
-  {
-    href: "/teacherDetails",
-    icon: Trello,
-    title: "Teacher",
-  },
-  {
-    href: "/teacherSalaries",
-    icon: DollarSign,
-    title: "Teacher Salaries",
-  },
+
+  // {
+  //   href: "/teacherSalaries",
+  //   icon: DollarSign,
+  //   title: "Teacher Salaries",
+  // },
   {
     href: "/reset/password",
     icon: LockIcon,
@@ -83,6 +79,11 @@ const items = [
     href: "/zoom-dashboard",
     icon: Video,
     title: "Zoom Dashboard",
+  },
+  {
+    href: "/teacherDetails",
+    icon: Trello,
+    title: "Teachers Data",
   },
   {
     href: "/teacher-salary",
