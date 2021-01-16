@@ -17,7 +17,18 @@ import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import axios from "axios";
-import { Button } from "@material-ui/core";
+import {
+  Button,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  CircularProgress,
+  Snackbar,
+} from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
+import moment from "moment";
+import Select from "@material-ui/core/Select";
+import "./HistoryCells.css";
 const useRowStyles = makeStyles({
   root: {
     "& > *": {
@@ -44,10 +55,10 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          <p style={{ fontWeight: "bold" }}>{row.TeacherName}</p>
+          <p style={{ fontWeight: "bold" }}>{row.name}</p>
         </TableCell>
         <TableCell>
-          <p style={{ fontWeight: "bold" }}>{row.salary}</p>
+          <p style={{ fontWeight: "bold" }}>{row.totalSalary}</p>
         </TableCell>
       </TableRow>
       <TableRow>
@@ -85,7 +96,7 @@ function Row(props) {
                       <p style={{ fontWeight: "bold" }}>No Of Days</p>
                     </TableCell>
                     <TableCell align="right">
-                      <p style={{ fontWeight: "bold" }}>No Of Students</p>
+                      <p style={{ fontWeight: "bold" }}>Commission</p>
                     </TableCell>
                     <TableCell align="right">
                       <p style={{ fontWeight: "bold" }}>Total Salary</p>
@@ -93,20 +104,32 @@ function Row(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.details.map((historyRow) => (
-                    <TableRow key={historyRow.ClassName}>
-                      <TableCell component="th" scope="row">
-                        {historyRow.ClassName}
-                      </TableCell>
-                      <TableCell>{historyRow["No.Students"]}</TableCell>
+                  {Object.keys(row.details).map((historyRow) => {
+                    return (
+                      <TableRow key={row.details[historyRow]}>
+                        <TableCell component="th" scope="row">
+                          <p className="Tablecell">{historyRow}</p>
+                        </TableCell>
+                        <TableCell>
+                          <p className="Tablecell">
+                            {row.details[historyRow].noOfDays}
+                          </p>
+                        </TableCell>
 
-                      <TableCell align="right">
-                        {historyRow.commission}
-                      </TableCell>
+                        <TableCell align="right">
+                          <p className="Tablecell">
+                            {row.details[historyRow].commission}
+                          </p>
+                        </TableCell>
 
-                      <TableCell align="right">{historyRow.salary}</TableCell>
-                    </TableRow>
-                  ))}
+                        <TableCell align="right">
+                          <p className="Tablecell">
+                            {row.details[historyRow].totalSalary}
+                          </p>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </Box>
@@ -120,74 +143,118 @@ function Row(props) {
 const TeacherSalary = () => {
   const [salaryData, setSalaryData] = useState();
   const [getDate, setGetDate] = useState();
+  const [loading, setLoading] = useState(false);
+  const [salDates, setSalDates] = useState([]);
+  const [successOpen, setSuccessOpen] = React.useState(false);
 
-  const onNameChange = (event, values) => {
-    setGetDate(values);
+  const handleChange = (event) => {
+    setGetDate(event.target.value);
+    getSalaries(event.target.value);
   };
-  const getSalaries = async () => {
+
+  const getSalDates = async () => {
     const data = await axios.get(
-      `${process.env.REACT_APP_API_KEY}/teacher/get/salary/${
-        getDate && getDate.title
-      }`
+      `${process.env.REACT_APP_API_KEY}/salary/months`
     );
-    setSalaryData(data && data.data.finalObj);
+    setSalDates(data && data.data.result);
+  };
+
+  const getSalaries = async (date) => {
+    setLoading(true);
+    try {
+      const data = await axios.get(
+        `${process.env.REACT_APP_API_KEY}/salary/all?month=${date}`
+      );
+      setSalaryData(data && data.data.finalDataObjectArr);
+    } catch (error) {
+      console.log(error.response);
+      setSuccessOpen(true);
+      setSalaryData();
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    getSalDates();
+  }, []);
+
+  const handleSuccessClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSuccessOpen(false);
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <div style={{ marginTop: "20px" }}>
-        <Autocomplete
-          id="combo-box-demo"
-          options={top100Films}
-          getOptionLabel={(option) => option.value}
-          style={{ width: 300 }}
-          onChange={onNameChange}
-          renderInput={(params) => (
-            <TextField {...params} label="Select Month" variant="outlined" />
-          )}
-        />
-      </div>
-
-      <Button
-        variant="contained"
-        color="primary"
-        style={{ marginTop: "20px" }}
-        onClick={getSalaries}
+    <>
+      <Snackbar
+        open={successOpen}
+        autoHideDuration={6000}
+        onClose={handleSuccessClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
-        Get Salaries
-      </Button>
+        <Alert onClose={handleSuccessClose} severity="error">
+          Error in retrieving salaries
+        </Alert>
+      </Snackbar>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <div style={{ marginTop: "20px", width: 300 }}>
+          <FormControl variant="outlined" style={{ width: "100%" }}>
+            <InputLabel id="demo-simple-select-outlined-label">
+              Select Month
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-outlined-label"
+              id="demo-simple-select-outlined"
+              value={getDate}
+              onChange={handleChange}
+              label="Age"
+            >
+              {salDates.map((dates) => (
+                <MenuItem key={dates} value={dates}>
+                  {moment(dates).format("ll")}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
 
-      <div style={{ width: "50%", marginTop: "40px" }}>
-        <TableContainer component={Paper}>
-          <Table aria-label="collapsible table">
-            <TableHead>
-              <TableRow>
-                <TableCell />
-                <TableCell>
-                  <h3>Teacher Name</h3>
-                </TableCell>
-                <TableCell>
-                  <h3>Total Salary</h3>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {salaryData &&
-                salaryData.map((row) => (
-                  <Row key={row.TeacherName} row={row} />
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        {loading ? (
+          <div style={{ marginTop: 40 }}>
+            <CircularProgress />
+          </div>
+        ) : (
+          <div style={{ width: "50%", marginTop: "40px" }}>
+            <TableContainer component={Paper}>
+              <Table aria-label="collapsible table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell />
+                    <TableCell>
+                      <h3>Teacher Name</h3>
+                    </TableCell>
+                    <TableCell>
+                      <h3>Total Salary</h3>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {salaryData &&
+                    salaryData.map((row) => <Row key={row.id} row={row} />)}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+        )}
       </div>
-    </div>
+    </>
   );
 };
 
