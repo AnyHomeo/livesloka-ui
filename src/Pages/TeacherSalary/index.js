@@ -215,11 +215,11 @@ const TeacherSalary = () => {
               id="demo-simple-select-outlined"
               value={getDate}
               onChange={handleChange}
-              label="Age"
+              label="Select Month"
             >
               {salDates.map((dates) => (
                 <MenuItem key={dates} value={dates}>
-                  {moment(dates).format("ll")}
+                  {moment(dates).format("MMM YYYY")}
                 </MenuItem>
               ))}
             </Select>
@@ -238,10 +238,10 @@ const TeacherSalary = () => {
                   <TableRow>
                     <TableCell />
                     <TableCell>
-                      <h3>Teacher Name</h3>
+                      <h3 style={{ color: "#2c3e50" }}>Teacher Name</h3>
                     </TableCell>
                     <TableCell>
-                      <h3>Total Salary</h3>
+                      <h3 style={{ color: "#2c3e50" }}>Total Salary</h3>
                     </TableCell>
                   </TableRow>
                 </TableHead>
