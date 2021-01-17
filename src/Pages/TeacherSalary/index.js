@@ -95,6 +95,9 @@ function Row(props) {
                     <TableCell>
                       <p style={{ fontWeight: "bold" }}>No Of Days</p>
                     </TableCell>
+                    <TableCell>
+                      <p style={{ fontWeight: "bold" }}>No Of Students</p>
+                    </TableCell>
                     <TableCell align="right">
                       <p style={{ fontWeight: "bold" }}>Commission</p>
                     </TableCell>
@@ -116,6 +119,11 @@ function Row(props) {
                           </p>
                         </TableCell>
 
+                        <TableCell>
+                          <p className="Tablecell">
+                            {row.details[historyRow].numberOfStudents}
+                          </p>
+                        </TableCell>
                         <TableCell align="right">
                           <p className="Tablecell">
                             {row.details[historyRow].commission}
@@ -166,6 +174,7 @@ const TeacherSalary = () => {
         `${process.env.REACT_APP_API_KEY}/salary/all?month=${date}`
       );
       setSalaryData(data && data.data.finalDataObjectArr);
+      console.log(data);
     } catch (error) {
       console.log(error.response);
       setSuccessOpen(true);
