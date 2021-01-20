@@ -55,11 +55,7 @@ const AmountChart = ({ dailyDataline, dataa, className, ...rest }) => {
   const data = {
     datasets: [
       {
-        data:
-          TotalSum &&
-          TotalSum.map(function (x) {
-            return x * usdVal;
-          }),
+        data: TotalSum && TotalSum,
         // backgroundColor: ["#27ae60", "#27ae60", "#27ae60"],
         borderWidth: 4,
         borderColor: "#27ae60",
