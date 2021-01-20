@@ -167,12 +167,15 @@ const EditSchedule = () => {
       const schedule = await Axios.get(
         `${process.env.REACT_APP_API_KEY}/schedule/${id}`
       );
+      console.log(schedule)
       const {
         teacher,
         className,
         meetingLink,
         meetingAccount,
         demo,
+        OneToOne,
+        oneToMany,
         subject,
         startDate,
         students,
@@ -192,6 +195,8 @@ const EditSchedule = () => {
       setZoomLink(meetingLink || "");
       setZoomEmail(meetingAccount || "");
       setDemo(demo);
+      setonetoone(OneToOne);
+      setonetomany(oneToMany);
       setSubjectNameId(subject || "");
       setSelectedDate(
         startDate
@@ -258,6 +263,7 @@ const EditSchedule = () => {
         `${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`,
         formData
       );
+      console.log(res)
       setDemo(false);
       setPersonName([]);
       setZoomEmail("");
