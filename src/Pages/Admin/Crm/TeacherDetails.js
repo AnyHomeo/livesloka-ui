@@ -31,9 +31,6 @@ const status = ["TeacherStatus"];
 export default function TeacherDetails() {
   const classes = useStyles();
   //states
-  const [loading, setLoading] = useState(false);
-  const [teachername, setteacherName] = useState("");
-  const [value, setValue] = useState(0);
   const [lookup, setLookup] = useState({});
   const [categoryLookup, setCategoryLookup] = useState({});
   const [item, setitem] = useState("Teacher");
@@ -54,7 +51,7 @@ export default function TeacherDetails() {
       });
       setCategoryLookup(dummyLookup);
     });
-  }, [value]);
+  }, []);
 
   return (
     <div style={{ width: "95%", margin: "0 auto", marginTop: "20px" }}>
