@@ -67,7 +67,6 @@ function capitalize(word) {
 }
 
 const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
-  console.log("categoryLookup", categoryLookup);
   const [column, setColumn] = useState([]);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -79,6 +78,7 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
   useEffect(() => {
     getData(name).then((response) => {
       setData(response.data.result);
+      console.log(response.data.result);
       setLoading(false);
     });
   }, []);
@@ -88,6 +88,13 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
       let lengths = data.map((item) => Object.keys(item).length);
       let v = Object.keys(data[lengths.indexOf(Math.max(...lengths))]).map(
         (key) => {
+          if (name === "Teacher" && key === "isDemoIncludedInSalaries") {
+            return {
+              title: "Include Demo Classes in Salaries",
+              type: "boolean",
+              field: "isDemoIncludedInSalaries",
+            };
+          }
           if (name === "Teacher" && key === "category") {
             return {
               title: "Category",
@@ -103,8 +110,8 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
                 <span>
                   {rowData[key]
                     ? rowData[key].slice(0, 3) +
-                    "...." +
-                    rowData[key].slice(-10)
+                      "...." +
+                      rowData[key].slice(-10)
                     : ""}
                 </span>
               ),
@@ -254,7 +261,7 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
                   setSuccess(false);
                   setResponse(
                     fetchedData.data.message ||
-                    "Something went wrong,Try again later"
+                      "Something went wrong,Try again later"
                   );
                   setOpen(true);
                 }

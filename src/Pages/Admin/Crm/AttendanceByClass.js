@@ -63,7 +63,11 @@ const AttedanceByClass = () => {
           options={classes}
           getOptionLabel={(option) => option.className}
           onChange={(e, v) => {
-            setSelectedScheduleId(v._id);
+            if (v && v._id) {
+              setSelectedScheduleId(v._id);
+            } else {
+              setSelectedScheduleId("");
+            }
           }}
           renderInput={(params) => (
             <TextField
