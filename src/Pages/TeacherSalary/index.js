@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Collapse from "@material-ui/core/Collapse";
@@ -10,13 +9,12 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import TextField from "@material-ui/core/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 import axios from "axios";
+import { getAttendanceByScheduleId } from "../../Services/Services";
 import {
   Button,
   InputLabel,
@@ -24,6 +22,7 @@ import {
   FormControl,
   CircularProgress,
   Snackbar,
+  Chip,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import moment from "moment";
@@ -37,10 +36,155 @@ const useRowStyles = makeStyles({
   },
 });
 
+const ExtraTeacherDetails = ({ open, scheduleId }) => {
+  const [scheduleData, setscheduleData] = useState();
+
+  useEffect(() => {
+    if (scheduleId) {
+      getClassesBySchedule();
+    }
+  }, []);
+
+  const getClassesBySchedule = async () => {
+    const data = await getAttendanceByScheduleId(scheduleId);
+    console.log(data);
+    setscheduleData(data && data.data.result);
+  };
+
+  return (
+    <Collapse in={open} timeout="auto" unmountOnExit>
+      <Table aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Date</TableCell>
+            <TableCell align="center">Time</TableCell>
+            <TableCell align="center">Attedended Students</TableCell>
+            <TableCell align="center">Requested Students</TableCell>
+            <TableCell align="center">Absent Students</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {scheduleData &&
+            scheduleData.map((data) => (
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  {data.date}
+                </TableCell>
+                <TableCell align="center">{data.time}</TableCell>
+                <TableCell align="center">
+                  {data.customers.map((student) => (
+                    <Chip
+                      key={student._id}
+                      style={{ marginBottom: 5 }}
+                      label={
+                        student.firstName
+                          ? student.firstName
+                          : student.email
+                          ? student.email
+                          : "Noname"
+                      }
+                      size="medium"
+                    />
+                  ))}
+                </TableCell>
+                <TableCell align="center">
+                  {data.requestedStudents.map((student) => (
+                    <Chip
+                      key={student._id}
+                      style={{ marginBottom: 5 }}
+                      label={
+                        student.firstName
+                          ? student.firstName
+                          : student.email
+                          ? student.email
+                          : "Noname"
+                      }
+                      size="medium"
+                      color="primary"
+                    />
+                  ))}
+                </TableCell>
+                <TableCell align="center">
+                  {data.absentees.map((student) => (
+                    <Chip
+                      key={student._id}
+                      style={{ marginBottom: 5 }}
+                      label={
+                        student.firstName
+                          ? student.firstName
+                          : student.email
+                          ? student.email
+                          : "Noname"
+                      }
+                      size="medium"
+                      color="secondary"
+                    />
+                  ))}
+                </TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
+      </Table>
+    </Collapse>
+  );
+};
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
+
+  const TableRowDetails = ({
+    noOfDays,
+    noOfStudents,
+    commission,
+    totalSalary,
+    className,
+    scheduleId,
+  }) => {
+    const [newOpen, setnewOpen] = React.useState(false);
+
+    return (
+      <>
+        <TableRow key={className}>
+          <TableCell>
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => {
+                setnewOpen(!newOpen);
+              }}
+            >
+              {newOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </TableCell>
+          <TableCell component="th" scope="row">
+            <p className="Tablecell">{className}</p>
+          </TableCell>
+
+          <TableCell>
+            <p className="Tablecell">{noOfDays}</p>
+          </TableCell>
+
+          <TableCell>
+            <p className="Tablecell">{noOfStudents}</p>
+          </TableCell>
+          <TableCell align="right">
+            <p className="Tablecell">{commission}</p>
+          </TableCell>
+
+          <TableCell align="right">
+            <p className="Tablecell">{totalSalary}</p>
+          </TableCell>
+        </TableRow>
+
+        <TableRow>
+          <TableCell colSpan="6">
+            <ExtraTeacherDetails open={newOpen} scheduleId={scheduleId} />
+          </TableCell>
+        </TableRow>
+      </>
+    );
+  };
 
   return (
     <React.Fragment>
@@ -90,6 +234,9 @@ function Row(props) {
                 <TableHead>
                   <TableRow>
                     <TableCell>
+                      <p style={{ fontWeight: "bold" }}></p>
+                    </TableCell>
+                    <TableCell>
                       <p style={{ fontWeight: "bold" }}>Class Name</p>
                     </TableCell>
                     <TableCell>
@@ -109,33 +256,21 @@ function Row(props) {
                 <TableBody>
                   {Object.keys(row.details).map((historyRow) => {
                     return (
-                      <TableRow key={row.details[historyRow]}>
-                        <TableCell component="th" scope="row">
-                          <p className="Tablecell">{historyRow}</p>
-                        </TableCell>
-                        <TableCell>
-                          <p className="Tablecell">
-                            {row.details[historyRow].noOfDays}
-                          </p>
-                        </TableCell>
+                      <>
+                        <TableRowDetails
+                          key={row.details[historyRow].scheduleId}
+                          scheduleId={row.details[historyRow].scheduleId}
+                          className={historyRow}
+                          noOfDays={row.details[historyRow].noOfDays}
+                          noOfStudents={
+                            row.details[historyRow].numberOfStudents
+                          }
+                          commission={row.details[historyRow].commission}
+                          totalSalary={row.details[historyRow].totalSalary}
+                        />
 
-                        <TableCell>
-                          <p className="Tablecell">
-                            {row.details[historyRow].numberOfStudents}
-                          </p>
-                        </TableCell>
-                        <TableCell align="right">
-                          <p className="Tablecell">
-                            {row.details[historyRow].commission}
-                          </p>
-                        </TableCell>
-
-                        <TableCell align="right">
-                          <p className="Tablecell">
-                            {row.details[historyRow].totalSalary}
-                          </p>
-                        </TableCell>
-                      </TableRow>
+                        {/* <ExtraTeacherDetails open={newOpen} /> */}
+                      </>
                     );
                   })}
                 </TableBody>
@@ -226,11 +361,12 @@ const TeacherSalary = () => {
               onChange={handleChange}
               label="Select Month"
             >
-              {salDates.map((dates) => (
-                <MenuItem key={dates} value={dates}>
-                  {moment(dates).format("MMM YYYY")}
-                </MenuItem>
-              ))}
+              {salDates &&
+                salDates.map((dates) => (
+                  <MenuItem key={dates} value={dates}>
+                    {moment(dates).format("MMM YYYY")}
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
         </div>
