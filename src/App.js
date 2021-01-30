@@ -6,6 +6,8 @@ import theme from "./theme";
 import Routes from "./Routes/Routes";
 
 const App = () => {
+  if (process.env.REACT_APP_STAGING === "PROD")
+    console.log = function no_console() {};
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles />
