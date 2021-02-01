@@ -45,8 +45,10 @@ const AmountChart = ({ dailyDataline, dataa, className, ...rest }) => {
     );
 
     Object.keys(result).map((data) => {
-      finalTotalAmount.push(result[data].totalSum);
-      finalDates.push(result[data].dates.toString());
+      if (data.startsWith("February")) {
+        finalTotalAmount.push(result[data].totalSum);
+        finalDates.push(result[data].dates.toString());
+      }
     });
     setTotalSum(finalTotalAmount);
     setTotalDates(finalDates);
@@ -56,7 +58,7 @@ const AmountChart = ({ dailyDataline, dataa, className, ...rest }) => {
     datasets: [
       {
         data: TotalSum && TotalSum,
-        // backgroundColor: ["#27ae60", "#27ae60", "#27ae60"],
+
         borderWidth: 4,
         borderColor: "#27ae60",
         hoverBorderColor: "#27ae60",

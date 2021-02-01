@@ -35,7 +35,7 @@ const TotalProfit = ({ failed, className, ...rest }) => {
               FAILED TRANSACTIONS
             </Typography>
             <Typography color="textPrimary" variant="h3">
-              {failed}
+              {failed === "undefined" ? 0 : failed}
             </Typography>
           </Grid>
           <Grid item>
