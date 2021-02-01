@@ -36,12 +36,11 @@ const LatestOrders = ({ data, className, ...rest }) => {
     data.data.result.map((data) => {
       const formatedDate = moment(data.createdAt).format("MMM");
 
-      if (formatedDate === "Feb") {
+      if (formatedDate === moment(new Date()).format("MMM")) {
         sortedData.push(data);
       }
     });
 
-  console.log(sortedData);
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <CardHeader title="Latest Transactions" />
