@@ -23,6 +23,7 @@ import {
   CircularProgress,
   Snackbar,
   Chip,
+  LinearProgress,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import moment from "moment";
@@ -40,10 +41,10 @@ const ExtraTeacherDetails = ({ open, scheduleId }) => {
   const [scheduleData, setscheduleData] = useState();
 
   useEffect(() => {
-    if (scheduleId) {
+    if (scheduleId && open === true && !scheduleData) {
       getClassesBySchedule();
     }
-  }, []);
+  }, [open, scheduleId, scheduleData]);
 
   const getClassesBySchedule = async () => {
     const data = await getAttendanceByScheduleId(scheduleId);
@@ -64,7 +65,7 @@ const ExtraTeacherDetails = ({ open, scheduleId }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {scheduleData &&
+          {scheduleData ? (
             scheduleData.map((data) => (
               <TableRow>
                 <TableCell component="th" scope="row">
@@ -97,7 +98,7 @@ const ExtraTeacherDetails = ({ open, scheduleId }) => {
                           ? student.firstName
                           : student.email
                           ? student.email
-                          : "Noname"
+                          : "No name"
                       }
                       size="medium"
                       color="primary"
@@ -114,7 +115,7 @@ const ExtraTeacherDetails = ({ open, scheduleId }) => {
                           ? student.firstName
                           : student.email
                           ? student.email
-                          : "Noname"
+                          : "No name"
                       }
                       size="medium"
                       color="secondary"
@@ -122,7 +123,14 @@ const ExtraTeacherDetails = ({ open, scheduleId }) => {
                   ))}
                 </TableCell>
               </TableRow>
-            ))}
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={5}>
+                <LinearProgress />
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </Collapse>
@@ -268,8 +276,6 @@ function Row(props) {
                           commission={row.details[historyRow].commission}
                           totalSalary={row.details[historyRow].totalSalary}
                         />
-
-                        {/* <ExtraTeacherDetails open={newOpen} /> */}
                       </>
                     );
                   })}
