@@ -498,7 +498,6 @@ const EditSchedule = () => {
               <InputLabel id="Select-label">Select Zoom Account</InputLabel>
               <Select
                 fullWidth
-                disabled
                 labelId="Select-label"
                 id="demo-simple-select-outlined"
                 value={zoomEmail}
