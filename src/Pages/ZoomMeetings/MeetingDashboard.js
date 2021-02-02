@@ -104,7 +104,6 @@ function MeetingDashboard() {
   useEffect(() => {
     getData("Zoom Account")
       .then((zoomAccountsResponse) => {
-        console.log(zoomAccountsResponse.data.result);
         setZoomAccounts(zoomAccountsResponse.data.result);
       })
       .catch((err) => {
@@ -130,7 +129,6 @@ function MeetingDashboard() {
         onChange={(e, v) => {
           getAllSchedulesByZoomAccountId(v._id)
             .then((data) => {
-              console.log(data.data.result);
               setSelectedZoomAccountSchedules(data.data.result);
             })
             .catch((err) => {

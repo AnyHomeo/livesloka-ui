@@ -48,7 +48,6 @@ const ExtraTeacherDetails = ({ open, scheduleId }) => {
 
   const getClassesBySchedule = async () => {
     const data = await getAttendanceByScheduleId(scheduleId);
-    console.log(data);
     setscheduleData(data && data.data.result);
   };
 
@@ -315,7 +314,6 @@ const TeacherSalary = () => {
         `${process.env.REACT_APP_API_KEY}/salary/all?month=${date}`
       );
       setSalaryData(data && data.data.finalDataObjectArr);
-      console.log(data);
     } catch (error) {
       console.log(error.response);
       setSuccessOpen(true);

@@ -167,7 +167,7 @@ const EditSchedule = () => {
       const schedule = await Axios.get(
         `${process.env.REACT_APP_API_KEY}/schedule/${id}`
       );
-      console.log(schedule)
+      console.log(schedule);
       const {
         teacher,
         className,
@@ -200,8 +200,9 @@ const EditSchedule = () => {
       setSubjectNameId(subject || "");
       setSelectedDate(
         startDate
-          ? `${startDate.split("-")[1]}-${startDate.split("-")[0]}-${startDate.split("-")[2]
-          }`
+          ? `${startDate.split("-")[1]}-${startDate.split("-")[0]}-${
+              startDate.split("-")[2]
+            }`
           : new Date()
       );
       setPersonName(students);
@@ -263,7 +264,7 @@ const EditSchedule = () => {
         `${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`,
         formData
       );
-      console.log(res)
+      console.log(res);
       setDemo(false);
       setPersonName([]);
       setZoomEmail("");
@@ -361,7 +362,8 @@ const EditSchedule = () => {
                 options={studentName}
                 getOptionSelected={(option, value) => option._id === value._id}
                 getOptionLabel={(option) =>
-                  `${option.firstName ? option.firstName : ""} ${option.lastName ? option.lastName : ""
+                  `${option.firstName ? option.firstName : ""} ${
+                    option.lastName ? option.lastName : ""
                   }`
                 }
                 multiple
@@ -496,6 +498,7 @@ const EditSchedule = () => {
               <InputLabel id="Select-label">Select Zoom Account</InputLabel>
               <Select
                 fullWidth
+                disabled
                 labelId="Select-label"
                 id="demo-simple-select-outlined"
                 value={zoomEmail}
@@ -523,23 +526,9 @@ const EditSchedule = () => {
                 marginTop: "10px",
               }}
             />
-            <TextField
-              fullWidth
-              id="outlined-basic"
-              label="Zoom Link"
-              variant="outlined"
-              value={zoomLink}
-              required
-              onChange={(e) => setZoomLink(e.target.value)}
-              style={{
-                maxWidth: "400px",
-                minWidth: "300px",
-                marginTop: "10px",
-              }}
-            />
-            <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <div style={{ display: "flex", flexDirection: "row" }}>
               <FormControlLabel
-                style={{ marginTop: '20px' }}
+                style={{ marginTop: "20px" }}
                 control={
                   <Checkbox
                     checked={onetoone}
@@ -547,12 +536,11 @@ const EditSchedule = () => {
                     name="OneToOne"
                     color="primary"
                   />
-
                 }
                 label="One to one ?"
               />
               <FormControlLabel
-                style={{ marginTop: '20px' }}
+                style={{ marginTop: "20px" }}
                 control={
                   <Checkbox
                     checked={onetomany}
@@ -560,10 +548,10 @@ const EditSchedule = () => {
                     name="OneToMany"
                     color="primary"
                   />
-
                 }
                 label="One to many ?"
-              /></div>
+              />
+            </div>
             <FormControlLabel
               style={{ marginTop: "20px" }}
               control={
@@ -581,17 +569,17 @@ const EditSchedule = () => {
             {loading ? (
               <CircularProgress />
             ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  type="submit"
-                  className={classes.button}
-                  startIcon={<SaveIcon />}
-                >
-                  Save Changes
-                </Button>
-              )}
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                type="submit"
+                className={classes.button}
+                startIcon={<SaveIcon />}
+              >
+                Save Changes
+              </Button>
+            )}
           </div>
         </div>
       </form>

@@ -141,7 +141,6 @@ export default function ZoomAccountDashboard() {
   useEffect(() => {
     getSchedulesByDayForZoomAccountDashboard(allDays[value])
       .then((data) => {
-        console.log(data.data.result);
         setSchedulesOfTheDay({
           ...data.data.result,
         });
