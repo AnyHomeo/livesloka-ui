@@ -15,6 +15,7 @@ import {
   Select,
   InputLabel,
   MenuItem,
+  Switch,
 } from "@material-ui/core/";
 import SaveIcon from "@material-ui/icons/Save";
 import { makeStyles } from "@material-ui/core/styles";
@@ -91,6 +92,9 @@ const EditSchedule = () => {
   const [subjectNameId, setSubjectNameId] = useState("");
   const [ClassName, setClassName] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const [isMeetingLinkChangeNeeded, setIsMeetingLinkChangeNeeded] = useState(
+    false
+  );
 
   const { id } = useParams();
 
@@ -236,58 +240,66 @@ const EditSchedule = () => {
     setSubjectNames(subjectName.data.result);
   };
   const submitForm = async (e) => {
-    setLoading(true);
     e.preventDefault();
-    let formData = {
-      slots: {},
-    };
-    days.forEach((day) => {
-      formData["slots"][day.toLowerCase()] = timeSlotState
-        .filter((slot) => slot.startsWith(day))
-        .map((slot) => slot.split("!@#$%^&*($%^")[0]);
-    });
-    formData = {
-      ...formData,
-      className: ClassName,
-      meetingLink: zoomLink,
-      meetingAccount: zoomEmail,
-      teacher: teacher,
-      students: personName.map((student) => student._id),
-      demo: demo,
-      OneToOne: onetoone,
-      oneToMany: onetomany,
-      subject: subjectNameId,
-      startDate: moment(selectedDate).format("DD-MM-YYYY"),
-    };
-    try {
-      const res = await Axios.post(
-        `${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`,
-        formData
-      );
-      console.log(res);
-      setDemo(false);
-      setPersonName([]);
-      setZoomEmail("");
-      setZoomLink("");
-      setSubjectNameId("");
-      setSuccessOpen(true);
-      setAlert(res.data.message);
-      setAlertColor("success");
-      setLoading(false);
-      setRadioday("");
-      setClassName("");
-      setTimeSlotState([]);
-      setTimeout(() => {
-        setRedirect(true);
-      }, 2000);
-    } catch (error) {
-      console.error(error.response);
-      if (error.response) {
+    console.log(timeSlotState);
+    if (!!timeSlotState.length) {
+      setLoading(true);
+      let formData = {
+        slots: {},
+      };
+      days.forEach((day) => {
+        formData["slots"][day.toLowerCase()] = timeSlotState
+          .filter((slot) => slot.startsWith(day))
+          .map((slot) => slot.split("!@#$%^&*($%^")[0]);
+      });
+      formData = {
+        ...formData,
+        className: ClassName,
+        meetingLink: zoomLink,
+        meetingAccount: zoomEmail,
+        teacher: teacher,
+        students: personName.map((student) => student._id),
+        demo: demo,
+        OneToOne: onetoone,
+        oneToMany: onetomany,
+        subject: subjectNameId,
+        startDate: moment(selectedDate).format("DD-MM-YYYY"),
+        isMeetingLinkChangeNeeded,
+      };
+      try {
+        const res = await Axios.post(
+          `${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`,
+          formData
+        );
+        console.log(res);
+        setDemo(false);
+        setPersonName([]);
+        setZoomEmail("");
+        setZoomLink("");
+        setSubjectNameId("");
         setSuccessOpen(true);
-        setAlert(error.response.data.error);
-        setAlertColor("error");
+        setAlert(res.data.message);
+        setAlertColor("success");
         setLoading(false);
+        setRadioday("");
+        setClassName("");
+        setTimeSlotState([]);
+        setTimeout(() => {
+          setRedirect(true);
+        }, 2000);
+      } catch (error) {
+        console.error(error.response);
+        if (error.response) {
+          setSuccessOpen(true);
+          setAlert(error.response.data.error);
+          setAlertColor("error");
+          setLoading(false);
+        }
       }
+    } else {
+      setAlertColor("error");
+      setSuccessOpen(true);
+      setAlert("Please Select TimeSlots");
     }
   };
 
@@ -536,7 +548,7 @@ const EditSchedule = () => {
                     color="primary"
                   />
                 }
-                label="One to one ?"
+                label="One to one"
               />
               <FormControlLabel
                 style={{ marginTop: "20px" }}
@@ -548,7 +560,7 @@ const EditSchedule = () => {
                     color="primary"
                   />
                 }
-                label="One to many ?"
+                label="One to many"
               />
             </div>
             <FormControlLabel
@@ -564,6 +576,16 @@ const EditSchedule = () => {
               label="DEMO"
             />
           </div>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={isMeetingLinkChangeNeeded}
+                onChange={() => setIsMeetingLinkChangeNeeded((prev) => !prev)}
+                name="checkedA"
+              />
+            }
+            label="Create new Meeting Link"
+          />
           <div className={classes.saveButton}>
             {loading ? (
               <CircularProgress />
