@@ -324,15 +324,7 @@ const CrmDetails = () => {
       });
     });
     fetchData();
-    getUsdVal();
   }, []);
-
-  const getUsdVal = async () => {
-    const data = await axios.get(
-      "https://free.currconv.com/api/v7/convert?q=USD_INR,INR_USD&compact=ultra&apiKey=eaff87f1207bb43ddfa6"
-    );
-    localStorage.setItem("USD", JSON.stringify(data.data.USD_INR));
-  };
 
   const toggleJoinButton = async (rowData) => {
     try {
