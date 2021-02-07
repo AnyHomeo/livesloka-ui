@@ -21,7 +21,6 @@ const useStyles = makeStyles(() => ({
 }));
 
 const AmountChart = ({ dailyDataline, dataa, className, ...rest }) => {
-  // console.log(dailyDataline);
   const classes = useStyles();
 
   const theme = useTheme();

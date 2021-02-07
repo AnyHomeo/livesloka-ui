@@ -15,6 +15,7 @@ import {
   Select,
   InputLabel,
   MenuItem,
+  Switch,
 } from "@material-ui/core/";
 import SaveIcon from "@material-ui/icons/Save";
 import { makeStyles } from "@material-ui/core/styles";
@@ -91,6 +92,9 @@ const EditSchedule = () => {
   const [subjectNameId, setSubjectNameId] = useState("");
   const [ClassName, setClassName] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const [isMeetingLinkChangeNeeded, setIsMeetingLinkChangeNeeded] = useState(
+    false
+  );
 
   const { id } = useParams();
 
@@ -167,7 +171,7 @@ const EditSchedule = () => {
       const schedule = await Axios.get(
         `${process.env.REACT_APP_API_KEY}/schedule/${id}`
       );
-      console.log(schedule)
+      console.log(schedule);
       const {
         teacher,
         className,
@@ -200,8 +204,9 @@ const EditSchedule = () => {
       setSubjectNameId(subject || "");
       setSelectedDate(
         startDate
-          ? `${startDate.split("-")[1]}-${startDate.split("-")[0]}-${startDate.split("-")[2]
-          }`
+          ? `${startDate.split("-")[1]}-${startDate.split("-")[0]}-${
+              startDate.split("-")[2]
+            }`
           : new Date()
       );
       setPersonName(students);
@@ -235,58 +240,66 @@ const EditSchedule = () => {
     setSubjectNames(subjectName.data.result);
   };
   const submitForm = async (e) => {
-    setLoading(true);
     e.preventDefault();
-    let formData = {
-      slots: {},
-    };
-    days.forEach((day) => {
-      formData["slots"][day.toLowerCase()] = timeSlotState
-        .filter((slot) => slot.startsWith(day))
-        .map((slot) => slot.split("!@#$%^&*($%^")[0]);
-    });
-    formData = {
-      ...formData,
-      className: ClassName,
-      meetingLink: zoomLink,
-      meetingAccount: zoomEmail,
-      teacher: teacher,
-      students: personName.map((student) => student._id),
-      demo: demo,
-      OneToOne: onetoone,
-      oneToMany: onetomany,
-      subject: subjectNameId,
-      startDate: moment(selectedDate).format("DD-MM-YYYY"),
-    };
-    try {
-      const res = await Axios.post(
-        `${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`,
-        formData
-      );
-      console.log(res)
-      setDemo(false);
-      setPersonName([]);
-      setZoomEmail("");
-      setZoomLink("");
-      setSubjectNameId("");
-      setSuccessOpen(true);
-      setAlert(res.data.message);
-      setAlertColor("success");
-      setLoading(false);
-      setRadioday("");
-      setClassName("");
-      setTimeSlotState([]);
-      setTimeout(() => {
-        setRedirect(true);
-      }, 2000);
-    } catch (error) {
-      console.error(error.response);
-      if (error.response) {
+    console.log(timeSlotState);
+    if (!!timeSlotState.length) {
+      setLoading(true);
+      let formData = {
+        slots: {},
+      };
+      days.forEach((day) => {
+        formData["slots"][day.toLowerCase()] = timeSlotState
+          .filter((slot) => slot.startsWith(day))
+          .map((slot) => slot.split("!@#$%^&*($%^")[0]);
+      });
+      formData = {
+        ...formData,
+        className: ClassName,
+        meetingLink: zoomLink,
+        meetingAccount: zoomEmail,
+        teacher: teacher,
+        students: personName.map((student) => student._id),
+        demo: demo,
+        OneToOne: onetoone,
+        oneToMany: onetomany,
+        subject: subjectNameId,
+        startDate: moment(selectedDate).format("DD-MM-YYYY"),
+        isMeetingLinkChangeNeeded,
+      };
+      try {
+        const res = await Axios.post(
+          `${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`,
+          formData
+        );
+        console.log(res);
+        setDemo(false);
+        setPersonName([]);
+        setZoomEmail("");
+        setZoomLink("");
+        setSubjectNameId("");
         setSuccessOpen(true);
-        setAlert(error.response.data.error);
-        setAlertColor("error");
+        setAlert(res.data.message);
+        setAlertColor("success");
         setLoading(false);
+        setRadioday("");
+        setClassName("");
+        setTimeSlotState([]);
+        setTimeout(() => {
+          setRedirect(true);
+        }, 2000);
+      } catch (error) {
+        console.error(error.response);
+        if (error.response) {
+          setSuccessOpen(true);
+          setAlert(error.response.data.error);
+          setAlertColor("error");
+          setLoading(false);
+        }
       }
+    } else {
+      setAlertColor("error");
+      setSuccessOpen(true);
+      setAlert("Please Select TimeSlots");
     }
   };
 
@@ -361,7 +374,8 @@ const EditSchedule = () => {
                 options={studentName}
                 getOptionSelected={(option, value) => option._id === value._id}
                 getOptionLabel={(option) =>
-                  `${option.firstName ? option.firstName : ""} ${option.lastName ? option.lastName : ""
+                  `${option.firstName ? option.firstName : ""} ${
+                    option.lastName ? option.lastName : ""
                   }`
                 }
                 multiple
@@ -523,23 +537,9 @@ const EditSchedule = () => {
                 marginTop: "10px",
               }}
             />
-            <TextField
-              fullWidth
-              id="outlined-basic"
-              label="Zoom Link"
-              variant="outlined"
-              value={zoomLink}
-              required
-              onChange={(e) => setZoomLink(e.target.value)}
-              style={{
-                maxWidth: "400px",
-                minWidth: "300px",
-                marginTop: "10px",
-              }}
-            />
-            <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <div style={{ display: "flex", flexDirection: "row" }}>
               <FormControlLabel
-                style={{ marginTop: '20px' }}
+                style={{ marginTop: "20px" }}
                 control={
                   <Checkbox
                     checked={onetoone}
@@ -547,12 +547,11 @@ const EditSchedule = () => {
                     name="OneToOne"
                     color="primary"
                   />
-
                 }
-                label="One to one ?"
+                label="One to one"
               />
               <FormControlLabel
-                style={{ marginTop: '20px' }}
+                style={{ marginTop: "20px" }}
                 control={
                   <Checkbox
                     checked={onetomany}
@@ -560,10 +559,10 @@ const EditSchedule = () => {
                     name="OneToMany"
                     color="primary"
                   />
-
                 }
-                label="One to many ?"
-              /></div>
+                label="One to many"
+              />
+            </div>
             <FormControlLabel
               style={{ marginTop: "20px" }}
               control={
@@ -577,21 +576,31 @@ const EditSchedule = () => {
               label="DEMO"
             />
           </div>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={isMeetingLinkChangeNeeded}
+                onChange={() => setIsMeetingLinkChangeNeeded((prev) => !prev)}
+                name="checkedA"
+              />
+            }
+            label="Create new Meeting Link"
+          />
           <div className={classes.saveButton}>
             {loading ? (
               <CircularProgress />
             ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  type="submit"
-                  className={classes.button}
-                  startIcon={<SaveIcon />}
-                >
-                  Save Changes
-                </Button>
-              )}
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                type="submit"
+                className={classes.button}
+                startIcon={<SaveIcon />}
+              >
+                Save Changes
+              </Button>
+            )}
           </div>
         </div>
       </form>
