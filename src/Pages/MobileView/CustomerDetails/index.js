@@ -34,7 +34,7 @@ const CustomerDetails = () => {
     <div className={classes.root}>
       <Link
         to={{
-          pathname: "/customer-data-info",
+          pathname: "/add-customer-mobile",
         }}
       >
         <Card
