@@ -153,6 +153,9 @@ const Login = () => {
           error: "no admin access to login",
         }));
       } else if (isAutheticated() && isAutheticated().roleId === 3) {
+        if (window.innerWidth <= 415) {
+          return <Redirect to="/customer-data-mobile" />;
+        }
         return <Redirect to="/customer-data" />;
       }
     }
