@@ -295,6 +295,10 @@ const TeacherSalary = () => {
   const [salDates, setSalDates] = useState([]);
   const [successOpen, setSuccessOpen] = React.useState(false);
 
+  const [totalSalaryVariable, setTotalSalaryVariable] = useState(0);
+
+  let totalSalaryVar = 0;
+
   const handleChange = (event) => {
     setGetDate(event.target.value);
     getSalaries(event.target.value);
@@ -314,6 +318,13 @@ const TeacherSalary = () => {
         `${process.env.REACT_APP_API_KEY}/salary/all?month=${date}`
       );
       setSalaryData(data && data.data.finalDataObjectArr);
+
+      data &&
+        data.data.finalDataObjectArr.map((data) => {
+          totalSalaryVar = totalSalaryVar + data.totalSalary;
+          setTotalSalaryVariable(totalSalaryVar);
+        });
+      console.log(totalSalaryVariable);
     } catch (error) {
       console.log(error.response);
       setSuccessOpen(true);
@@ -374,7 +385,9 @@ const TeacherSalary = () => {
             </Select>
           </FormControl>
         </div>
-
+        <h1 style={{ marginTop: "15px" }}>
+          Total Salary : {totalSalaryVariable} rs
+        </h1>
         {loading ? (
           <div style={{ marginTop: 40 }}>
             <CircularProgress />
