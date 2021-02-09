@@ -24,6 +24,7 @@ import {
   Snackbar,
   Chip,
   LinearProgress,
+  Card,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import moment from "moment";
@@ -385,9 +386,27 @@ const TeacherSalary = () => {
             </Select>
           </FormControl>
         </div>
-        <h1 style={{ marginTop: "15px" }}>
-          Total Salary : {totalSalaryVariable} rs
-        </h1>
+        <Card
+          style={{
+            width: 300,
+            height: 100,
+            marginTop: "30px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            marginTop: "8px",
+            marginBottom: "15px",
+            backgroundColor: "#1abc9c",
+            color: "white",
+          }}
+        >
+          <h1 style={{ fontSize: "20px" }}>
+            Total Salary :{" "}
+            {totalSalaryVariable.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}{" "}
+            rs
+          </h1>
+        </Card>
         {loading ? (
           <div style={{ marginTop: 40 }}>
             <CircularProgress />
