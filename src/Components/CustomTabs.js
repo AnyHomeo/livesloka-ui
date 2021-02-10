@@ -37,9 +37,12 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "block",
     margin: "0 auto",
-    width: "80vw",
+    width: "95%",
     marginTop: "40px",
     backgroundColor: theme.palette.background.paper,
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
   },
 }));
 
