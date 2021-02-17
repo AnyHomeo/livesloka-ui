@@ -18,46 +18,75 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "10px",
   },
 }));
+
+const getSlotFromTime = (date) => {
+  let daysarr = [
+    "SUNDAY",
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY",
+  ];
+  let newDate = new Date(date);
+  let dayToday = newDate.getDay();
+  let hoursRightNow = newDate.getHours();
+  let minutesRightNow = newDate.getMinutes();
+  let secondsRightNow = newDate.getSeconds();
+  let isAm = hoursRightNow < 12;
+  hoursRightNow = !isAm ? hoursRightNow - 12 : hoursRightNow;
+  let is30 = minutesRightNow > 30;
+  let secondsLeft =
+    (is30 ? 59 - minutesRightNow : 29 - minutesRightNow) * 60 +
+    (60 - secondsRightNow);
+  if ((hoursRightNow === 11) & is30) {
+    return {
+      slot: `${daysarr[dayToday]}-11:30 ${isAm ? "AM" : "PM"}-12:00 ${
+        !isAm ? "AM" : "PM"
+      }`,
+      secondsLeft,
+    };
+  } else if (hoursRightNow === 12 && is30) {
+    return {
+      slot: `${daysarr[dayToday]}-12:30 ${isAm ? "AM" : "PM"}-01:00 ${
+        isAm ? "AM" : "PM"
+      }`,
+      secondsLeft,
+    };
+  } else {
+    return {
+      slot: `${daysarr[dayToday]}-${hoursRightNow}${is30 ? ":30" : ":00"} ${
+        isAm ? "AM" : "PM"
+      }-${is30 ? hoursRightNow + 1 : hoursRightNow}${is30 ? ":00" : ":30"} ${
+        isAm ? "AM" : "PM"
+      }`,
+      secondsLeft,
+    };
+  }
+};
+
 const Statistics = () => {
   const classes = useStyles();
-
   const [statisticsData, setStatisticsData] = useState();
-
-  const [todayDay, setTodayDay] = useState();
-  const [hourQueryString, setHourQueryString] = useState();
-  const [amorpm, setAmorpm] = useState();
-  const [todatDate, setTodatDate] = useState();
-
   useEffect(() => {
-    convertTZ();
-    fetchStatisticsData();
-  }, [todayDay]);
+    getStatistics();
+  }, []);
 
-  function convertTZ() {
-    let date = new Date().toLocaleString("en-US", {
-      timeZone: "Asia/Kolkata",
-    });
-
-    setTodayDay(moment(date).format("dddd").toUpperCase());
-    setHourQueryString(moment(date).format("hh"));
-    setAmorpm(moment(date).format("A"));
-
-    setTodatDate(moment(date).format("DD-MM-YYYY"));
-  }
-
-  const fetchStatisticsData = async () => {
+  const getStatistics = async () => {
     try {
-      let slotQueryString = `${todayDay}-${hourQueryString}:00 ${amorpm}-${hourQueryString}:30 ${amorpm}`;
-      if (todayDay) {
-        const res = await axios.get(
-          `${process.env.REACT_APP_API_KEY}/customer/class/dashboard?date=${todatDate}&slot=${slotQueryString}`
-        );
+      let date = new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kolkata",
+      });
+      const { slot } = getSlotFromTime(date);
+      let formattedDate = moment(date).format("DD-MM-YYYY");
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_KEY}/customer/class/dashboard?date=${formattedDate}&slot=${slot}`
+      );
 
-        setStatisticsData(res && res.data);
-        console.log(res);
-      }
+      setStatisticsData(res.data);
     } catch (error) {
-      console.log(error.response);
+      console.log(error);
     }
   };
 
@@ -193,10 +222,7 @@ const Statistics = () => {
             }}
           >
             <div>
-              <h1 className={classes.titleCard}>
-                Class Live Dashboard Now : {todayDay} {hourQueryString}:00{" "}
-                {amorpm}
-              </h1>
+              <h1 className={classes.titleCard}>Classes Live Now</h1>
             </div>
             <Grid
               container
