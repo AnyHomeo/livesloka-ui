@@ -274,10 +274,7 @@ const Statistics = () => {
             }}
           >
             <div>
-              <h1 className={classes.titleCard}>
-                Next Classes
-                {amorpm}
-              </h1>
+              <h1 className={classes.titleCard}>Next Classes</h1>
             </div>
             <Grid
               container
