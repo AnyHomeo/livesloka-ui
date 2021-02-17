@@ -117,8 +117,8 @@ function Routes() {
               component={TeacherSalaries}
             />
             <AdminRoute path="/test" exact component={ZoomAccountDashboard} />
+            <Route path="*" component={NotFoundView} />
           </DashboardLayout>
-          <Route path="*" component={NotFoundView} />
         </Switch>
       </Router>
     </>
