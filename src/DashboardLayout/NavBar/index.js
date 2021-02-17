@@ -35,7 +35,7 @@ const user = {
 
 const items = [
   {
-    href: "/customer-data",
+    href: window.innerWidth <= 415 ? "/customer-data-mobile" : "/customer-data",
     icon: FileText,
     title: "Customers Data",
   },
@@ -65,11 +65,6 @@ const items = [
     title: "Scheduler",
   },
 
-  // {
-  //   href: "/teacherSalaries",
-  //   icon: DollarSign,
-  //   title: "Teacher Salaries",
-  // },
   {
     href: "/reset/password",
     icon: LockIcon,
