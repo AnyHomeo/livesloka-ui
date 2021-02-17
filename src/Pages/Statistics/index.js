@@ -167,7 +167,7 @@ const Statistics = () => {
 
                 <Card
                   style={{
-                    width: "500px",
+                    width: "100%",
                     height: "150px",
                     display: "flex",
                     justifyContent: "center",
@@ -183,7 +183,7 @@ const Statistics = () => {
             </Grid>
           </Grid>
 
-          <Grid
+          {/* <Grid
             container
             style={{
               display: "flex",
@@ -202,7 +202,7 @@ const Statistics = () => {
               statisticsData.schedulesRightNow.map((data) => {
                 console.log(data);
                 return (
-                  <Grid item xs={6} sm={4}>
+                  <Grid item xs={6} sm={4} style={{display:"flex"}}>
                     <a href={data.meetingLink}>
                       <Card
                         className={classes.card}
@@ -233,6 +233,145 @@ const Statistics = () => {
                   </Grid>
                 );
               })}
+          </Grid> */}
+
+          <Grid
+            container
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <div>
+              <h1 className={classes.titleCard}>
+                Class Live Dashboard Now : {todayDay} {hourQueryString}:00{" "}
+                {amorpm}
+              </h1>
+            </div>
+            <Grid
+              container
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {statisticsData &&
+              statisticsData.schedulesRightNow.length === 0 ? (
+                <p
+                  style={{
+                    color: "#e74c3c",
+                  }}
+                >
+                  No classes found
+                </p>
+              ) : (
+                statisticsData.schedulesRightNow.map((data) => {
+                  return (
+                    <Grid item xs={4} sm={2} style={{ display: "flex" }}>
+                      <a href={data.meetingLink}>
+                        <Card
+                          className={classes.card}
+                          style={{
+                            backgroundColor: data.isTeacherJoined
+                              ? "#2ecc71"
+                              : "#f39c12",
+                          }}
+                        >
+                          <p
+                            style={{
+                              color: "white",
+                            }}
+                          >
+                            {data.className}
+                          </p>
+
+                          <p
+                            style={{
+                              color: "white",
+                              fontSize: "10px",
+                            }}
+                          >
+                            {data.scheduleDescription}
+                          </p>
+                        </Card>
+                      </a>
+                    </Grid>
+                  );
+                })
+              )}
+            </Grid>
+          </Grid>
+
+          <Grid
+            container
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <div>
+              <h1 className={classes.titleCard}>
+                Class Live Dashboard Now : {todayDay} {hourQueryString}:00{" "}
+                {amorpm}
+              </h1>
+            </div>
+            <Grid
+              container
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {statisticsData && statisticsData.nextSchedules.length === 0 ? (
+                <p
+                  style={{
+                    color: "#e74c3c",
+                  }}
+                >
+                  No classes found
+                </p>
+              ) : (
+                statisticsData.nextSchedules.map((data) => {
+                  return (
+                    <Grid item xs={4} sm={2} style={{ display: "flex" }}>
+                      <a href={data.meetingLink}>
+                        <Card
+                          className={classes.card}
+                          style={{
+                            backgroundColor: "#ecf0f1",
+                          }}
+                        >
+                          <p
+                            style={{
+                              color: "black",
+                            }}
+                          >
+                            {data.className}
+                          </p>
+
+                          <p
+                            style={{
+                              color: "black",
+                              fontSize: "10px",
+                            }}
+                          >
+                            {data.scheduleDescription}
+                          </p>
+                        </Card>
+                      </a>
+                    </Grid>
+                  );
+                })
+              )}
+            </Grid>
           </Grid>
         </div>
       )}
