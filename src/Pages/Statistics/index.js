@@ -275,7 +275,7 @@ const Statistics = () => {
           >
             <div>
               <h1 className={classes.titleCard}>
-                Class Live Dashboard Now : {todayDay} {hourQueryString}:00{" "}
+                Next Classes
                 {amorpm}
               </h1>
             </div>

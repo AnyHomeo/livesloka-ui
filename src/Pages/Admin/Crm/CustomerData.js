@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import SmsOutlinedIcon from "@material-ui/icons/SmsOutlined";
 import useWindowDimensions from "../../../Components/useWindowDimensions";
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
+import moment from "moment";
 import {
   getAllCustomerDetails,
   AddCustomer,
@@ -26,6 +27,8 @@ import {
   Snackbar,
   Checkbox,
   Switch,
+  Card,
+  Grid,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import Comments from "./Comments";
@@ -115,6 +118,19 @@ const useStyles = makeStyles((theme) => ({
   },
   fullList: {
     width: "auto",
+  },
+  card: {
+    width: 150,
+    height: 100,
+    marginTop: "10px",
+    marginBottom: "10px",
+    textAlign: "center",
+  },
+  titleCard: {
+    fontSize: "16px",
+    textAlign: "center",
+    marginBottom: "10px",
+    marginTop: "10px",
   },
 }));
 
@@ -772,6 +788,44 @@ const CrmDetails = () => {
     setSnackBarOpen(false);
   };
 
+  const [statisticsData, setStatisticsData] = useState();
+  const [todayDay, setTodayDay] = useState();
+  const [hourQueryString, setHourQueryString] = useState();
+  const [amorpm, setAmorpm] = useState();
+  const [todatDate, setTodatDate] = useState();
+  useEffect(() => {
+    convertTZ();
+    fetchStatisticsData();
+  }, [todayDay]);
+
+  function convertTZ() {
+    let date = new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Kolkata",
+    });
+
+    setTodayDay(moment(date).format("dddd").toUpperCase());
+    setHourQueryString(moment(date).format("hh"));
+    setAmorpm(moment(date).format("A"));
+
+    setTodatDate(moment(date).format("DD-MM-YYYY"));
+  }
+
+  const fetchStatisticsData = async () => {
+    try {
+      let slotQueryString = `${todayDay}-${hourQueryString}:00 ${amorpm}-${hourQueryString}:30 ${amorpm}`;
+      if (todayDay) {
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_KEY}/customer/class/dashboard?date=${todatDate}&slot=${slotQueryString}`
+        );
+
+        setStatisticsData(res && res.data);
+        console.log(res);
+      }
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
   return (
     <>
       <ColumnFilterDrawer
@@ -794,6 +848,104 @@ const CrmDetails = () => {
         </Alert>
       </Snackbar>
       <div>
+        {statisticsData && (
+          <div style={{ backgroundColor: "white" }}>
+            <Grid container style={{ margin: "0 auto", width: "90%" }}>
+              <Grid item xs={12} md={6}>
+                <div>
+                  <h1 className={classes.titleCard}>
+                    No Of Classes for In Classes Status
+                  </h1>
+                </div>
+                <Grid
+                  container
+                  style={{ display: "flex", flexDirection: "row" }}
+                >
+                  <Grid item xs={6} sm={4}>
+                    <Card
+                      className={classes.card}
+                      style={{ backgroundColor: "#e74c3c" }}
+                    >
+                      <h2>{"<-2"}</h2>
+                      <h1 style={{ color: "white" }}>
+                        {statisticsData.customersLessThanMinus2}
+                      </h1>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={6} sm={4}>
+                    <Card
+                      className={classes.card}
+                      style={{ backgroundColor: "#e67e22" }}
+                    >
+                      <h2>{"<-1"}</h2>
+                      <h1 style={{ color: "white" }}>
+                        {statisticsData.customersEqualToMinus1}
+                      </h1>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={6} sm={4}>
+                    <Card
+                      className={classes.card}
+                      style={{ backgroundColor: "#2ecc71" }}
+                    >
+                      <h2>{"0"}</h2>
+                      <h1 style={{ color: "white" }}>
+                        {statisticsData.customersEqualTo0}
+                      </h1>
+                    </Card>
+                  </Grid>
+                </Grid>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <div>
+                  <h1 className={classes.titleCard}>
+                    No Of Classes for In Classes Status
+                  </h1>
+                </div>
+                <Grid
+                  container
+                  style={{ display: "flex", flexDirection: "row" }}
+                >
+                  <Grid item xs={6} sm={4}>
+                    <Card
+                      className={classes.card}
+                      style={{ backgroundColor: "#d35400" }}
+                    >
+                      <h2>New</h2>
+                      <h1 style={{ color: "white" }}>
+                        {statisticsData.newCustomers}
+                      </h1>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={6} sm={4}>
+                    <Card
+                      className={classes.card}
+                      style={{ backgroundColor: "#3498db" }}
+                    >
+                      <h2>Demo</h2>
+                      <h1 style={{ color: "white" }}>
+                        {statisticsData.demoCustomers}
+                      </h1>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={6} sm={4}>
+                    <Card
+                      className={classes.card}
+                      style={{ backgroundColor: "#27ae60" }}
+                    >
+                      <h2>InClass</h2>
+                      <h1 style={{ color: "white" }}>
+                        {statisticsData.customersInClass}
+                      </h1>
+                    </Card>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </div>
+        )}
+
         <MaterialTable
           stickyHeader
           style={{
