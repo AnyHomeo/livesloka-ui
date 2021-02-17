@@ -183,58 +183,6 @@ const Statistics = () => {
             </Grid>
           </Grid>
 
-          {/* <Grid
-            container
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <div>
-              <h1 className={classes.titleCard}>
-                Class Live Dashboard Now : {todayDay} {hourQueryString}:00{" "}
-                {amorpm}
-              </h1>
-            </div>
-            {statisticsData &&
-              statisticsData.schedulesRightNow.map((data) => {
-                console.log(data);
-                return (
-                  <Grid item xs={6} sm={4} style={{display:"flex"}}>
-                    <a href={data.meetingLink}>
-                      <Card
-                        className={classes.card}
-                        style={{
-                          backgroundColor: data.isTeacherJoined
-                            ? "#2ecc71"
-                            : "#f39c12",
-                        }}
-                      >
-                        <p
-                          style={{
-                            color: "white",
-                          }}
-                        >
-                          {data.className}
-                        </p>
-
-                        <p
-                          style={{
-                            color: "white",
-                            fontSize: "10px",
-                          }}
-                        >
-                          {data.scheduleDescription}
-                        </p>
-                      </Card>
-                    </a>
-                  </Grid>
-                );
-              })}
-          </Grid> */}
-
           <Grid
             container
             style={{
@@ -271,7 +219,17 @@ const Statistics = () => {
               ) : (
                 statisticsData.schedulesRightNow.map((data) => {
                   return (
-                    <Grid item xs={4} sm={2} style={{ display: "flex" }}>
+                    <Grid
+                      item
+                      xs={6}
+                      sm={2}
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
                       <a href={data.meetingLink}>
                         <Card
                           className={classes.card}
@@ -341,7 +299,17 @@ const Statistics = () => {
               ) : (
                 statisticsData.nextSchedules.map((data) => {
                   return (
-                    <Grid item xs={4} sm={2} style={{ display: "flex" }}>
+                    <Grid
+                      item
+                      xs={6}
+                      sm={2}
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
                       <a href={data.meetingLink}>
                         <Card
                           className={classes.card}
