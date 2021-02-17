@@ -90,6 +90,11 @@ const items = [
     icon: BarChart2,
     title: "Teachers Salary",
   },
+  {
+    href: "/statistics",
+    icon: BarChart,
+    title: "Statistics",
+  },
 ];
 
 const useStyles = makeStyles(() => ({

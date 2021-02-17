@@ -28,6 +28,7 @@ import TeacherSalaries from "../Pages/Admin/Crm/TeacherSalaries";
 import CustomerDetails from "../Pages/MobileView/CustomerDetails";
 import CustomersDetailsMb from "../Pages/MobileView/CustomerDetails/CustomersDetailsMb";
 import AddNewCustomer from "../Pages/MobileView/CustomerDetails/AddNewCustomer";
+import Statistics from "../Pages/Statistics";
 function Routes() {
   return (
     <>
@@ -55,6 +56,7 @@ function Routes() {
               exact
               component={CustomersDetailsMb}
             />
+            <AdminRoute path="/statistics" exact component={Statistics} />
             <AdminRoute
               path="/add-customer-mobile"
               exact
