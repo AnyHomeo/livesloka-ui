@@ -56,11 +56,13 @@ const getSlotFromTime = (date) => {
     };
   } else {
     return {
-      slot: `${daysarr[dayToday]}-${hoursRightNow}${is30 ? ":30" : ":00"} ${
-        isAm ? "AM" : "PM"
-      }-${is30 ? hoursRightNow + 1 : hoursRightNow}${is30 ? ":00" : ":30"} ${
-        isAm ? "AM" : "PM"
-      }`,
+      slot: `${daysarr[dayToday]}-${("0" + hoursRightNow).slice(-2)}${
+        is30 ? ":30" : ":00"
+      } ${isAm ? "AM" : "PM"}-${
+        is30
+          ? ("0" + (hoursRightNow + 1)).slice(-2)
+          : ("0" + hoursRightNow).slice(-2)
+      }${is30 ? ":00" : ":30"} ${isAm ? "AM" : "PM"}`,
       secondsLeft,
     };
   }
