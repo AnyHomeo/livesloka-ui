@@ -3,6 +3,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Card } from "@material-ui/core/";
 import axios from "axios";
 import moment from "moment";
+import io from "socket.io-client";
+const socket = io("http://localhost:5000/");
+
 const useStyles = makeStyles((theme) => ({
   card: {
     width: 150,
@@ -73,6 +76,24 @@ const Statistics = () => {
   const [statisticsData, setStatisticsData] = useState();
   useEffect(() => {
     getStatistics();
+    socket.on("teacher-joined", ({ scheduleId }) => {
+      console.log(scheduleId);
+      console.log(statisticsData);
+      setStatisticsData((prev) => {
+        let tempStatisticsData = { ...prev };
+        tempStatisticsData = {
+          ...tempStatisticsData,
+          schedulesRightNow: tempStatisticsData.schedulesRightNow.map(
+            (schedule) => ({
+              ...schedule,
+              isTeacherJoined:
+                schedule._id == scheduleId ? true : schedule.isTeacherJoined,
+            })
+          ),
+        };
+        return tempStatisticsData;
+      });
+    });
   }, []);
 
   const getStatistics = async () => {
@@ -85,7 +106,7 @@ const Statistics = () => {
       const res = await axios.get(
         `${process.env.REACT_APP_API_KEY}/customer/class/dashboard?date=${formattedDate}&slot=${slot}`
       );
-
+      console.log(res.data);
       setStatisticsData(res.data);
     } catch (error) {
       console.log(error);

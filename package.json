@@ -32,7 +32,8 @@
     "react-perfect-scrollbar": "^1.5.8",
     "react-router-dom": "5.2.0",
     "react-scripts": "3.4.1",
-    "react-spinners": "0.9.0"
+    "react-spinners": "0.9.0",
+    "socket.io-client": "3.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
