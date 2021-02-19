@@ -140,10 +140,10 @@ function Scheduler() {
   const [selectedSchedule, setSelectedSchedule] = useState({});
 
   useEffect(() => {
-    serviceCallDelete();
+    getAllSchedulesData();
   }, []);
 
-  const serviceCallDelete = () => {
+  const getAllSchedulesData = () => {
     getOccupancy().then((data) => {
       setCategorizedData(data.data.data);
       setAllSchedules(data.data.allSchedules);
@@ -155,7 +155,7 @@ function Scheduler() {
       const deleteddata = await Axios.get(
         `${process.env.REACT_APP_API_KEY}/schedule/delete/${scheduleId}`
       );
-      serviceCallDelete();
+      getAllSchedulesData();
       setScheduleId("");
     } catch (error) {
       console.log(error.response);
@@ -277,20 +277,55 @@ function Scheduler() {
                 />
                 <div
                   style={{
-                    display: "flex",
-                    alignItems: "center",
+                    width: "100%",
                   }}
                 >
-                  <h3>Zoom Account:</h3>
-                  <p
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={selectedSchedule.isClassTemperarilyCancelled}
+                        onChange={() => {
+                          setSelectedSchedule((prev) => {
+                            let oldSchedule = { ...prev };
+                            let newSchedule = {
+                              ...oldSchedule,
+                              isClassTemperarilyCancelled: !oldSchedule.isClassTemperarilyCancelled,
+                            };
+                            return newSchedule;
+                          });
+                        }}
+                        name="cancelClass"
+                      />
+                    }
+                    label="Enable to Cancel the Class"
+                  />
+                  <div
                     style={{
-                      marginLeft: "20px",
+                      display: "flex",
+                      flexDirection: "row",
                     }}
                   >
-                    {selectedSchedule.meetingAccount
-                      ? selectedSchedule.meetingAccount.ZoomAccountName
-                      : ""}
-                  </p>
+                    {selectedSchedule.isClassTemperarilyCancelled ? (
+                      <>
+                        <TextField
+                          id="message"
+                          label="Message"
+                          fullWidth
+                          variant="outlined"
+                        />
+                        <Button
+                          variant="contained"
+                          style={{ marginLeft: "10px" }}
+                          color="primary"
+                        >
+                          {" "}
+                          Submit{" "}
+                        </Button>
+                      </>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
               </>
             ) : (
