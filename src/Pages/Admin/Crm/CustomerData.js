@@ -386,6 +386,10 @@ const CrmDetails = () => {
           selected: settings.includes("studyMaterialSent"),
           name: "Study Material Sent",
         },
+        createdAt: {
+          selected: settings.includes("createdAt"),
+          name: "Joining Date",
+        },
       });
     });
     fetchData();
@@ -786,6 +790,15 @@ const CrmDetails = () => {
           headerStyle: { whiteSpace: "nowrap" },
         },
         {
+          title: "Joining Date",
+          field: "createdAt",
+          width: "1%",
+          type: "date",
+          hidden: !columnFilters["createdAt"].selected,
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
+        },
+        {
           title: "Study material Sent",
           field: "studyMaterialSent",
           type: "boolean",
@@ -1157,7 +1170,7 @@ const CrmDetails = () => {
               <MTableBodyRow
                 {...props}
                 onDoubleClick={(e) => {
-                  props.actions[3]().onClick(e, props.data);
+                  props.actions[4]().onClick(e, props.data);
                 }}
               />
             ),

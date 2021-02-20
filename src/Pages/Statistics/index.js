@@ -4,7 +4,7 @@ import { Grid, Card } from "@material-ui/core/";
 import axios from "axios";
 import moment from "moment";
 import io from "socket.io-client";
-const socket = io("http://localhost:5000/");
+const socket = io(process.env.REACT_APP_API_KEY);
 
 const useStyles = makeStyles((theme) => ({
   card: {
