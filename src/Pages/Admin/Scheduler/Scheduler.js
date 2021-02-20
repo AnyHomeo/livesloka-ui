@@ -312,6 +312,17 @@ function Scheduler() {
                           label="Message"
                           fullWidth
                           variant="outlined"
+                          value={selectedSchedule.message}
+                          onChange={(e) =>
+                            setSelectedSchedule((prev) => {
+                              let oldSchedule = { ...prev };
+                              let newSchedule = {
+                                ...oldSchedule,
+                                message: e.target.value,
+                              };
+                              return newSchedule;
+                            })
+                          }
                         />
                         <Button
                           variant="contained"

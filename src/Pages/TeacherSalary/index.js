@@ -325,7 +325,6 @@ const TeacherSalary = () => {
           totalSalaryVar = totalSalaryVar + data.totalSalary;
           setTotalSalaryVariable(totalSalaryVar);
         });
-      console.log(totalSalaryVariable);
     } catch (error) {
       console.log(error.response);
       setSuccessOpen(true);

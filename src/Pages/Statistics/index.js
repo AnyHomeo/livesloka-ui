@@ -106,7 +106,6 @@ const Statistics = () => {
       const res = await axios.get(
         `${process.env.REACT_APP_API_KEY}/customer/class/dashboard?date=${formattedDate}&slot=${slot}`
       );
-      console.log(res.data);
       setStatisticsData(res.data);
     } catch (error) {
       console.log(error);
