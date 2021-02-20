@@ -150,8 +150,6 @@ const CustomersDetailsMb = ({ location }) => {
     });
   };
 
-  console.log(customersEditData);
-  console.log(data);
   return (
     <div
       style={{

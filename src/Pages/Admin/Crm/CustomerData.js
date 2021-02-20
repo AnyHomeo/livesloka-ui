@@ -30,6 +30,7 @@ import {
   Card,
   Grid,
 } from "@material-ui/core";
+import EqualizerIcon from "@material-ui/icons/Equalizer";
 import CloseIcon from "@material-ui/icons/Close";
 import Comments from "./Comments";
 import "date-fns";
@@ -41,6 +42,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { isAutheticated } from "../../../auth";
 import { getSettings, updateSettings } from "../../../Services/Services";
 import axios from "axios";
+
 const copyToClipboard = (text) => {
   var textField = document.createElement("textarea");
   textField.innerText = text;
@@ -210,6 +212,7 @@ const CrmDetails = () => {
   const [success, setSuccess] = useState(false);
   const [response, setResponse] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [statisticsOpen, setStatisticsOpen] = useState(false);
   const [columnFilters, setColumnFilters] = useState({});
   const [classDropdown, setClassDropdown] = useState({});
   const [timeZoneDropdown, setTimeZoneDropdown] = useState({});
@@ -221,7 +224,7 @@ const CrmDetails = () => {
   const [categoryDropdown, setCategoryDropdown] = useState({});
   const [subjectDropdown, setSubjectDropdown] = useState({});
   const [dropDownFilters, setDropDownFilters] = useState({});
-
+  const [toolbarFilteredData, setToolbarFilteredData] = useState();
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
@@ -819,13 +822,68 @@ const CrmDetails = () => {
         );
 
         setStatisticsData(res && res.data);
-        console.log(res);
       }
     } catch (error) {
       console.log(error.response);
     }
   };
 
+  const [filteredDataBTN, setFilteredDataBTN] = useState();
+  const [applyFilerBool, setApplyFilerBool] = useState(false);
+  const filterDatabtn = () => {
+    let newArray = [];
+
+    // if (toolbarFilteredData.filerName === "classStatus") {
+    //   newArray = data.filter((el) => {
+    //     if (el.classStatusId === toolbarFilteredData.data[0].id) {
+    //       // newArray.push(el);
+    //     }
+    //   });
+    // }
+    // if (toolbarFilteredData.filerName === "timeZone") {
+    //   newArray = data.filter((el) => {
+    //     if (el.timeZoneId === toolbarFilteredData.data[0].id) {
+    //       // newArray.push(el);
+    //     }
+    //   });
+    // }
+    // if (toolbarFilteredData.filerName === "class") {
+    //   newArray = data.filter((el) => {
+    //     if (el.classId === toolbarFilteredData.data[0].id) {
+    //       // newArray.push(el);
+    //     }
+    //   });
+    // }
+    // if (toolbarFilteredData.filerName === "teacher") {
+    //   newArray = data.filter((el) => {
+    //     if (el.teacherId === toolbarFilteredData.data[0].id) {
+    //       // newArray.push(el);
+    //     }
+    //   });
+    // }
+    // if (toolbarFilteredData.filerName === "country") {
+    //   newArray = data.filter((el) => {
+    //     if (el.countryId === toolbarFilteredData.data[0].id) {
+    //       // newArray.push(el);
+    //     }
+    //   });
+    // }
+
+    // setData(newArray);
+    setApplyFilerBool(true);
+    var id_filter = [toolbarFilteredData.data[0].id];
+    var filtered = data.filter(function (item) {
+      if (toolbarFilteredData.filerName === "classStatus") {
+        return id_filter.indexOf(item.classStatusId) !== -1;
+      }
+      if (toolbarFilteredData.filerName === "timeZone") {
+        return id_filter.indexOf(item.timeZoneId) !== -1;
+      }
+    });
+    setFilteredDataBTN(filtered);
+  };
+
+  console.log(toolbarFilteredData);
   return (
     <>
       <ColumnFilterDrawer
@@ -848,7 +906,7 @@ const CrmDetails = () => {
         </Alert>
       </Snackbar>
       <div>
-        {statisticsData && (
+        {statisticsOpen && statisticsData && (
           <div style={{ backgroundColor: "white" }}>
             <Grid container style={{ margin: "0 auto", width: "90%" }}>
               <Grid item xs={12} md={6}>
@@ -955,7 +1013,7 @@ const CrmDetails = () => {
           isLoading={loading}
           title="Customer data"
           columns={columns}
-          data={data}
+          data={applyFilerBool ? filteredDataBTN : data}
           options={{
             pageSize: 20,
             pageSizeOptions: [20, 30, 40, 50, data.length],
@@ -992,6 +1050,12 @@ const CrmDetails = () => {
               tooltip: "Filter Columns",
               isFreeAction: true,
               onClick: (event) => setDrawerOpen(true),
+            },
+            {
+              icon: () => <EqualizerIcon />,
+              tooltip: "Statistics",
+              isFreeAction: true,
+              onClick: (event) => setStatisticsOpen(!statisticsOpen),
             },
           ]}
           components={{
@@ -1046,7 +1110,16 @@ const CrmDetails = () => {
                           ]
                         }
                         onChange={(e, arr) => {
-                          console.log(arr);
+                          setToolbarFilteredData({
+                            filerName: [
+                              "classStatus",
+                              "timeZone",
+                              "class",
+                              "teacher",
+                              "country",
+                            ][i],
+                            data: arr,
+                          });
                         }}
                         limitTags={1}
                         getOptionLabel={(option) => option.name}
@@ -1072,8 +1145,18 @@ const CrmDetails = () => {
                     variant="contained"
                     color="primary"
                     style={{ margin: "5px" }}
+                    // onClick={filterDatabtn}
                   >
                     Apply Filter
+                  </Button>
+
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ margin: "5px" }}
+                    // onClick={() => setApplyFilerBool(false)}
+                  >
+                    Clear Filter
                   </Button>
                 </div>
               </div>
