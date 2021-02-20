@@ -118,7 +118,6 @@ const AddNewCustomer = () => {
   const addNewCustomer = async () => {
     try {
       const res = await AddCustomer(customersEditData);
-      console.log(res);
     } catch (err) {
       console.log(err.response);
     }

@@ -6,6 +6,7 @@ import {
   addAvailableTimeSlot,
   deleteAvailableTimeSlot,
   getOccupancy,
+  updateScheduleDangerously,
 } from "../../../Services/Services";
 import {
   Button,
@@ -21,7 +22,7 @@ import {
   Slide,
   Switch,
   TextField,
-  Typography,
+  Snackbar,
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -29,6 +30,7 @@ import { FileCopyOutlined } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import Axios from "axios";
 import SingleBlock from "./SingleBlock";
+import MuiAlert from "@material-ui/lab/Alert";
 import AdjustIcon from "@material-ui/icons/Adjust";
 const times = [
   "12:00 AM-12:30 AM",
@@ -126,6 +128,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 function Scheduler() {
   const [teacher, setTeacher] = useState("");
   const [teacherId, setTeacherId] = useState("");
@@ -138,6 +144,9 @@ function Scheduler() {
   );
   const [scheduleId, setScheduleId] = useState("");
   const [selectedSchedule, setSelectedSchedule] = useState({});
+  const [snackBarOpen, setSnackBarOpen] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [response, setResponse] = useState("");
 
   useEffect(() => {
     getAllSchedulesData();
@@ -160,6 +169,13 @@ function Scheduler() {
     } catch (error) {
       console.log(error.response);
     }
+  };
+
+  const handleSnackBarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackBarOpen(false);
   };
 
   const gotoZoomLink = (id, link) => {
@@ -222,6 +238,18 @@ function Scheduler() {
         setTeacherId={setTeacherId}
         setCategory={setCategory}
       />
+      <Snackbar
+        open={snackBarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackBarClose}
+      >
+        <Alert
+          onClose={handleSnackBarClose}
+          severity={success ? "success" : "warning"}
+        >
+          {response}
+        </Alert>
+      </Snackbar>
       <Dialog
         open={!!scheduleId}
         TransitionComponent={Transition}
@@ -285,14 +313,19 @@ function Scheduler() {
                       <Switch
                         checked={selectedSchedule.isClassTemperarilyCancelled}
                         onChange={() => {
-                          setSelectedSchedule((prev) => {
-                            let oldSchedule = { ...prev };
-                            let newSchedule = {
-                              ...oldSchedule,
-                              isClassTemperarilyCancelled: !oldSchedule.isClassTemperarilyCancelled,
-                            };
-                            return newSchedule;
-                          });
+                          updateScheduleDangerously(selectedSchedule._id, {
+                            isClassTemperarilyCancelled: !selectedSchedule.isClassTemperarilyCancelled,
+                          })
+                            .then((response) => {
+                              console.log(response);
+                              getAllSchedulesData();
+                            })
+                            .catch((error) => {
+                              console.log(error);
+                              setSuccess(false);
+                              setResponse("Something went wrong");
+                              setSnackBarOpen(true);
+                            });
                         }}
                         name="cancelClass"
                       />
@@ -312,11 +345,41 @@ function Scheduler() {
                           label="Message"
                           fullWidth
                           variant="outlined"
+                          value={selectedSchedule.message}
+                          onChange={(e) => {
+                            e.persist();
+                            setSelectedSchedule((prev) => {
+                              let oldSchedule = { ...prev };
+                              let newSchedule = {
+                                ...oldSchedule,
+                                message: e.target.value,
+                              };
+                              return newSchedule;
+                            });
+                          }}
                         />
                         <Button
                           variant="contained"
                           style={{ marginLeft: "10px" }}
                           color="primary"
+                          onClick={() => {
+                            updateScheduleDangerously(selectedSchedule._id, {
+                              message: selectedSchedule.message,
+                            })
+                              .then((response) => {
+                                console.log(response);
+                                getAllSchedulesData();
+                                setSuccess(true);
+                                setResponse(response.data.message);
+                                setSnackBarOpen(true);
+                              })
+                              .catch((error) => {
+                                console.log(error);
+                                setSuccess(false);
+                                setResponse(response.data.message);
+                                setSnackBarOpen(true);
+                              });
+                          }}
                         >
                           {" "}
                           Submit{" "}

@@ -226,3 +226,9 @@ export const getAllSchedulesByZoomAccountId = (id) =>
 
 export const getSchedulesByDayForZoomAccountDashboard = (day) =>
   axios.get(`${API.main}/schedule/zoom/all?day=${day}`);
+
+export const updateScheduleDangerously = (id, data) =>
+  axios.post(
+    `${API.main}/schedule/dangerous/edit/${id}?message=Class Cancellation`,
+    data
+  );

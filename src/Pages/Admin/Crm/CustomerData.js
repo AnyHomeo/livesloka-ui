@@ -794,6 +794,7 @@ const CrmDetails = () => {
           field: "createdAt",
           width: "1%",
           type: "date",
+          editable: "never",
           hidden: !columnFilters["createdAt"].selected,
           cellStyle: { whiteSpace: "nowrap" },
           headerStyle: { whiteSpace: "nowrap" },
