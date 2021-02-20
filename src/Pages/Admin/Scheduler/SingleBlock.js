@@ -50,7 +50,9 @@ function SingleBlock({
             : "not-allowed",
         borderBottom: i % 2 !== 0 ? "1px solid rgba(0,0,0,0.5)" : "",
         backgroundColor: Object.keys(schedule).length
-          ? schedule.demo
+          ? schedule.isClassTemperarilyCancelled
+            ? "#aaa"
+            : schedule.demo
             ? "#B73427"
             : "#e67e22"
           : categorizedData[category][teacher].availableSlots.includes(
