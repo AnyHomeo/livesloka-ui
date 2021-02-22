@@ -271,7 +271,6 @@ const CrmDetails = () => {
   const [categoryDropdown, setCategoryDropdown] = useState({});
   const [subjectDropdown, setSubjectDropdown] = useState({});
   const [dropDownFilters, setDropDownFilters] = useState({});
-  const [toolbarFilteredData, setToolbarFilteredData] = useState();
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
@@ -876,9 +875,12 @@ const CrmDetails = () => {
 
   const [filteredDataBTN, setFilteredDataBTN] = useState();
   const [applyFilerBool, setApplyFilerBool] = useState(false);
-  const filterDatabtn = () => {
-    let newArray = [];
 
+  const [globalFilterData, setGlobalFilterData] = useState();
+
+  let tempGlobalData = {};
+  const filterDatabtn = () => {
+    console.log(tempGlobalData);
     // if (toolbarFilteredData.filerName === "classStatus") {
     //   newArray = data.filter((el) => {
     //     if (el.classStatusId === toolbarFilteredData.data[0].id) {
@@ -914,22 +916,82 @@ const CrmDetails = () => {
     //     }
     //   });
     // }
-
     // setData(newArray);
     setApplyFilerBool(true);
-    var id_filter = [toolbarFilteredData.data[0].id];
-    var filtered = data.filter(function (item) {
-      if (toolbarFilteredData.filerName === "classStatus") {
-        return id_filter.indexOf(item.classStatusId) !== -1;
-      }
-      if (toolbarFilteredData.filerName === "timeZone") {
-        return id_filter.indexOf(item.timeZoneId) !== -1;
-      }
-    });
-    setFilteredDataBTN(filtered);
+    var id_filter = [];
+
+    tempGlobalData &&
+      tempGlobalData.data.map((data) => {
+        id_filter.push(data.id);
+      });
+
+    if (tempGlobalData) {
+      var filtered = data.filter(function (item) {
+        if (tempGlobalData.filerName === "classStatus") {
+          return id_filter.indexOf(item.classStatusId) !== -1;
+        }
+        if (tempGlobalData.filerName === "timeZone") {
+          return id_filter.indexOf(item.timeZoneId) !== -1;
+        }
+        if (tempGlobalData.filerName === "class") {
+          return id_filter.indexOf(item.classId) !== -1;
+        }
+        if (tempGlobalData.filerName === "teacher") {
+          return id_filter.indexOf(item.teacherId) !== -1;
+        }
+        if (tempGlobalData.filerName === "country") {
+          return id_filter.indexOf(item.countryId) !== -1;
+        }
+      });
+      setFilteredDataBTN(filtered);
+    }
   };
 
-  console.log(toolbarFilteredData);
+  // console.log(toolbarFilteredData);
+
+  const AutoCompleteFilterData = ({ dropdown, i }) => {
+    const [toolbarFilteredData, setToolbarFilteredData] = useState();
+
+    if (toolbarFilteredData) {
+      tempGlobalData = toolbarFilteredData;
+    }
+
+    return (
+      <Autocomplete
+        multiple
+        size="small"
+        id="tags-standard"
+        options={Object.keys(dropdown).map((id) => ({
+          id,
+          name: dropdown[id],
+        }))}
+        value={toolbarFilteredData && toolbarFilteredData.data}
+        onChange={(e, arr) => {
+          setToolbarFilteredData({
+            filerName: [
+              "classStatus",
+              "timeZone",
+              "class",
+              "teacher",
+              "country",
+            ][i],
+            data: arr,
+          });
+        }}
+        limitTags={1}
+        getOptionLabel={(option) => option.name}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant="outlined"
+            label={
+              ["Class Status", "Time Zone", "Class", "Teacher", "Country"][i]
+            }
+          />
+        )}
+      />
+    );
+  };
   return (
     <>
       <ColumnFilterDrawer
@@ -1136,7 +1198,7 @@ const CrmDetails = () => {
                         boxSizing: "border-box",
                       }}
                     >
-                      <Autocomplete
+                      {/* <Autocomplete
                         multiple
                         size="small"
                         id="tags-standard"
@@ -1184,14 +1246,15 @@ const CrmDetails = () => {
                             }
                           />
                         )}
-                      />
+                      /> */}
+                      <AutoCompleteFilterData dropdown={dropdown} i={i} />
                     </div>
                   ))}
                   <Button
                     variant="contained"
                     color="primary"
                     style={{ margin: "5px" }}
-                    // onClick={filterDatabtn}
+                    onClick={filterDatabtn}
                   >
                     Apply Filter
                   </Button>
@@ -1200,7 +1263,7 @@ const CrmDetails = () => {
                     variant="contained"
                     color="primary"
                     style={{ margin: "5px" }}
-                    // onClick={() => setApplyFilerBool(false)}
+                    onClick={() => setApplyFilerBool(false)}
                   >
                     Clear Filter
                   </Button>
