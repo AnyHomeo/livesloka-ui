@@ -29,6 +29,7 @@ import {
   Switch,
   Card,
   Grid,
+  LinearProgress,
 } from "@material-ui/core";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import CloseIcon from "@material-ui/icons/Close";
@@ -875,48 +876,11 @@ const CrmDetails = () => {
   const [filteredDataBTN, setFilteredDataBTN] = useState();
   const [applyFilerBool, setApplyFilerBool] = useState(false);
 
-  const [globalFilterData, setGlobalFilterData] = useState();
-
+  const [loadingFilter, setLoadingFilter] = useState(false);
   let tempGlobalData = {};
   const filterDatabtn = () => {
-    console.log(tempGlobalData);
-    // if (toolbarFilteredData.filerName === "classStatus") {
-    //   newArray = data.filter((el) => {
-    //     if (el.classStatusId === toolbarFilteredData.data[0].id) {
-    //       // newArray.push(el);
-    //     }
-    //   });
-    // }
-    // if (toolbarFilteredData.filerName === "timeZone") {
-    //   newArray = data.filter((el) => {
-    //     if (el.timeZoneId === toolbarFilteredData.data[0].id) {
-    //       // newArray.push(el);
-    //     }
-    //   });
-    // }
-    // if (toolbarFilteredData.filerName === "class") {
-    //   newArray = data.filter((el) => {
-    //     if (el.classId === toolbarFilteredData.data[0].id) {
-    //       // newArray.push(el);
-    //     }
-    //   });
-    // }
-    // if (toolbarFilteredData.filerName === "teacher") {
-    //   newArray = data.filter((el) => {
-    //     if (el.teacherId === toolbarFilteredData.data[0].id) {
-    //       // newArray.push(el);
-    //     }
-    //   });
-    // }
-    // if (toolbarFilteredData.filerName === "country") {
-    //   newArray = data.filter((el) => {
-    //     if (el.countryId === toolbarFilteredData.data[0].id) {
-    //       // newArray.push(el);
-    //     }
-    //   });
-    // }
-    // setData(newArray);
     setApplyFilerBool(true);
+
     var id_filter = [];
 
     tempGlobalData &&
@@ -924,6 +888,7 @@ const CrmDetails = () => {
         id_filter.push(data.id);
       });
 
+    setLoadingFilter(true);
     if (tempGlobalData) {
       var filtered = data.filter(function (item) {
         if (tempGlobalData.filerName === "classStatus") {
@@ -944,9 +909,8 @@ const CrmDetails = () => {
       });
       setFilteredDataBTN(filtered);
     }
+    setLoadingFilter(false);
   };
-
-  // console.log(toolbarFilteredData);
 
   const AutoCompleteFilterData = ({ dropdown, i }) => {
     const [toolbarFilteredData, setToolbarFilteredData] = useState();
@@ -1197,55 +1161,6 @@ const CrmDetails = () => {
                         boxSizing: "border-box",
                       }}
                     >
-                      {/* <Autocomplete
-                        multiple
-                        size="small"
-                        id="tags-standard"
-                        options={Object.keys(dropdown).map((id) => ({
-                          id,
-                          name: dropdown[id],
-                        }))}
-                        value={
-                          dropDownFilters[
-                            [
-                              "classStatus",
-                              "timeZone",
-                              "class",
-                              "teacher",
-                              "country",
-                            ][i]
-                          ]
-                        }
-                        onChange={(e, arr) => {
-                          setToolbarFilteredData({
-                            filerName: [
-                              "classStatus",
-                              "timeZone",
-                              "class",
-                              "teacher",
-                              "country",
-                            ][i],
-                            data: arr,
-                          });
-                        }}
-                        limitTags={1}
-                        getOptionLabel={(option) => option.name}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            variant="outlined"
-                            label={
-                              [
-                                "Class Status",
-                                "Time Zone",
-                                "Class",
-                                "Teacher",
-                                "Country",
-                              ][i]
-                            }
-                          />
-                        )}
-                      /> */}
                       <AutoCompleteFilterData dropdown={dropdown} i={i} />
                     </div>
                   ))}
@@ -1267,6 +1182,10 @@ const CrmDetails = () => {
                     Clear Filter
                   </Button>
                 </div>
+
+                {loadingFilter && (
+                  <LinearProgress style={{ marginBottom: "20px" }} />
+                )}
               </div>
             ),
           }}

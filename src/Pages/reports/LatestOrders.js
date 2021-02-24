@@ -41,6 +41,8 @@ const LatestOrders = ({ data, className, ...rest }) => {
       }
     });
 
+  console.log(sortedData);
+
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <CardHeader title="Latest Transactions" />
@@ -51,7 +53,9 @@ const LatestOrders = ({ data, className, ...rest }) => {
             <TableHead>
               <TableRow>
                 <TableCell>Order Ref</TableCell>
-                <TableCell>Customer</TableCell>
+                <TableCell>Paypal Customer Name</TableCell>
+                <TableCell>Student Name</TableCell>
+                <TableCell>Guardian Name</TableCell>
                 <TableCell>Total Amount</TableCell>
                 <TableCell>Date</TableCell>
                 <TableCell>Status</TableCell>
@@ -68,6 +72,16 @@ const LatestOrders = ({ data, className, ...rest }) => {
                           {" "}
                           {dataa.paymentData.payer.payer_info.first_name}{" "}
                           {dataa.paymentData.payer.payer_info.last_name}
+                        </TableCell>
+
+                        <TableCell>
+                          {" "}
+                          {dataa.customerId && dataa.customerId.firstName}{" "}
+                        </TableCell>
+
+                        <TableCell>
+                          {" "}
+                          {dataa.customerId && dataa.customerId.lastName}
                         </TableCell>
                         <TableCell>
                           {" "}
