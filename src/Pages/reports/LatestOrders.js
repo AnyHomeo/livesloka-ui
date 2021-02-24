@@ -54,6 +54,7 @@ const LatestOrders = ({ data, className, ...rest }) => {
               <TableRow>
                 <TableCell>Order Ref</TableCell>
                 <TableCell>Paypal Customer Name</TableCell>
+                <TableCell>Paypal Email</TableCell>
                 <TableCell>Student Name</TableCell>
                 <TableCell>Guardian Name</TableCell>
                 <TableCell>Total Amount</TableCell>
@@ -72,6 +73,11 @@ const LatestOrders = ({ data, className, ...rest }) => {
                           {" "}
                           {dataa.paymentData.payer.payer_info.first_name}{" "}
                           {dataa.paymentData.payer.payer_info.last_name}
+                        </TableCell>
+
+                        <TableCell>
+                          {" "}
+                          {dataa.paymentData.payer.payer_info.email}
                         </TableCell>
 
                         <TableCell>
@@ -108,14 +114,17 @@ const LatestOrders = ({ data, className, ...rest }) => {
                     return (
                       <TableRow hover key={dataa._id}>
                         <TableCell>{dataa._id}</TableCell>
+
+                        <TableCell>NA</TableCell>
+                        <TableCell>NA</TableCell>
                         <TableCell>
                           {" "}
-                          {dataa.customerId.firstName}{" "}
-                          {dataa.customerId.lastName &&
-                            dataa.customerId.lastName}
+                          {dataa.customerId && dataa.customerId.firstName}{" "}
                         </TableCell>
-                        <TableCell>Not available</TableCell>
-
+                        <TableCell>
+                          {dataa.customerId && dataa.customerId.lastName}
+                        </TableCell>
+                        <TableCell>NA</TableCell>
                         <TableCell>
                           {moment(dataa.createdAt).format("MMM Do YYYY h:mm A")}
                         </TableCell>
