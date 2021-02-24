@@ -97,7 +97,7 @@ const Dashboard = () => {
               success={successTrx}
             />
           </Grid>
-          <Grid item lg={12} md={12} xl={9} xs={12}>
+          <Grid item lg={12} md={12} xs={12}>
             <LatestOrders data={allData} />
           </Grid>
         </Grid>
