@@ -122,7 +122,6 @@ const CustomersDetailsMb = ({ location }) => {
 
     try {
       const res = await editCustomer({ ...customersEditData, _id: data._id });
-      console.log(res);
       if (res.status === 200) {
         setDisableEditButton(true);
       }
@@ -134,7 +133,6 @@ const CustomersDetailsMb = ({ location }) => {
   const onUserDelete = async () => {
     try {
       const res = await deleteUser(data._id);
-      console.log(res);
       if (res.status === 200) {
         window.open("/customer-data-mobile", "_self");
       }

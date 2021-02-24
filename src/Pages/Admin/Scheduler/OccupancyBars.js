@@ -62,10 +62,7 @@ const OccupancyBars = ({
                                 scheduledSlots,
                                 id,
                               } = categorizedData[category][teacher];
-                              console.log(
-                                Object.keys(scheduledSlots).length,
-                                availableSlots.length
-                              );
+
                               if (
                                 Object.keys(scheduledSlots).length === 0 &&
                                 availableSlots.length === 0
