@@ -17,6 +17,7 @@ import {
   TableRow,
   makeStyles,
 } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -41,8 +42,6 @@ const LatestOrders = ({ data, className, ...rest }) => {
       }
     });
 
-  console.log(sortedData);
-
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <CardHeader title="Latest Transactions" />
@@ -57,18 +56,30 @@ const LatestOrders = ({ data, className, ...rest }) => {
                 <TableCell>Paypal Email</TableCell>
                 <TableCell>Student Name</TableCell>
                 <TableCell>Guardian Name</TableCell>
+                <TableCell>Customer Email</TableCell>
                 <TableCell>Total Amount</TableCell>
                 <TableCell>Date</TableCell>
                 <TableCell>Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {sortedData &&
-                sortedData.map((dataa) => {
+              {data &&
+                data.data.result.map((dataa) => {
                   if (dataa.paymentData !== null) {
                     return (
                       <TableRow hover key={dataa._id}>
-                        <TableCell>{dataa.paymentData.id}</TableCell>
+                        <TableCell>
+                          <a
+                            target="_blank"
+                            style={{ color: "blue" }}
+                            href={`https://www.paypal.com/activity/payment/${dataa.paymentData.transactions[0].related_resources[0].sale.id}`}
+                          >
+                            {
+                              dataa.paymentData.transactions[0]
+                                .related_resources[0].sale.id
+                            }
+                          </a>
+                        </TableCell>
                         <TableCell>
                           {" "}
                           {dataa.paymentData.payer.payer_info.first_name}{" "}
@@ -88,6 +99,10 @@ const LatestOrders = ({ data, className, ...rest }) => {
                         <TableCell>
                           {" "}
                           {dataa.customerId && dataa.customerId.lastName}
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          {dataa.customerId && dataa.customerId.email}
                         </TableCell>
                         <TableCell>
                           {" "}
@@ -117,12 +132,17 @@ const LatestOrders = ({ data, className, ...rest }) => {
 
                         <TableCell>NA</TableCell>
                         <TableCell>NA</TableCell>
+
                         <TableCell>
                           {" "}
                           {dataa.customerId && dataa.customerId.firstName}{" "}
                         </TableCell>
                         <TableCell>
                           {dataa.customerId && dataa.customerId.lastName}
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          {dataa.customerId && dataa.customerId.email}
                         </TableCell>
                         <TableCell>NA</TableCell>
                         <TableCell>
