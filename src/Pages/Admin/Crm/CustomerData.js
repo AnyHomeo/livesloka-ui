@@ -11,6 +11,7 @@ import {
   getData,
   editCustomer,
   deleteUser,
+  getByUserSettings,
 } from "../../../Services/Services";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -271,12 +272,19 @@ const CrmDetails = () => {
   const [agentDropdown, setAgentDropdown] = useState({});
   const [categoryDropdown, setCategoryDropdown] = useState({});
   const [subjectDropdown, setSubjectDropdown] = useState({});
-  const [dropDownFilters, setDropDownFilters] = useState({});
+  const [filters, setFilters] = useState({
+    classStatuses: [],
+    timeZones: [],
+    classes: [],
+    teachers: [],
+    countries: [],
+  });
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
 
   useEffect(() => {
+    console.log(isAutheticated()._id);
     getSettings(isAutheticated()._id).then((data) => {
       let settings;
       if (data.data.result.columns) {
@@ -284,15 +292,15 @@ const CrmDetails = () => {
       } else {
         settings = [];
       }
-      if (data.data.result.dropDownFilters) {
-        setDropDownFilters(data.data.result.dropDownFilters);
+      if (data.data.result.filters) {
+        setFilters(data.data.result.filters);
       } else {
-        setDropDownFilters({
-          classStatus: [],
-          timeZone: [],
-          class: [],
-          teacher: [],
-          country: [],
+        setFilters({
+          classStatuses: [],
+          timeZones: [],
+          classes: [],
+          teachers: [],
+          countries: [],
         });
       }
       setColumnFilters({
@@ -836,7 +844,8 @@ const CrmDetails = () => {
 
   const fetchData = async () => {
     try {
-      const data = await getAllCustomerDetails();
+      let id = isAutheticated()._id;
+      const data = await getByUserSettings(id);
       let details = data.data.result;
       setData(details);
       setLoading(false);
@@ -874,75 +883,41 @@ const CrmDetails = () => {
     }
   };
 
-  const [filteredDataBTN, setFilteredDataBTN] = useState();
-  const [applyFilerBool, setApplyFilerBool] = useState(false);
-
-  const [loadingFilter, setLoadingFilter] = useState(false);
-  let tempGlobalData = {};
-  const filterDatabtn = () => {
-    setApplyFilerBool(true);
-
-    var id_filter = [];
-
-    tempGlobalData &&
-      tempGlobalData.data.map((data) => {
-        id_filter.push(data.id);
-      });
-
-    setLoadingFilter(true);
-    if (tempGlobalData) {
-      var filtered = data.filter(function (item) {
-        if (tempGlobalData.filerName === "classStatus") {
-          return id_filter.indexOf(item.classStatusId) !== -1;
-        }
-        if (tempGlobalData.filerName === "timeZone") {
-          return id_filter.indexOf(item.timeZoneId) !== -1;
-        }
-        if (tempGlobalData.filerName === "class") {
-          return id_filter.indexOf(item.classId) !== -1;
-        }
-        if (tempGlobalData.filerName === "teacher") {
-          return id_filter.indexOf(item.teacherId) !== -1;
-        }
-        if (tempGlobalData.filerName === "country") {
-          return id_filter.indexOf(item.countryId) !== -1;
-        }
-      });
-      setFilteredDataBTN(filtered);
-    }
-    setLoadingFilter(false);
-  };
-
   const AutoCompleteFilterData = ({ dropdown, i }) => {
-    const [toolbarFilteredData, setToolbarFilteredData] = useState();
-
-    if (toolbarFilteredData) {
-      tempGlobalData = toolbarFilteredData;
-    }
-
     return (
       <Autocomplete
         multiple
         size="small"
         id="tags-standard"
+        filterSelectedOptions
         options={Object.keys(dropdown).map((id) => ({
           id,
           name: dropdown[id],
         }))}
-        value={toolbarFilteredData && toolbarFilteredData.data}
-        onChange={(e, arr) => {
-          setToolbarFilteredData({
-            filerName: [
-              "classStatus",
-              "timeZone",
-              "class",
-              "teacher",
-              "country",
-            ][i],
-            data: arr,
+        limitTags={1}
+        getOptionSelected={(option, value) => option.id === value.id}
+        value={
+          filters[
+            ["classStatuses", "timeZones", "classes", "teachers", "countries"][
+              i
+            ]
+          ]
+        }
+        onChange={(e, v) => {
+          setFilters((prev) => {
+            let prevFilters = { ...prev };
+            return {
+              ...prevFilters,
+              [[
+                "classStatuses",
+                "timeZones",
+                "classes",
+                "teachers",
+                "countries",
+              ][i]]: v,
+            };
           });
         }}
-        limitTags={1}
         getOptionLabel={(option) => option.name}
         renderInput={(params) => (
           <TextField
@@ -1085,7 +1060,7 @@ const CrmDetails = () => {
           isLoading={loading}
           title="Customer data"
           columns={columns}
-          data={applyFilerBool ? filteredDataBTN : data}
+          data={data}
           options={{
             pageSize: 20,
             pageSizeOptions: [20, 30, 40, 50, data.length],
@@ -1169,24 +1144,59 @@ const CrmDetails = () => {
                     variant="contained"
                     color="primary"
                     style={{ margin: "5px" }}
-                    onClick={filterDatabtn}
+                    onClick={(e) => {
+                      setLoading(true);
+                      let id = isAutheticated()._id;
+                      if (id) {
+                        updateSettings(id, {
+                          filters,
+                        })
+                          .then((data) => {
+                            fetchData();
+                          })
+                          .catch((err) => {
+                            console.log(err);
+                          });
+                      }
+                    }}
                   >
-                    Apply Filter
+                    Apply
                   </Button>
 
                   <Button
                     variant="contained"
                     color="primary"
                     style={{ margin: "5px" }}
-                    onClick={() => setApplyFilerBool(false)}
+                    onClick={() => {
+                      let id = isAutheticated()._id;
+                      setLoading(true);
+                      setFilters({
+                        classStatuses: [],
+                        timeZones: [],
+                        classes: [],
+                        teachers: [],
+                        countries: [],
+                      });
+                      updateSettings(id, {
+                        filters: {
+                          classStatuses: [],
+                          timeZones: [],
+                          classes: [],
+                          teachers: [],
+                          countries: [],
+                        },
+                      })
+                        .then((data) => {
+                          fetchData();
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                        });
+                    }}
                   >
-                    Clear Filter
+                    Clear
                   </Button>
                 </div>
-
-                {loadingFilter && (
-                  <LinearProgress style={{ marginBottom: "20px" }} />
-                )}
               </div>
             ),
           }}

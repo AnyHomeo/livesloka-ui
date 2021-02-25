@@ -232,3 +232,6 @@ export const updateScheduleDangerously = (id, data) =>
     `${API.main}/schedule/dangerous/edit/${id}?message=Class Cancellation`,
     data
   );
+
+export const getByUserSettings = (id) =>
+  axios.get(`${API.main}/customers/all/${id}`);
