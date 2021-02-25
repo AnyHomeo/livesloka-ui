@@ -282,6 +282,9 @@ const CrmDetails = () => {
     classes: [],
     teachers: [],
     countries: [],
+    agents: [],
+    subjects: [],
+    paidClasses: [],
   });
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -305,6 +308,9 @@ const CrmDetails = () => {
           classes: [],
           teachers: [],
           countries: [],
+          agents: [],
+          subjects: [],
+          paidClasses: [],
         });
       }
       setColumnFilters({
@@ -902,9 +908,15 @@ const CrmDetails = () => {
         getOptionSelected={(option, value) => option.id === value.id}
         value={
           filters[
-            ["classStatuses", "timeZones", "classes", "teachers", "countries"][
-              i
-            ]
+            [
+              "classStatuses",
+              "timeZones",
+              "classes",
+              "teachers",
+              "countries",
+              "agents",
+              "subjects",
+            ][i]
           ]
         }
         onChange={(e, v) => {
@@ -918,6 +930,8 @@ const CrmDetails = () => {
                 "classes",
                 "teachers",
                 "countries",
+                "agents",
+                "subjects",
               ][i]]: v,
             };
           });
@@ -928,7 +942,15 @@ const CrmDetails = () => {
             {...params}
             variant="outlined"
             label={
-              ["Class Status", "Time Zone", "Class", "Teacher", "Country"][i]
+              [
+                "Class Status",
+                "Time Zone",
+                "Class",
+                "Teacher",
+                "Country",
+                "Agent",
+                "Subject",
+              ][i]
             }
           />
         )}
@@ -1054,6 +1076,164 @@ const CrmDetails = () => {
             </Grid>
           </div>
         )}
+        {filterOpen ? (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              margin: "30px",
+              alignItems: "center",
+              justifyContent: "space-evenly",
+              flexWrap: "wrap",
+            }}
+          >
+            {[
+              classStatusDropdown,
+              timeZoneDropdown,
+              classDropdown,
+              teachersDropdown,
+              countryDropdown,
+              agentDropdown,
+              subjectDropdown,
+            ].map((dropdown, i) => (
+              <div
+                style={{
+                  width: "300px",
+                  margin: "10px 0",
+                }}
+              >
+                <AutoCompleteFilterData dropdown={dropdown} i={i} />
+              </div>
+            ))}
+            <div
+              style={{
+                width: "300px",
+                margin: "10px 0",
+              }}
+            >
+              <Autocomplete
+                multiple
+                size="small"
+                filterSelectedOptions
+                options={[
+                  -6,
+                  -5,
+                  -4,
+                  -3,
+                  -2,
+                  -1,
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10,
+                  11,
+                  12,
+                ]}
+                limitTags={1}
+                getOptionSelected={(option, value) => option === value}
+                value={filters["paidClasses"]}
+                onChange={(e, v) => {
+                  setFilters((prev) => {
+                    let prevFilters = { ...prev };
+                    return {
+                      ...prevFilters,
+                      paidClasses: v,
+                    };
+                  });
+                }}
+                getOptionLabel={(option) => option.toString()}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="outlined"
+                    label={"Paid Classes"}
+                  />
+                )}
+              />
+            </div>
+            <div
+              style={{
+                width: "300px",
+                margin: "10px 0",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-evenly",
+              }}
+            >
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ margin: "5px" }}
+                onClick={(e) => {
+                  setLoading(true);
+                  let id = isAutheticated()._id;
+                  if (id) {
+                    updateSettings(id, {
+                      filters,
+                    })
+                      .then((data) => {
+                        fetchData();
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                  }
+                }}
+              >
+                Apply
+              </Button>
+
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ margin: "5px" }}
+                onClick={() => {
+                  let id = isAutheticated()._id;
+                  setLoading(true);
+                  setFilters({
+                    classStatuses: [],
+                    timeZones: [],
+                    classes: [],
+                    teachers: [],
+                    countries: [],
+                    agents: [],
+                    subjects: [],
+                    paidClasses: [],
+                  });
+                  updateSettings(id, {
+                    filters: {
+                      classStatuses: [],
+                      timeZones: [],
+                      classes: [],
+                      teachers: [],
+                      countries: [],
+                      agents: [],
+                      subjects: [],
+                      paidClasses: [],
+                    },
+                  })
+                    .then((data) => {
+                      fetchData();
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                }}
+              >
+                Clear
+              </Button>
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
 
         <MaterialTable
           stickyHeader
@@ -1110,7 +1290,7 @@ const CrmDetails = () => {
             },
             {
               icon: () => <FilterListIcon />,
-              tooltip: "Toggle",
+              tooltip: "Toggle Filters",
               isFreeAction: true,
               onClick: (event) => setFilterOpen(!filterOpen),
             },
@@ -1123,91 +1303,6 @@ const CrmDetails = () => {
                   props.actions[4]().onClick(e, props.data);
                 }}
               />
-            ),
-            Toolbar: (props) => (
-              <div>
-                <MTableToolbar {...props} />
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                  }}
-                >
-                  {[
-                    classStatusDropdown,
-                    timeZoneDropdown,
-                    classDropdown,
-                    teachersDropdown,
-                    countryDropdown,
-                  ].map((dropdown, i) => (
-                    <div
-                      style={{
-                        width: "16%",
-                        margin: "6px",
-                        boxSizing: "border-box",
-                      }}
-                    >
-                      <AutoCompleteFilterData dropdown={dropdown} i={i} />
-                    </div>
-                  ))}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    style={{ margin: "5px" }}
-                    onClick={(e) => {
-                      setLoading(true);
-                      let id = isAutheticated()._id;
-                      if (id) {
-                        updateSettings(id, {
-                          filters,
-                        })
-                          .then((data) => {
-                            fetchData();
-                          })
-                          .catch((err) => {
-                            console.log(err);
-                          });
-                      }
-                    }}
-                  >
-                    Apply
-                  </Button>
-
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    style={{ margin: "5px" }}
-                    onClick={() => {
-                      let id = isAutheticated()._id;
-                      setLoading(true);
-                      setFilters({
-                        classStatuses: [],
-                        timeZones: [],
-                        classes: [],
-                        teachers: [],
-                        countries: [],
-                      });
-                      updateSettings(id, {
-                        filters: {
-                          classStatuses: [],
-                          timeZones: [],
-                          classes: [],
-                          teachers: [],
-                          countries: [],
-                        },
-                      })
-                        .then((data) => {
-                          fetchData();
-                        })
-                        .catch((err) => {
-                          console.log(err);
-                        });
-                    }}
-                  >
-                    Clear
-                  </Button>
-                </div>
-              </div>
             ),
           }}
           editable={{
