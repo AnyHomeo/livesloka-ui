@@ -35,7 +35,6 @@ export default function TeacherDetails() {
   const [categoryLookup, setCategoryLookup] = useState({});
   const [item, setitem] = useState("Teacher");
 
-  //UseEffect
   useEffect(() => {
     getData("Status").then((data) => {
       let dummyLookup = {};
