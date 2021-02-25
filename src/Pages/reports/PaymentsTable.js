@@ -110,7 +110,7 @@ const PaymentsTable = ({ data }) => {
         data={tableData}
         options={{
           search: true,
-          pageSizeOptions: [20, 30, 40, 50, tableData.length],
+          pageSizeOptions: [5, 20, 30, 40, 50, tableData.length],
         }}
       />
     </div>

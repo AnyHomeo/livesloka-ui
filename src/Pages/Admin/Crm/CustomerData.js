@@ -1097,7 +1097,7 @@ const CrmDetails = () => {
             searchFieldVariant: "outlined",
             actionsColumnIndex: 0,
             addRowPosition: "first",
-            maxBodyHeight: height - 300,
+            maxBodyHeight: height,
             // grouping: true,
             exportButton: true,
             rowStyle: (rowData) => ({
