@@ -203,6 +203,7 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
           isDeleteHidden: (rowData) =>
             (rowData && rowData.statusId) || data.length === 1,
           onRowAdd: (newData) => {
+            newData.isDemoIncludedInSalaries = !!newData.isDemoIncludedInSalaries;
             return addInField(`Add ${name}`, newData)
               .then((fetchedData) => {
                 if (fetchedData.data.status === "ok") {
@@ -224,12 +225,12 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
                   setLoading(false);
                 }
               })
-
               .catch((e) => {
                 console.error(e, e.response);
               });
           },
           onRowUpdate: (newData, oldData) => {
+            newData.isDemoIncludedInSalaries = !!newData.isDemoIncludedInSalaries;
             return editField(`Update ${name}`, newData).then((fetchedData) => {
               if (fetchedData.data.status === "OK") {
                 const dataUpdate = [...data];
