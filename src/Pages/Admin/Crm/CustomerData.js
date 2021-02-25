@@ -4,7 +4,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import SmsOutlinedIcon from "@material-ui/icons/SmsOutlined";
 import useWindowDimensions from "../../../Components/useWindowDimensions";
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
+import ToggleOnIcon from "@material-ui/icons/ToggleOn";
 import moment from "moment";
+import FilterListIcon from "@material-ui/icons/FilterList";
 import {
   getAllCustomerDetails,
   AddCustomer,
@@ -32,6 +34,7 @@ import {
   LinearProgress,
 } from "@material-ui/core";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
+import ToggleOffIcon from "@material-ui/icons/ToggleOff";
 import CloseIcon from "@material-ui/icons/Close";
 import Comments from "./Comments";
 import "date-fns";
@@ -261,6 +264,7 @@ const CrmDetails = () => {
   const [response, setResponse] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [statisticsOpen, setStatisticsOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
   const [columnFilters, setColumnFilters] = useState({});
   const [classDropdown, setClassDropdown] = useState({});
   const [timeZoneDropdown, setTimeZoneDropdown] = useState({});
@@ -1129,6 +1133,12 @@ const CrmDetails = () => {
               isFreeAction: true,
               onClick: (event) => setStatisticsOpen(!statisticsOpen),
             },
+            {
+              icon: () => <FilterListIcon />,
+              tooltip: "Toggle",
+              isFreeAction: true,
+              onClick: (event) => setFilterOpen(!filterOpen),
+            },
           ]}
           components={{
             Row: (props) => (
@@ -1142,50 +1152,51 @@ const CrmDetails = () => {
             Toolbar: (props) => (
               <div>
                 <MTableToolbar {...props} />
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                  }}
-                >
-                  {[
-                    classStatusDropdown,
-                    timeZoneDropdown,
-                    classDropdown,
-                    teachersDropdown,
-                    countryDropdown,
-                  ].map((dropdown, i) => (
-                    <div
-                      style={{
-                        width: "16%",
-                        margin: "6px",
-                        boxSizing: "border-box",
-                      }}
+
+                {filterOpen === true ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                    }}
+                  >
+                    {[
+                      classStatusDropdown,
+                      timeZoneDropdown,
+                      classDropdown,
+                      teachersDropdown,
+                      countryDropdown,
+                    ].map((dropdown, i) => (
+                      <div
+                        style={{
+                          width: "16%",
+                          margin: "6px",
+                          boxSizing: "border-box",
+                        }}
+                      >
+                        <AutoCompleteFilterData dropdown={dropdown} i={i} />
+                      </div>
+                    ))}
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      style={{ margin: "5px" }}
+                      onClick={filterDatabtn}
                     >
-                      <AutoCompleteFilterData dropdown={dropdown} i={i} />
-                    </div>
-                  ))}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    style={{ margin: "5px" }}
-                    onClick={filterDatabtn}
-                  >
-                    Apply Filter
-                  </Button>
+                      Apply Filter
+                    </Button>
 
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    style={{ margin: "5px" }}
-                    onClick={() => setApplyFilerBool(false)}
-                  >
-                    Clear Filter
-                  </Button>
-                </div>
-
-                {loadingFilter && (
-                  <LinearProgress style={{ marginBottom: "20px" }} />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      style={{ margin: "5px" }}
+                      onClick={() => setApplyFilerBool(false)}
+                    >
+                      Clear Filter
+                    </Button>
+                  </div>
+                ) : (
+                  ""
                 )}
               </div>
             ),
