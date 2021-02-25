@@ -1300,7 +1300,7 @@ const CrmDetails = () => {
               <MTableBodyRow
                 {...props}
                 onDoubleClick={(e) => {
-                  props.actions[4]().onClick(e, props.data);
+                  props.actions[5]().onClick(e, props.data);
                 }}
               />
             ),
