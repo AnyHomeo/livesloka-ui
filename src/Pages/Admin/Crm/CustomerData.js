@@ -1098,7 +1098,7 @@ const CrmDetails = () => {
             actionsColumnIndex: 0,
             addRowPosition: "first",
             maxBodyHeight: height - 300,
-            grouping: true,
+            // grouping: true,
             exportButton: true,
             rowStyle: (rowData) => ({
               backgroundColor: "#FFF",

@@ -88,10 +88,10 @@ const Dashboard = () => {
           <Grid item lg={3} sm={6} xl={3} xs={12}>
             <TotalProfit failed={failedTrx} />
           </Grid>
-          <Grid item lg={8} md={6} xl={3} xs={12}>
+          <Grid item lg={8} md={6} xl={8} xs={12}>
             <AmountChart dailyDataline={dailyDataLine} dataa={allData} />
           </Grid>
-          <Grid item lg={4} md={6} xl={3} xs={12}>
+          <Grid item lg={4} md={6} xl={4} xs={12}>
             <TrafficByDevice
               totaltrx={totalTransactions}
               failed={failedTrx}
