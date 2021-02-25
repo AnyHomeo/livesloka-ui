@@ -10,6 +10,7 @@ import TrafficByDevice from "./TrafficByDevice";
 import moment from "moment";
 import axios from "axios";
 import AmountChart from "./AmountChart";
+import PaymentsTable from "./PaymentsTable";
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -98,7 +99,8 @@ const Dashboard = () => {
             />
           </Grid>
           <Grid item lg={12} md={12} xs={12}>
-            <LatestOrders data={allData} />
+            {/* <LatestOrders data={allData} /> */}
+            <PaymentsTable data={allData} />
           </Grid>
         </Grid>
       </Container>
