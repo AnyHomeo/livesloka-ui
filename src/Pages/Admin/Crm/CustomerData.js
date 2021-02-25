@@ -4,7 +4,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import SmsOutlinedIcon from "@material-ui/icons/SmsOutlined";
 import useWindowDimensions from "../../../Components/useWindowDimensions";
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
+import ToggleOnIcon from "@material-ui/icons/ToggleOn";
 import moment from "moment";
+import FilterListIcon from "@material-ui/icons/FilterList";
 import {
   getAllCustomerDetails,
   AddCustomer,
@@ -33,6 +35,7 @@ import {
   LinearProgress,
 } from "@material-ui/core";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
+import ToggleOffIcon from "@material-ui/icons/ToggleOff";
 import CloseIcon from "@material-ui/icons/Close";
 import Comments from "./Comments";
 import "date-fns";
@@ -262,6 +265,7 @@ const CrmDetails = () => {
   const [response, setResponse] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [statisticsOpen, setStatisticsOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
   const [columnFilters, setColumnFilters] = useState({});
   const [classDropdown, setClassDropdown] = useState({});
   const [timeZoneDropdown, setTimeZoneDropdown] = useState({});
@@ -1068,8 +1072,8 @@ const CrmDetails = () => {
             searchFieldVariant: "outlined",
             actionsColumnIndex: 0,
             addRowPosition: "first",
-            maxBodyHeight: height - 300,
-            grouping: true,
+            maxBodyHeight: height,
+            // grouping: true,
             exportButton: true,
             rowStyle: (rowData) => ({
               backgroundColor: "#FFF",
@@ -1103,6 +1107,12 @@ const CrmDetails = () => {
               tooltip: "Statistics",
               isFreeAction: true,
               onClick: (event) => setStatisticsOpen(!statisticsOpen),
+            },
+            {
+              icon: () => <FilterListIcon />,
+              tooltip: "Toggle",
+              isFreeAction: true,
+              onClick: (event) => setFilterOpen(!filterOpen),
             },
           ]}
           components={{

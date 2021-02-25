@@ -31,16 +31,16 @@ const useStyles = makeStyles(() => ({
 const LatestOrders = ({ data, className, ...rest }) => {
   const classes = useStyles();
 
-  const sortedData = [];
+  // const sortedData = [];
 
-  data &&
-    data.data.result.map((data) => {
-      const formatedDate = moment(data.createdAt).format("MMM");
+  // data &&
+  //   data.data.result.map((data) => {
+  //     const formatedDate = moment(data.createdAt).format("MMM");
 
-      if (formatedDate === moment(new Date()).format("MMM")) {
-        sortedData.push(data);
-      }
-    });
+  //     if (formatedDate === moment(new Date()).format("MMM")) {
+  //       sortedData.push(data);
+  //     }
+  //   });
 
   return (
     <Card className={clsx(classes.root, className)} {...rest}>

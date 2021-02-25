@@ -10,6 +10,7 @@ import TrafficByDevice from "./TrafficByDevice";
 import moment from "moment";
 import axios from "axios";
 import AmountChart from "./AmountChart";
+import PaymentsTable from "./PaymentsTable";
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -87,10 +88,10 @@ const Dashboard = () => {
           <Grid item lg={3} sm={6} xl={3} xs={12}>
             <TotalProfit failed={failedTrx} />
           </Grid>
-          <Grid item lg={8} md={6} xl={3} xs={12}>
+          <Grid item lg={8} md={6} xl={8} xs={12}>
             <AmountChart dailyDataline={dailyDataLine} dataa={allData} />
           </Grid>
-          <Grid item lg={4} md={6} xl={3} xs={12}>
+          <Grid item lg={4} md={6} xl={4} xs={12}>
             <TrafficByDevice
               totaltrx={totalTransactions}
               failed={failedTrx}
@@ -98,7 +99,8 @@ const Dashboard = () => {
             />
           </Grid>
           <Grid item lg={12} md={12} xs={12}>
-            <LatestOrders data={allData} />
+            {/* <LatestOrders data={allData} /> */}
+            <PaymentsTable data={allData} />
           </Grid>
         </Grid>
       </Container>
