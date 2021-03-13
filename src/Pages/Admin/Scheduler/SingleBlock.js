@@ -42,24 +42,28 @@ function SingleBlock({
       style={{
         fontSize: "14px",
         fontWeight: "bold",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
         cursor:
           categorizedData[category][teacher].scheduledSlots[
             `${day.toUpperCase()}-${time}`
           ] || availableSlotsEditingMode
             ? "pointer"
             : "not-allowed",
-        borderBottom: i % 2 !== 0 ? "1px solid rgba(0,0,0,0.5)" : "",
-        backgroundColor: Object.keys(schedule).length
-          ? schedule.isClassTemperarilyCancelled
-            ? "#aaa"
-            : schedule.demo
-            ? "#B73427"
-            : "#e67e22"
-          : categorizedData[category][teacher].availableSlots.includes(
-              `${day.toUpperCase()}-${time}`
-            )
-          ? "#2ecc71"
-          : undefined,
+
+        // backgroundColor: Object.keys(schedule).length
+        //   ? schedule.isClassTemperarilyCancelled
+        //     ? "#aaa"
+        //     : schedule.demo
+        //     ? "#B73427"
+        //     : "#e67e22"
+        //   : categorizedData[category][teacher].availableSlots.includes(
+        //       `${day.toUpperCase()}-${time}`
+        //     )
+        //   ? "#2ecc71"
+        //   : undefined,
       }}
       onClick={() => {
         if (Object.keys(schedule).length) {
@@ -73,13 +77,37 @@ function SingleBlock({
         }
       }}
     >
-      {Object.keys(schedule).length
-        ? schedule.className
-        : categorizedData[category][teacher].availableSlots.includes(
-            `${day.toUpperCase()}-${time}`
-          )
-        ? "Available"
-        : ""}
+      <div
+        style={{
+          cursor:
+            categorizedData[category][teacher].scheduledSlots[
+              `${day.toUpperCase()}-${time}`
+            ] || availableSlotsEditingMode
+              ? "pointer"
+              : "not-allowed",
+
+          background: Object.keys(schedule).length
+            ? schedule.isClassTemperarilyCancelled
+              ? "#aaa"
+              : schedule.demo
+              ? "#B73427"
+              : "linear-gradient(315deg, #ee9617 0%, #fe5858 74%)"
+            : categorizedData[category][teacher].availableSlots.includes(
+                `${day.toUpperCase()}-${time}`
+              )
+            ? "linear-gradient(315deg, #3bb78f 0%, #0bab64 74%)"
+            : undefined,
+        }}
+        className="blockName"
+      >
+        {Object.keys(schedule).length
+          ? schedule.className
+          : categorizedData[category][teacher].availableSlots.includes(
+              `${day.toUpperCase()}-${time}`
+            )
+          ? "Available"
+          : ""}
+      </div>
     </div>
   );
 }

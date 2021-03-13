@@ -474,8 +474,18 @@ function Scheduler() {
               backgroundColor: "white",
             }}
           >
-            <div style={{ width: width < 700 ? "10%" : "5%" }} />
-            <div style={{ width: width < 700 ? "90%" : "95%" }}>
+            <div
+              style={{
+                width: width < 700 ? "10%" : "5%",
+                backgroundColor: "#f1f2f6",
+              }}
+            />
+            <div
+              style={{
+                width: width < 700 ? "90%" : "95%",
+                backgroundColor: "#f1f2f6",
+              }}
+            >
               <div
                 style={{
                   display: "flex",
@@ -484,20 +494,7 @@ function Scheduler() {
                 }}
               >
                 {days.map((day, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      width: "14.2857%",
-                      height: "50px",
-                      textAlign: "center",
-                      padding: "15px 0",
-                      backgroundColor: "#3F51B5",
-                      color: "white",
-                      borderLeft: "1px solid #fff",
-                      boxShadow:
-                        "0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)",
-                    }}
-                  >
+                  <div key={i} style={{}} className="schedulerHeader">
                     {" "}
                     {width < 700
                       ? day.toUpperCase().slice(0, 3)
