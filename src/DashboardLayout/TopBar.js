@@ -16,10 +16,13 @@ import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/NotificationsOutlined";
 import InputIcon from "@material-ui/icons/Input";
 // import Logo from 'src/components/Logo';
+import "./Topbar.css";
 import { logout } from "../Services/Services";
 
 const useStyles = makeStyles(() => ({
-  root: {},
+  root: {
+    backgroundColor: "#3867d6",
+  },
   avatar: {
     width: 60,
     height: 60,
