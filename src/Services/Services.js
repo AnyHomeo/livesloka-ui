@@ -235,3 +235,11 @@ export const updateScheduleDangerously = (id, data) =>
 
 export const getByUserSettings = (id) =>
   axios.get(`${API.main}/customers/all/${id}`);
+
+
+export const getAllLeaves = () => 
+   axios.get(`${API.main}/cancelclass`)
+
+export const updateLeave = (data) => axios.put(`${API.main}/cancelclass`,data)
+
+export const deleteALeave = (id) => axios.delete(`${API.main}/cancelclass/${id}`)

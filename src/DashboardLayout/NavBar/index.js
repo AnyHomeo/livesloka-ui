@@ -25,6 +25,7 @@ import {
   BarChart,
   Video,
   BarChart2,
+  UserMinus
 } from "react-feather";
 import NavItem from "./NavItem";
 const user = {
@@ -64,7 +65,11 @@ const items = [
     icon: SettingsIcon,
     title: "Scheduler",
   },
-
+  {
+    href:"/leaves",
+    icon:UserMinus,
+    title:"Customer Leaves"
+  },
   {
     href: "/reset/password",
     icon: LockIcon,

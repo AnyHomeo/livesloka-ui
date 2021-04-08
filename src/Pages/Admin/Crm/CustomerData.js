@@ -276,6 +276,7 @@ const CrmDetails = () => {
   const [agentDropdown, setAgentDropdown] = useState({});
   const [categoryDropdown, setCategoryDropdown] = useState({});
   const [subjectDropdown, setSubjectDropdown] = useState({});
+  const [statisticsData, setStatisticsData] = useState();
   const [filters, setFilters] = useState({
     classStatuses: [],
     timeZones: [],
@@ -871,7 +872,6 @@ const CrmDetails = () => {
     setSnackBarOpen(false);
   };
 
-  const [statisticsData, setStatisticsData] = useState();
   useEffect(() => {
     getStatistics();
   }, []);
