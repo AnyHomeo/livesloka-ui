@@ -116,7 +116,11 @@ const Login = () => {
     setUser({ ...user, isLoading: true, errors: false });
     login(userId, password)
       .then((data) => {
-        if (data.data.result.token && data.data.result.roleId === 3) {
+        if (
+          (data.data.result.token && data.data.result.roleId === 3) || (
+          data.data.result.roleId === 4 )|| (
+          data.data.result.roleId === 5)
+        ) {
           authenticate(data.data.result, remember, () => {
             setUser({
               ...user,
@@ -152,7 +156,9 @@ const Login = () => {
           didRedirect: false,
           error: "no admin access to login",
         }));
-      } else if (isAutheticated() && isAutheticated().roleId === 3) {
+      } else if (
+        (isAutheticated() && isAutheticated().roleId === 3) || (isAutheticated().roleId === 4) || (isAutheticated().roleId === 5)
+      ) {
         if (window.innerWidth <= 415) {
           return <Redirect to="/customer-data-mobile" />;
         }
@@ -163,7 +169,11 @@ const Login = () => {
       if (isAutheticated() && isAutheticated().firstTimeLogin === "Y") {
         return <Redirect to="/password-reset" />;
       }
-      if (isAutheticated() && isAutheticated().roleId === 3) {
+      if (
+        (isAutheticated() && isAutheticated().roleId === 3) ||
+        (isAutheticated() && isAutheticated().roleId === 4) ||
+        (isAutheticated() && isAutheticated().roleId === 5)
+      ) {
         return <Redirect to="/customer-data" />;
       }
     }
