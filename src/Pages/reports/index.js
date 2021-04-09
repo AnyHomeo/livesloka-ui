@@ -53,23 +53,23 @@ const Dashboard = () => {
         monthlyData[month].responses.push(item);
       });
 
-    monthlyData[moment(new Date()).format("MMMM YYYY")].responses.map(
-      (data) => {
-        if (data.paymentData !== null) {
-          successtransactions++;
-          setSuccessTrx(successtransactions);
-          amount += parseInt(data.paymentData.transactions[0].amount.total);
-          setTotalAmount(amount);
-        } else {
-          failedtransactions++;
-          setFailedTrx(failedtransactions);
-        }
-      }
-    );
+    // monthlyData[moment(new Date()).format("MMMM YYYY")].responses.map(
+    //   (data) => {
+    //     if (data.paymentData !== null) {
+    //       successtransactions++;
+    //       setSuccessTrx(successtransactions);
+    //       amount += parseInt(data.paymentData.transactions[0].amount.total);
+    //       setTotalAmount(amount);
+    //     } else {
+    //       failedtransactions++;
+    //       setFailedTrx(failedtransactions);
+    //     }
+    //   }
+    // );
 
-    setTotalTransactions(
-      monthlyData[moment(new Date()).format("MMMM YYYY")].responses.length
-    );
+    // setTotalTransactions(
+    //   monthlyData[moment(new Date()).format("MMMM YYYY")].responses.length
+    // );
   };
 
   return (

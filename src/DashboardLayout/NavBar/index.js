@@ -6,7 +6,6 @@ import {
   Box,
   Divider,
   Drawer,
-  Hidden,
   List,
   Typography,
   makeStyles,
@@ -40,11 +39,7 @@ const items = [
     icon: FileText,
     title: "Customers Data",
   },
-  {
-    href: "/dashboard",
-    icon: DollarSign,
-    title: "Financial Dashboard",
-  },
+
   {
     href: "/add-fields",
     icon: Edit,
@@ -95,8 +90,70 @@ const items = [
     icon: BarChart,
     title: "Statistics",
   },
+  {
+    href: "/dashboard",
+    icon: DollarSign,
+    title: "Financial Dashboard",
+  },
+  {
+    href: "/payments",
+    icon: DollarSign,
+    title: "Payments",
+  },
 ];
 
+const SalesTeam = [
+  {
+    href: window.innerWidth <= 415 ? "/customer-data-mobile" : "/customer-data",
+    icon: FileText,
+    title: "Customers Data",
+  },
+  {
+    href: "/scheduler",
+    icon: UserIcon,
+    title: "Timetable",
+  },
+];
+
+const CustomerSupport = [
+  {
+    href: window.innerWidth <= 415 ? "/customer-data-mobile" : "/customer-data",
+    icon: FileText,
+    title: "Customers Data",
+  },
+  {
+    href: "/attendance",
+    icon: Trello,
+    title: "Attendance",
+  },
+  {
+    href: "/scheduler",
+    icon: UserIcon,
+    title: "Timetable",
+  },
+
+  {
+    href: "/reset/password",
+    icon: LockIcon,
+    title: "Reset Password",
+  },
+
+  {
+    href: "/statistics",
+    icon: BarChart,
+    title: "Statistics",
+  },
+
+  {
+    href: "/payments",
+    icon: DollarSign,
+    title: "Payments",
+  },
+];
+
+const roleID = isAutheticated().roleId;
+
+console.log(roleID);
 const useStyles = makeStyles(() => ({
   mobileDrawer: {
     width: 256,
@@ -178,14 +235,34 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       <Divider />
       <Box p={2}>
         <List>
-          {items.map((item) => (
-            <NavItem
-              href={item.href}
-              key={item.title}
-              title={item.title}
-              icon={item.icon}
-            />
-          ))}
+          {roleID && roleID === 3
+            ? items.map((item) => (
+                <NavItem
+                  href={item.href}
+                  key={item.title}
+                  title={item.title}
+                  icon={item.icon}
+                />
+              ))
+            : roleID && roleID === 4
+            ? SalesTeam.map((item) => (
+                <NavItem
+                  href={item.href}
+                  key={item.title}
+                  title={item.title}
+                  icon={item.icon}
+                />
+              ))
+            : roleID && roleID === 5
+            ? CustomerSupport.map((item) => (
+                <NavItem
+                  href={item.href}
+                  key={item.title}
+                  title={item.title}
+                  icon={item.icon}
+                />
+              ))
+            : ""}
         </List>
       </Box>
       <Box flexGrow={1} />

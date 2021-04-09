@@ -85,13 +85,14 @@ function SingleBlock({
             ] || availableSlotsEditingMode
               ? "pointer"
               : "not-allowed",
-
+          // background-color: #ef5734;
+          // background-image: linear-gradient(315deg, #ef5734 0%, #ffcc2f 74%);
           background: Object.keys(schedule).length
             ? schedule.isClassTemperarilyCancelled
               ? "#aaa"
               : schedule.demo
-              ? "#B73427"
-              : "linear-gradient(315deg, #ee9617 0%, #fe5858 74%)"
+              ? "linear-gradient(315deg, #e84118 0%, #e84118 74%)"
+              : "linear-gradient(315deg, #f39c12 0%, #f39c12 74%)"
             : categorizedData[category][teacher].availableSlots.includes(
                 `${day.toUpperCase()}-${time}`
               )
