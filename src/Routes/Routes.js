@@ -29,6 +29,7 @@ import CustomerDetails from "../Pages/MobileView/CustomerDetails";
 import CustomersDetailsMb from "../Pages/MobileView/CustomerDetails/CustomersDetailsMb";
 import AddNewCustomer from "../Pages/MobileView/CustomerDetails/AddNewCustomer";
 import Statistics from "../Pages/Statistics";
+import LeavesTable from './../Pages/Leaves/LeavesTable';
 import PaymentsPage from "../Pages/reports/PaymentsPage";
 function Routes() {
   return (
@@ -96,6 +97,7 @@ function Routes() {
             <AdminRoute path="/manual-invoice" exact component={Invoice} />
             <AdminRoute path="/invoices" exact component={Invoices} />
             <AdminRoute path="/scheduler" exact component={Scheduler} />
+            <AdminRoute path="/leaves" exact component={LeavesTable} />
             <AdminRoute
               path="/analytics"
               exact
