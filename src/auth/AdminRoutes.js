@@ -8,13 +8,13 @@ const AdminRoute = ({ component: Component, ...rest }) => {
       <Route
         {...rest}
         render={(props) =>
-          isAutheticated() && isAutheticated().roleId === 3 ? (
+          (isAutheticated() && isAutheticated().roleId === 3) ||
+          isAutheticated().roleId === 4 ||
+          isAutheticated().roleId === 5 ? (
             <Component {...props} />
           ) : (
-              <Redirect
-                to={{ pathname: "/", state: { from: props.location } }}
-              />
-            )
+            <Redirect to={{ pathname: "/", state: { from: props.location } }} />
+          )
         }
       />
     </>

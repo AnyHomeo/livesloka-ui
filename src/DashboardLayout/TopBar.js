@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Link as RouterLink } from "react-router-dom";
 import clsx from "clsx";
 import PropTypes from "prop-types";
@@ -46,15 +46,15 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
           Welcome Admin
         </Typography>
         <Box flexGrow={1} />
-        <Link
-          to="/login"
+        <a
+          href="/login"
           onClick={() => logout(() => console.log("logout successful"))}
           style={{ color: "white" }}
         >
           <IconButton color="inherit">
             <InputIcon />
           </IconButton>
-        </Link>
+        </a>
       </Toolbar>
     </AppBar>
   );

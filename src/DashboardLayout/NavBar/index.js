@@ -146,9 +146,6 @@ const CustomerSupport = [
   },
 ];
 
-const roleID = isAutheticated().roleId;
-
-console.log(roleID);
 const useStyles = makeStyles(() => ({
   mobileDrawer: {
     width: 256,
@@ -190,6 +187,19 @@ const NavBar = ({ onMobileClose, openMobile }) => {
   useEffect(() => {
     getUserDetails();
   }, []);
+
+  const [roleID, setRoleID] = useState();
+
+  useEffect(() => {
+    setAuth();
+  }, []);
+
+  const setAuth = () => {
+    if (isAutheticated().roleId) {
+      setRoleID(isAutheticated().roleId);
+    }
+  };
+  console.log(roleID);
 
   const getUserDetails = () => {
     const data = isAutheticated();

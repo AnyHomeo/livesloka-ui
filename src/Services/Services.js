@@ -18,6 +18,7 @@ export const login = (userId, password) => {
 };
 
 export const logout = (next) => {
+  localStorage.removeItem("roleID");
   if (typeof window !== "undefined") {
     document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     next();

@@ -116,10 +116,14 @@ const Login = () => {
     setUser({ ...user, isLoading: true, errors: false });
     login(userId, password)
       .then((data) => {
+        localStorage.setItem(
+          "roleID",
+          data.data.result.token && data.data.result.roleId
+        );
         if (
-          (data.data.result.token && data.data.result.roleId === 3) || (
-          data.data.result.roleId === 4 )|| (
-          data.data.result.roleId === 5)
+          (data.data.result.token && data.data.result.roleId === 3) ||
+          data.data.result.roleId === 4 ||
+          data.data.result.roleId === 5
         ) {
           authenticate(data.data.result, remember, () => {
             setUser({
@@ -157,7 +161,9 @@ const Login = () => {
           error: "no admin access to login",
         }));
       } else if (
-        (isAutheticated() && isAutheticated().roleId === 3) || (isAutheticated().roleId === 4) || (isAutheticated().roleId === 5)
+        (isAutheticated() && isAutheticated().roleId === 3) ||
+        isAutheticated().roleId === 4 ||
+        isAutheticated().roleId === 5
       ) {
         if (window.innerWidth <= 415) {
           return <Redirect to="/customer-data-mobile" />;
@@ -171,8 +177,8 @@ const Login = () => {
       }
       if (
         (isAutheticated() && isAutheticated().roleId === 3) ||
-        (isAutheticated() && isAutheticated().roleId === 4) ||
-        (isAutheticated() && isAutheticated().roleId === 5)
+        isAutheticated().roleId === 4 ||
+        isAutheticated().roleId === 5
       ) {
         return <Redirect to="/customer-data" />;
       }
