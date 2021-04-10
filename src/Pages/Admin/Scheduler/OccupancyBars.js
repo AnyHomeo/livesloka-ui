@@ -95,7 +95,8 @@ const OccupancyBars = ({
                                     style={{
                                       height: "50px",
                                       width: "100%",
-                                      backgroundColor: "#2ecc71",
+                                      background:
+                                        "linear-gradient(315deg, #3bb78f 0%, #0bab64 74%)",
                                       marginBottom: 10,
                                       marginLeft: 10,
                                       display: "flex",
