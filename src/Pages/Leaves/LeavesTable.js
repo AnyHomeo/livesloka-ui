@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
+import moment from 'moment';
 
 function LeavesTable() {
   const { height } = useWindowDimensions();
@@ -19,13 +20,17 @@ function LeavesTable() {
     getAllLeaves()
       .then((data) => {
         setRows(
-          data.data.result.map((leave) => ({
-            _id:leave._id,
-            firstName: leave.studentId.firstName,
-            lastName: leave.studentId.lastName,
-            className: leave.scheduleId.className,
-            cancelledDate: leave.cancelledDate,
-          }))
+          data.data.result.map((leave) => {
+            console.log(leave.cancelledDate)
+            return {
+              _id:leave._id,
+              firstName: leave.studentId.firstName,
+              lastName: leave.studentId.lastName,
+              className: leave.scheduleId.className,
+              cancelledDate: leave.cancelledDate,
+            }
+          }
+           )
         );
       })
       .catch((error) => {
@@ -54,9 +59,10 @@ function LeavesTable() {
       type: "string",
     },
     {
-      title: "Date",
+      title: "Date(User TimeZone)",
       field: "cancelledDate",
-      type: "date",
+      type: "datetime",
+      render:(rowData) => moment(rowData.cancelledDate).format("DD-MM-YYYY hh:mm A")
     },
   ];
 
