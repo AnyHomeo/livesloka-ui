@@ -53,7 +53,12 @@ const OccupancyBars = ({
                         >
                           {category}
                         </Typography>
-                        <List>
+                        <Grid
+                          container
+                          direction="row"
+                          justify="center"
+                          alignItems="center"
+                        >
                           {Object.keys(categorizedData[category]).map(
                             (teacher) => {
                               let val;
@@ -76,28 +81,49 @@ const OccupancyBars = ({
                                   100;
                               }
                               return (
-                                <ListItem
-                                  button
-                                  key={teacher}
-                                  onClick={() => {
-                                    setTeacher(teacher);
-                                    setTeacherId(id);
-                                    setCategory(category);
+                                <Grid
+                                  item
+                                  xs={6}
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "space-around",
+                                    alignItems: "center",
+                                    marginTop: 20,
                                   }}
-                                  style={{ flexDirection: "column" }}
                                 >
-                                  <Typography
-                                    color="textSecondary"
-                                    style={{ width: "100%" }}
+                                  <ListItem
+                                    style={{
+                                      height: "50px",
+                                      width: "100%",
+                                      backgroundColor: "#2ecc71",
+                                      marginBottom: 10,
+                                      marginLeft: 10,
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+
+                                      borderRadius: 10,
+                                    }}
+                                    button
+                                    key={teacher}
+                                    onClick={() => {
+                                      setTeacher(teacher);
+                                      setTeacherId(id);
+                                      setCategory(category);
+                                    }}
                                   >
-                                    {teacher}
-                                  </Typography>
-                                  <LinearProgressWithLabel value={val} />
-                                </ListItem>
+                                    <Typography
+                                      color="textSecondary"
+                                      style={{ color: "white" }}
+                                    >
+                                      {teacher}
+                                    </Typography>
+                                  </ListItem>
+                                </Grid>
                               );
                             }
                           )}
-                        </List>
+                        </Grid>
                       </CardContent>
                     </Card>
                   </Grid>
