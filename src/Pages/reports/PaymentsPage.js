@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from "react";
 import MaterialTable from "material-table";
-import { Chip } from "@material-ui/core";
+import { Chip, LinearProgress } from "@material-ui/core";
 import axios from "axios";
 import moment from "moment";
 const PaymentsPage = () => {
   const [allData, setAllData] = useState();
+
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     getAllTransactions();
   }, []);
 
   const getAllTransactions = async () => {
+    setLoading(true);
     const data = await axios.get(
       `${process.env.REACT_APP_API_KEY}/payment/get/alltransactions/`
     );
     setAllData(data);
+    setLoading(false);
   };
 
   const columnData = [
@@ -117,6 +121,8 @@ const PaymentsPage = () => {
 
   return (
     <div style={{ margin: 20 }}>
+      {loading && <LinearProgress />}
+
       <MaterialTable
         title="Payments"
         columns={columnData}

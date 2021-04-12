@@ -109,6 +109,11 @@ const SalesTeam = [
     title: "Customers Data",
   },
   {
+    href: "/meeting-scheduler",
+    icon: SettingsIcon,
+    title: "Scheduler",
+  },
+  {
     href: "/scheduler",
     icon: UserIcon,
     title: "Timetable",
@@ -128,11 +133,6 @@ const SalesTeam = [
     icon: LockIcon,
     title: "Reset Password",
   },
-  {
-    href: "/scheduler",
-    icon: UserIcon,
-    title: "Timetable",
-  },
 ];
 
 const CustomerSupport = [
@@ -145,6 +145,11 @@ const CustomerSupport = [
     href: "/attendance",
     icon: Trello,
     title: "Attendance",
+  },
+  {
+    href: "/meeting-scheduler",
+    icon: SettingsIcon,
+    title: "Scheduler",
   },
   {
     href: "/scheduler",
