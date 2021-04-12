@@ -24,7 +24,7 @@ import {
   BarChart,
   Video,
   BarChart2,
-  UserMinus
+  UserMinus,
 } from "react-feather";
 import NavItem from "./NavItem";
 const user = {
@@ -61,9 +61,9 @@ const items = [
     title: "Scheduler",
   },
   {
-    href:"/leaves",
-    icon:UserMinus,
-    title:"Customer Leaves"
+    href: "/leaves",
+    icon: UserMinus,
+    title: "Customer Leaves",
   },
   {
     href: "/reset/password",
@@ -113,6 +113,26 @@ const SalesTeam = [
     icon: UserIcon,
     title: "Timetable",
   },
+  {
+    href: "/payments",
+    icon: DollarSign,
+    title: "Payments",
+  },
+  {
+    href: "/statistics",
+    icon: BarChart,
+    title: "Statistics",
+  },
+  {
+    href: "/reset/password",
+    icon: LockIcon,
+    title: "Reset Password",
+  },
+  {
+    href: "/scheduler",
+    icon: UserIcon,
+    title: "Timetable",
+  },
 ];
 
 const CustomerSupport = [
@@ -144,6 +164,25 @@ const CustomerSupport = [
     title: "Statistics",
   },
 
+  {
+    href: "/scheduler",
+    icon: UserIcon,
+    title: "Timetable",
+  },
+
+  {
+    href: "/payments",
+    icon: DollarSign,
+    title: "Payments",
+  },
+  {
+    href: "/leaves",
+    icon: UserMinus,
+    title: "Customer Leaves",
+  },
+];
+
+const Accountant = [
   {
     href: "/payments",
     icon: DollarSign,

@@ -8,6 +8,7 @@ import {
   LinearProgress,
   List,
   ListItem,
+  Chip,
 } from "@material-ui/core/";
 
 function LinearProgressWithLabel(props) {
@@ -43,7 +44,7 @@ const OccupancyBars = ({
             return (
               <React.Fragment key={category}>
                 {Object.keys(categorizedData[category]).length ? (
-                  <Grid item xs={12} sm={6} md={4} lg={3}>
+                  <Grid item xs={12} sm={4} md={4} lg={3}>
                     <Card style={{ height: "100%" }}>
                       <CardContent>
                         <Typography
@@ -53,12 +54,7 @@ const OccupancyBars = ({
                         >
                           {category}
                         </Typography>
-                        <Grid
-                          container
-                          direction="row"
-                          justify="center"
-                          alignItems="center"
-                        >
+                        <Grid container direction="row">
                           {Object.keys(categorizedData[category]).map(
                             (teacher) => {
                               let val;
@@ -81,46 +77,67 @@ const OccupancyBars = ({
                                   100;
                               }
                               return (
-                                <Grid
-                                  item
-                                  xs={6}
-                                  style={{
-                                    display: "flex",
-                                    justifyContent: "space-around",
-                                    alignItems: "center",
-                                    marginTop: 20,
-                                  }}
-                                >
-                                  <ListItem
-                                    style={{
-                                      height: "50px",
-                                      width: "100%",
-                                      background:
-                                        "linear-gradient(315deg, #3bb78f 0%, #0bab64 74%)",
-                                      marginBottom: 10,
-                                      marginLeft: 10,
-                                      display: "flex",
-                                      justifyContent: "center",
-                                      alignItems: "center",
+                                // <Grid
+                                //   item
+                                //   xs={4}
+                                //   style={{
+                                //     display: "flex",
+                                //     justifyContent: "space-around",
+                                //     alignItems: "center",
+                                //     marginTop: 20,
+                                //   }}
+                                // >
+                                //   {/* <ListItem
+                                //     style={{
+                                //       height: "50px",
+                                //       width: "100%",
+                                //       background:
+                                //         "linear-gradient(315deg, #3bb78f 0%, #0bab64 74%)",
+                                //       marginBottom: 10,
+                                //       marginLeft: 10,
+                                //       display: "flex",
+                                //       justifyContent: "center",
+                                //       alignItems: "center",
 
-                                      borderRadius: 10,
-                                    }}
-                                    button
-                                    key={teacher}
-                                    onClick={() => {
-                                      setTeacher(teacher);
-                                      setTeacherId(id);
-                                      setCategory(category);
-                                    }}
-                                  >
-                                    <Typography
-                                      color="textSecondary"
-                                      style={{ color: "white" }}
-                                    >
-                                      {teacher}
-                                    </Typography>
-                                  </ListItem>
-                                </Grid>
+                                //       borderRadius: 10,
+                                //     }}
+                                //     button
+                                //     key={teacher}
+                                //     onClick={() => {
+                                //       setTeacher(teacher);
+                                //       setTeacherId(id);
+                                //       setCategory(category);
+                                //     }}
+                                //   >
+                                //     <Typography
+                                //       color="textSecondary"
+                                //       style={{ color: "white" }}
+                                //     >
+                                //       {teacher}
+                                //     </Typography>
+                                //   </ListItem> */}
+
+                                //   <Chip
+                                //     onClick={() => {
+                                //       setTeacher(teacher);
+                                //       setTeacherId(id);
+                                //       setCategory(category);
+                                //     }}
+                                //     label={teacher}
+                                //     size="small"
+                                //   />
+                                // </Grid>
+
+                                <Chip
+                                  onClick={() => {
+                                    setTeacher(teacher);
+                                    setTeacherId(id);
+                                    setCategory(category);
+                                  }}
+                                  style={{ margin: 5 }}
+                                  label={teacher}
+                                  size="small"
+                                />
                               );
                             }
                           )}
