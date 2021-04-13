@@ -541,6 +541,7 @@ const CrmDetails = () => {
           field: "numberOfClassesBought",
           type: "numeric",
           width: "1%",
+          editable:"never",
           hidden: !columnFilters["numberOfClassesBought"].selected,
           cellStyle: { whiteSpace: "nowrap" },
           headerStyle: { whiteSpace: "nowrap" },

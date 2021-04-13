@@ -31,6 +31,7 @@ import AddNewCustomer from "../Pages/MobileView/CustomerDetails/AddNewCustomer";
 import Statistics from "../Pages/Statistics";
 import LeavesTable from './../Pages/Leaves/LeavesTable';
 import PaymentsPage from "../Pages/reports/PaymentsPage";
+import UpdateNumberOfBoughtClasses from './../Pages/Admin/Crm/UpdateNumberOfBoughtClasses';
 function Routes() {
   return (
     <>
@@ -42,6 +43,7 @@ function Routes() {
           <Route path="/404" exact component={NotFoundView} />
           <DashboardLayout>
             <AdminRoute path="/dashboard" exact component={Dashboard} />
+            <AdminRoute path="/update/classes" exact component={UpdateNumberOfBoughtClasses} />
             <AdminRoute
               path="/zoom-dashboard"
               exact
