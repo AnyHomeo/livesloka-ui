@@ -20,11 +20,11 @@ import {
   Edit,
   Trello,
   DollarSign,
-  Info,
   BarChart,
   Video,
   BarChart2,
   UserMinus,
+  UserCheck,
 } from "react-feather";
 import NavItem from "./NavItem";
 const user = {
@@ -99,6 +99,11 @@ const items = [
     href: "/payments",
     icon: DollarSign,
     title: "Payments",
+  },
+  {
+    href: "/update/classes",
+    icon: UserCheck,
+    title: "Update Classes Paid",
   },
 ];
 
@@ -248,7 +253,6 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       setRoleID(isAutheticated().roleId);
     }
   };
-  console.log(roleID);
 
   const getUserDetails = () => {
     const data = isAutheticated();

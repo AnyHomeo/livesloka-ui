@@ -244,3 +244,7 @@ export const getAllLeaves = () =>
 export const updateLeave = (data) => axios.put(`${API.main}/cancelclass`,data)
 
 export const deleteALeave = (id) => axios.delete(`${API.main}/cancelclass/${id}`)
+
+export const getAllCustomers = (select) => axios.get(`${API.main}/admin/get/Customer?select=${select}`)
+
+export const updateBoughtClasses = (data) => axios.put(`${API.main}/class-history`,data)
