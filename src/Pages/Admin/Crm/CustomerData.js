@@ -47,6 +47,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { isAutheticated } from "../../../auth";
 import { getSettings, updateSettings } from "../../../Services/Services";
 import axios from "axios";
+import StudentHistoryTable from "./StudentsHistoryTable";
 
 const copyToClipboard = (text) => {
   var textField = document.createElement("textarea");
@@ -254,6 +255,8 @@ const ColumnFilterDrawer = ({
 const CrmDetails = () => {
   const { height, width } = useWindowDimensions();
   const classes = useStyles();
+
+  const [historyOpen, setHistoryOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [id, setId] = useState("");
@@ -277,6 +280,8 @@ const CrmDetails = () => {
   const [categoryDropdown, setCategoryDropdown] = useState({});
   const [subjectDropdown, setSubjectDropdown] = useState({});
   const [statisticsData, setStatisticsData] = useState();
+
+  const [historyStudentData, setHistoryStudentData] = useState();
   const [filters, setFilters] = useState({
     classStatuses: [],
     timeZones: [],
@@ -450,6 +455,19 @@ const CrmDetails = () => {
     setSubjectDropdown(fetchDropDown(8));
   }, []);
 
+  const studentsHistorytable = async (id) => {
+    const data = await axios.get(
+      `${process.env.REACT_APP_API_KEY}/class-history/${id}`
+    );
+    setHistoryStudentData(data);
+
+    if (data.status === 200) {
+      setHistoryOpen(true);
+    }
+    console.log(data);
+    // console.log(id);
+  };
+
   useEffect(() => {
     if (Object.keys(columnFilters).length) {
       setColumns([
@@ -544,6 +562,16 @@ const CrmDetails = () => {
           hidden: !columnFilters["numberOfClassesBought"].selected,
           cellStyle: { whiteSpace: "nowrap" },
           headerStyle: { whiteSpace: "nowrap" },
+          render: (rowData) => {
+            return (
+              <Button
+                style={{ color: "black" }}
+                onClick={() => studentsHistorytable(rowData._id)}
+              >
+                {rowData.numberOfClassesBought}
+              </Button>
+            );
+          },
         },
         {
           title: "Number of Classes",
@@ -1425,6 +1453,30 @@ const CrmDetails = () => {
         </AppBar>
         <Comments id={id} name={name} />
       </Dialog>
+
+      {historyStudentData && (
+        <Dialog
+          open={historyOpen}
+          fullWidth
+          onClose={() => setHistoryOpen(false)}
+          aria-labelledby="form-dialog-title"
+          TransitionComponent={Transition}
+        >
+          <AppBar className={classes.appBar}>
+            <Toolbar>
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={() => setHistoryOpen(false)}
+                aria-label="close"
+              >
+                <CloseIcon />
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+          <StudentHistoryTable data={historyStudentData} />
+        </Dialog>
+      )}
     </>
   );
 };
