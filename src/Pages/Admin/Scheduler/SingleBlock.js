@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 
 function SingleBlock({
   day,
@@ -12,8 +13,10 @@ function SingleBlock({
   setScheduleId,
   availableSlotsEditingMode,
   allSchedules,
+  teacherID,
 }) {
   const [schedule, setSchedule] = useState({});
+  let history = useHistory();
 
   useEffect(() => {
     if (
@@ -52,18 +55,6 @@ function SingleBlock({
           ] || availableSlotsEditingMode
             ? "pointer"
             : "not-allowed",
-
-        // backgroundColor: Object.keys(schedule).length
-        //   ? schedule.isClassTemperarilyCancelled
-        //     ? "#aaa"
-        //     : schedule.demo
-        //     ? "#B73427"
-        //     : "#e67e22"
-        //   : categorizedData[category][teacher].availableSlots.includes(
-        //       `${day.toUpperCase()}-${time}`
-        //     )
-        //   ? "#2ecc71"
-        //   : undefined,
       }}
       onClick={() => {
         if (Object.keys(schedule).length) {
@@ -74,6 +65,16 @@ function SingleBlock({
           );
         } else if (availableSlotsEditingMode) {
           addOrRemoveAvailableSlot(`${day.toUpperCase()}-${time}`);
+        } else if (
+          categorizedData[category][teacher].availableSlots.includes(
+            `${day.toUpperCase()}-${time}`
+          )
+        ) {
+          console.log(`${day.toUpperCase()}-${time}`);
+          console.log(teacherID);
+          history.push(
+            `/availabe-scheduler/${day.toUpperCase()}-${time}/${teacherID}`
+          );
         }
       }}
     >
@@ -85,8 +86,6 @@ function SingleBlock({
             ] || availableSlotsEditingMode
               ? "pointer"
               : "not-allowed",
-          // background-color: #ef5734;
-          // background-image: linear-gradient(315deg, #ef5734 0%, #ffcc2f 74%);
           background: Object.keys(schedule).length
             ? schedule.isClassTemperarilyCancelled
               ? "#aaa"

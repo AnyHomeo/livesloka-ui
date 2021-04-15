@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import {
   Button,
@@ -13,12 +14,12 @@ import {
   Select,
   InputLabel,
   MenuItem,
-  Switch,
 } from "@material-ui/core/";
 import SaveIcon from "@material-ui/icons/Save";
 import { makeStyles } from "@material-ui/core/styles";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import moment from "moment";
+import LinkIcon from "@material-ui/icons/Link";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
@@ -31,7 +32,6 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
-import { Redirect, useParams } from "react-router-dom";
 
 let days = [
   "MONDAY",
@@ -63,13 +63,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const EditSchedule = () => {
+const AvailableMeetingSchedule = ({ match }) => {
   const classes = useStyles();
 
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
+  console.log(match.params.slot);
   const [personName, setPersonName] = useState([]);
-  const [teacher, setInputTeacher] = useState("");
-  const [successOpen, setSuccessOpen] = useState(false);
+  const [teacher, setInputTeacher] = useState(match.params.teacher);
+  const [successOpen, setSuccessOpen] = React.useState(false);
   const [demo, setDemo] = useState(false);
   const [onetoone, setonetoone] = useState(false);
   const [onetomany, setonetomany] = useState(false);
@@ -77,28 +83,23 @@ const EditSchedule = () => {
   const [teacherName, setTeacherName] = useState([]);
   const [studentName, setStudentName] = useState([]);
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
-  const [timeSlotState, setTimeSlotState] = useState([]);
+  const [timeSlotState, setTimeSlotState] = useState([match.params.slot]);
   const [zoomEmail, setZoomEmail] = useState("");
   const [zoomLink, setZoomLink] = useState("");
   const [zoomAccounts, setZoomAccounts] = useState([]);
+  const [teacherNameFullObject, setTeacherNameFullObject] = useState({
+    id: "",
+    TeacherName: "",
+  });
+  const [studentNamesFullObject, setStudentNamesFullObject] = useState([]);
   const [alert, setAlert] = useState("");
   const [alertColor, setAlertColor] = useState("");
   const [loading, setLoading] = useState(false);
-  const [prevTeacher, setPrevTeacher] = useState("");
-  const [prevSlots, setPrevSlots] = useState([]);
+
   const [subjectNames, setSubjectNames] = useState("");
   const [subjectNameId, setSubjectNameId] = useState("");
-  const [ClassName, setClassName] = useState("");
-  const [redirect, setRedirect] = useState(false);
-  const [isMeetingLinkChangeNeeded, setIsMeetingLinkChangeNeeded] = useState(
-    false
-  );
+  const [className, setClassName] = useState("");
 
-  const { id } = useParams();
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
   const handleDayChange = (event) => {
     setRadioday(event.target.value);
   };
@@ -110,16 +111,11 @@ const EditSchedule = () => {
     setSuccessOpen(false);
   };
 
-  const getTimeSlots = async (teacher, prevTeacher) => {
+  const getTimeSlots = async () => {
     const timeSlotsData = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/teacher/available/${teacher}?day=MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY`
     );
-    if (teacher === prevTeacher) {
-      setAvailableTimeSlots(timeSlotsData.data.result.concat(prevSlots));
-      setTimeSlotState(prevSlots);
-    } else {
-      setAvailableTimeSlots(timeSlotsData.data.result);
-    }
+    setAvailableTimeSlots(timeSlotsData.data.result);
   };
 
   // Serice calls
@@ -128,15 +124,14 @@ const EditSchedule = () => {
     getStudents();
     getZoomAccounts();
     getSubjectNames();
-    getScheduleData();
   }, []);
 
   useEffect(() => {
-    if (teacher && prevTeacher) {
-      getTimeSlots(teacher, prevTeacher);
+    if (teacher) {
+      getTimeSlots();
       setTimeSlotState([]);
     }
-  }, [teacher, prevTeacher, prevSlots]);
+  }, [teacher]);
 
   // Get teachers
   const getTeachers = async () => {
@@ -149,7 +144,7 @@ const EditSchedule = () => {
   // Get Students
   const getStudents = async () => {
     const studentNames = await Axios.get(
-      `${process.env.REACT_APP_API_KEY}/customers/all?params=firstName,lastName`
+      `${process.env.REACT_APP_API_KEY}/customers/all?params=firstName,lastName,subjectId`
     );
     setStudentName(studentNames.data.result);
   };
@@ -164,147 +159,96 @@ const EditSchedule = () => {
       });
   };
 
-  const getScheduleData = async () => {
-    try {
-      const schedule = await Axios.get(
-        `${process.env.REACT_APP_API_KEY}/schedule/${id}`
-      );
-      console.log(schedule);
-      const {
-        teacher,
-        className,
-        meetingLink,
-        meetingAccount,
-        demo,
-        OneToOne,
-        oneToMany,
-        subject,
-        startDate,
-        students,
-        slots: {
-          monday,
-          tuesday,
-          wednesday,
-          thursday,
-          friday,
-          saturday,
-          sunday,
-        },
-      } = schedule.data.result;
-
-      setInputTeacher(teacher);
-      setClassName(className);
-      setPrevTeacher(teacher);
-      setZoomLink(meetingLink || "");
-      setZoomEmail(meetingAccount || "");
-      setDemo(demo);
-      setonetoone(OneToOne);
-      setonetomany(oneToMany);
-      setSubjectNameId(subject || "");
-      setSelectedDate(
-        startDate
-          ? `${startDate.split("-")[1]}-${startDate.split("-")[0]}-${
-              startDate.split("-")[2]
-            }`
-          : new Date()
-      );
-      setPersonName(students);
-      setTimeSlotState([
-        ...monday,
-        ...tuesday,
-        ...wednesday,
-        ...thursday,
-        ...friday,
-        ...saturday,
-        ...sunday,
-      ]);
-      setPrevSlots([
-        ...monday,
-        ...tuesday,
-        ...wednesday,
-        ...thursday,
-        ...friday,
-        ...saturday,
-        ...sunday,
-      ]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const getSubjectNames = async () => {
     const subjectName = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/admin/get/Subject`
     );
     setSubjectNames(subjectName.data.result);
   };
+
   const submitForm = async (e) => {
+    setLoading(true);
     e.preventDefault();
-    console.log(timeSlotState);
-    if (!!timeSlotState.length) {
-      setLoading(true);
-      let formData = {
-        slots: {},
-      };
-      days.forEach((day) => {
-        formData["slots"][day.toLowerCase()] = timeSlotState
-          .filter((slot) => slot.startsWith(day))
-          .map((slot) => slot.split("!@#$%^&*($%^")[0]);
-      });
-      formData = {
-        ...formData,
-        className: ClassName,
-        meetingLink: zoomLink,
-        meetingAccount: zoomEmail,
-        teacher: teacher,
-        students: personName.map((student) => student._id),
-        demo: demo,
-        OneToOne: onetoone,
-        oneToMany: onetomany,
-        subject: subjectNameId,
-        startDate: moment(selectedDate).format("DD-MM-YYYY"),
-        isMeetingLinkChangeNeeded,
-      };
-      try {
-        const res = await Axios.post(
-          `${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`,
-          formData
-        );
-        console.log(res);
-        setDemo(false);
-        setPersonName([]);
-        setZoomEmail("");
-        setZoomLink("");
-        setSubjectNameId("");
-        setSuccessOpen(true);
-        setAlert(res.data.message);
-        setAlertColor("success");
-        setLoading(false);
-        setRadioday("");
-        setClassName("");
-        setTimeSlotState([]);
-        setTimeout(() => {
-          setRedirect(true);
-        }, 2000);
-      } catch (error) {
-        console.error(error.response);
-        if (error.response) {
+    let formData = {};
+
+    days.forEach((day) => {
+      formData[day.toLowerCase()] = timeSlotState
+        .filter((slot) => slot.startsWith(day))
+        .map((slot) => slot.split("!@#$%^&*($%^")[0]);
+    });
+
+    let newZoomLink = "";
+    let newZoomJwt = "";
+    try {
+      const getZoomLink = await Axios.post(
+        `${process.env.REACT_APP_API_KEY}/link/getzoomlink`,
+
+        timeSlotState
+      );
+      newZoomLink = getZoomLink.data.result.link;
+      newZoomJwt = getZoomLink.data.result.id;
+
+      if (getZoomLink.status === 200) {
+        formData = {
+          ...formData,
+          meetingLink: newZoomLink,
+          meetingAccount: newZoomJwt,
+          teacher: teacher,
+          students: personName,
+          demo: demo,
+          OneToOne: onetoone,
+          OneToMany: onetomany,
+          subject: subjectNameId,
+          startDate: moment(selectedDate).format("DD-MM-YYYY"),
+          classname: className,
+          Jwtid: newZoomJwt,
+          timeSlotState,
+        };
+        try {
+          console.log(formData);
+          const res = await Axios.post(
+            `${process.env.REACT_APP_API_KEY}/schedule`,
+            formData
+          );
+          setDemo(false);
+          setonetoone(false);
+          setonetomany(false);
+          setPersonName("");
+          setZoomLink("");
+          setPersonName("");
+          setSubjectNameId("");
           setSuccessOpen(true);
-          setAlert(error.response.data.error);
-          setAlertColor("error");
+          setAlert(res.data.message);
+          setAlertColor("success");
           setLoading(false);
+          setTeacherNameFullObject({});
+          setStudentNamesFullObject([]);
+          setRadioday("");
+          setClassName("");
+          setTimeSlotState([]);
+          setAvailableTimeSlots([]);
+        } catch (error) {
+          console.error(error.response);
+          if (error.response) {
+            setSuccessOpen(true);
+            setAlert(error.response.data.error);
+            setAlertColor("error");
+            setLoading(false);
+          }
         }
       }
-    } else {
-      setAlertColor("error");
+    } catch (error) {
+      console.log(error.response);
       setSuccessOpen(true);
-      setAlert("Please Select TimeSlots");
+      setAlert(error.response.data.message);
+      setAlertColor("error");
+      setLoading(false);
     }
   };
 
-  if (redirect) {
-    return <Redirect to={"/scheduler"} />;
-  }
+  useEffect(() => {
+    setTimeSlotState([match.params.slot]);
+  }, []);
 
   return (
     <>
@@ -324,11 +268,11 @@ const EditSchedule = () => {
           className="heading"
           style={{ fontSize: "20px", marginTop: "20px", textAlign: "center" }}
         >
-          Edit the Schedule
+          Schedule A Meeting
         </h1>
         <Grid container style={{ width: "100%" }}>
           <Grid item xs={false} md={4} />
-          <Grid item xs={12} style={{ padding: "20px 50px" }} md={4}>
+          <Grid item xs={12} md={4}>
             <FormControl
               style={{
                 width: "100%",
@@ -362,35 +306,38 @@ const EditSchedule = () => {
             md={4}
             style={{ display: "flex", justifyContent: "center" }}
           >
-            <div
-              style={{
-                width: "100%",
-                margin: "0 20px",
-              }}
-            >
+            {studentName.length && studentName[0].firstName ? (
               <Autocomplete
-                filterSelectedOptions
+                multiple
+                style={{ width: "100%", margin: "0 auto" }}
                 options={studentName}
-                getOptionSelected={(option, value) => option._id === value._id}
-                getOptionLabel={(option) =>
-                  `${option.firstName ? option.firstName : ""} ${
-                    option.lastName ? option.lastName : ""
+                value={studentNamesFullObject}
+                getOptionLabel={(name) =>
+                  `${name.firstName} ${name.lastName ? name.lastName : ""}${
+                    name.subject ? `(${name.subject.subjectName})` : ""
                   }`
                 }
-                multiple
-                onChange={(e, v) => setPersonName(v)}
-                value={personName}
+                onChange={(event, value) => {
+                  let tempData = [];
+                  setStudentNamesFullObject(value);
+                  value &&
+                    value.forEach((val) => {
+                      tempData.push(val._id);
+                      setPersonName(tempData);
+                    });
+                }}
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    style={{ width: "100%" }}
                     label="Students"
                     variant="outlined"
                     margin="normal"
                   />
                 )}
               />
-            </div>
+            ) : (
+              ""
+            )}
           </Grid>
 
           <Grid item xs={12} md={4} />
@@ -441,11 +388,10 @@ const EditSchedule = () => {
                     slot.startsWith(radioday)
                   ) || []
                 }
-                state={timeSlotState}
-                setState={setTimeSlotState}
-                timeSlots
                 valueFinder={(item) => item}
                 labelFinder={(item) => item}
+                state={timeSlotState}
+                setState={setTimeSlotState}
               />
             }
           </div>
@@ -459,6 +405,7 @@ const EditSchedule = () => {
           >
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
+                disableToolbar
                 variant="inline"
                 format="dd-MM-yyyy"
                 margin="normal"
@@ -496,7 +443,6 @@ const EditSchedule = () => {
                   ))}
               </Select>
             </FormControl>
-
             <FormControl
               style={{
                 maxWidth: "400px",
@@ -504,38 +450,21 @@ const EditSchedule = () => {
                 marginTop: "10px",
               }}
               variant="outlined"
-              className={classes.formControl}
             >
-              <InputLabel id="Select-label">Select Zoom Account</InputLabel>
-              <Select
+              <TextField
                 fullWidth
-                labelId="Select-label"
-                id="demo-simple-select-outlined"
-                value={zoomEmail}
-                onChange={(e) => setZoomEmail(e.target.value)}
-                label="Select Zoom Account"
-              >
-                {zoomAccounts.map((account) => (
-                  <MenuItem value={account._id}>
-                    {account.ZoomAccountName}
-                  </MenuItem>
-                ))}
-              </Select>
+                id="outlined-basic"
+                label="Class Name "
+                variant="outlined"
+                value={className}
+                onChange={(e) => setClassName(e.target.value)}
+                style={{
+                  maxWidth: "400px",
+                  minWidth: "300px",
+                  marginTop: "10px",
+                }}
+              />
             </FormControl>
-            <TextField
-              fullWidth
-              id="outlined-basic"
-              label="ClassName"
-              variant="outlined"
-              value={ClassName}
-              required
-              onChange={(e) => setClassName(e.target.value)}
-              style={{
-                maxWidth: "400px",
-                minWidth: "300px",
-                marginTop: "10px",
-              }}
-            />
             <div style={{ display: "flex", flexDirection: "row" }}>
               <FormControlLabel
                 style={{ marginTop: "20px" }}
@@ -547,7 +476,7 @@ const EditSchedule = () => {
                     color="primary"
                   />
                 }
-                label="One to one"
+                label="One to one ?"
               />
               <FormControlLabel
                 style={{ marginTop: "20px" }}
@@ -559,7 +488,7 @@ const EditSchedule = () => {
                     color="primary"
                   />
                 }
-                label="One to many"
+                label="One to many ?"
               />
             </div>
             <FormControlLabel
@@ -575,16 +504,6 @@ const EditSchedule = () => {
               label="DEMO"
             />
           </div>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={isMeetingLinkChangeNeeded}
-                onChange={() => setIsMeetingLinkChangeNeeded((prev) => !prev)}
-                name="checkedA"
-              />
-            }
-            label="Create new Meeting Link"
-          />
           <div className={classes.saveButton}>
             {loading ? (
               <CircularProgress />
@@ -597,7 +516,7 @@ const EditSchedule = () => {
                 className={classes.button}
                 startIcon={<SaveIcon />}
               >
-                Save Changes
+                Save
               </Button>
             )}
           </div>
@@ -607,4 +526,4 @@ const EditSchedule = () => {
   );
 };
 
-export default EditSchedule;
+export default AvailableMeetingSchedule;

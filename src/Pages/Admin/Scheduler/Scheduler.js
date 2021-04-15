@@ -544,6 +544,7 @@ function Scheduler() {
                             }
                             setScheduleId={setScheduleId}
                             addOrRemoveAvailableSlot={addOrRemoveAvailableSlot}
+                            teacherID={teacherId}
                           />
                         );
                       })}
