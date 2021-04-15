@@ -29,9 +29,10 @@ import CustomerDetails from "../Pages/MobileView/CustomerDetails";
 import CustomersDetailsMb from "../Pages/MobileView/CustomerDetails/CustomersDetailsMb";
 import AddNewCustomer from "../Pages/MobileView/CustomerDetails/AddNewCustomer";
 import Statistics from "../Pages/Statistics";
-import LeavesTable from './../Pages/Leaves/LeavesTable';
+import LeavesTable from "./../Pages/Leaves/LeavesTable";
 import PaymentsPage from "../Pages/reports/PaymentsPage";
-import UpdateNumberOfBoughtClasses from './../Pages/Admin/Crm/UpdateNumberOfBoughtClasses';
+import UpdateNumberOfBoughtClasses from "./../Pages/Admin/Crm/UpdateNumberOfBoughtClasses";
+import AvailableMeetingSchedule from "../Pages/Admin/Crm/AvailableMeetingSchedule";
 function Routes() {
   return (
     <>
@@ -43,7 +44,11 @@ function Routes() {
           <Route path="/404" exact component={NotFoundView} />
           <DashboardLayout>
             <AdminRoute path="/dashboard" exact component={Dashboard} />
-            <AdminRoute path="/update/classes" exact component={UpdateNumberOfBoughtClasses} />
+            <AdminRoute
+              path="/update/classes"
+              exact
+              component={UpdateNumberOfBoughtClasses}
+            />
             <AdminRoute
               path="/zoom-dashboard"
               exact
@@ -87,6 +92,11 @@ function Routes() {
               path="/meeting-scheduler"
               exact
               component={MeetingScheduler}
+            />
+            <AdminRoute
+              path="/availabe-scheduler/:slot/:teacher"
+              exact
+              component={AvailableMeetingSchedule}
             />
             <AdminRoute
               path="/attendance/class"
