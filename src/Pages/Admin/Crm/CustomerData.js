@@ -48,8 +48,9 @@ import { isAutheticated } from "../../../auth";
 import { getSettings, updateSettings } from "../../../Services/Services";
 import axios from "axios";
 import StudentHistoryTable from "./StudentsHistoryTable";
-import { useHistory } from "react-router-dom";
-import {Smartphone} from "react-feather"
+import { useHistory, Redirect } from "react-router-dom";
+import { Smartphone } from "react-feather";
+
 const copyToClipboard = (text) => {
   var textField = document.createElement("textarea");
   textField.innerText = text;
@@ -988,6 +989,7 @@ const CrmDetails = () => {
       />
     );
   };
+
   return (
     <>
       <ColumnFilterDrawer

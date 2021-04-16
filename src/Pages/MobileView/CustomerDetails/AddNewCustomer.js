@@ -130,8 +130,9 @@ const AddNewCustomer = () => {
       }}
     >
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Student Name: </h3>
+        {/* <h3 className={classes.textLable}>Student Name: </h3> */}
         <TextField
+          variant="outlined"
           name="firstName"
           value={customersEditData.firstName}
           onChange={handleFormValueChange}

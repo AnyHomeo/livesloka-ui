@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Button, TextField, Select, MenuItem, Switch } from "@material-ui/core";
+import {
+  Button,
+  TextField,
+  Select,
+  MenuItem,
+  Switch,
+  InputLabel,
+  FormControl,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import {
@@ -156,9 +164,11 @@ const CustomersDetailsMb = ({ location }) => {
       }}
     >
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Student Name: </h3>
         <TextField
+          fullWidth
+          variant="outlined"
           name="firstName"
+          label="Student Name"
           value={customersEditData.firstName}
           onChange={handleFormValueChange}
           InputProps={{
@@ -167,9 +177,11 @@ const CustomersDetailsMb = ({ location }) => {
         />
       </div>
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Guardian: </h3>
         <TextField
+          variant="outlined"
+          fullWidth
           name="lastName"
+          label="Guardian"
           onChange={handleFormValueChange}
           value={customersEditData.lastName}
           InputProps={{
@@ -178,8 +190,10 @@ const CustomersDetailsMb = ({ location }) => {
         />
       </div>
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Age: </h3>
         <TextField
+          variant="outlined"
+          fullWidth
+          label="Age"
           name="age"
           onChange={handleFormValueChange}
           value={customersEditData.age}
@@ -189,8 +203,10 @@ const CustomersDetailsMb = ({ location }) => {
         />
       </div>
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Classes Paid: </h3>
         <TextField
+          variant="outlined"
+          label="Classes Paid"
+          fullWidth
           name="numberOfClassesBought"
           onChange={handleFormValueChange}
           value={customersEditData.numberOfClassesBought}
@@ -201,8 +217,10 @@ const CustomersDetailsMb = ({ location }) => {
       </div>
 
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Email: </h3>
         <TextField
+          label="Email"
+          variant="outlined"
+          fullWidth
           name="email"
           onChange={handleFormValueChange}
           value={customersEditData.email}
@@ -213,8 +231,10 @@ const CustomersDetailsMb = ({ location }) => {
       </div>
 
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Gender: </h3>
         <TextField
+          label="Gender"
+          variant="outlined"
+          fullWidth
           name="gender"
           onChange={handleFormValueChange}
           value={customersEditData.gender}
@@ -225,8 +245,10 @@ const CustomersDetailsMb = ({ location }) => {
       </div>
 
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Schedule Des: </h3>
         <TextField
+          label="Schedule Des"
+          variant="outlined"
+          fullWidth
           name="scheduleDescription"
           onChange={handleFormValueChange}
           value={customersEditData.scheduleDescription}
@@ -237,8 +259,10 @@ const CustomersDetailsMb = ({ location }) => {
       </div>
 
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>No Of Classes: </h3>
         <TextField
+          label="No Of Classes"
+          variant="outlined"
+          fullWidth
           name="noOfClasses"
           onChange={handleFormValueChange}
           value={customersEditData.noOfClasses}
@@ -249,8 +273,10 @@ const CustomersDetailsMb = ({ location }) => {
       </div>
 
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>No Of Classes: </h3>
         <TextField
+          label="No Of Classes"
+          variant="outlined"
+          fullWidth
           name="numberOfClassesBought"
           onChange={handleFormValueChange}
           value={customersEditData.numberOfClassesBought}
@@ -261,8 +287,10 @@ const CustomersDetailsMb = ({ location }) => {
       </div>
 
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>No Of Students: </h3>
         <TextField
+          label="No Of Students"
+          variant="outlined"
+          fullWidth
           name="numberOfStudents"
           onChange={handleFormValueChange}
           value={customersEditData.numberOfStudents}
@@ -273,8 +301,10 @@ const CustomersDetailsMb = ({ location }) => {
       </div>
 
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Proposed Amount: </h3>
         <TextField
+          label="Proposed Amount"
+          variant="outlined"
+          fullWidth
           name="proposedAmount"
           onChange={handleFormValueChange}
           value={customersEditData.proposedAmount}
@@ -285,8 +315,10 @@ const CustomersDetailsMb = ({ location }) => {
       </div>
 
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Meeting Link: </h3>
         <TextField
+          label="Meeting Link"
+          variant="outlined"
+          fullWidth
           name="meetingLink"
           onChange={handleFormValueChange}
           value={customersEditData.meetingLink}
@@ -296,9 +328,11 @@ const CustomersDetailsMb = ({ location }) => {
         />
       </div>
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Class Name: </h3>
         <Select
+          label="Class Name"
           name="classId"
+          fullWidth
+          variant="outlined"
           style={{ width: "52%" }}
           value={customersEditData.classId}
           disabled={disableEditButton}
@@ -312,8 +346,10 @@ const CustomersDetailsMb = ({ location }) => {
       </div>
 
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Class Status: </h3>
         <Select
+          label="Class Status"
+          fullWidth
+          variant="outlined"
           style={{ width: "52%" }}
           labelId="demo-simple-select-label"
           id="demo-simple-select"
@@ -330,8 +366,10 @@ const CustomersDetailsMb = ({ location }) => {
       </div>
 
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Currency: </h3>
         <Select
+          label="Currency"
+          fullWidth
+          variant="outlined"
           style={{ width: "52%" }}
           disabled={disableEditButton}
           // onChange={handleChange}
@@ -348,8 +386,10 @@ const CustomersDetailsMb = ({ location }) => {
       </div>
 
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Country: </h3>
         <Select
+          label="Country"
+          fullWidth
+          variant="outlined"
           style={{ width: "52%" }}
           value={customersEditData.countryId}
           disabled={disableEditButton}
@@ -364,8 +404,10 @@ const CustomersDetailsMb = ({ location }) => {
       </div>
 
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Teacher: </h3>
         <Select
+          label="Teacher"
+          fullWidth
+          variant="outlined"
           style={{ width: "52%" }}
           value={customersEditData.teacherId}
           disabled={disableEditButton}
@@ -382,8 +424,10 @@ const CustomersDetailsMb = ({ location }) => {
       </div>
 
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Subject: </h3>
         <Select
+          label="Subject"
+          fullWidth
+          variant="outlined"
           style={{ width: "52%" }}
           disabled={disableEditButton}
           name="subjectId"
@@ -400,8 +444,10 @@ const CustomersDetailsMb = ({ location }) => {
       </div>
 
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Agent: </h3>
         <Select
+          label="Agent"
+          fullWidth
+          variant="outlined"
           style={{ width: "52%" }}
           name="agentId"
           value={customersEditData.agentId}
@@ -417,8 +463,10 @@ const CustomersDetailsMb = ({ location }) => {
       </div>
 
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Time Zone: </h3>
         <Select
+          label="Time Zone"
+          fullWidth
+          variant="outlined"
           style={{ width: "52%" }}
           name="timeZoneId"
           value={customersEditData.timeZoneId}
@@ -434,25 +482,32 @@ const CustomersDetailsMb = ({ location }) => {
       </div>
 
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Category Name: </h3>
-        <Select
-          style={{ width: "52%" }}
-          name="categoryId"
-          value={customersEditData.categoryId}
-          onChange={handleDropDownChange}
-          disabled={disableEditButton}
-          // onChange={handleChange}
-        >
-          {categoryDropdown &&
-            categoryDropdown.map((data) => (
-              <MenuItem value={data.id}>{data.categoryName}</MenuItem>
-            ))}
-        </Select>
+        <FormControl variant="outlined" style={{ width: "100%" }}>
+          <InputLabel id="demo-simple-select-filled-label">Music</InputLabel>
+          <Select
+            label="Category Name"
+            fullWidth
+            variant="outlined"
+            style={{ width: "52%" }}
+            name="categoryId"
+            value={customersEditData.categoryId}
+            onChange={handleDropDownChange}
+            disabled={disableEditButton}
+            // onChange={handleChange}
+          >
+            {categoryDropdown &&
+              categoryDropdown.map((data) => (
+                <MenuItem value={data.id}>{data.categoryName}</MenuItem>
+              ))}
+          </Select>
+        </FormControl>
       </div>
 
       <div className={classes.divCon}>
-        <h3 className={classes.textLable}>Toggle Class Join: </h3>
         <Switch
+          label="Toggle Class Join"
+          fullWidth
+          variant="outlined"
           checked={customersEditData.isJoinButtonEnabledByAdmin}
           onChange={handleSwitchChange}
           color="primary"

@@ -165,7 +165,7 @@ const Login = () => {
         isAutheticated().roleId === 4 ||
         isAutheticated().roleId === 5
       ) {
-        if (window.innerWidth <= 415) {
+        if (window.innerWidth <= 500) {
           return <Redirect to="/customer-data-mobile" />;
         }
         return <Redirect to="/customer-data" />;

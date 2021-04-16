@@ -68,7 +68,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
 
   const items = [
     {
-      href: width <= 500 ? "/customer-data-mobile" : "/customer-data",
+      href: width <= 550 ? "/customer-data-mobile" : "/customer-data",
       icon: FileText,
       title: "Customers Data",
     },
@@ -142,7 +142,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
 
   const SalesTeam = [
     {
-      href: width <= 500 ? "/customer-data-mobile" : "/customer-data",
+      href: width <= 550 ? "/customer-data-mobile" : "/customer-data",
       icon: FileText,
       title: "Customers Data",
     },
@@ -175,7 +175,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
 
   const CustomerSupport = [
     {
-      href: width <= 500 ? "/customer-data-mobile" : "/customer-data",
+      href: width <= 550 ? "/customer-data-mobile" : "/customer-data",
       icon: FileText,
       title: "Customers Data",
     },
