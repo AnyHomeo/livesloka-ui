@@ -78,11 +78,16 @@ const CustomerDetails = () => {
         </Card>
       </Link> */}
 
-      <div>
-        <IconButton>
-          <PlusSquare />
-        </IconButton>
-
+      <div style={{ textAlign: "right" }}>
+        <Link
+          to={{
+            pathname: "/add-customer-mobile",
+          }}
+        >
+          <IconButton>
+            <PlusSquare />
+          </IconButton>
+        </Link>
         <IconButton onClick={() => history.push("/customer-data")}>
           <Monitor />
         </IconButton>

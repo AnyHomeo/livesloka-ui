@@ -7,8 +7,10 @@ import {
   Switch,
   InputLabel,
   FormControl,
+  IconButton,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import FileCopyIcon from "@material-ui/icons/FileCopy";
 
 import {
   AddCustomer,
@@ -26,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "10px",
   },
 }));
-
 const CustomersDetailsMb = ({ location }) => {
   const classes = useStyles();
 
@@ -78,6 +79,8 @@ const CustomersDetailsMb = ({ location }) => {
       isJoinButtonEnabledByAdmin: event.target.checked,
     });
   };
+
+  const [meetingLinkCopy] = useState(customersEditData.meetingLink);
 
   const fetchDropDown = async (name) => {
     try {
@@ -154,6 +157,15 @@ const CustomersDetailsMb = ({ location }) => {
       ...customersEditData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const copyToClipboard = (text) => {
+    var textField = document.createElement("textarea");
+    textField.innerText = text;
+    document.body.appendChild(textField);
+    textField.select();
+    document.execCommand("copy");
+    textField.remove();
   };
 
   return (
@@ -315,17 +327,24 @@ const CustomersDetailsMb = ({ location }) => {
       </div>
 
       <div className={classes.divCon}>
-        <TextField
-          label="Meeting Link"
-          variant="outlined"
-          fullWidth
-          name="meetingLink"
-          onChange={handleFormValueChange}
-          value={customersEditData.meetingLink}
-          InputProps={{
-            readOnly: disableEditButton,
-          }}
-        />
+        <div style={{ display: "flex" }}>
+          <TextField
+            label="Meeting Link"
+            variant="outlined"
+            fullWidth
+            name="meetingLink"
+            onChange={handleFormValueChange}
+            value={customersEditData.meetingLink}
+            InputProps={{
+              readOnly: disableEditButton,
+            }}
+          />
+          <IconButton
+            onClick={() => copyToClipboard(customersEditData.meetingLink)}
+          >
+            <FileCopyIcon />
+          </IconButton>
+        </div>
       </div>
       <div className={classes.divCon}>
         <Select
