@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { getAllCustomerDetails } from "../../../Services/Services";
-import { Paper, Grid, Card, TextField } from "@material-ui/core/";
+import { Paper, Grid, Card, TextField, IconButton } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
-
+import { PlusSquare, Monitor } from "react-feather";
+import { useHistory } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -17,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CustomerDetails = () => {
+  const history = useHistory();
   const classes = useStyles();
 
   const [customersData, setCustomersData] = useState();
@@ -52,11 +54,12 @@ const CustomerDetails = () => {
 
   return (
     <div className={classes.root}>
-      <Link
+      {/* <Link
         to={{
           pathname: "/add-customer-mobile",
         }}
       >
+        
         <Card
           style={{
             width: "100%",
@@ -73,7 +76,17 @@ const CustomerDetails = () => {
         >
           Add new
         </Card>
-      </Link>
+      </Link> */}
+
+      <div>
+        <IconButton>
+          <PlusSquare />
+        </IconButton>
+
+        <IconButton onClick={() => history.push("/customer-data")}>
+          <Monitor />
+        </IconButton>
+      </div>
       <TextField
         fullWidth
         style={{ marginBottom: "20px" }}

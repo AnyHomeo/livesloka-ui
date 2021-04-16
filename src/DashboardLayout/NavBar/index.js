@@ -27,178 +27,13 @@ import {
   UserCheck,
 } from "react-feather";
 import NavItem from "./NavItem";
+import useWindowDimensions from "../../Components/useWindowDimensions";
+
 const user = {
   avatar: "/static/images/avatars/avatar_6.png",
   jobTitle: "Admin",
   name: "Ram Kishore",
 };
-
-const items = [
-  {
-    href: window.innerWidth <= 415 ? "/customer-data-mobile" : "/customer-data",
-    icon: FileText,
-    title: "Customers Data",
-  },
-
-  {
-    href: "/add-fields",
-    icon: Edit,
-    title: "Add Fields",
-  },
-  {
-    href: "/attendance",
-    icon: Trello,
-    title: "Attendance",
-  },
-  {
-    href: "/scheduler",
-    icon: UserIcon,
-    title: "Timetable",
-  },
-  {
-    href: "/meeting-scheduler",
-    icon: SettingsIcon,
-    title: "Scheduler",
-  },
-  {
-    href: "/leaves",
-    icon: UserMinus,
-    title: "Customer Leaves",
-  },
-  {
-    href: "/reset/password",
-    icon: LockIcon,
-    title: "Reset Password",
-  },
-  {
-    href: "/zoom-dashboard",
-    icon: Video,
-    title: "Zoom Dashboard",
-  },
-  {
-    href: "/teacherDetails",
-    icon: Trello,
-    title: "Teachers Data",
-  },
-  {
-    href: "/teacher-salary",
-    icon: BarChart2,
-    title: "Teachers Salary",
-  },
-  {
-    href: "/statistics",
-    icon: BarChart,
-    title: "Statistics",
-  },
-  {
-    href: "/dashboard",
-    icon: DollarSign,
-    title: "Financial Dashboard",
-  },
-  {
-    href: "/payments",
-    icon: DollarSign,
-    title: "Payments",
-  },
-  {
-    href: "/update/classes",
-    icon: UserCheck,
-    title: "Update Classes Paid",
-  },
-];
-
-const SalesTeam = [
-  {
-    href: window.innerWidth <= 415 ? "/customer-data-mobile" : "/customer-data",
-    icon: FileText,
-    title: "Customers Data",
-  },
-  {
-    href: "/meeting-scheduler",
-    icon: SettingsIcon,
-    title: "Scheduler",
-  },
-  {
-    href: "/scheduler",
-    icon: UserIcon,
-    title: "Timetable",
-  },
-  {
-    href: "/payments",
-    icon: DollarSign,
-    title: "Payments",
-  },
-  {
-    href: "/statistics",
-    icon: BarChart,
-    title: "Statistics",
-  },
-  {
-    href: "/reset/password",
-    icon: LockIcon,
-    title: "Reset Password",
-  },
-];
-
-const CustomerSupport = [
-  {
-    href: window.innerWidth <= 415 ? "/customer-data-mobile" : "/customer-data",
-    icon: FileText,
-    title: "Customers Data",
-  },
-  {
-    href: "/attendance",
-    icon: Trello,
-    title: "Attendance",
-  },
-  {
-    href: "/meeting-scheduler",
-    icon: SettingsIcon,
-    title: "Scheduler",
-  },
-  {
-    href: "/scheduler",
-    icon: UserIcon,
-    title: "Timetable",
-  },
-
-  {
-    href: "/reset/password",
-    icon: LockIcon,
-    title: "Reset Password",
-  },
-
-  {
-    href: "/statistics",
-    icon: BarChart,
-    title: "Statistics",
-  },
-
-  {
-    href: "/scheduler",
-    icon: UserIcon,
-    title: "Timetable",
-  },
-
-  {
-    href: "/payments",
-    icon: DollarSign,
-    title: "Payments",
-  },
-  {
-    href: "/leaves",
-    icon: UserMinus,
-    title: "Customer Leaves",
-  },
-];
-
-const Accountant = [
-  {
-    href: "/payments",
-    icon: DollarSign,
-    title: "Payments",
-  },
-];
 
 const useStyles = makeStyles(() => ({
   mobileDrawer: {
@@ -229,6 +64,175 @@ const useStyles = makeStyles(() => ({
 }));
 
 const NavBar = ({ onMobileClose, openMobile }) => {
+  const { width } = useWindowDimensions();
+
+  const items = [
+    {
+      href: width <= 500 ? "/customer-data-mobile" : "/customer-data",
+      icon: FileText,
+      title: "Customers Data",
+    },
+
+    {
+      href: "/add-fields",
+      icon: Edit,
+      title: "Add Fields",
+    },
+    {
+      href: "/attendance",
+      icon: Trello,
+      title: "Attendance",
+    },
+    {
+      href: "/scheduler",
+      icon: UserIcon,
+      title: "Timetable",
+    },
+    {
+      href: "/meeting-scheduler",
+      icon: SettingsIcon,
+      title: "Scheduler",
+    },
+    {
+      href: "/leaves",
+      icon: UserMinus,
+      title: "Customer Leaves",
+    },
+    {
+      href: "/reset/password",
+      icon: LockIcon,
+      title: "Reset Password",
+    },
+    {
+      href: "/zoom-dashboard",
+      icon: Video,
+      title: "Zoom Dashboard",
+    },
+    {
+      href: "/teacherDetails",
+      icon: Trello,
+      title: "Teachers Data",
+    },
+    {
+      href: "/teacher-salary",
+      icon: BarChart2,
+      title: "Teachers Salary",
+    },
+    {
+      href: "/statistics",
+      icon: BarChart,
+      title: "Statistics",
+    },
+    {
+      href: "/dashboard",
+      icon: DollarSign,
+      title: "Financial Dashboard",
+    },
+    {
+      href: "/payments",
+      icon: DollarSign,
+      title: "Payments",
+    },
+    {
+      href: "/update/classes",
+      icon: UserCheck,
+      title: "Update Classes Paid",
+    },
+  ];
+
+  const SalesTeam = [
+    {
+      href: width <= 500 ? "/customer-data-mobile" : "/customer-data",
+      icon: FileText,
+      title: "Customers Data",
+    },
+    {
+      href: "/meeting-scheduler",
+      icon: SettingsIcon,
+      title: "Scheduler",
+    },
+    {
+      href: "/scheduler",
+      icon: UserIcon,
+      title: "Timetable",
+    },
+    {
+      href: "/payments",
+      icon: DollarSign,
+      title: "Payments",
+    },
+    {
+      href: "/statistics",
+      icon: BarChart,
+      title: "Statistics",
+    },
+    {
+      href: "/reset/password",
+      icon: LockIcon,
+      title: "Reset Password",
+    },
+  ];
+
+  const CustomerSupport = [
+    {
+      href: width <= 500 ? "/customer-data-mobile" : "/customer-data",
+      icon: FileText,
+      title: "Customers Data",
+    },
+    {
+      href: "/attendance",
+      icon: Trello,
+      title: "Attendance",
+    },
+    {
+      href: "/meeting-scheduler",
+      icon: SettingsIcon,
+      title: "Scheduler",
+    },
+    {
+      href: "/scheduler",
+      icon: UserIcon,
+      title: "Timetable",
+    },
+
+    {
+      href: "/reset/password",
+      icon: LockIcon,
+      title: "Reset Password",
+    },
+
+    {
+      href: "/statistics",
+      icon: BarChart,
+      title: "Statistics",
+    },
+
+    {
+      href: "/scheduler",
+      icon: UserIcon,
+      title: "Timetable",
+    },
+
+    {
+      href: "/payments",
+      icon: DollarSign,
+      title: "Payments",
+    },
+    {
+      href: "/leaves",
+      icon: UserMinus,
+      title: "Customer Leaves",
+    },
+  ];
+
+  const Accountant = [
+    {
+      href: "/payments",
+      icon: DollarSign,
+      title: "Payments",
+    },
+  ];
+
   const classes = useStyles();
   const location = useLocation();
   const [userDetails, setUserDetails] = useState();

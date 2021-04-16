@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import SmsOutlinedIcon from "@material-ui/icons/SmsOutlined";
 import useWindowDimensions from "../../../Components/useWindowDimensions";
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
-import ToggleOnIcon from "@material-ui/icons/ToggleOn";
+import SwapHorizIcon from "@material-ui/icons/SwapHoriz";
 import moment from "moment";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import {
@@ -48,7 +48,8 @@ import { isAutheticated } from "../../../auth";
 import { getSettings, updateSettings } from "../../../Services/Services";
 import axios from "axios";
 import StudentHistoryTable from "./StudentsHistoryTable";
-
+import { useHistory } from "react-router-dom";
+import {Smartphone} from "react-feather"
 const copyToClipboard = (text) => {
   var textField = document.createElement("textarea");
   textField.innerText = text;
@@ -253,6 +254,7 @@ const ColumnFilterDrawer = ({
 );
 
 const CrmDetails = () => {
+  const history = useHistory();
   const { height, width } = useWindowDimensions();
   const classes = useStyles();
 
@@ -559,7 +561,7 @@ const CrmDetails = () => {
           field: "numberOfClassesBought",
           type: "numeric",
           width: "1%",
-          editable:"never",
+          editable: "never",
           hidden: !columnFilters["numberOfClassesBought"].selected,
           cellStyle: { whiteSpace: "nowrap" },
           headerStyle: { whiteSpace: "nowrap" },
@@ -1322,6 +1324,12 @@ const CrmDetails = () => {
               tooltip: "Toggle Filters",
               isFreeAction: true,
               onClick: (event) => setFilterOpen(!filterOpen),
+            },
+            {
+              icon: () => <Smartphone />,
+              tooltip: "Mobile View",
+              isFreeAction: true,
+              onClick: () => history.push("/customer-data-mobile"),
             },
           ]}
           components={{
