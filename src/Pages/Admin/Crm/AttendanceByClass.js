@@ -307,6 +307,7 @@ const AttedanceByClass = () => {
               <TableCell align="center">Time</TableCell>
               <TableCell align="center">Attedended Students</TableCell>
               <TableCell align="center">Requested Students</TableCell>
+              <TableCell align="center">Requested Paid Students</TableCell>
               <TableCell align="center">Absent Students</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
@@ -336,6 +337,23 @@ const AttedanceByClass = () => {
                 </TableCell>
                 <TableCell align="center">
                   {data.requestedStudents.map((student) => (
+                    <Chip
+                      key={student._id}
+                      style={{ margin: "0 5px" }}
+                      label={
+                        student.firstName
+                          ? student.firstName
+                          : student.email
+                          ? student.email
+                          : "Noname"
+                      }
+                      size="medium"
+                      color="primary"
+                    />
+                  ))}
+                </TableCell>
+                <TableCell align="center">
+                  {data.requestedPaidStudents.map((student) => (
                     <Chip
                       key={student._id}
                       style={{ margin: "0 5px" }}
