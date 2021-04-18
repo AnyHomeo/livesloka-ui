@@ -5,6 +5,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import { PlusSquare, Monitor } from "react-feather";
 import { useHistory } from "react-router-dom";
+import WhatsAppIcon from "@material-ui/icons/WhatsApp";
+import "./style.css";
+import PhoneAndroidIcon from "@material-ui/icons/PhoneAndroid";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -54,30 +58,6 @@ const CustomerDetails = () => {
 
   return (
     <div className={classes.root}>
-      {/* <Link
-        to={{
-          pathname: "/add-customer-mobile",
-        }}
-      >
-        
-        <Card
-          style={{
-            width: "100%",
-            height: 70,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            marginTop: "8px",
-            marginBottom: "15px",
-            backgroundColor: "#1abc9c",
-            color: "white",
-          }}
-        >
-          Add new
-        </Card>
-      </Link> */}
-
       <div style={{ textAlign: "right" }}>
         <Link
           to={{
@@ -101,66 +81,84 @@ const CustomerDetails = () => {
         value={searchKeyword}
       />
 
-      <Grid
-        container
-        spacing={2}
-        direction="row"
-        justify="center"
-        alignItems="center"
-      >
+      <Grid container spacing={2}>
         {loading
           ? ""
           : searchKeyword
           ? filteredData &&
             filteredData.map((data) => (
               <Grid item xs={4}>
-                <Link
-                  to={{
-                    pathname: "/customer-data-info",
-                    state: { data },
+                <Card
+                  className="cus-data-name-card"
+                  style={{
+                    backgroundColor: "rgb(46, 204, 113)",
+                    textAlign: "center",
                   }}
                 >
-                  <Card
+                  <Link
+                    to={{
+                      pathname: "/customer-data-info",
+                      state: { data },
+                    }}
                     style={{
-                      width: 110,
-                      height: 70,
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      textAlign: "center",
-                      backgroundColor: "#2ecc71",
-                      color: "white",
+                      color:"#fff"
                     }}
                   >
                     {data.firstName}
-                  </Card>
-                </Link>
+                  </Link>
+                    {console.log(data)}
+                  <div className="cus-data-icons">
+                    <a href={`https://wa.me/${data.whatsAppnumber}`}>
+                      <IconButton>
+                        <WhatsAppIcon style={{ color: "#fff" }} />
+                      </IconButton>
+                    </a>
+                    <a href={`tel:${data.phone}`} >
+
+                    <IconButton>
+                      <PhoneAndroidIcon style={{ color: "#fff" }} />
+                    </IconButton>
+                    </a>
+                  </div>
+                </Card>
               </Grid>
             ))
           : customersData &&
             customersData.map((data) => (
               <Grid item xs={4}>
-                <Link
-                  to={{
-                    pathname: "/customer-data-info",
-                    state: { data },
+                <Card
+                  className="cus-data-name-card"
+                  style={{
+                    backgroundColor: "rgb(46, 204, 113)",
+                    textAlign: "center",
                   }}
                 >
-                  <Card
+                  <Link
+                    to={{
+                      pathname: "/customer-data-info",
+                      state: { data },
+                    }}
                     style={{
-                      width: 110,
-                      height: 70,
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      textAlign: "center",
-                      backgroundColor: "#2ecc71",
-                      color: "white",
+                      color:"#fff"
                     }}
                   >
                     {data.firstName}
-                  </Card>
-                </Link>
+                  </Link>
+                    {console.log(data)}
+                  <div className="cus-data-icons">
+                    <a href={`https://wa.me/${data.whatsAppnumber}`}>
+                      <IconButton>
+                        <WhatsAppIcon style={{ color: "#fff" }} />
+                      </IconButton>
+                    </a>
+                    <a href={`tel:${data.phone}`} >
+
+                    <IconButton>
+                      <PhoneAndroidIcon style={{ color: "#fff" }} />
+                    </IconButton>
+                    </a>
+                  </div>
+                </Card>
               </Grid>
             ))}
       </Grid>
