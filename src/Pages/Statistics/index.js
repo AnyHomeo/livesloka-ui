@@ -14,9 +14,17 @@ import io from "socket.io-client";
 import EditIcon from "@material-ui/icons/Edit";
 import { Link } from "react-router-dom";
 import OpenInBrowserIcon from "@material-ui/icons/OpenInBrowser";
-import { getStudentList } from "../../Services/Services";
+import { getStudentList, getUserAttendance } from "../../Services/Services";
 import MaterialTable from "material-table";
-import { WhatsApp } from "@material-ui/icons";
+import { Refresh, WhatsApp } from "@material-ui/icons";
+import BookIcon from '@material-ui/icons/Book';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 
 const socket = io(process.env.REACT_APP_API_KEY);
 
@@ -88,6 +96,8 @@ const Statistics = () => {
   const [statisticsData, setStatisticsData] = useState();
   const [scheduleId, setScheduleId] = useState("");
   const [selectedScheduleData, setSelectedScheduleData] = useState([]);
+  const [attendance, setAttendance] = useState([]);
+  const [refresh, setRefresh] = useState(false)
 
   useEffect(() => {
     if (scheduleId) {
@@ -103,7 +113,6 @@ const Statistics = () => {
   }, [scheduleId]);
 
   useEffect(() => {
-    getStatistics();
     socket.on("teacher-joined", ({ scheduleId }) => {
       console.log(scheduleId);
       console.log(statisticsData);
@@ -122,7 +131,11 @@ const Statistics = () => {
         return tempStatisticsData;
       });
     });
-  }, []);
+  },[])
+
+  useEffect(() => {
+    getStatistics();
+  }, [refresh]);
 
   const getStatistics = async () => {
     try {
@@ -142,6 +155,33 @@ const Statistics = () => {
 
   return (
     <>
+        <Dialog
+        open={!!attendance.length}
+        onClose={() => setAttendance([])}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogContent>
+          <MaterialTable
+            data={attendance}
+            columns={[
+              {
+                field:"date",
+                title:"Date" 
+              },
+              {
+                field:"time",
+                title:"Time"
+              }
+            ]}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setAttendance([])}  color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
       {statisticsData && (
         <div>
           <Grid
@@ -241,6 +281,16 @@ const Statistics = () => {
               alignItems: "center",
             }}
           >
+            <Button style={{
+              position:"absolute",
+              right:"20px",
+              top:"70px"
+            }} 
+            onClick={() => setRefresh(prev => !prev)}
+            variant="contained"
+            >
+              Refresh
+            </Button>
             <div>
               <h1 className={classes.titleCard}>Next Classes</h1>
             </div>
@@ -334,6 +384,21 @@ const Statistics = () => {
                 margin:"20px",
                 padding:"20px"
               }}
+              actions={[
+                {
+                  icon: () => <BookIcon/>,
+                  onClick:(e,v) => {
+                    console.log(v)
+                    getUserAttendance(v._id,"")
+                    .then(data => {
+                      console.log(data.data.result.reverse())
+                      setAttendance(data.data.result)
+                    }).catch(err => {
+                      console.log(err)
+                    })
+                  }
+                }
+              ]}
               columns={[
                 {
                   field: "firstName",
@@ -363,10 +428,6 @@ const Statistics = () => {
                     </div>
                   ),
                 },
-                {
-                  field: "phone",
-                  title: "Phone Number",
-                }
               ]}
             />
           ) : (

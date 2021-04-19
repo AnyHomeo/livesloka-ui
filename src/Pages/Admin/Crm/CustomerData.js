@@ -368,10 +368,6 @@ const CrmDetails = () => {
           selected: settings.includes("numberOfClassesBought"),
           name: "Classes paid",
         },
-        paidTill: {
-          selected: settings.includes("paidTill"),
-          name: "Paid Till",
-        },
         teacherId: {
           selected: settings.includes("teacherId"),
           name: "Teacher",
@@ -475,7 +471,7 @@ const CrmDetails = () => {
     if (Object.keys(columnFilters).length) {
       setColumns([
         {
-          title: "Toggle Class Join",
+          title: "Join",
           width: "1%",
           align: "center",
           editable: "never",
@@ -499,6 +495,16 @@ const CrmDetails = () => {
           cellStyle: { whiteSpace: "nowrap" },
           headerStyle: { whiteSpace: "nowrap" },
           hidden: !columnFilters["classStatusId"].selected,
+        },
+        {
+          title: "Entry Date",
+          field: "createdAt",
+          width: "1%",
+          type: "date",
+          editable: "never",
+          hidden: !columnFilters["createdAt"].selected,
+          cellStyle: { whiteSpace: "nowrap" },
+          headerStyle: { whiteSpace: "nowrap" },
         },
         {
           title: "Time Zone",
@@ -550,15 +556,7 @@ const CrmDetails = () => {
           ),
         },
         {
-          title: "Paid Till (DD-MM-YYYY) ",
-          field: "paidTill",
-          width: "1%",
-          cellStyle: { whiteSpace: "nowrap" },
-          headerStyle: { whiteSpace: "nowrap" },
-          hidden: !columnFilters["paidTill"].selected,
-        },
-        {
-          title: "Classes Paid",
+          title: "Class left",
           field: "numberOfClassesBought",
           type: "numeric",
           width: "1%",
@@ -578,7 +576,7 @@ const CrmDetails = () => {
           },
         },
         {
-          title: "Number of Classes",
+          title: "Default classes",
           field: "noOfClasses",
           type: "numeric",
           width: "1%",
@@ -624,7 +622,7 @@ const CrmDetails = () => {
           hidden: !columnFilters["gender"].selected,
         },
         {
-          title: "Class Name",
+          title: "Class",
           field: "classId",
           width: "1%",
           lookup: classDropdown,
@@ -640,15 +638,6 @@ const CrmDetails = () => {
           cellStyle: { whiteSpace: "nowrap" },
           headerStyle: { whiteSpace: "nowrap" },
           hidden: !columnFilters["subjectId"].selected,
-        },
-        {
-          title: "New Class Name",
-          field: "className",
-          hidden: !columnFilters["className"].selected,
-          width: "1%",
-          editable: "never",
-          cellStyle: { whiteSpace: "nowrap" },
-          headerStyle: { whiteSpace: "nowrap" },
         },
         {
           title: "Email",
@@ -746,7 +735,7 @@ const CrmDetails = () => {
           ),
         },
         {
-          title: "Proposed Amount",
+          title: "Amount",
           field: "proposedAmount",
           type: "numeric",
           width: "1%",
@@ -769,7 +758,7 @@ const CrmDetails = () => {
           ),
         },
         {
-          title: "Proposed Currency",
+          title: "Currency",
           field: "proposedCurrencyId",
           hidden: !columnFilters["proposedCurrencyId"].selected,
           width: "1%",
@@ -795,7 +784,7 @@ const CrmDetails = () => {
           headerStyle: { whiteSpace: "nowrap" },
         },
         {
-          title: "Schedule Description",
+          title: "Schedule",
           field: "scheduleDescription",
           hidden: !columnFilters["scheduleDescription"].selected,
           headerStyle: { whiteSpace: "nowrap" },
@@ -840,36 +829,7 @@ const CrmDetails = () => {
           hidden: !columnFilters["phone"].selected,
           cellStyle: { whiteSpace: "nowrap" },
           headerStyle: { whiteSpace: "nowrap" },
-        },
-        {
-          title: "Joining Date",
-          field: "createdAt",
-          width: "1%",
-          type: "date",
-          editable: "never",
-          hidden: !columnFilters["createdAt"].selected,
-          cellStyle: { whiteSpace: "nowrap" },
-          headerStyle: { whiteSpace: "nowrap" },
-        },
-        {
-          title: "Study material Sent",
-          field: "studyMaterialSent",
-          type: "boolean",
-          width: "1%",
-          hidden: !columnFilters["studyMaterialSent"].selected,
-          cellStyle: { whiteSpace: "nowrap" },
-          headerStyle: { whiteSpace: "nowrap" },
-          editComponent: (props) => (
-            <Checkbox
-              labelstyle={{ color: "green" }}
-              iconstyle={{ fill: "green" }}
-              inputstyle={{ color: "green" }}
-              style={{ color: "green" }}
-              checked={props.value}
-              onChange={(e) => props.onChange(!props.value)}
-            />
-          ),
-        },
+        }
       ]);
     }
   }, [

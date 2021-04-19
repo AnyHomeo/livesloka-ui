@@ -174,6 +174,7 @@ function Scheduler() {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [success, setSuccess] = useState(false);
   const [response, setResponse] = useState("");
+  const [selectedSlots, setSelectedSlots] = useState([]);
 
   useEffect(() => {
     getAllSchedulesData();
@@ -558,6 +559,8 @@ function Scheduler() {
                       {days.map((day, j) => {
                         return (
                           <SingleBlock
+                            selectedSlots={selectedSlots}
+                            setSelectedSlots={setSelectedSlots}
                             allSchedules={allSchedules}
                             day={day}
                             time={time}
@@ -580,6 +583,25 @@ function Scheduler() {
                 })}
               </div>
             </div>
+            {selectedSlots.length ? (
+              <div className="buttons">
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  style={{ marginRight: "20px" }}
+                  onClick={() => setSelectedSlots([])}
+                >
+                  Cancel
+                </Button>
+                <Link to={`/availabe-scheduler/${selectedSlots.join(",")}/${teacherId}`} >
+                <Button variant="contained" color="primary">
+                  Schedule
+                </Button>
+                </Link>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         </>
       ) : (

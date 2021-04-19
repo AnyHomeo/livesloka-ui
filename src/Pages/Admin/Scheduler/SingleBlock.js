@@ -15,6 +15,8 @@ function SingleBlock({
   availableSlotsEditingMode,
   allSchedules,
   teacherID,
+  selectedSlots,
+  setSelectedSlots
 }) {
   const [schedule, setSchedule] = useState({});
   let history = useHistory();
@@ -73,15 +75,6 @@ function SingleBlock({
             );
           } else if (availableSlotsEditingMode) {
             addOrRemoveAvailableSlot(`${day.toUpperCase()}-${time}`);
-          } else if (
-            categorizedData[category][teacher].availableSlots.includes(
-              `${day.toUpperCase()}-${time}`
-            )
-          ) {
-            // console.log(`${day.toUpperCase()}-${time}`);
-            // history.push(
-            //   `/availabe-scheduler/${day.toUpperCase()}-${time}/${teacherID}`
-            // );
           }
         }}
       >
@@ -92,7 +85,7 @@ function SingleBlock({
                 `${day.toUpperCase()}-${time}`
               ] || availableSlotsEditingMode
                 ? "pointer"
-                : "not-allowed",
+                : "default",
             background: Object.keys(schedule).length
               ? schedule.isClassTemperarilyCancelled
                 ? "#aaa"
@@ -107,28 +100,33 @@ function SingleBlock({
           }}
           className="blockName"
         >
-          {Object.keys(schedule).length ? (
-            schedule.className
-          ) : categorizedData[category][teacher].availableSlots.includes(
-              `${day.toUpperCase()}-${time}`
-            ) ? (
-            <>
-              <Checkbox
-                sytle={{ position: "absolute" }}
-                checked={checked}
-                onChange={handleChange}
-                inputProps={{ "aria-label": "primary checkbox" }}
-              />
-            </>
-          ) : (
-            ""
-          )}
           {Object.keys(schedule).length
             ? schedule.className
             : categorizedData[category][teacher].availableSlots.includes(
                 `${day.toUpperCase()}-${time}`
               )
-            ? "Available"
+            ? 
+            (
+              <>
+              <Checkbox
+                style={{ position: "absolute",left:"5px",top:"5px" }}
+                checked={selectedSlots.includes(`${day.toUpperCase()}-${time}`)}
+                onChange={() => setSelectedSlots(prev => {
+                  let prevData = [...prev]
+                  let str = `${day.toUpperCase()}-${time}`
+                  if(prevData.includes(str)){
+                    let index = prevData.indexOf(str)
+                    prevData.splice(index,1)
+                    return prevData
+                  } else {
+                    return [...prevData,str]
+                  }
+                })}
+                inputProps={{ "aria-label": "primary checkbox" }}
+              />
+            Available
+            </>
+            )
             : ""}
         </div>
       </div>

@@ -83,7 +83,7 @@ const AvailableMeetingSchedule = ({ match }) => {
   const [teacherName, setTeacherName] = useState([]);
   const [studentName, setStudentName] = useState([]);
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
-  const [timeSlotState, setTimeSlotState] = useState([match.params.slot]);
+  const [timeSlotState, setTimeSlotState] = useState([]);
   const [zoomEmail, setZoomEmail] = useState("");
   const [zoomLink, setZoomLink] = useState("");
   const [zoomAccounts, setZoomAccounts] = useState([]);
@@ -247,7 +247,7 @@ const AvailableMeetingSchedule = ({ match }) => {
   };
 
   useEffect(() => {
-    setTimeSlotState([match.params.slot]);
+    setTimeSlotState(match.params.slot.split(","));
   }, []);
 
   return (
