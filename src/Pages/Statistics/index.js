@@ -1,15 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Card } from "@material-ui/core/";
+import {
+  Grid,
+  Card,
+  CardActions,
+  IconButton,
+  Tooltip,
+} from "@material-ui/core/";
 import axios from "axios";
 import moment from "moment";
+import CameraFrontIcon from "@material-ui/icons/CameraFront";
 import io from "socket.io-client";
+import EditIcon from "@material-ui/icons/Edit";
+import { Link } from "react-router-dom";
+import OpenInBrowserIcon from "@material-ui/icons/OpenInBrowser";
+import { getStudentList } from "../../Services/Services";
+import MaterialTable from "material-table";
+import { WhatsApp } from "@material-ui/icons";
+
 const socket = io(process.env.REACT_APP_API_KEY);
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    width: 150,
-    height: 100,
     marginTop: "10px",
     marginBottom: "10px",
     textAlign: "center",
@@ -74,6 +86,22 @@ const getSlotFromTime = (date) => {
 const Statistics = () => {
   const classes = useStyles();
   const [statisticsData, setStatisticsData] = useState();
+  const [scheduleId, setScheduleId] = useState("");
+  const [selectedScheduleData, setSelectedScheduleData] = useState([]);
+
+  useEffect(() => {
+    if (scheduleId) {
+      getStudentList(scheduleId)
+        .then((data) => {
+          console.log(data.data.result.students);
+          setSelectedScheduleData(data.data.result.students);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [scheduleId]);
+
   useEffect(() => {
     getStatistics();
     socket.on("teacher-joined", ({ scheduleId }) => {
@@ -128,15 +156,7 @@ const Statistics = () => {
             <div>
               <h1 className={classes.titleCard}>Classes Live Now</h1>
             </div>
-            <Grid
-              container
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
+            <Grid container justify={"center"} align={"center"}>
               {statisticsData &&
               statisticsData.schedulesRightNow.length === 0 ? (
                 <p
@@ -149,44 +169,62 @@ const Statistics = () => {
               ) : (
                 statisticsData.schedulesRightNow.map((data) => {
                   return (
-                    <Grid
-                      item
-                      xs={6}
-                      sm={2}
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <a href={data.meetingLink}>
-                        <Card
-                          className={classes.card}
+                    <Grid item xs={6} sm={2} style={{ height: "100%" }}>
+                      <Card
+                        className={classes.card}
+                        style={{
+                          height: "100%",
+                          backgroundColor: data.isTeacherJoined
+                            ? "#2ecc71"
+                            : "#f39c12",
+                        }}
+                      >
+                        <p
                           style={{
-                            backgroundColor: data.isTeacherJoined
-                              ? "#2ecc71"
-                              : "#f39c12",
+                            color: "white",
                           }}
                         >
-                          <p
-                            style={{
-                              color: "white",
-                            }}
-                          >
-                            {data.className}
-                          </p>
+                          {data.className}
+                        </p>
 
-                          <p
-                            style={{
-                              color: "white",
-                              fontSize: "10px",
-                            }}
+                        <p
+                          style={{
+                            color: "white",
+                            fontSize: "10px",
+                          }}
+                        >
+                          {data.scheduleDescription}
+                        </p>
+                        <CardActions
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-evenly",
+                          }}
+                        >
+                          <a href={data.meetingLink}>
+                            <Tooltip title="Join Meeting">
+                              <IconButton>
+                                <CameraFrontIcon style={{ color: "white" }} />
+                              </IconButton>
+                            </Tooltip>
+                          </a>
+                          <Link
+                            to={`/edit-schedule/${data._id}?goto=/statistics`}
                           >
-                            {data.scheduleDescription}
-                          </p>
-                        </Card>
-                      </a>
+                            <Tooltip title="Edit Meeting">
+                              <IconButton>
+                                <EditIcon style={{ color: "white" }} />
+                              </IconButton>
+                            </Tooltip>
+                          </Link>
+                          <Tooltip title="Open Schedule Table">
+                            <IconButton onClick={() => setScheduleId(data._id)}>
+                              <OpenInBrowserIcon style={{ color: "white" }} />
+                            </IconButton>
+                          </Tooltip>
+                        </CardActions>
+                      </Card>
                     </Grid>
                   );
                 })
@@ -226,48 +264,114 @@ const Statistics = () => {
               ) : (
                 statisticsData.nextSchedules.map((data) => {
                   return (
-                    <Grid
-                      item
-                      xs={6}
-                      sm={2}
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <a href={data.meetingLink}>
-                        <Card
-                          className={classes.card}
+                    <Grid item xs={6} sm={2} style={{ height: "100%" }}>
+                      <Card
+                        className={classes.card}
+                        style={{
+                          height: "100%",
+                          backgroundColor: data.isTeacherJoined
+                            ? "#2ecc71"
+                            : "#f39c12",
+                        }}
+                      >
+                        <p
                           style={{
-                            backgroundColor: "#ecf0f1",
+                            color: "white",
                           }}
                         >
-                          <p
-                            style={{
-                              color: "black",
-                            }}
-                          >
-                            {data.className}
-                          </p>
+                          {data.className}
+                        </p>
 
-                          <p
-                            style={{
-                              color: "black",
-                              fontSize: "10px",
-                            }}
+                        <p
+                          style={{
+                            color: "white",
+                            fontSize: "10px",
+                          }}
+                        >
+                          {data.scheduleDescription}
+                        </p>
+                        <CardActions
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-evenly",
+                          }}
+                        >
+                          <a href={data.meetingLink}>
+                            <Tooltip title="Join Meeting">
+                              <IconButton>
+                                <CameraFrontIcon style={{ color: "white" }} />
+                              </IconButton>
+                            </Tooltip>
+                          </a>
+                          <Link
+                            to={`/edit-schedule/${data._id}?goto=/statistics`}
                           >
-                            {data.scheduleDescription}
-                          </p>
-                        </Card>
-                      </a>
+                            <Tooltip title="Edit Meeting">
+                              <IconButton>
+                                <EditIcon style={{ color: "white" }} />
+                              </IconButton>
+                            </Tooltip>
+                          </Link>
+                          <Tooltip title="Open Schedule Table">
+                            <IconButton onClick={() => setScheduleId(data._id)}>
+                              <OpenInBrowserIcon style={{ color: "white" }} />
+                            </IconButton>
+                          </Tooltip>
+                        </CardActions>
+                      </Card>
                     </Grid>
                   );
                 })
               )}
             </Grid>
           </Grid>
+          {selectedScheduleData.length ? (
+            <MaterialTable
+              title="Customers of selected Schedule"
+              data={selectedScheduleData}
+              style={{
+                margin:"20px",
+                padding:"20px"
+              }}
+              columns={[
+                {
+                  field: "firstName",
+                  title: "First Name",
+                },
+                {
+                  field: "lastName",
+                  title: "Gaurdian Name",
+                },
+                {
+                  field: "whatsAppnumber",
+                  title: "Whatsapp Number",
+                  render: (rowData) => (
+                    <div>
+                      {rowData.whatsAppnumber ? (
+                        <a href={`https://wa.me/${rowData.whatsAppnumber}`}>
+                          <Tooltip title="Open whatsapp Chat">
+                            <IconButton>
+                              <WhatsApp />
+                            </IconButton>
+                          </Tooltip>
+                        </a>
+                      ) : (
+                        ""
+                      )}
+                      {rowData.whatsAppnumber}
+                    </div>
+                  ),
+                },
+                {
+                  field: "phone",
+                  title: "Phone Number",
+                }
+              ]}
+            />
+          ) : (
+            ""
+          )}
         </div>
       )}
     </>

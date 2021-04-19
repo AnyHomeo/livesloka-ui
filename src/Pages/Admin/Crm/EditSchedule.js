@@ -31,7 +31,11 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
-import { Redirect, useParams } from "react-router-dom";
+import { Redirect, useParams,useLocation } from "react-router-dom";
+
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
 let days = [
   "MONDAY",
@@ -65,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
 
 const EditSchedule = () => {
   const classes = useStyles();
-
+  let query = useQuery();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [personName, setPersonName] = useState([]);
   const [teacher, setInputTeacher] = useState("");
@@ -122,7 +126,7 @@ const EditSchedule = () => {
     }
   };
 
-  // Serice calls
+  // Service calls
   useEffect(() => {
     getTeachers();
     getStudents();
@@ -303,7 +307,7 @@ const EditSchedule = () => {
   };
 
   if (redirect) {
-    return <Redirect to={"/scheduler"} />;
+    return <Redirect to={query.get("goto") ?  query.get("goto") : "/scheduler"} />;
   }
 
   return (
