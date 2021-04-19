@@ -22,9 +22,8 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-
+import VideocamIcon from '@material-ui/icons/Videocam';
+import CopyIcon from "./CopyIcon";
 
 const socket = io(process.env.REACT_APP_API_KEY);
 
@@ -111,6 +110,7 @@ const Statistics = () => {
         });
     }
   }, [scheduleId]);
+
 
   useEffect(() => {
     socket.on("teacher-joined", ({ scheduleId }) => {
@@ -397,23 +397,43 @@ const Statistics = () => {
                       console.log(err)
                     })
                   }
-                }
+                },
+                
               ]}
               columns={[
                 {
                   field: "firstName",
-                  title: "First Name",
+                  title: "Student",
                 },
                 {
                   field: "lastName",
-                  title: "Gaurdian Name",
+                  title: "Gaurdian",
                 },
+                {
+                  field:"email",
+                  title:"Email"
+                },
+                {
+                  field:"numberOfClassesBought",
+                  title:"Classes Left"
+                },
+                {
+                  field:"meetingLink",
+                  title:"Zoom",
+                  render:(rowData) => (
+                    <div style={{display:"flex"}} >
+                      <CopyIcon Icon={VideocamIcon} text={rowData.meetingLink} />
+                      {rowData.meetingLink}
+                    </div>
+                  )
+                },  
                 {
                   field: "whatsAppnumber",
                   title: "Whatsapp Number",
                   render: (rowData) => (
                     <div>
                       {rowData.whatsAppnumber ? (
+                        <>
                         <a href={`https://wa.me/${rowData.whatsAppnumber}`}>
                           <Tooltip title="Open whatsapp Chat">
                             <IconButton>
@@ -421,6 +441,7 @@ const Statistics = () => {
                             </IconButton>
                           </Tooltip>
                         </a>
+                        </>
                       ) : (
                         ""
                       )}
