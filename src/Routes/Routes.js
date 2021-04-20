@@ -14,6 +14,7 @@ import MeetingScheduler from "../Pages/Admin/Crm/MeetingScheduler";
 import Scheduler from "../Pages/Admin/Scheduler/Scheduler";
 import FinancialAnalytics from "../Pages/Analytics/FinancialAnalytics";
 import TeacherDetails from "../Pages/Admin/Crm/TeacherDetails";
+import NewTeacherDetails from "../Pages/Admin/Crm/NewTeacherData";
 import UserPasswordReset from "../Pages/Admin/Crm/UserPasswordReset";
 import EditSchedule from "../Pages/Admin/Crm/EditSchedule";
 import AttedanceByClass from "../Pages/Admin/Crm/AttendanceByClass";
@@ -87,6 +88,11 @@ function Routes() {
               path="/teacherDetails"
               exact
               component={TeacherDetails}
+            />
+            <AdminRoute
+              path="/teacher"
+              exact
+              component={NewTeacherDetails}
             />
             <AdminRoute
               path="/meeting-scheduler"

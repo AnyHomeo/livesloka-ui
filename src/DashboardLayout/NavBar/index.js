@@ -171,6 +171,11 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       icon: LockIcon,
       title: "Reset Password",
     },
+    {
+      href: "/teacher",
+      icon: Trello,
+      title: "Teacher Data",
+    }
   ];
 
   const CustomerSupport = [
@@ -223,6 +228,11 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       icon: UserMinus,
       title: "Customer Leaves",
     },
+    {
+      href: "/teacher",
+      icon: Trello,
+      title: "Teacher Data",
+    }
   ];
 
   const Accountant = [
