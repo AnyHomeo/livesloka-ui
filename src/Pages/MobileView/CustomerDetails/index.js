@@ -102,10 +102,13 @@ const CustomerDetails = () => {
             color = "#3498db";
           } else if (data.classStatusName === "In Class") {
             color = "#26de81";
-          } else if (data.classStatusName === "Schedule Demo") {
+          } else if (
+            data.classStatusName === "Schedule Demo" ||
+            data.classStatusName === "Demo Scheduled"
+          ) {
             color = "#e67e22";
           } else {
-            color = "#34495e";
+            color = "#95a5a6";
           }
         }
       });
@@ -122,10 +125,13 @@ const CustomerDetails = () => {
             color = "#2980b9";
           } else if (data.classStatusName === "In Class") {
             color = "#20bf6b";
-          } else if (data.classStatusName === "Schedule Demo") {
+          } else if (
+            data.classStatusName === "Schedule Demo" ||
+            data.classStatusName === "Demo Scheduled"
+          ) {
             color = "#d35400";
           } else {
-            color = "#2c3e50";
+            color = "#7f8c8d";
           }
         }
       });
@@ -174,100 +180,28 @@ const CustomerDetails = () => {
           : searchKeyword
           ? filteredData &&
             filteredData.map((data) => (
-              <Link
-                key={data._id}
-                to={{
-                  pathname: "/customer-data-info",
-                  state: { data },
-                }}
+              <Card
                 style={{
                   width: "100%",
-                  textDecoration: "none",
+                  height: 60,
+                  marginBottom: 5,
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  border: "1px solid #ecf0f1",
+                  backgroundColor: backgroundColorReturn(data.classStatusId),
+                  color: "white",
+                  overflow: "hidden",
                 }}
               >
-                <Card
+                <div
                   style={{
-                    width: "100%",
-                    height: 60,
-                    marginBottom: 5,
+                    marginLeft: 10,
                     display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    border: "1px solid #ecf0f1",
-                    backgroundColor: backgroundColorReturn(data.classStatusId),
-                    color: "white",
-                    overflow: "hidden",
+                    flexDirection: "column",
                   }}
                 >
-                  <div
-                    style={{
-                      marginLeft: 10,
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <Typography
-                      className={classes.heading}
-                      style={{ fontSize: 14 }}
-                    >
-                      {data.firstName}
-                    </Typography>
-
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography
-                        className={classes.heading}
-                        style={{ fontSize: 10 }}
-                      >
-                        {data.lastName}
-                      </Typography>
-                      <Typography
-                        // className={classes.heading}
-                        style={{
-                          fontSize: 10,
-                          marginRight: 10,
-                          marginLeft: 10,
-                        }}
-                      >
-                        {data.noOfClasses}
-                      </Typography>
-                      {getTimeZone(data.timeZoneId)}
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      height: "100%",
-                      width: "70px",
-                      backgroundColor: backgroundColorReturn2(
-                        data.classStatusId
-                      ),
-                      borderRadius: "0px 7px 5px 0px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      flexDirection: "column",
-                      overflow: "hidden",
-                    }}
-                  >
-                    <a href={`https://wa.me/${data.whatsAppnumber}`}>
-                      <IconButton>
-                        <WhatsAppIcon style={{ color: "#fff" }} />
-                      </IconButton>
-                    </a>
-                  </div>
-                </Card>
-              </Link>
-            ))
-          : customersData &&
-            customersData.map((data) => {
-              return (
-                <>
                   <Link
                     key={data._id}
                     to={{
@@ -277,30 +211,100 @@ const CustomerDetails = () => {
                     style={{
                       width: "100%",
                       textDecoration: "none",
+                      color: "white",
                     }}
                   >
-                    <Card
+                    <Typography
+                      className={classes.heading}
+                      style={{ fontSize: 14 }}
+                    >
+                      {data.firstName}
+                    </Typography>
+                  </Link>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography
+                      className={classes.heading}
+                      style={{ fontSize: 10 }}
+                    >
+                      {data.lastName}
+                    </Typography>
+                    <Typography
+                      // className={classes.heading}
                       style={{
-                        width: "100%",
-                        height: 60,
-                        marginBottom: 5,
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        border: "1px solid #ecf0f1",
-                        backgroundColor: backgroundColorReturn(
-                          data.classStatusId
-                        ),
-                        color: "white",
-                        overflow: "hidden",
+                        fontSize: 10,
+                        marginRight: 10,
+                        marginLeft: 10,
                       }}
                     >
-                      <div
+                      {data.noOfClasses}
+                    </Typography>
+                    {getTimeZone(data.timeZoneId)}
+                  </div>
+                </div>
+                <div
+                  style={{
+                    height: "100%",
+                    width: "70px",
+                    backgroundColor: backgroundColorReturn2(data.classStatusId),
+                    borderRadius: "0px 7px 5px 0px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "column",
+                    overflow: "hidden",
+                  }}
+                >
+                  <a href={`https://wa.me/${data.whatsAppnumber}`}>
+                    <IconButton>
+                      <WhatsAppIcon style={{ color: "#fff" }} />
+                    </IconButton>
+                  </a>
+                </div>
+              </Card>
+            ))
+          : customersData &&
+            customersData.map((data) => {
+              return (
+                <>
+                  <Card
+                    style={{
+                      width: "100%",
+                      height: 60,
+                      marginBottom: 5,
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      border: "1px solid #ecf0f1",
+                      backgroundColor: backgroundColorReturn(
+                        data.classStatusId
+                      ),
+                      color: "white",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <div
+                      style={{
+                        marginLeft: 10,
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <Link
+                        key={data._id}
+                        to={{
+                          pathname: "/customer-data-info",
+                          state: { data },
+                        }}
                         style={{
-                          marginLeft: 10,
-                          display: "flex",
-                          flexDirection: "column",
+                          width: "100%",
+                          textDecoration: "none",
+                          color: "white",
                         }}
                       >
                         <Typography
@@ -309,56 +313,55 @@ const CustomerDetails = () => {
                         >
                           {data.firstName}
                         </Typography>
-
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                        >
-                          <Typography
-                            className={classes.heading}
-                            style={{ fontSize: 10 }}
-                          >
-                            {data.lastName}
-                          </Typography>
-                          <Typography
-                            // className={classes.heading}
-                            style={{
-                              fontSize: 10,
-                              marginRight: 10,
-                              marginLeft: 10,
-                            }}
-                          >
-                            {data.noOfClasses}
-                          </Typography>
-                          {getTimeZone(data.timeZoneId)}
-                        </div>
-                      </div>
-
+                      </Link>
                       <div
                         style={{
-                          height: "100%",
-                          width: "70px",
-                          backgroundColor: backgroundColorReturn2(
-                            data.classStatusId
-                          ),
-                          borderRadius: "0px 7px 5px 0px",
                           display: "flex",
-                          justifyContent: "center",
                           alignItems: "center",
-                          flexDirection: "column",
-                          overflow: "hidden",
                         }}
                       >
-                        <a href={`https://wa.me/${data.whatsAppnumber}`}>
-                          <IconButton>
-                            <WhatsAppIcon style={{ color: "#fff" }} />
-                          </IconButton>
-                        </a>
+                        <Typography
+                          className={classes.heading}
+                          style={{ fontSize: 10 }}
+                        >
+                          {data.lastName}
+                        </Typography>
+                        <Typography
+                          // className={classes.heading}
+                          style={{
+                            fontSize: 10,
+                            marginRight: 10,
+                            marginLeft: 10,
+                          }}
+                        >
+                          {data.noOfClasses}
+                        </Typography>
+                        {getTimeZone(data.timeZoneId)}
                       </div>
-                    </Card>
-                  </Link>
+                    </div>
+
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "70px",
+                        backgroundColor: backgroundColorReturn2(
+                          data.classStatusId
+                        ),
+                        borderRadius: "0px 7px 5px 0px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "column",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <a href={`https://wa.me/${data.whatsAppnumber}`}>
+                        <IconButton>
+                          <WhatsAppIcon style={{ color: "#fff" }} />
+                        </IconButton>
+                      </a>
+                    </div>
+                  </Card>
                 </>
               );
             })}
