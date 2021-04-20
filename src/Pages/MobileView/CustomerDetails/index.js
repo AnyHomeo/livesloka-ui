@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { getAllCustomerDetails, getData } from "../../../Services/Services";
-import { Paper, Grid, Card, TextField, IconButton } from "@material-ui/core/";
+import {
+  Paper,
+  Grid,
+  Card,
+  TextField,
+  IconButton,
+  Typography,
+} from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import { PlusSquare, Monitor } from "react-feather";
@@ -39,7 +46,8 @@ const CustomerDetails = () => {
     setLoading(true);
     const data = await getAllCustomerDetails();
 
-    data && data.data.result.reverse();
+    console.log(data);
+    // data && data.data.result.reverse();
     setCustomersData(data && data.data.result);
     setLoading(false);
   };
@@ -70,7 +78,8 @@ const CustomerDetails = () => {
           regex.test(x.noOfClasses) ||
           regex.test(x.proposedAmount) ||
           regex.test(x.scheduleDescription) ||
-          regex.test(x.whatsAppnumber)
+          regex.test(x.whatsAppnumber) ||
+          regex.test(x.gender)
       );
 
     setFilteredData(sortedArr);
@@ -86,19 +95,40 @@ const CustomerDetails = () => {
 
   const backgroundColorReturn = (id) => {
     let color = "";
-    classStatusDrop.map((data) => {
-      if (data.id === id) {
-        if (data.classStatusName === "New") {
-          color = "#3f51b5";
-        } else if (data.classStatusName === "In Class") {
-          color = "#27ae60";
-        } else if (data.classStatusName === "Schedule Demo") {
-          color = "#f1c40f";
-        } else {
-          color = "#7f8c8d";
+    classStatusDrop &&
+      classStatusDrop.map((data) => {
+        if (data.id === id) {
+          if (data.classStatusName === "New") {
+            color = "#3498db";
+          } else if (data.classStatusName === "In Class") {
+            color = "#26de81";
+          } else if (data.classStatusName === "Schedule Demo") {
+            color = "#e67e22";
+          } else {
+            color = "#34495e";
+          }
         }
-      }
-    });
+      });
+
+    return color;
+  };
+
+  const backgroundColorReturn2 = (id) => {
+    let color = "";
+    classStatusDrop &&
+      classStatusDrop.map((data) => {
+        if (data.id === id) {
+          if (data.classStatusName === "New") {
+            color = "#2980b9";
+          } else if (data.classStatusName === "In Class") {
+            color = "#20bf6b";
+          } else if (data.classStatusName === "Schedule Demo") {
+            color = "#d35400";
+          } else {
+            color = "#2c3e50";
+          }
+        }
+      });
 
     return color;
   };
@@ -111,7 +141,7 @@ const CustomerDetails = () => {
           timeZoneString = data.timeZoneName;
         }
       });
-    return <p style={{ marginTop: 5, color: "white" }}>{timeZoneString}</p>;
+    return <p style={{ color: "white", fontSize: 10 }}>{timeZoneString}</p>;
   }
   return (
     <div className={classes.root}>
@@ -144,83 +174,191 @@ const CustomerDetails = () => {
           : searchKeyword
           ? filteredData &&
             filteredData.map((data) => (
-              <Grid item xs={4} key={data._id}>
+              <Link
+                key={data._id}
+                to={{
+                  pathname: "/customer-data-info",
+                  state: { data },
+                }}
+                style={{
+                  width: "100%",
+                  textDecoration: "none",
+                }}
+              >
                 <Card
-                  className="cus-data-name-card"
                   style={{
+                    width: "100%",
+                    height: 60,
+                    marginBottom: 5,
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    border: "1px solid #ecf0f1",
                     backgroundColor: backgroundColorReturn(data.classStatusId),
-                    textAlign: "center",
+                    color: "white",
+                    overflow: "hidden",
                   }}
                 >
-                  <Link
-                    to={{
-                      pathname: "/customer-data-info",
-                      state: { data },
-                    }}
+                  <div
                     style={{
-                      color: "#fff",
+                      marginLeft: 10,
+                      display: "flex",
+                      flexDirection: "column",
                     }}
                   >
-                    {data.firstName}
-                  </Link>
-                  <p style={{ color: "white" }}>{data.noOfClasses}</p>
+                    <Typography
+                      className={classes.heading}
+                      style={{ fontSize: 14 }}
+                    >
+                      {data.firstName}
+                    </Typography>
 
-                  <div className="cus-data-icons">
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography
+                        className={classes.heading}
+                        style={{ fontSize: 10 }}
+                      >
+                        {data.lastName}
+                      </Typography>
+                      <Typography
+                        // className={classes.heading}
+                        style={{
+                          fontSize: 10,
+                          marginRight: 10,
+                          marginLeft: 10,
+                        }}
+                      >
+                        {data.noOfClasses}
+                      </Typography>
+                      {getTimeZone(data.timeZoneId)}
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      height: "100%",
+                      width: "70px",
+                      backgroundColor: backgroundColorReturn2(
+                        data.classStatusId
+                      ),
+                      borderRadius: "0px 7px 5px 0px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexDirection: "column",
+                      overflow: "hidden",
+                    }}
+                  >
                     <a href={`https://wa.me/${data.whatsAppnumber}`}>
                       <IconButton>
                         <WhatsAppIcon style={{ color: "#fff" }} />
                       </IconButton>
                     </a>
-                    <a href={`tel:${data.phone}`}>
-                      <IconButton>
-                        <PhoneAndroidIcon style={{ color: "#fff" }} />
-                      </IconButton>
-                    </a>
                   </div>
                 </Card>
-              </Grid>
+              </Link>
             ))
           : customersData &&
             customersData.map((data) => {
               return (
                 <>
-                  <Grid item xs={4} key={data._id}>
+                  <Link
+                    key={data._id}
+                    to={{
+                      pathname: "/customer-data-info",
+                      state: { data },
+                    }}
+                    style={{
+                      width: "100%",
+                      textDecoration: "none",
+                    }}
+                  >
                     <Card
-                      className="cus-data-name-card"
                       style={{
+                        width: "100%",
+                        height: 60,
+                        marginBottom: 5,
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        border: "1px solid #ecf0f1",
                         backgroundColor: backgroundColorReturn(
                           data.classStatusId
                         ),
-                        textAlign: "center",
+                        color: "white",
+                        overflow: "hidden",
                       }}
                     >
-                      <Link
-                        to={{
-                          pathname: "/customer-data-info",
-                          state: { data },
-                        }}
+                      <div
                         style={{
-                          color: "#fff",
+                          marginLeft: 10,
+                          display: "flex",
+                          flexDirection: "column",
                         }}
                       >
-                        {data.firstName}
-                      </Link>
-                      <p style={{ color: "white" }}>{data.noOfClasses}</p>
-                      {getTimeZone(data.timeZoneId)}
-                      <div className="cus-data-icons">
+                        <Typography
+                          className={classes.heading}
+                          style={{ fontSize: 14 }}
+                        >
+                          {data.firstName}
+                        </Typography>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Typography
+                            className={classes.heading}
+                            style={{ fontSize: 10 }}
+                          >
+                            {data.lastName}
+                          </Typography>
+                          <Typography
+                            // className={classes.heading}
+                            style={{
+                              fontSize: 10,
+                              marginRight: 10,
+                              marginLeft: 10,
+                            }}
+                          >
+                            {data.noOfClasses}
+                          </Typography>
+                          {getTimeZone(data.timeZoneId)}
+                        </div>
+                      </div>
+
+                      <div
+                        style={{
+                          height: "100%",
+                          width: "70px",
+                          backgroundColor: backgroundColorReturn2(
+                            data.classStatusId
+                          ),
+                          borderRadius: "0px 7px 5px 0px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          flexDirection: "column",
+                          overflow: "hidden",
+                        }}
+                      >
                         <a href={`https://wa.me/${data.whatsAppnumber}`}>
                           <IconButton>
                             <WhatsAppIcon style={{ color: "#fff" }} />
                           </IconButton>
                         </a>
-                        <a href={`tel:${data.phone}`}>
-                          <IconButton>
-                            <PhoneAndroidIcon style={{ color: "#fff" }} />
-                          </IconButton>
-                        </a>
                       </div>
                     </Card>
-                  </Grid>
+                  </Link>
                 </>
               );
             })}
