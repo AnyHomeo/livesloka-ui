@@ -594,10 +594,14 @@ function Scheduler() {
                 >
                   Cancel
                 </Button>
-                <Link to={`/availabe-scheduler/${selectedSlots.join(",")}/${teacherId}`} >
-                <Button variant="contained" color="primary">
-                  Schedule
-                </Button>
+                <Link
+                  to={`/availabe-scheduler/${selectedSlots.join(
+                    ","
+                  )}/${teacherId}`}
+                >
+                  <Button variant="contained" color="primary">
+                    Schedule
+                  </Button>
                 </Link>
               </div>
             ) : (
