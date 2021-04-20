@@ -31,7 +31,7 @@ const CustomerDetails = () => {
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     fetchCustomerDetails();
-  }, []);
+  }, []); 
 
   const fetchCustomerDetails = async () => {
     setLoading(true);
@@ -106,7 +106,6 @@ const CustomerDetails = () => {
                   >
                     {data.firstName}
                   </Link>
-                    {console.log(data)}
                   <div className="cus-data-icons">
                     <a href={`https://wa.me/${data.whatsAppnumber}`}>
                       <IconButton>
