@@ -96,6 +96,7 @@ const hours = [
   "05:00 AM",
   "05:30 AM",
   "06:00 AM",
+  "06:30 AM",
   "07:00 AM",
   "07:30 AM",
   "08:00 AM",
@@ -593,10 +594,14 @@ function Scheduler() {
                 >
                   Cancel
                 </Button>
-                <Link to={`/availabe-scheduler/${selectedSlots.join(",")}/${teacherId}`} >
-                <Button variant="contained" color="primary">
-                  Schedule
-                </Button>
+                <Link
+                  to={`/availabe-scheduler/${selectedSlots.join(
+                    ","
+                  )}/${teacherId}`}
+                >
+                  <Button variant="contained" color="primary">
+                    Schedule
+                  </Button>
                 </Link>
               </div>
             ) : (
