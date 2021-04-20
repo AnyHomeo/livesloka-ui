@@ -24,6 +24,10 @@ function NewTeacherData() {
 
     return (
         <MaterialTable
+        style={{
+            margin:"20px",
+            padding:"20px"
+        }}
         title="Teacher Data"
             columns={[
             {
@@ -53,6 +57,9 @@ function NewTeacherData() {
             }
         ]}
         data={data}
+        options={{
+            paging:false
+        }}
         />
     )
 }
