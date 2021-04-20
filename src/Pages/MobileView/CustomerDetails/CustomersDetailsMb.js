@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
   divCon: {
     marginTop: "10px",
     marginBottom: "10px",
+    width: "100%",
   },
 }));
 const CustomersDetailsMb = ({ location }) => {
@@ -175,6 +176,69 @@ const CustomersDetailsMb = ({ location }) => {
         marginTop: "20px",
       }}
     >
+      <div
+        className={classes.divCon}
+        style={{ display: "flex", alignItems: "center" }}
+      >
+        <p>Toggle Class Join: </p>
+        <Switch
+          label="Toggle Class Join"
+          fullWidth
+          variant="outlined"
+          checked={customersEditData.isJoinButtonEnabledByAdmin}
+          onChange={handleSwitchChange}
+          color="primary"
+          name="checkedB"
+          inputProps={{ "aria-label": "primary checkbox" }}
+        />
+      </div>
+      <div className={classes.divCon}>
+        <FormControl variant="outlined" style={{ minWidth: "100%" }}>
+          <InputLabel id="demo-simple-select-filled-label">
+            Class Status:
+          </InputLabel>
+          <Select
+            label="Class Status"
+            fullWidth
+            variant="outlined"
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={customersEditData.classStatusId}
+            disabled={disableEditButton}
+            name="classStatusId"
+            onChange={handleDropDownChange}
+          >
+            {classStatusDropDown &&
+              classStatusDropDown.map((data) => (
+                <MenuItem value={data.id}>{data.classStatusName}</MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+      </div>
+
+      <div className={classes.divCon}>
+        <FormControl variant="outlined" style={{ minWidth: "100%" }}>
+          <InputLabel id="demo-simple-select-filled-label">
+            TimeZone:
+          </InputLabel>
+          <Select
+            label="Time Zone"
+            fullWidth
+            variant="outlined"
+            name="timeZoneId"
+            value={customersEditData.timeZoneId}
+            onChange={handleDropDownChange}
+            disabled={disableEditButton}
+            // onChange={handleChange}
+          >
+            {timezoneDropdown &&
+              timezoneDropdown.map((data) => (
+                <MenuItem value={data.id}>{data.timeZoneName}</MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+      </div>
+
       <div className={classes.divCon}>
         <TextField
           fullWidth
@@ -214,61 +278,6 @@ const CustomersDetailsMb = ({ location }) => {
           }}
         />
       </div>
-      <div className={classes.divCon}>
-        <TextField
-          variant="outlined"
-          label="Classes Paid"
-          fullWidth
-          name="numberOfClassesBought"
-          onChange={handleFormValueChange}
-          value={customersEditData.numberOfClassesBought}
-          InputProps={{
-            readOnly: disableEditButton,
-          }}
-        />
-      </div>
-
-      <div className={classes.divCon}>
-        <TextField
-          label="Email"
-          variant="outlined"
-          fullWidth
-          name="email"
-          onChange={handleFormValueChange}
-          value={customersEditData.email}
-          InputProps={{
-            readOnly: disableEditButton,
-          }}
-        />
-      </div>
-
-      <div className={classes.divCon}>
-        <TextField
-          label="Gender"
-          variant="outlined"
-          fullWidth
-          name="gender"
-          onChange={handleFormValueChange}
-          value={customersEditData.gender}
-          InputProps={{
-            readOnly: disableEditButton,
-          }}
-        />
-      </div>
-
-      <div className={classes.divCon}>
-        <TextField
-          label="Schedule Des"
-          variant="outlined"
-          fullWidth
-          name="scheduleDescription"
-          onChange={handleFormValueChange}
-          value={customersEditData.scheduleDescription}
-          InputProps={{
-            readOnly: disableEditButton,
-          }}
-        />
-      </div>
 
       <div className={classes.divCon}>
         <TextField
@@ -300,6 +309,148 @@ const CustomersDetailsMb = ({ location }) => {
 
       <div className={classes.divCon}>
         <TextField
+          variant="outlined"
+          label="Classes Paid"
+          fullWidth
+          name="numberOfClassesBought"
+          onChange={handleFormValueChange}
+          value={customersEditData.numberOfClassesBought}
+          InputProps={{
+            readOnly: disableEditButton,
+          }}
+        />
+      </div>
+
+      <div className={classes.divCon}>
+        <TextField
+          label="Gender"
+          variant="outlined"
+          fullWidth
+          name="gender"
+          onChange={handleFormValueChange}
+          value={customersEditData.gender}
+          InputProps={{
+            readOnly: disableEditButton,
+          }}
+        />
+      </div>
+
+      <div className={classes.divCon}>
+        <FormControl variant="outlined" style={{ minWidth: "100%" }}>
+          <InputLabel id="demo-simple-select-filled-label">
+            Class Name:
+          </InputLabel>
+          <Select
+            label="Class Name"
+            name="classId"
+            fullWidth
+            variant="outlined"
+            value={customersEditData.classId}
+            disabled={disableEditButton}
+            onChange={handleDropDownChange}
+          >
+            {classesIdDropdown &&
+              classesIdDropdown.map((data) => (
+                <MenuItem value={data.id}>{data.className}</MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+      </div>
+
+      <div className={classes.divCon}>
+        <FormControl variant="outlined" style={{ minWidth: "100%" }}>
+          <InputLabel id="demo-simple-select-filled-label">Subject:</InputLabel>
+          <Select
+            label="Subject"
+            fullWidth
+            variant="outlined"
+            disabled={disableEditButton}
+            name="subjectId"
+            value={customersEditData.subjectId}
+            onChange={handleDropDownChange}
+            disabled={disableEditButton}
+            // onChange={handleChange}
+          >
+            {subjectDropdown &&
+              subjectDropdown.map((data) => (
+                <MenuItem value={data.id}>{data.subjectName}</MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+      </div>
+
+      <div className={classes.divCon}>
+        <TextField
+          label="Email"
+          variant="outlined"
+          fullWidth
+          name="email"
+          onChange={handleFormValueChange}
+          value={customersEditData.email}
+          InputProps={{
+            readOnly: disableEditButton,
+          }}
+        />
+      </div>
+
+      <div className={classes.divCon}>
+        <TextField
+          label="Whatsapp Number"
+          variant="outlined"
+          fullWidth
+          name="whatsAppnumber"
+          onChange={handleFormValueChange}
+          value={customersEditData.whatsAppnumber}
+          InputProps={{
+            readOnly: disableEditButton,
+          }}
+        />
+      </div>
+
+      <div className={classes.divCon}>
+        <FormControl variant="outlined" style={{ minWidth: "100%" }}>
+          <InputLabel id="demo-simple-select-filled-label">Teacher:</InputLabel>
+          <Select
+            label="Teacher"
+            fullWidth
+            variant="outlined"
+            value={customersEditData.teacherId}
+            disabled={disableEditButton}
+            name="teacherId"
+            onChange={handleDropDownChange}
+            disabled={disableEditButton}
+            // onChange={handleChange}
+          >
+            {teacherDropdown &&
+              teacherDropdown.map((data) => (
+                <MenuItem value={data.id}>{data.TeacherName}</MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+      </div>
+
+      <div className={classes.divCon}>
+        <FormControl variant="outlined" style={{ minWidth: "100%" }}>
+          <InputLabel id="demo-simple-select-filled-label">Country:</InputLabel>
+          <Select
+            label="Country"
+            fullWidth
+            variant="outlined"
+            value={customersEditData.countryId}
+            disabled={disableEditButton}
+            name="countryId"
+            onChange={handleDropDownChange}
+          >
+            {countryDropdown &&
+              countryDropdown.map((data) => (
+                <MenuItem value={data.id}>{data.countryName}</MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+      </div>
+
+      <div className={classes.divCon}>
+        <TextField
           label="No Of Students"
           variant="outlined"
           fullWidth
@@ -327,6 +478,88 @@ const CustomersDetailsMb = ({ location }) => {
       </div>
 
       <div className={classes.divCon}>
+        <FormControl variant="outlined" style={{ minWidth: "100%" }}>
+          <InputLabel id="demo-simple-select-filled-label">
+            Currency:
+          </InputLabel>
+          <Select
+            label="Currency"
+            fullWidth
+            variant="outlined"
+            disabled={disableEditButton}
+            // onChange={handleChange}
+            value={customersEditData.proposedCurrencyId}
+            disabled={disableEditButton}
+            name="proposedCurrencyId"
+            onChange={handleDropDownChange}
+          >
+            {currencyDropdown &&
+              currencyDropdown.map((data) => (
+                <MenuItem value={data.id}>{data.currencyName}</MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+      </div>
+
+      <div className={classes.divCon}>
+        <FormControl variant="outlined" style={{ minWidth: "100%" }}>
+          <InputLabel id="demo-simple-select-filled-label">Agent:</InputLabel>
+          <Select
+            label="Agent"
+            fullWidth
+            variant="outlined"
+            name="agentId"
+            value={customersEditData.agentId}
+            onChange={handleDropDownChange}
+            disabled={disableEditButton}
+            // onChange={handleChange}
+          >
+            {agentDropdown &&
+              agentDropdown.map((data) => (
+                <MenuItem value={data.id}>{data.AgentName}</MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+      </div>
+
+      <div className={classes.divCon}>
+        <TextField
+          label="Schedule Des"
+          variant="outlined"
+          fullWidth
+          name="scheduleDescription"
+          onChange={handleFormValueChange}
+          value={customersEditData.scheduleDescription}
+          InputProps={{
+            readOnly: disableEditButton,
+          }}
+        />
+      </div>
+
+      <div className={classes.divCon}>
+        <FormControl variant="outlined" style={{ minWidth: "100%" }}>
+          <InputLabel id="demo-simple-select-filled-label">
+            Category:
+          </InputLabel>
+          <Select
+            label="Category Name"
+            fullWidth
+            variant="outlined"
+            name="categoryId"
+            value={customersEditData.categoryId}
+            onChange={handleDropDownChange}
+            disabled={disableEditButton}
+            // onChange={handleChange}
+          >
+            {categoryDropdown &&
+              categoryDropdown.map((data) => (
+                <MenuItem value={data.id}>{data.categoryName}</MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+      </div>
+
+      <div className={classes.divCon}>
         <div style={{ display: "flex" }}>
           <TextField
             label="Meeting Link"
@@ -346,200 +579,12 @@ const CustomersDetailsMb = ({ location }) => {
           </IconButton>
         </div>
       </div>
-      <div className={classes.divCon}>
-        <Select
-          label="Class Name"
-          name="classId"
-          fullWidth
-          variant="outlined"
-          style={{ width: "52%" }}
-          value={customersEditData.classId}
-          disabled={disableEditButton}
-          onChange={handleDropDownChange}
-        >
-          {classesIdDropdown &&
-            classesIdDropdown.map((data) => (
-              <MenuItem value={data.id}>{data.className}</MenuItem>
-            ))}
-        </Select>
-      </div>
-
-      <div className={classes.divCon}>
-        <Select
-          label="Class Status"
-          fullWidth
-          variant="outlined"
-          style={{ width: "52%" }}
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={customersEditData.classStatusId}
-          disabled={disableEditButton}
-          name="classStatusId"
-          onChange={handleDropDownChange}
-        >
-          {classStatusDropDown &&
-            classStatusDropDown.map((data) => (
-              <MenuItem value={data.id}>{data.classStatusName}</MenuItem>
-            ))}
-        </Select>
-      </div>
-
-      <div className={classes.divCon}>
-        <Select
-          label="Currency"
-          fullWidth
-          variant="outlined"
-          style={{ width: "52%" }}
-          disabled={disableEditButton}
-          // onChange={handleChange}
-          value={customersEditData.proposedCurrencyId}
-          disabled={disableEditButton}
-          name="proposedCurrencyId"
-          onChange={handleDropDownChange}
-        >
-          {currencyDropdown &&
-            currencyDropdown.map((data) => (
-              <MenuItem value={data.id}>{data.currencyName}</MenuItem>
-            ))}
-        </Select>
-      </div>
-
-      <div className={classes.divCon}>
-        <Select
-          label="Country"
-          fullWidth
-          variant="outlined"
-          style={{ width: "52%" }}
-          value={customersEditData.countryId}
-          disabled={disableEditButton}
-          name="countryId"
-          onChange={handleDropDownChange}
-        >
-          {countryDropdown &&
-            countryDropdown.map((data) => (
-              <MenuItem value={data.id}>{data.countryName}</MenuItem>
-            ))}
-        </Select>
-      </div>
-
-      <div className={classes.divCon}>
-        <Select
-          label="Teacher"
-          fullWidth
-          variant="outlined"
-          style={{ width: "52%" }}
-          value={customersEditData.teacherId}
-          disabled={disableEditButton}
-          name="teacherId"
-          onChange={handleDropDownChange}
-          disabled={disableEditButton}
-          // onChange={handleChange}
-        >
-          {teacherDropdown &&
-            teacherDropdown.map((data) => (
-              <MenuItem value={data.id}>{data.TeacherName}</MenuItem>
-            ))}
-        </Select>
-      </div>
-
-      <div className={classes.divCon}>
-        <Select
-          label="Subject"
-          fullWidth
-          variant="outlined"
-          style={{ width: "52%" }}
-          disabled={disableEditButton}
-          name="subjectId"
-          value={customersEditData.subjectId}
-          onChange={handleDropDownChange}
-          disabled={disableEditButton}
-          // onChange={handleChange}
-        >
-          {subjectDropdown &&
-            subjectDropdown.map((data) => (
-              <MenuItem value={data.id}>{data.subjectName}</MenuItem>
-            ))}
-        </Select>
-      </div>
-
-      <div className={classes.divCon}>
-        <Select
-          label="Agent"
-          fullWidth
-          variant="outlined"
-          style={{ width: "52%" }}
-          name="agentId"
-          value={customersEditData.agentId}
-          onChange={handleDropDownChange}
-          disabled={disableEditButton}
-          // onChange={handleChange}
-        >
-          {agentDropdown &&
-            agentDropdown.map((data) => (
-              <MenuItem value={data.id}>{data.AgentName}</MenuItem>
-            ))}
-        </Select>
-      </div>
-
-      <div className={classes.divCon}>
-        <Select
-          label="Time Zone"
-          fullWidth
-          variant="outlined"
-          style={{ width: "52%" }}
-          name="timeZoneId"
-          value={customersEditData.timeZoneId}
-          onChange={handleDropDownChange}
-          disabled={disableEditButton}
-          // onChange={handleChange}
-        >
-          {timezoneDropdown &&
-            timezoneDropdown.map((data) => (
-              <MenuItem value={data.id}>{data.timeZoneName}</MenuItem>
-            ))}
-        </Select>
-      </div>
-
-      <div className={classes.divCon}>
-        <FormControl variant="outlined" style={{ width: "100%" }}>
-          <InputLabel id="demo-simple-select-filled-label">Music</InputLabel>
-          <Select
-            label="Category Name"
-            fullWidth
-            variant="outlined"
-            style={{ width: "52%" }}
-            name="categoryId"
-            value={customersEditData.categoryId}
-            onChange={handleDropDownChange}
-            disabled={disableEditButton}
-            // onChange={handleChange}
-          >
-            {categoryDropdown &&
-              categoryDropdown.map((data) => (
-                <MenuItem value={data.id}>{data.categoryName}</MenuItem>
-              ))}
-          </Select>
-        </FormControl>
-      </div>
-
-      <div className={classes.divCon}>
-        <Switch
-          label="Toggle Class Join"
-          fullWidth
-          variant="outlined"
-          checked={customersEditData.isJoinButtonEnabledByAdmin}
-          onChange={handleSwitchChange}
-          color="primary"
-          name="checkedB"
-          inputProps={{ "aria-label": "primary checkbox" }}
-        />
-      </div>
 
       {disableEditButton ? (
         <Button
           variant="contained"
           onClick={() => setDisableEditButton(false)}
-          style={{ marginRight: "15px" }}
+          style={{ marginRight: "15px", marginBottom: 10 }}
         >
           Edit
         </Button>
@@ -547,7 +592,7 @@ const CustomersDetailsMb = ({ location }) => {
         <Button
           variant="contained"
           onClick={onCustomerUpdate}
-          style={{ marginRight: "15px" }}
+          style={{ marginRight: "15px", marginBottom: 10 }}
         >
           Submit
         </Button>
@@ -556,7 +601,7 @@ const CustomersDetailsMb = ({ location }) => {
       <Button
         variant="contained"
         onClick={onUserDelete}
-        style={{ backgroundColor: "#e74c3c", color: "white" }}
+        style={{ backgroundColor: "#e74c3c", color: "white", marginBottom: 10 }}
       >
         Delete
       </Button>
