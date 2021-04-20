@@ -241,7 +241,7 @@ const CustomerDetails = () => {
                         marginLeft: 10,
                       }}
                     >
-                      {data.noOfClasses}
+                      {data.numberOfClassesBought}
                     </Typography>
                     {getTimeZone(data.timeZoneId)}
                   </div>
@@ -334,7 +334,7 @@ const CustomerDetails = () => {
                             marginLeft: 10,
                           }}
                         >
-                          {data.noOfClasses}
+                          {data.numberOfClassesBought}
                         </Typography>
                         {getTimeZone(data.timeZoneId)}
                       </div>
