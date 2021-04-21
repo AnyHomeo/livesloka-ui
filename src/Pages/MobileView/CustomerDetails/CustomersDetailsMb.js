@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
-
+import moment from "moment";
 import {
   AddCustomer,
   getData,
@@ -72,6 +72,7 @@ const CustomersDetailsMb = ({ location }) => {
     isJoinButtonEnabledByAdmin: data.isJoinButtonEnabledByAdmin,
     agentId: data.agentId,
     _id: data._id,
+    createdAt: data.createdAt,
   });
 
   const handleSwitchChange = (event) => {
@@ -216,6 +217,22 @@ const CustomersDetailsMb = ({ location }) => {
         </FormControl>
       </div>
 
+      {/* {console.log(customersEditData.createdAt)} */}
+      <div className={classes.divCon}>
+        <TextField
+          variant="outlined"
+          fullWidth
+          name="lastName"
+          label="Entry Date"
+          // onChange={handleFormValueChange}
+
+          value={moment(customersEditData.createdAt).format("l")}
+          InputProps={{
+            readOnly: true,
+          }}
+        />
+      </div>
+
       <div className={classes.divCon}>
         <FormControl variant="outlined" style={{ minWidth: "100%" }}>
           <InputLabel id="demo-simple-select-filled-label">
@@ -295,28 +312,14 @@ const CustomersDetailsMb = ({ location }) => {
 
       <div className={classes.divCon}>
         <TextField
-          label="No Of Classes"
+          label="Classes Left"
           variant="outlined"
           fullWidth
           name="numberOfClassesBought"
           onChange={handleFormValueChange}
           value={customersEditData.numberOfClassesBought}
           InputProps={{
-            readOnly: disableEditButton,
-          }}
-        />
-      </div>
-
-      <div className={classes.divCon}>
-        <TextField
-          variant="outlined"
-          label="Classes Paid"
-          fullWidth
-          name="numberOfClassesBought"
-          onChange={handleFormValueChange}
-          value={customersEditData.numberOfClassesBought}
-          InputProps={{
-            readOnly: disableEditButton,
+            readOnly: true,
           }}
         />
       </div>
@@ -569,7 +572,7 @@ const CustomersDetailsMb = ({ location }) => {
             onChange={handleFormValueChange}
             value={customersEditData.meetingLink}
             InputProps={{
-              readOnly: disableEditButton,
+              readOnly: true,
             }}
           />
           <IconButton

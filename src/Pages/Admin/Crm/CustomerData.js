@@ -829,7 +829,7 @@ const CrmDetails = () => {
           hidden: !columnFilters["phone"].selected,
           cellStyle: { whiteSpace: "nowrap" },
           headerStyle: { whiteSpace: "nowrap" },
-        }
+        },
       ]);
     }
   }, [
