@@ -4,7 +4,7 @@ import { green } from "@material-ui/core/colors";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import { Button, FormLabel, Radio, RadioGroup } from "@material-ui/core";
+import { Button, Card, FormLabel, Radio, RadioGroup } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import {
   getScheduleAndDateAttendance,
@@ -24,14 +24,28 @@ const BooleanRadioBox = ({ value, onChange, label }) => {
       style={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "flex-start",
+        justifyContent: "space-between",
         width: "500px",
         margin: "0 auto",
         padding: "3px 0",
-        flexDirection: "column",
+        flexDirection: "row",
         marginBottom: 10,
       }}
     >
+      <Card
+        style={{
+          height: 47,
+          width: "110%",
+          marginTop: -10,
+          marginRight: 20,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {label}
+      </Card>
+      {/* <p></p> */}
       <div style={{ display: "flex" }}>
         {/* <Radio
           checked={value === "present"}
@@ -68,7 +82,7 @@ const BooleanRadioBox = ({ value, onChange, label }) => {
             <CheckCircleOutlineIcon
               style={{ marginRight: 5, fontWeight: "bold" }}
             />{" "}
-            Present
+            {/* Present */}
           </ToggleButton>
           <ToggleButton
             onClick={() => onChange("absent")}
@@ -81,7 +95,8 @@ const BooleanRadioBox = ({ value, onChange, label }) => {
               border: "0.1px solid #ecf0f1",
             }}
           >
-            <CancelIcon style={{ marginRight: 5, fontWeight: "bold" }} /> Absent
+            <CancelIcon style={{ marginRight: 5, fontWeight: "bold" }} />
+            {/* Absent */}
           </ToggleButton>
           <ToggleButton
             onClick={() => onChange("paid")}
@@ -95,7 +110,7 @@ const BooleanRadioBox = ({ value, onChange, label }) => {
             }}
           >
             <AttachMoneyIcon style={{ marginRight: 5, fontWeight: "bold" }} />{" "}
-            Paid
+            {/* Paid */}
           </ToggleButton>
           <ToggleButton
             onClick={() => onChange("unpaid")}
@@ -109,11 +124,10 @@ const BooleanRadioBox = ({ value, onChange, label }) => {
             }}
           >
             <MoneyOffIcon style={{ marginRight: 5, fontWeight: "bold" }} />{" "}
-            UnPaid
+            {/* UnPaid */}
           </ToggleButton>
         </ToggleButtonGroup>
       </div>
-      <p>{label}</p>
     </div>
   );
 };
