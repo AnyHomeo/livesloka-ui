@@ -29,7 +29,7 @@ const BooleanRadioBox = ({ value, onChange, label }) => {
         margin: "0 auto",
         padding: "3px 0",
         flexDirection: "row",
-        marginBottom: 10,
+        marginBottom: 3,
       }}
     >
       <Card
@@ -66,7 +66,7 @@ const BooleanRadioBox = ({ value, onChange, label }) => {
           value={value}
           exclusive
           aria-label="text alignment"
-          style={{ marginBottom: 10 }}
+          style={{ marginBottom: 5 }}
         >
           <ToggleButton
             onClick={() => onChange("present")}
@@ -76,6 +76,7 @@ const BooleanRadioBox = ({ value, onChange, label }) => {
               color: "white",
               fontWeight: "bold",
               border: "0.1px solid #ecf0f1",
+              marginTop: -10,
             }}
             aria-label="left aligned"
           >
@@ -93,6 +94,7 @@ const BooleanRadioBox = ({ value, onChange, label }) => {
               color: "white",
               fontWeight: "bold",
               border: "0.1px solid #ecf0f1",
+              marginTop: -10,
             }}
           >
             <CancelIcon style={{ marginRight: 5, fontWeight: "bold" }} />
@@ -107,6 +109,7 @@ const BooleanRadioBox = ({ value, onChange, label }) => {
               color: "white",
               fontWeight: "bold",
               border: "0.1px solid #ecf0f1",
+              marginTop: -10,
             }}
           >
             <AttachMoneyIcon style={{ marginRight: 5, fontWeight: "bold" }} />{" "}
@@ -121,6 +124,7 @@ const BooleanRadioBox = ({ value, onChange, label }) => {
               color: "white",
               fontWeight: "bold",
               border: "0.1px solid #ecf0f1",
+              marginTop: -10,
             }}
           >
             <MoneyOffIcon style={{ marginRight: 5, fontWeight: "bold" }} />{" "}
