@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "16px",
     textAlign: "center",
     marginBottom: "10px",
-    marginTop: "50px",
+    marginTop: "10px",
   },
 }));
 
@@ -181,16 +181,17 @@ const Statistics = () => {
         </DialogActions>
       </Dialog>
       {statisticsData && (
-        <div>
-          <Grid
-            container
-            justify={"center"}
-            spacing={3}
-          >
-            <div>
+        <div style={{
+          width:"100vw",
+          overflow:"hidden",
+          height:"inherit",
+        }} >
+            <div >
               <h1 className={classes.titleCard}>Classes Live Now</h1>
             </div>
-            <Grid container justify={"center"} spacing={3} >
+            <Grid container spacing={3} style={{
+              padding:"10px 30px"
+            }} >
               {statisticsData &&
               statisticsData.schedulesRightNow.length === 0 ? (
                 <div
@@ -272,7 +273,6 @@ const Statistics = () => {
                 })
               )}
             </Grid>
-          </Grid>
             <Button
               style={{
                 position: "absolute",
@@ -284,9 +284,15 @@ const Statistics = () => {
             >
               Refresh
             </Button>
-            <div>
+            <div >
               <h1 className={classes.titleCard}>Next Classes</h1>
-              {statisticsData && statisticsData.nextSchedules.length === 0 ? (
+            </div>
+            <Grid container spacing={3} justify={"center"} style={{
+              padding:"10px 30px"
+            }} >
+              {console.log(statisticsData)}
+              {statisticsData && statisticsData.nextSchedules.length === 0
+                ? (
                 <div
                   style={{
                     color: "#e74c3c",
@@ -295,17 +301,10 @@ const Statistics = () => {
                 >
                   No classes found
                 </div>
-              ) : (
-                ""
-              )}
-            </div>
-            <Grid container spacing={3} justify={"center"}>
-              {statisticsData && statisticsData.nextSchedules.length === 0
-                ? ""
+                )
                 : statisticsData.nextSchedules.map((data) => {
                     return (
-                      <>
-                    <Grid item xs={6} sm={3} >
+                      <Grid item xs={6} sm={3} >
                       <Card
                         className={classes.card}
                         style={{
@@ -369,7 +368,6 @@ const Statistics = () => {
                         </CardActions>
                       </Card>
                     </Grid>
-                      </>
                     );
                   })}
             </Grid>
