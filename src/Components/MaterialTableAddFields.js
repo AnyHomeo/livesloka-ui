@@ -147,7 +147,10 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
             };
           } else if (key === status) {
             return { title: humanReadable(key), field: key, lookup };
-          } else {
+          }else if (key === "amount") {
+            return { title: humanReadable(key), field: key, type:"numeric",align:"left" };
+          }  
+          else {
             return { title: humanReadable(key), field: key };
           }
         }
