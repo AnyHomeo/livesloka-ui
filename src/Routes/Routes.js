@@ -34,6 +34,7 @@ import LeavesTable from "./../Pages/Leaves/LeavesTable";
 import PaymentsPage from "../Pages/reports/PaymentsPage";
 import UpdateNumberOfBoughtClasses from "./../Pages/Admin/Crm/UpdateNumberOfBoughtClasses";
 import AvailableMeetingSchedule from "../Pages/Admin/Crm/AvailableMeetingSchedule";
+
 function Routes() {
   return (
     <>
@@ -89,11 +90,7 @@ function Routes() {
               exact
               component={TeacherDetails}
             />
-            <AdminRoute
-              path="/teacher"
-              exact
-              component={NewTeacherDetails}
-            />
+            <AdminRoute path="/teacher" exact component={NewTeacherDetails} />
             <AdminRoute
               path="/meeting-scheduler"
               exact
