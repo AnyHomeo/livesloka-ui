@@ -8,6 +8,7 @@ import {
   InputLabel,
   FormControl,
   IconButton,
+  Card,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
@@ -130,6 +131,7 @@ const CustomersDetailsMb = ({ location }) => {
   };
   const [disableEditButton, setDisableEditButton] = useState(true);
 
+  console.log(disableEditButton);
   const onCustomerUpdate = async () => {
     console.log(customersEditData);
 
@@ -175,419 +177,1234 @@ const CustomersDetailsMb = ({ location }) => {
       style={{
         marginLeft: "10px",
         marginTop: "20px",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
-      <div
-        className={classes.divCon}
-        style={{ display: "flex", alignItems: "center" }}
-      >
-        <p>Toggle Class Join: </p>
-        <Switch
-          label="Toggle Class Join"
-          fullWidth
-          variant="outlined"
-          checked={customersEditData.isJoinButtonEnabledByAdmin}
-          onChange={handleSwitchChange}
-          color="primary"
-          name="checkedB"
-          inputProps={{ "aria-label": "primary checkbox" }}
-        />
-      </div>
-      <div className={classes.divCon}>
-        <FormControl variant="outlined" style={{ minWidth: "100%" }}>
-          <InputLabel id="demo-simple-select-filled-label">
-            Class Status:
-          </InputLabel>
-          <Select
-            label="Class Status"
-            fullWidth
-            variant="outlined"
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={customersEditData.classStatusId}
-            disabled={disableEditButton}
-            name="classStatusId"
-            onChange={handleDropDownChange}
+      {disableEditButton ? (
+        <>
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>Class Status:</p>
+            </Card>
+
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {classStatusDropDown &&
+                  classStatusDropDown.map((data) => {
+                    if (data.id === customersEditData.classStatusId) {
+                      return <span>{data.classStatusName}</span>;
+                    }
+                  })}
+              </p>
+            </Card>
+          </div>
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}> Entry Date:</p>
+            </Card>
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {moment(customersEditData.createdAt).format("l")}
+              </p>
+            </Card>
+          </div>
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}> Timezone:</p>
+            </Card>
+
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {timezoneDropdown &&
+                  timezoneDropdown.map((data) => {
+                    if (data.id === customersEditData.timeZoneId) {
+                      return <span>{data.timeZoneName}</span>;
+                    }
+                  })}
+              </p>
+            </Card>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}> Firstname:</p>
+            </Card>{" "}
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {customersEditData.firstName}
+              </p>
+            </Card>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}> Lastname:</p>
+            </Card>{" "}
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {customersEditData.lastName}
+              </p>
+            </Card>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold", fontSize: 14 }}>
+                {" "}
+                No Of Classes:
+              </p>
+            </Card>{" "}
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {customersEditData.noOfClasses}
+              </p>
+            </Card>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {" "}
+                Classes Left:{" "}
+              </p>
+            </Card>
+
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {customersEditData.numberOfClassesBought}
+              </p>
+            </Card>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>Gender: </p>
+            </Card>
+
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {customersEditData.gender}
+              </p>
+            </Card>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>Class Name:</p>
+            </Card>
+
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {classesIdDropdown &&
+                  classesIdDropdown.map((data) => {
+                    if (data.id === customersEditData.classId) {
+                      return <span>{data.className}</span>;
+                    }
+                  })}
+              </p>
+            </Card>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>Subject:</p>
+            </Card>
+
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {subjectDropdown &&
+                  subjectDropdown.map((data) => {
+                    if (data.id === customersEditData.subjectId) {
+                      return <span>{data.subjectName}</span>;
+                    }
+                  })}
+              </p>
+            </Card>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>Email:</p>
+            </Card>
+
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {customersEditData.email}
+              </p>
+            </Card>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold", fontSize: 14 }}>
+                Whatsapp No:
+              </p>
+            </Card>
+
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {customersEditData.whatsAppnumber}
+              </p>
+            </Card>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>Teacher:</p>
+            </Card>{" "}
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {teacherDropdown &&
+                  teacherDropdown.map((data) => {
+                    if (data.id === customersEditData.teacherId) {
+                      return <span>{data.TeacherName}</span>;
+                    }
+                  })}
+              </p>
+            </Card>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>Country:</p>
+            </Card>
+
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {countryDropdown &&
+                  countryDropdown.map((data) => {
+                    if (data.id === customersEditData.countryId) {
+                      return <span>{data.countryName}</span>;
+                    }
+                  })}
+              </p>
+            </Card>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold", fontSize: 14 }}>
+                No Of Students:{" "}
+              </p>
+            </Card>
+
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {customersEditData.numberOfStudents}
+              </p>
+            </Card>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>Amount:</p>
+            </Card>
+
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {customersEditData.proposedAmount}
+              </p>
+            </Card>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>Currency:</p>
+            </Card>
+
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {currencyDropdown &&
+                  currencyDropdown.map((data) => {
+                    if (data.id === customersEditData.proposedCurrencyId) {
+                      return <span>{data.currencyName}</span>;
+                    }
+                  })}
+              </p>
+            </Card>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>Agent:</p>
+            </Card>{" "}
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {agentDropdown &&
+                  agentDropdown.map((data) => {
+                    if (data.id === customersEditData.agentId) {
+                      return <span>{data.AgentName}</span>;
+                    }
+                  })}
+              </p>
+            </Card>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold", fontSize: 14 }}>
+                Schedule Des:
+              </p>
+            </Card>
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold", fontSize: 10 }}>
+                {customersEditData.scheduleDescription}
+              </p>
+            </Card>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>Agent:</p>
+            </Card>
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                {categoryDropdown &&
+                  categoryDropdown.map((data) => {
+                    if (data.id === customersEditData.categoryId) {
+                      return <span>{data.categoryName}</span>;
+                    }
+                  })}
+              </p>
+            </Card>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Card
+              style={{
+                height: 30,
+                width: "30%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#2980b9",
+                color: "white",
+                borderRadius: 0,
+                border: "1px solid #2980b9",
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}> Entry Date:</p>
+            </Card>{" "}
+            <Card
+              style={{
+                height: 30,
+                width: "70%",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 10,
+                backgroundColor: "#ecf0f1",
+                color: "black",
+                border: "1px solid #2980b9",
+                borderRadius: 0,
+              }}
+            >
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+                Meeting Link: {customersEditData.meetingLink}
+              </p>
+            </Card>
+          </div>
+        </>
+      ) : (
+        <>
+          <div
+            className={classes.divCon}
+            style={{ display: "flex", alignItems: "center" }}
           >
-            {classStatusDropDown &&
-              classStatusDropDown.map((data) => (
-                <MenuItem value={data.id}>{data.classStatusName}</MenuItem>
-              ))}
-          </Select>
-        </FormControl>
-      </div>
+            <p>Toggle Class Join: </p>
+            <Switch
+              label="Toggle Class Join"
+              fullWidth
+              variant="outlined"
+              checked={customersEditData.isJoinButtonEnabledByAdmin}
+              onChange={handleSwitchChange}
+              color="primary"
+              name="checkedB"
+              inputProps={{ "aria-label": "primary checkbox" }}
+            />
+          </div>
+          <div className={classes.divCon}>
+            <FormControl variant="outlined" style={{ minWidth: "100%" }}>
+              <InputLabel id="demo-simple-select-filled-label">
+                Class Status:
+              </InputLabel>
+              <Select
+                label="Class Status"
+                fullWidth
+                variant="outlined"
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={customersEditData.classStatusId}
+                disabled={disableEditButton}
+                name="classStatusId"
+                onChange={handleDropDownChange}
+              >
+                {classStatusDropDown &&
+                  classStatusDropDown.map((data) => (
+                    <MenuItem value={data.id}>{data.classStatusName}</MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </div>
 
-      {/* {console.log(customersEditData.createdAt)} */}
-      <div className={classes.divCon}>
-        <TextField
-          variant="outlined"
-          fullWidth
-          name="lastName"
-          label="Entry Date"
-          // onChange={handleFormValueChange}
+          <div className={classes.divCon}>
+            <TextField
+              variant="outlined"
+              fullWidth
+              name="lastName"
+              label="Entry Date"
+              value={moment(customersEditData.createdAt).format("l")}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </div>
 
-          value={moment(customersEditData.createdAt).format("l")}
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-      </div>
+          <div className={classes.divCon}>
+            <FormControl variant="outlined" style={{ minWidth: "100%" }}>
+              <InputLabel id="demo-simple-select-filled-label">
+                TimeZone:
+              </InputLabel>
+              <Select
+                label="Time Zone"
+                fullWidth
+                variant="outlined"
+                name="timeZoneId"
+                value={customersEditData.timeZoneId}
+                onChange={handleDropDownChange}
+                disabled={disableEditButton}
+                // onChange={handleChange}
+              >
+                {timezoneDropdown &&
+                  timezoneDropdown.map((data) => (
+                    <MenuItem value={data.id}>{data.timeZoneName}</MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </div>
 
-      <div className={classes.divCon}>
-        <FormControl variant="outlined" style={{ minWidth: "100%" }}>
-          <InputLabel id="demo-simple-select-filled-label">
-            TimeZone:
-          </InputLabel>
-          <Select
-            label="Time Zone"
-            fullWidth
-            variant="outlined"
-            name="timeZoneId"
-            value={customersEditData.timeZoneId}
-            onChange={handleDropDownChange}
-            disabled={disableEditButton}
-            // onChange={handleChange}
-          >
-            {timezoneDropdown &&
-              timezoneDropdown.map((data) => (
-                <MenuItem value={data.id}>{data.timeZoneName}</MenuItem>
-              ))}
-          </Select>
-        </FormControl>
-      </div>
+          <div className={classes.divCon}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              name="firstName"
+              label="Student Name"
+              value={customersEditData.firstName}
+              onChange={handleFormValueChange}
+              InputProps={{
+                readOnly: disableEditButton,
+              }}
+            />
+          </div>
+          <div className={classes.divCon}>
+            <TextField
+              variant="outlined"
+              fullWidth
+              name="lastName"
+              label="Guardian"
+              onChange={handleFormValueChange}
+              value={customersEditData.lastName}
+              InputProps={{
+                readOnly: disableEditButton,
+              }}
+            />
+          </div>
+          <div className={classes.divCon}>
+            <TextField
+              variant="outlined"
+              fullWidth
+              label="Age"
+              name="age"
+              onChange={handleFormValueChange}
+              value={customersEditData.age}
+              InputProps={{
+                readOnly: disableEditButton,
+              }}
+            />
+          </div>
 
-      <div className={classes.divCon}>
-        <TextField
-          fullWidth
-          variant="outlined"
-          name="firstName"
-          label="Student Name"
-          value={customersEditData.firstName}
-          onChange={handleFormValueChange}
-          InputProps={{
-            readOnly: disableEditButton,
-          }}
-        />
-      </div>
-      <div className={classes.divCon}>
-        <TextField
-          variant="outlined"
-          fullWidth
-          name="lastName"
-          label="Guardian"
-          onChange={handleFormValueChange}
-          value={customersEditData.lastName}
-          InputProps={{
-            readOnly: disableEditButton,
-          }}
-        />
-      </div>
-      <div className={classes.divCon}>
-        <TextField
-          variant="outlined"
-          fullWidth
-          label="Age"
-          name="age"
-          onChange={handleFormValueChange}
-          value={customersEditData.age}
-          InputProps={{
-            readOnly: disableEditButton,
-          }}
-        />
-      </div>
+          <div className={classes.divCon}>
+            <TextField
+              label="No Of Classes"
+              variant="outlined"
+              fullWidth
+              name="noOfClasses"
+              onChange={handleFormValueChange}
+              value={customersEditData.noOfClasses}
+              InputProps={{
+                readOnly: disableEditButton,
+              }}
+            />
+          </div>
 
-      <div className={classes.divCon}>
-        <TextField
-          label="No Of Classes"
-          variant="outlined"
-          fullWidth
-          name="noOfClasses"
-          onChange={handleFormValueChange}
-          value={customersEditData.noOfClasses}
-          InputProps={{
-            readOnly: disableEditButton,
-          }}
-        />
-      </div>
+          <div className={classes.divCon}>
+            <TextField
+              label="Classes Left"
+              variant="outlined"
+              fullWidth
+              name="numberOfClassesBought"
+              onChange={handleFormValueChange}
+              value={customersEditData.numberOfClassesBought}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </div>
 
-      <div className={classes.divCon}>
-        <TextField
-          label="Classes Left"
-          variant="outlined"
-          fullWidth
-          name="numberOfClassesBought"
-          onChange={handleFormValueChange}
-          value={customersEditData.numberOfClassesBought}
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-      </div>
+          <div className={classes.divCon}>
+            <TextField
+              label="Gender"
+              variant="outlined"
+              fullWidth
+              name="gender"
+              onChange={handleFormValueChange}
+              value={customersEditData.gender}
+              InputProps={{
+                readOnly: disableEditButton,
+              }}
+            />
+          </div>
 
-      <div className={classes.divCon}>
-        <TextField
-          label="Gender"
-          variant="outlined"
-          fullWidth
-          name="gender"
-          onChange={handleFormValueChange}
-          value={customersEditData.gender}
-          InputProps={{
-            readOnly: disableEditButton,
-          }}
-        />
-      </div>
+          <div className={classes.divCon}>
+            <FormControl variant="outlined" style={{ minWidth: "100%" }}>
+              <InputLabel id="demo-simple-select-filled-label">
+                Class Name:
+              </InputLabel>
+              <Select
+                label="Class Name"
+                name="classId"
+                fullWidth
+                variant="outlined"
+                value={customersEditData.classId}
+                disabled={disableEditButton}
+                onChange={handleDropDownChange}
+              >
+                {classesIdDropdown &&
+                  classesIdDropdown.map((data) => (
+                    <MenuItem value={data.id}>{data.className}</MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </div>
 
-      <div className={classes.divCon}>
-        <FormControl variant="outlined" style={{ minWidth: "100%" }}>
-          <InputLabel id="demo-simple-select-filled-label">
-            Class Name:
-          </InputLabel>
-          <Select
-            label="Class Name"
-            name="classId"
-            fullWidth
-            variant="outlined"
-            value={customersEditData.classId}
-            disabled={disableEditButton}
-            onChange={handleDropDownChange}
-          >
-            {classesIdDropdown &&
-              classesIdDropdown.map((data) => (
-                <MenuItem value={data.id}>{data.className}</MenuItem>
-              ))}
-          </Select>
-        </FormControl>
-      </div>
+          <div className={classes.divCon}>
+            <FormControl variant="outlined" style={{ minWidth: "100%" }}>
+              <InputLabel id="demo-simple-select-filled-label">
+                Subject:
+              </InputLabel>
+              <Select
+                label="Subject"
+                fullWidth
+                variant="outlined"
+                disabled={disableEditButton}
+                name="subjectId"
+                value={customersEditData.subjectId}
+                onChange={handleDropDownChange}
+                disabled={disableEditButton}
+                // onChange={handleChange}
+              >
+                {subjectDropdown &&
+                  subjectDropdown.map((data) => (
+                    <MenuItem value={data.id}>{data.subjectName}</MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </div>
 
-      <div className={classes.divCon}>
-        <FormControl variant="outlined" style={{ minWidth: "100%" }}>
-          <InputLabel id="demo-simple-select-filled-label">Subject:</InputLabel>
-          <Select
-            label="Subject"
-            fullWidth
-            variant="outlined"
-            disabled={disableEditButton}
-            name="subjectId"
-            value={customersEditData.subjectId}
-            onChange={handleDropDownChange}
-            disabled={disableEditButton}
-            // onChange={handleChange}
-          >
-            {subjectDropdown &&
-              subjectDropdown.map((data) => (
-                <MenuItem value={data.id}>{data.subjectName}</MenuItem>
-              ))}
-          </Select>
-        </FormControl>
-      </div>
+          <div className={classes.divCon}>
+            <TextField
+              label="Email"
+              variant="outlined"
+              fullWidth
+              name="email"
+              onChange={handleFormValueChange}
+              value={customersEditData.email}
+              InputProps={{
+                readOnly: disableEditButton,
+              }}
+            />
+          </div>
 
-      <div className={classes.divCon}>
-        <TextField
-          label="Email"
-          variant="outlined"
-          fullWidth
-          name="email"
-          onChange={handleFormValueChange}
-          value={customersEditData.email}
-          InputProps={{
-            readOnly: disableEditButton,
-          }}
-        />
-      </div>
+          <div className={classes.divCon}>
+            <TextField
+              label="Whatsapp Number"
+              variant="outlined"
+              fullWidth
+              name="whatsAppnumber"
+              onChange={handleFormValueChange}
+              value={customersEditData.whatsAppnumber}
+              InputProps={{
+                readOnly: disableEditButton,
+              }}
+            />
+          </div>
 
-      <div className={classes.divCon}>
-        <TextField
-          label="Whatsapp Number"
-          variant="outlined"
-          fullWidth
-          name="whatsAppnumber"
-          onChange={handleFormValueChange}
-          value={customersEditData.whatsAppnumber}
-          InputProps={{
-            readOnly: disableEditButton,
-          }}
-        />
-      </div>
+          <div className={classes.divCon}>
+            <FormControl variant="outlined" style={{ minWidth: "100%" }}>
+              <InputLabel id="demo-simple-select-filled-label">
+                Teacher:
+              </InputLabel>
+              <Select
+                label="Teacher"
+                fullWidth
+                variant="outlined"
+                value={customersEditData.teacherId}
+                disabled={disableEditButton}
+                name="teacherId"
+                onChange={handleDropDownChange}
+                disabled={disableEditButton}
+                // onChange={handleChange}
+              >
+                {teacherDropdown &&
+                  teacherDropdown.map((data) => (
+                    <MenuItem value={data.id}>{data.TeacherName}</MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </div>
 
-      <div className={classes.divCon}>
-        <FormControl variant="outlined" style={{ minWidth: "100%" }}>
-          <InputLabel id="demo-simple-select-filled-label">Teacher:</InputLabel>
-          <Select
-            label="Teacher"
-            fullWidth
-            variant="outlined"
-            value={customersEditData.teacherId}
-            disabled={disableEditButton}
-            name="teacherId"
-            onChange={handleDropDownChange}
-            disabled={disableEditButton}
-            // onChange={handleChange}
-          >
-            {teacherDropdown &&
-              teacherDropdown.map((data) => (
-                <MenuItem value={data.id}>{data.TeacherName}</MenuItem>
-              ))}
-          </Select>
-        </FormControl>
-      </div>
+          <div className={classes.divCon}>
+            <FormControl variant="outlined" style={{ minWidth: "100%" }}>
+              <InputLabel id="demo-simple-select-filled-label">
+                Country:
+              </InputLabel>
+              <Select
+                label="Country"
+                fullWidth
+                variant="outlined"
+                value={customersEditData.countryId}
+                disabled={disableEditButton}
+                name="countryId"
+                onChange={handleDropDownChange}
+              >
+                {countryDropdown &&
+                  countryDropdown.map((data) => (
+                    <MenuItem value={data.id}>{data.countryName}</MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </div>
 
-      <div className={classes.divCon}>
-        <FormControl variant="outlined" style={{ minWidth: "100%" }}>
-          <InputLabel id="demo-simple-select-filled-label">Country:</InputLabel>
-          <Select
-            label="Country"
-            fullWidth
-            variant="outlined"
-            value={customersEditData.countryId}
-            disabled={disableEditButton}
-            name="countryId"
-            onChange={handleDropDownChange}
-          >
-            {countryDropdown &&
-              countryDropdown.map((data) => (
-                <MenuItem value={data.id}>{data.countryName}</MenuItem>
-              ))}
-          </Select>
-        </FormControl>
-      </div>
+          <div className={classes.divCon}>
+            <TextField
+              label="No Of Students"
+              variant="outlined"
+              fullWidth
+              name="numberOfStudents"
+              onChange={handleFormValueChange}
+              value={customersEditData.numberOfStudents}
+              InputProps={{
+                readOnly: disableEditButton,
+              }}
+            />
+          </div>
 
-      <div className={classes.divCon}>
-        <TextField
-          label="No Of Students"
-          variant="outlined"
-          fullWidth
-          name="numberOfStudents"
-          onChange={handleFormValueChange}
-          value={customersEditData.numberOfStudents}
-          InputProps={{
-            readOnly: disableEditButton,
-          }}
-        />
-      </div>
+          <div className={classes.divCon}>
+            <TextField
+              label="Proposed Amount"
+              variant="outlined"
+              fullWidth
+              name="proposedAmount"
+              onChange={handleFormValueChange}
+              value={customersEditData.proposedAmount}
+              InputProps={{
+                readOnly: disableEditButton,
+              }}
+            />
+          </div>
 
-      <div className={classes.divCon}>
-        <TextField
-          label="Proposed Amount"
-          variant="outlined"
-          fullWidth
-          name="proposedAmount"
-          onChange={handleFormValueChange}
-          value={customersEditData.proposedAmount}
-          InputProps={{
-            readOnly: disableEditButton,
-          }}
-        />
-      </div>
+          <div className={classes.divCon}>
+            <FormControl variant="outlined" style={{ minWidth: "100%" }}>
+              <InputLabel id="demo-simple-select-filled-label">
+                Currency:
+              </InputLabel>
+              <Select
+                label="Currency"
+                fullWidth
+                variant="outlined"
+                disabled={disableEditButton}
+                // onChange={handleChange}
+                value={customersEditData.proposedCurrencyId}
+                disabled={disableEditButton}
+                name="proposedCurrencyId"
+                onChange={handleDropDownChange}
+              >
+                {currencyDropdown &&
+                  currencyDropdown.map((data) => (
+                    <MenuItem value={data.id}>{data.currencyName}</MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </div>
 
-      <div className={classes.divCon}>
-        <FormControl variant="outlined" style={{ minWidth: "100%" }}>
-          <InputLabel id="demo-simple-select-filled-label">
-            Currency:
-          </InputLabel>
-          <Select
-            label="Currency"
-            fullWidth
-            variant="outlined"
-            disabled={disableEditButton}
-            // onChange={handleChange}
-            value={customersEditData.proposedCurrencyId}
-            disabled={disableEditButton}
-            name="proposedCurrencyId"
-            onChange={handleDropDownChange}
-          >
-            {currencyDropdown &&
-              currencyDropdown.map((data) => (
-                <MenuItem value={data.id}>{data.currencyName}</MenuItem>
-              ))}
-          </Select>
-        </FormControl>
-      </div>
+          <div className={classes.divCon}>
+            <FormControl variant="outlined" style={{ minWidth: "100%" }}>
+              <InputLabel id="demo-simple-select-filled-label">
+                Agent:
+              </InputLabel>
+              <Select
+                label="Agent"
+                fullWidth
+                variant="outlined"
+                name="agentId"
+                value={customersEditData.agentId}
+                onChange={handleDropDownChange}
+                disabled={disableEditButton}
+                // onChange={handleChange}
+              >
+                {agentDropdown &&
+                  agentDropdown.map((data) => (
+                    <MenuItem value={data.id}>{data.AgentName}</MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </div>
 
-      <div className={classes.divCon}>
-        <FormControl variant="outlined" style={{ minWidth: "100%" }}>
-          <InputLabel id="demo-simple-select-filled-label">Agent:</InputLabel>
-          <Select
-            label="Agent"
-            fullWidth
-            variant="outlined"
-            name="agentId"
-            value={customersEditData.agentId}
-            onChange={handleDropDownChange}
-            disabled={disableEditButton}
-            // onChange={handleChange}
-          >
-            {agentDropdown &&
-              agentDropdown.map((data) => (
-                <MenuItem value={data.id}>{data.AgentName}</MenuItem>
-              ))}
-          </Select>
-        </FormControl>
-      </div>
+          <div className={classes.divCon}>
+            <TextField
+              label="Schedule Des"
+              variant="outlined"
+              fullWidth
+              name="scheduleDescription"
+              onChange={handleFormValueChange}
+              value={customersEditData.scheduleDescription}
+              InputProps={{
+                readOnly: disableEditButton,
+              }}
+            />
+          </div>
 
-      <div className={classes.divCon}>
-        <TextField
-          label="Schedule Des"
-          variant="outlined"
-          fullWidth
-          name="scheduleDescription"
-          onChange={handleFormValueChange}
-          value={customersEditData.scheduleDescription}
-          InputProps={{
-            readOnly: disableEditButton,
-          }}
-        />
-      </div>
+          <div className={classes.divCon}>
+            <FormControl variant="outlined" style={{ minWidth: "100%" }}>
+              <InputLabel id="demo-simple-select-filled-label">
+                Category:
+              </InputLabel>
+              <Select
+                label="Category Name"
+                fullWidth
+                variant="outlined"
+                name="categoryId"
+                value={customersEditData.categoryId}
+                onChange={handleDropDownChange}
+                disabled={disableEditButton}
+                // onChange={handleChange}
+              >
+                {categoryDropdown &&
+                  categoryDropdown.map((data) => (
+                    <MenuItem value={data.id}>{data.categoryName}</MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </div>
 
-      <div className={classes.divCon}>
-        <FormControl variant="outlined" style={{ minWidth: "100%" }}>
-          <InputLabel id="demo-simple-select-filled-label">
-            Category:
-          </InputLabel>
-          <Select
-            label="Category Name"
-            fullWidth
-            variant="outlined"
-            name="categoryId"
-            value={customersEditData.categoryId}
-            onChange={handleDropDownChange}
-            disabled={disableEditButton}
-            // onChange={handleChange}
-          >
-            {categoryDropdown &&
-              categoryDropdown.map((data) => (
-                <MenuItem value={data.id}>{data.categoryName}</MenuItem>
-              ))}
-          </Select>
-        </FormControl>
-      </div>
-
-      <div className={classes.divCon}>
-        <div style={{ display: "flex" }}>
-          <TextField
-            label="Meeting Link"
-            variant="outlined"
-            fullWidth
-            name="meetingLink"
-            onChange={handleFormValueChange}
-            value={customersEditData.meetingLink}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
-          <IconButton
-            onClick={() => copyToClipboard(customersEditData.meetingLink)}
-          >
-            <FileCopyIcon />
-          </IconButton>
-        </div>
-      </div>
+          <div className={classes.divCon}>
+            <div style={{ display: "flex" }}>
+              <TextField
+                label="Meeting Link"
+                variant="outlined"
+                fullWidth
+                name="meetingLink"
+                onChange={handleFormValueChange}
+                value={customersEditData.meetingLink}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <IconButton
+                onClick={() => copyToClipboard(customersEditData.meetingLink)}
+              >
+                <FileCopyIcon />
+              </IconButton>
+            </div>
+          </div>
+        </>
+      )}
 
       {disableEditButton ? (
         <Button
           variant="contained"
           onClick={() => setDisableEditButton(false)}
-          style={{ marginRight: "15px", marginBottom: 10 }}
+          style={{ marginBottom: 10, width: "100%" }}
         >
           Edit
         </Button>
@@ -595,7 +1412,7 @@ const CustomersDetailsMb = ({ location }) => {
         <Button
           variant="contained"
           onClick={onCustomerUpdate}
-          style={{ marginRight: "15px", marginBottom: 10 }}
+          style={{ marginBottom: 10 }}
         >
           Submit
         </Button>
