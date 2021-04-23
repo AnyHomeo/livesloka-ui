@@ -133,8 +133,6 @@ const CustomersDetailsMb = ({ location }) => {
 
   console.log(disableEditButton);
   const onCustomerUpdate = async () => {
-    console.log(customersEditData);
-
     try {
       const res = await editCustomer({ ...customersEditData, _id: data._id });
       if (res.status === 200) {
@@ -181,13 +179,57 @@ const CustomersDetailsMb = ({ location }) => {
         flexDirection: "column",
       }}
     >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "center",
+        }}
+      >
+        {disableEditButton ? (
+          <Button
+            variant="contained"
+            onClick={() => setDisableEditButton(false)}
+            style={{ marginBottom: 10 }}
+          >
+            Edit
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            onClick={onCustomerUpdate}
+            style={{ marginBottom: 10 }}
+          >
+            Submit
+          </Button>
+        )}
+
+        <Button
+          variant="contained"
+          onClick={onUserDelete}
+          style={{
+            backgroundColor: "#e74c3c",
+            color: "white",
+            marginBottom: 10,
+          }}
+        >
+          Delete
+        </Button>
+      </div>
       {disableEditButton ? (
         <>
-          <div style={{ display: "flex", flexDirection: "row" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -203,7 +245,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -222,12 +264,24 @@ const CustomersDetailsMb = ({ location }) => {
                   })}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                classStatusDropDown.map((data) => {
+                  if (data.id === customersEditData.classStatusId) {
+                    copyToClipboard(data.classStatusName);
+                  }
+                });
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -242,7 +296,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -256,12 +310,20 @@ const CustomersDetailsMb = ({ location }) => {
                 {moment(customersEditData.createdAt).format("l")}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                copyToClipboard(customersEditData.createdAt);
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -277,7 +339,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -296,13 +358,25 @@ const CustomersDetailsMb = ({ location }) => {
                   })}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                timezoneDropdown.map((data) => {
+                  if (data.id === customersEditData.timeZoneId) {
+                    copyToClipboard(data.timeZoneName);
+                  }
+                });
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -317,7 +391,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -331,13 +405,21 @@ const CustomersDetailsMb = ({ location }) => {
                 {customersEditData.firstName}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                copyToClipboard(customersEditData.firstName);
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -352,7 +434,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -366,13 +448,21 @@ const CustomersDetailsMb = ({ location }) => {
                 {customersEditData.lastName}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                copyToClipboard(customersEditData.lastName);
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -390,7 +480,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -404,13 +494,21 @@ const CustomersDetailsMb = ({ location }) => {
                 {customersEditData.noOfClasses}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                copyToClipboard(customersEditData.noOfClasses);
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -429,7 +527,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -443,13 +541,21 @@ const CustomersDetailsMb = ({ location }) => {
                 {customersEditData.numberOfClassesBought}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                copyToClipboard(customersEditData.numberOfClassesBought);
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -465,7 +571,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -479,13 +585,21 @@ const CustomersDetailsMb = ({ location }) => {
                 {customersEditData.gender}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                copyToClipboard(customersEditData.gender);
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -501,7 +615,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -520,13 +634,28 @@ const CustomersDetailsMb = ({ location }) => {
                   })}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                {
+                  classesIdDropdown &&
+                    classesIdDropdown.map((data) => {
+                      if (data.id === customersEditData.classId) {
+                        copyToClipboard(data.className);
+                      }
+                    });
+                }
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -542,7 +671,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -561,13 +690,28 @@ const CustomersDetailsMb = ({ location }) => {
                   })}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                {
+                  subjectDropdown &&
+                    subjectDropdown.map((data) => {
+                      if (data.id === customersEditData.subjectId) {
+                        copyToClipboard(data.subjectName);
+                      }
+                    });
+                }
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -583,7 +727,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -597,13 +741,21 @@ const CustomersDetailsMb = ({ location }) => {
                 {customersEditData.email}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                copyToClipboard(customersEditData.email);
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -621,7 +773,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -635,13 +787,21 @@ const CustomersDetailsMb = ({ location }) => {
                 {customersEditData.whatsAppnumber}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                copyToClipboard(customersEditData.whatsAppnumber);
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -656,7 +816,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -675,13 +835,28 @@ const CustomersDetailsMb = ({ location }) => {
                   })}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                {
+                  teacherDropdown &&
+                    teacherDropdown.map((data) => {
+                      if (data.id === customersEditData.teacherId) {
+                        copyToClipboard(data.TeacherName);
+                      }
+                    });
+                }
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -697,7 +872,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -716,13 +891,28 @@ const CustomersDetailsMb = ({ location }) => {
                   })}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                {
+                  countryDropdown &&
+                    countryDropdown.map((data) => {
+                      if (data.id === customersEditData.countryId) {
+                        copyToClipboard(data.countryName);
+                      }
+                    });
+                }
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -740,7 +930,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -754,13 +944,21 @@ const CustomersDetailsMb = ({ location }) => {
                 {customersEditData.numberOfStudents}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                copyToClipboard(customersEditData.numberOfStudents);
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -776,7 +974,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -790,13 +988,21 @@ const CustomersDetailsMb = ({ location }) => {
                 {customersEditData.proposedAmount}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                copyToClipboard(customersEditData.proposedAmount);
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -812,7 +1018,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -831,13 +1037,28 @@ const CustomersDetailsMb = ({ location }) => {
                   })}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                {
+                  currencyDropdown &&
+                    currencyDropdown.map((data) => {
+                      if (data.id === customersEditData.proposedCurrencyId) {
+                        copyToClipboard(data.currencyName);
+                      }
+                    });
+                }
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -852,7 +1073,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -871,13 +1092,28 @@ const CustomersDetailsMb = ({ location }) => {
                   })}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                {
+                  agentDropdown &&
+                    agentDropdown.map((data) => {
+                      if (data.id === customersEditData.agentId) {
+                        copyToClipboard(data.AgentName);
+                      }
+                    });
+                }
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -894,7 +1130,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -908,13 +1144,21 @@ const CustomersDetailsMb = ({ location }) => {
                 {customersEditData.scheduleDescription}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                copyToClipboard(customersEditData.scheduleDescription);
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -929,7 +1173,7 @@ const CustomersDetailsMb = ({ location }) => {
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -948,13 +1192,28 @@ const CustomersDetailsMb = ({ location }) => {
                   })}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                {
+                  categoryDropdown &&
+                    categoryDropdown.map((data) => {
+                      if (data.id === customersEditData.categoryId) {
+                        copyToClipboard(data.categoryName);
+                      }
+                    });
+                }
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
             <Card
               style={{
                 height: 30,
-                width: "30%",
+                width: "40%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -964,12 +1223,12 @@ const CustomersDetailsMb = ({ location }) => {
                 border: "1px solid #2980b9",
               }}
             >
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}> Entry Date:</p>
+              <p style={{ marginLeft: 5, fontWeight: "bold" }}>Meeting Link:</p>
             </Card>{" "}
             <Card
               style={{
                 height: 30,
-                width: "70%",
+                width: "55%",
                 display: "flex",
                 alignItems: "center",
                 marginBottom: 10,
@@ -980,9 +1239,17 @@ const CustomersDetailsMb = ({ location }) => {
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>
-                Meeting Link: {customersEditData.meetingLink}
+                {customersEditData.meetingLink}
               </p>
             </Card>
+            <IconButton
+              style={{ marginTop: -8 }}
+              onClick={() => {
+                copyToClipboard(customersEditData.meetingLink);
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
           </div>
         </>
       ) : (
@@ -1399,32 +1666,44 @@ const CustomersDetailsMb = ({ location }) => {
           </div>
         </>
       )}
-
-      {disableEditButton ? (
-        <Button
-          variant="contained"
-          onClick={() => setDisableEditButton(false)}
-          style={{ marginBottom: 10, width: "100%" }}
-        >
-          Edit
-        </Button>
-      ) : (
-        <Button
-          variant="contained"
-          onClick={onCustomerUpdate}
-          style={{ marginBottom: 10 }}
-        >
-          Submit
-        </Button>
-      )}
-
-      <Button
-        variant="contained"
-        onClick={onUserDelete}
-        style={{ backgroundColor: "#e74c3c", color: "white", marginBottom: 10 }}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "center",
+        }}
       >
-        Delete
-      </Button>
+        {disableEditButton ? (
+          <Button
+            variant="contained"
+            onClick={() => setDisableEditButton(false)}
+            style={{ marginBottom: 10 }}
+          >
+            Edit
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            onClick={onCustomerUpdate}
+            style={{ marginBottom: 10 }}
+          >
+            Submit
+          </Button>
+        )}
+
+        <Button
+          variant="contained"
+          onClick={onUserDelete}
+          style={{
+            backgroundColor: "#e74c3c",
+            color: "white",
+            marginBottom: 10,
+          }}
+        >
+          Delete
+        </Button>
+      </div>
     </div>
   );
 };
