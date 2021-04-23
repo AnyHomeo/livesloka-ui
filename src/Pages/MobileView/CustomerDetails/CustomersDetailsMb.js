@@ -19,6 +19,7 @@ import {
   editCustomer,
   deleteUser,
 } from "../../../Services/Services";
+import { Edit, Trash, ArrowRightCircle } from "react-feather";
 const useStyles = makeStyles((theme) => ({
   textLable: {
     marginBottom: "10px",
@@ -179,43 +180,20 @@ const CustomersDetailsMb = ({ location }) => {
         flexDirection: "column",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-around",
-          alignItems: "center",
-        }}
-      >
+      <div style={{ textAlign: "right" }}>
         {disableEditButton ? (
-          <Button
-            variant="contained"
-            onClick={() => setDisableEditButton(false)}
-            style={{ marginBottom: 10 }}
-          >
-            Edit
-          </Button>
+          <IconButton onClick={() => setDisableEditButton(false)}>
+            <Edit style={{ fontSize: 24 }} />
+          </IconButton>
         ) : (
-          <Button
-            variant="contained"
-            onClick={onCustomerUpdate}
-            style={{ marginBottom: 10 }}
-          >
-            Submit
-          </Button>
+          <IconButton onClick={onCustomerUpdate}>
+            <ArrowRightCircle style={{ fontSize: 24 }} />
+          </IconButton>
         )}
 
-        <Button
-          variant="contained"
-          onClick={onUserDelete}
-          style={{
-            backgroundColor: "#e74c3c",
-            color: "white",
-            marginBottom: 10,
-          }}
-        >
-          Delete
-        </Button>
+        <IconButton onClick={onUserDelete}>
+          <Trash style={{ fontSize: 24 }} />
+        </IconButton>
       </div>
       {disableEditButton ? (
         <>
@@ -1670,7 +1648,7 @@ const CustomersDetailsMb = ({ location }) => {
         style={{
           display: "flex",
           flexDirection: "row",
-          justifyContent: "space-around",
+          justifyContent: "space-between",
           alignItems: "center",
         }}
       >
@@ -1678,7 +1656,12 @@ const CustomersDetailsMb = ({ location }) => {
           <Button
             variant="contained"
             onClick={() => setDisableEditButton(false)}
-            style={{ marginBottom: 10 }}
+            style={{
+              marginBottom: 10,
+              width: 150,
+              backgroundColor: "#27ae60",
+              color: "white",
+            }}
           >
             Edit
           </Button>
@@ -1686,7 +1669,7 @@ const CustomersDetailsMb = ({ location }) => {
           <Button
             variant="contained"
             onClick={onCustomerUpdate}
-            style={{ marginBottom: 10 }}
+            style={{ marginBottom: 10, width: 150 }}
           >
             Submit
           </Button>
@@ -1699,6 +1682,7 @@ const CustomersDetailsMb = ({ location }) => {
             backgroundColor: "#e74c3c",
             color: "white",
             marginBottom: 10,
+            width: 150,
           }}
         >
           Delete
