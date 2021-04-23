@@ -3,6 +3,7 @@ import { Button, TextField, Select, MenuItem, Switch } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { AddCustomer, getData } from "../../../Services/Services";
+import { isAutheticated } from "../../../auth";
 const useStyles = makeStyles((theme) => ({
   textLable: {
     marginBottom: "10px",
@@ -56,6 +57,7 @@ const AddNewCustomer = () => {
   const handleSwitchChange = (event) => {
     setCustomersEditData({
       ...customersEditData,
+      agentId:isAutheticated().agentId,
       isJoinButtonEnabledByAdmin: event.target.checked,
     });
   };
@@ -373,7 +375,7 @@ const AddNewCustomer = () => {
             ))}
         </Select>
       </div>
-
+{/* 
       <div className={classes.divCon}>
         <h3 className={classes.textLable}>Agent: </h3>
         <Select
@@ -389,7 +391,7 @@ const AddNewCustomer = () => {
               <MenuItem value={data.id}>{data.AgentName}</MenuItem>
             ))}
         </Select>
-      </div>
+      </div> */}
 
       <div className={classes.divCon}>
         <h3 className={classes.textLable}>Time Zone: </h3>

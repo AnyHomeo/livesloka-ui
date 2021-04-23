@@ -20,6 +20,7 @@ import {
   deleteUser,
 } from "../../../Services/Services";
 import { Edit, Trash, ArrowRightCircle } from "react-feather";
+import { isAutheticated } from "../../../auth";
 const useStyles = makeStyles((theme) => ({
   textLable: {
     marginBottom: "10px",
@@ -80,6 +81,7 @@ const CustomersDetailsMb = ({ location }) => {
   const handleSwitchChange = (event) => {
     setCustomersEditData({
       ...customersEditData,
+      agentId:isAutheticated().agentId,
       isJoinButtonEnabledByAdmin: event.target.checked,
     });
   };

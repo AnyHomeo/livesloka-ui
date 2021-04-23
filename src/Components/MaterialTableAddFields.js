@@ -11,6 +11,7 @@ import {
 import { Chip, Snackbar, TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import useWindowDimensions from "./useWindowDimensions";
+import { isAutheticated } from "../auth";
 
 const DropdownEditor = ({ onChange, value }) => {
   const [arr, setArr] = useState(value);
@@ -150,6 +151,9 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
           }else if (key === "amount") {
             return { title: humanReadable(key), field: key, type:"numeric",align:"left" };
           }  
+          else if (key === "AgentRole") {
+            return { title: humanReadable(key), field: key, type:"",lookup:{3:"Admin",4:"Sales",5:"Customer Support"}, editable:!(isAutheticated().roleId  == 3) ? "never" : undefined };
+          }
           else {
             return { title: humanReadable(key), field: key };
           }
