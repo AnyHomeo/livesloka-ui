@@ -76,8 +76,6 @@ const MeetingScheduler = () => {
   const [teacher, setInputTeacher] = useState("");
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [demo, setDemo] = useState(false);
-  const [onetoone, setonetoone] = useState(false);
-  const [onetomany, setonetomany] = useState(false);
   const [radioday, setRadioday] = useState("");
   const [teacherName, setTeacherName] = useState([]);
   const [studentName, setStudentName] = useState([]);
@@ -94,10 +92,10 @@ const MeetingScheduler = () => {
   const [alert, setAlert] = useState("");
   const [alertColor, setAlertColor] = useState("");
   const [loading, setLoading] = useState(false);
-
   const [subjectNames, setSubjectNames] = useState("");
   const [subjectNameId, setSubjectNameId] = useState("");
   const [className, setClassName] = useState("");
+  const [oneToOne, setOneToOne] = useState("");
 
   const handleDayChange = (event) => {
     setRadioday(event.target.value);
@@ -195,8 +193,8 @@ const MeetingScheduler = () => {
           teacher: teacher,
           students: personName,
           demo: demo,
-          OneToOne: onetoone,
-          OneToMany: onetomany,
+          OneToOne: oneToOne,
+          OneToMany: !oneToOne,
           subject: subjectNameId,
           startDate: moment(selectedDate).format("DD-MM-YYYY"),
           classname: className,
@@ -210,8 +208,7 @@ const MeetingScheduler = () => {
             formData
           );
           setDemo(false);
-          setonetoone(false);
-          setonetomany(false);
+          setOneToOne("");
           setPersonName("");
           setZoomLink("");
           setPersonName("");
@@ -289,8 +286,8 @@ const MeetingScheduler = () => {
                 )}
               />
             ) : (
-                ""
-              )}{" "}
+              ""
+            )}{" "}
           </Grid>
           <Grid item xs={12} md={4} />
           <Grid item xs={12} md={4} />
@@ -307,7 +304,8 @@ const MeetingScheduler = () => {
                 options={studentName}
                 value={studentNamesFullObject}
                 getOptionLabel={(name) =>
-                  `${name.firstName} ${name.lastName ? name.lastName : ""}${name.subject ? `(${name.subject.subjectName})` : ""
+                  `${name.firstName} ${name.lastName ? name.lastName : ""}${
+                    name.subject ? `(${name.subject.subjectName})` : ""
                   }`
                 }
                 onChange={(event, value) => {
@@ -329,8 +327,8 @@ const MeetingScheduler = () => {
                 )}
               />
             ) : (
-                ""
-              )}
+              ""
+            )}
           </Grid>
 
           <Grid item xs={12} md={4} />
@@ -458,34 +456,24 @@ const MeetingScheduler = () => {
                 }}
               />
             </FormControl>
-            <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <RadioGroup
+              row
+              aria-label="position"
+              onChange={() => setOneToOne((prev) => !prev)}
+              name="position"
+              value={oneToOne}
+            >
               <FormControlLabel
-                style={{ marginTop: '20px' }}
-                control={
-                  <Checkbox
-                    checked={onetoone}
-                    onChange={(event) => setonetoone(event.target.checked)}
-                    name="OneToOne"
-                    color="primary"
-                  />
-
-                }
-                label="One to one ?"
+                value={true}
+                control={<Radio color="primary" />}
+                label="One to One"
               />
               <FormControlLabel
-                style={{ marginTop: '20px' }}
-                control={
-                  <Checkbox
-                    checked={onetomany}
-                    onChange={(event) => setonetomany(event.target.checked)}
-                    name="OneToMany"
-                    color="primary"
-                  />
-
-                }
-                label="One to many ?"
+                value={false}
+                control={<Radio color="primary" />}
+                label="One to Many"
               />
-            </div>
+            </RadioGroup>
             <FormControlLabel
               style={{ marginTop: "20px" }}
               control={
@@ -503,17 +491,17 @@ const MeetingScheduler = () => {
             {loading ? (
               <CircularProgress />
             ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  type="submit"
-                  className={classes.button}
-                  startIcon={<SaveIcon />}
-                >
-                  Save
-                </Button>
-              )}
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                type="submit"
+                className={classes.button}
+                startIcon={<SaveIcon />}
+              >
+                Save
+              </Button>
+            )}
           </div>
         </div>
       </form>

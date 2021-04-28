@@ -1412,6 +1412,7 @@ const CrmDetails = () => {
       <Dialog
         open={open}
         fullWidth
+        maxWidth={"md"}
         onClose={() => setOpen(false)}
         aria-labelledby="form-dialog-title"
         TransitionComponent={Transition}

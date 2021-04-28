@@ -34,6 +34,7 @@ import LeavesTable from "./../Pages/Leaves/LeavesTable";
 import PaymentsPage from "../Pages/reports/PaymentsPage";
 import UpdateNumberOfBoughtClasses from "./../Pages/Admin/Crm/UpdateNumberOfBoughtClasses";
 import AvailableMeetingSchedule from "../Pages/Admin/Crm/AvailableMeetingSchedule";
+import Stats from "../Pages/Statistics/Statistics";
 
 function Routes() {
   return (
@@ -67,7 +68,7 @@ function Routes() {
               exact
               component={CustomersDetailsMb}
             />
-            <AdminRoute path="/statistics" exact component={Statistics} />
+            <AdminRoute path="/statistics" exact component={Stats} />
             <AdminRoute
               path="/add-customer-mobile"
               exact

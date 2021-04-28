@@ -31,7 +31,8 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
-import { Redirect, useParams,useLocation } from "react-router-dom";
+import { Redirect, useParams, useLocation } from "react-router-dom";
+
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -75,8 +76,6 @@ const EditSchedule = () => {
   const [teacher, setInputTeacher] = useState("");
   const [successOpen, setSuccessOpen] = useState(false);
   const [demo, setDemo] = useState(false);
-  const [onetoone, setonetoone] = useState(false);
-  const [onetomany, setonetomany] = useState(false);
   const [radioday, setRadioday] = useState("");
   const [teacherName, setTeacherName] = useState([]);
   const [studentName, setStudentName] = useState([]);
@@ -97,6 +96,7 @@ const EditSchedule = () => {
   const [isMeetingLinkChangeNeeded, setIsMeetingLinkChangeNeeded] = useState(
     false
   );
+  const [oneToOne, setOneToOne] = useState(true);
 
   const { id } = useParams();
 
@@ -142,7 +142,6 @@ const EditSchedule = () => {
     }
   }, [teacher, prevTeacher, prevSlots]);
 
-  // Get teachers
   const getTeachers = async () => {
     const teacherNames = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/teacher?params=id,TeacherName`
@@ -150,7 +149,6 @@ const EditSchedule = () => {
     setTeacherName(teacherNames.data.result);
   };
 
-  // Get Students
   const getStudents = async () => {
     const studentNames = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/customers/all?params=firstName,lastName`
@@ -202,8 +200,7 @@ const EditSchedule = () => {
       setZoomLink(meetingLink || "");
       setZoomEmail(meetingAccount || "");
       setDemo(demo);
-      setonetoone(OneToOne);
-      setonetomany(oneToMany);
+      setOneToOne(OneToOne);
       setSubjectNameId(subject || "");
       setSelectedDate(
         startDate
@@ -242,6 +239,7 @@ const EditSchedule = () => {
     );
     setSubjectNames(subjectName.data.result);
   };
+
   const submitForm = async (e) => {
     e.preventDefault();
     console.log(timeSlotState);
@@ -263,8 +261,8 @@ const EditSchedule = () => {
         teacher: teacher,
         students: personName.map((student) => student._id),
         demo: demo,
-        OneToOne: onetoone,
-        oneToMany: onetomany,
+        OneToOne: oneToOne,
+        oneToMany: !oneToOne,
         subject: subjectNameId,
         startDate: moment(selectedDate).format("DD-MM-YYYY"),
         isMeetingLinkChangeNeeded,
@@ -307,7 +305,9 @@ const EditSchedule = () => {
   };
 
   if (redirect) {
-    return <Redirect to={query.get("goto") ?  query.get("goto") : "/scheduler"} />;
+    return (
+      <Redirect to={query.get("goto") ? query.get("goto") : "/scheduler"} />
+    );
   }
 
   return (
@@ -396,7 +396,6 @@ const EditSchedule = () => {
               />
             </div>
           </Grid>
-
           <Grid item xs={12} md={4} />
         </Grid>
         <div
@@ -540,32 +539,12 @@ const EditSchedule = () => {
                 marginTop: "10px",
               }}
             />
-            <div style={{ display: "flex", flexDirection: "row" }}>
-              <FormControlLabel
-                style={{ marginTop: "20px" }}
-                control={
-                  <Checkbox
-                    checked={onetoone}
-                    onChange={(event) => setonetoone(event.target.checked)}
-                    name="OneToOne"
-                    color="primary"
-                  />
-                }
-                label="One to one"
-              />
-              <FormControlLabel
-                style={{ marginTop: "20px" }}
-                control={
-                  <Checkbox
-                    checked={onetomany}
-                    onChange={(event) => setonetomany(event.target.checked)}
-                    name="OneToMany"
-                    color="primary"
-                  />
-                }
-                label="One to many"
-              />
-            </div>
+            <FormControl component="fieldset">
+      <RadioGroup row aria-label="position" onChange={() => setOneToOne(prev => !prev)}  name="position" value={oneToOne}>
+        <FormControlLabel value={true} control={<Radio color="primary" />} label="One to One" />
+        <FormControlLabel value={false} control={<Radio color="primary" />} label="One to Many" />
+      </RadioGroup>
+    </FormControl>
             <FormControlLabel
               style={{ marginTop: "20px" }}
               control={

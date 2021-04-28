@@ -1,0 +1,70 @@
+.statistics-container{
+    width: 100%;
+    height: auto;
+    display: flex;
+}
+
+.statistics-container .hours-display{
+    width: 80px;
+}
+
+.statistics-container .hours-display .hour{
+    width: 100%;
+    height: 100px;
+}
+
+.statistics-container .stats-display{
+    width: calc(100% - 80px);
+    overflow-x: scroll;
+}
+
+.statistics-container .single-row-container{
+    height: 100px;
+    display: flex;
+}
+
+.statistics-container .single-row-container .single-card{
+    min-width: 200px;
+    height: calc(100% - 10px);
+    padding: 5px;
+    margin: 5px;
+    box-sizing: border-box;
+    padding-bottom: 30px;
+    position: relative;
+}
+
+.statistics-container .single-row-container .single-card .students{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: flex;
+}
+
+.statistics-container .single-row-container .single-card .teacher-name{
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+}
+
+.statistics-container .zoom-link{
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+ .info-wrapper{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.info-wrapper > *{
+    flex: 0 0 50%;
+}
+
+@media only screen and (max-width:600px) {
+    .info-wrapper{
+        flex-direction: column;
+    }
+}
