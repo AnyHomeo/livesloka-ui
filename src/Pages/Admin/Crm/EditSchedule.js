@@ -171,7 +171,6 @@ const EditSchedule = () => {
       const schedule = await Axios.get(
         `${process.env.REACT_APP_API_KEY}/schedule/${id}`
       );
-      console.log(schedule);
       const {
         teacher,
         className,

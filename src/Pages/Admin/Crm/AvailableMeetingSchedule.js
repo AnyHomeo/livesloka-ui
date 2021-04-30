@@ -72,7 +72,6 @@ const AvailableMeetingSchedule = ({ match }) => {
     setSelectedDate(date);
   };
 
-  console.log(match.params.slot);
   const [personName, setPersonName] = useState([]);
   const [teacher, setInputTeacher] = useState(match.params.teacher);
   const [successOpen, setSuccessOpen] = React.useState(false);
@@ -205,7 +204,6 @@ const AvailableMeetingSchedule = ({ match }) => {
           timeSlotState,
         };
         try {
-          console.log(formData);
           const res = await Axios.post(
             `${process.env.REACT_APP_API_KEY}/schedule`,
             formData

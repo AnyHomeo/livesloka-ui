@@ -202,7 +202,6 @@ const MeetingScheduler = () => {
           timeSlotState,
         };
         try {
-          console.log(formData);
           const res = await Axios.post(
             `${process.env.REACT_APP_API_KEY}/schedule`,
             formData

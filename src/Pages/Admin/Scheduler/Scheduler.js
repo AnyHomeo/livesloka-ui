@@ -342,7 +342,6 @@ function Scheduler() {
                             isClassTemperarilyCancelled: !selectedSchedule.isClassTemperarilyCancelled,
                           })
                             .then((response) => {
-                              console.log(response);
                               getAllSchedulesData();
                             })
                             .catch((error) => {
@@ -392,7 +391,6 @@ function Scheduler() {
                               message: selectedSchedule.message,
                             })
                               .then((response) => {
-                                console.log(response);
                                 getAllSchedulesData();
                                 setSuccess(true);
                                 setResponse(response.data.message);

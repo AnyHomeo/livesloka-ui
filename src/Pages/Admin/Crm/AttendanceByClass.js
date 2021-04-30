@@ -113,7 +113,6 @@ const AttedanceByClass = () => {
     };
     postStudentsAttendance(formData)
       .then((data) => {
-        console.log(data);
         setLoading(true);
         setSuccess(true);
         setResponse(data.data.message);

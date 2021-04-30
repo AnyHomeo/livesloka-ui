@@ -136,7 +136,6 @@ const fetchDropDown = (index) => {
   getData(names[index])
     .then((data) => {
       data.data.result.forEach((item) => {
-        console.log(names[index]=== "Class Status" && item.status === "1" )
       if(names[index]=== "Class Status"){
         if(item.status === "1"){
           obj[item.id] = item[status[index]];
@@ -307,7 +306,6 @@ const CrmDetails = () => {
   }
 
   useEffect(() => {
-    console.log(isAutheticated()._id);
     getSettings(isAutheticated()._id).then((data) => {
       let settings;
       if (data.data.result.columns) {
@@ -470,8 +468,6 @@ const CrmDetails = () => {
     if (data.status === 200) {
       setHistoryOpen(true);
     }
-    console.log(data);
-    // console.log(id);
   };
 
   useEffect(() => {
@@ -1350,7 +1346,6 @@ const CrmDetails = () => {
                 !Object.keys(requestBody).includes("numberOfClassesBought") ||
                 window.confirm("Are you sure in updating Classes paid")
               ) {
-                console.log(isAutheticated().agentId)
                 requestBody.agentId = isAutheticated().agentId 
                 newData.agentId = isAutheticated().agentId 
                 return editCustomer({ ...requestBody, _id: oldData._id })

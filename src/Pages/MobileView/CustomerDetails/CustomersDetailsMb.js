@@ -134,7 +134,6 @@ const CustomersDetailsMb = ({ location }) => {
   };
   const [disableEditButton, setDisableEditButton] = useState(true);
 
-  console.log(disableEditButton);
   const onCustomerUpdate = async () => {
     try {
       const res = await editCustomer({ ...customersEditData, _id: data._id });
