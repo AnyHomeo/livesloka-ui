@@ -10,12 +10,12 @@ function SingleRow({
   day,
   prevTime,
   selectedSlot,
-  setDialogData
+  setDialogData,
 }) {
   return (
     <div
       className="single-row-container"
-      style={{ backgroundColor: selectedSlot === time ? "rgba(56,103,214,0.5)" : undefined }}
+      style={{ backgroundColor: selectedSlot === time || selectedSlot === prevTime ? "rgba(56,103,214,0.5)" : undefined }}
     >
       {todayData.map((singleData) => (
         <>

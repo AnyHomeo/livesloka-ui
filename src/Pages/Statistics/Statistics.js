@@ -21,6 +21,7 @@ import FileCopyIcon from "@material-ui/icons/FileCopy";
 import MaterialTable from "material-table";
 import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import momentTZ from "moment-timezone";
 
 let days = [
   "SUNDAY",
@@ -58,7 +59,7 @@ function TabPanel(props) {
 }
 
 function Statistics() {
-  const [value, setValue] = useState(new Date().getDay());
+  const [value, setValue] = useState(days.indexOf(momentTZ(new Date()).tz("Asia/Kolkata").format("dddd").toUpperCase()));
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogData, setDialogData] = useState({});
 
