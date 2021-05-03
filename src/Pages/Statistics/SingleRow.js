@@ -35,7 +35,7 @@ function SingleRow({
               }}
                 className="teacher-name"
               >
-                {singleData.teacher.TeacherName}
+                {singleData.teacher && singleData.teacher.TeacherName}
               </div>
               <div className="students">
                 {singleData.students.map((student) => (
