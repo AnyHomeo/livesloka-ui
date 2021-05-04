@@ -1,4 +1,4 @@
-import { Card, Icon, IconButton, Tooltip } from "@material-ui/core";
+import { Card, Chip, Icon, IconButton, Tooltip } from "@material-ui/core";
 import React from "react";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import PersonIcon from "@material-ui/icons/Person";
@@ -27,6 +27,18 @@ function SingleRow({
                 backgroundColor:!singleData.isTeacherJoined ? "rgb(237, 159, 157)" : "#38CC77",
               }}
             >
+              {
+                singleData.demo ? (
+                  <Chip label="Demo"
+                  size="small"
+                  style={{
+                    position:"absolute",
+                    top:0,
+                    transform:"translateX(-50%)",
+                    left:"50%"
+                  }} />
+                ) : ""
+              }
               <div
               onClick={() => {
                 setDialogOpen((prev) => !prev)
