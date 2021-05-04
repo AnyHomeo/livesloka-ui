@@ -25,7 +25,6 @@ function SingleRow({
               className="single-card"
               style={{
                 backgroundColor:!singleData.isTeacherJoined ? "rgb(237, 159, 157)" : "#38CC77",
-                
               }}
             >
               <div

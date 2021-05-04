@@ -32,6 +32,7 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import { Redirect, useParams, useLocation } from "react-router-dom";
+import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 
 
 function useQuery() {
@@ -97,7 +98,7 @@ const EditSchedule = () => {
     false
   );
   const [oneToOne, setOneToOne] = useState(true);
-
+    const [isZoomMeeting, setIsZoomMeeting] = useState(true);
   const { id } = useParams();
 
   const handleDateChange = (date) => {
@@ -178,10 +179,10 @@ const EditSchedule = () => {
         meetingAccount,
         demo,
         OneToOne,
-        oneToMany,
         subject,
         startDate,
         students,
+        isZoomMeeting : zoomMeetingOrNot,
         slots: {
           monday,
           tuesday,
@@ -200,6 +201,8 @@ const EditSchedule = () => {
       setZoomEmail(meetingAccount || "");
       setDemo(demo);
       setOneToOne(OneToOne);
+      console.log(schedule.data.result)
+      setIsZoomMeeting(zoomMeetingOrNot)
       setSubjectNameId(subject || "");
       setSelectedDate(
         startDate
@@ -252,6 +255,20 @@ const EditSchedule = () => {
           .filter((slot) => slot.startsWith(day))
           .map((slot) => slot.split("!@#$%^&*($%^")[0]);
       });
+      if(!teacher){
+        setAlertColor("error");
+        setSuccessOpen(true);
+        setAlert("Please Select a Teacher");
+        setLoading(false)
+        return
+      }
+      if(!personName.length){
+        setAlertColor("error");
+        setSuccessOpen(true);
+        setAlert("Please Select a Student");
+        setLoading(false)
+        return
+      }
       formData = {
         ...formData,
         className: ClassName,
@@ -265,6 +282,7 @@ const EditSchedule = () => {
         subject: subjectNameId,
         startDate: moment(selectedDate).format("DD-MM-YYYY"),
         isMeetingLinkChangeNeeded,
+        isZoomMeeting
       };
       try {
         const res = await Axios.post(
@@ -284,6 +302,8 @@ const EditSchedule = () => {
         setRadioday("");
         setClassName("");
         setTimeSlotState([]);
+        setIsZoomMeeting("");
+        setOneToOne("");
         setTimeout(() => {
           setRedirect(true);
         }, 2000);
@@ -538,6 +558,22 @@ const EditSchedule = () => {
                 marginTop: "10px",
               }}
             />
+    <ToggleButtonGroup
+      value={isZoomMeeting}
+      exclusive
+      style={{
+        margin:"20px 0"
+      }}
+      onChange={(e,v) =>setIsZoomMeeting(v)}
+      aria-label="Zoom meeting or not"
+    >
+      <ToggleButton value={true} aria-label="left aligned">
+        <img style={{width:"30px",height:"30px"}} src={require("../../../Images/ZOOM LOGO.png")} />
+      </ToggleButton>
+      <ToggleButton value={false} aria-label="centered">
+        <img style={{width:"30px",height:"30px"}} src={require("../../../Images/whereby.png")} />
+      </ToggleButton>
+    </ToggleButtonGroup>
             <FormControl component="fieldset">
       <RadioGroup row aria-label="position" onChange={() => setOneToOne(prev => !prev)}  name="position" value={oneToOne}>
         <FormControlLabel value={true} control={<Radio color="primary" />} label="One to One" />

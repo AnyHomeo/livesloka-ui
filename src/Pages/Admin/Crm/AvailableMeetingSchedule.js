@@ -14,6 +14,7 @@ import {
   Select,
   InputLabel,
   MenuItem,
+  Tooltip,
 } from "@material-ui/core/";
 import SaveIcon from "@material-ui/icons/Save";
 import { makeStyles } from "@material-ui/core/styles";
@@ -32,6 +33,7 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
+import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 
 let days = [
   "MONDAY",
@@ -76,14 +78,11 @@ const AvailableMeetingSchedule = ({ match }) => {
   const [teacher, setInputTeacher] = useState(match.params.teacher);
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [demo, setDemo] = useState(false);
-  const [onetoone, setonetoone] = useState(false);
-  const [onetomany, setonetomany] = useState(false);
   const [radioday, setRadioday] = useState("");
   const [teacherName, setTeacherName] = useState([]);
   const [studentName, setStudentName] = useState([]);
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const [timeSlotState, setTimeSlotState] = useState([]);
-  const [zoomEmail, setZoomEmail] = useState("");
   const [zoomLink, setZoomLink] = useState("");
   const [zoomAccounts, setZoomAccounts] = useState([]);
   const [teacherNameFullObject, setTeacherNameFullObject] = useState({
@@ -94,10 +93,12 @@ const AvailableMeetingSchedule = ({ match }) => {
   const [alert, setAlert] = useState("");
   const [alertColor, setAlertColor] = useState("");
   const [loading, setLoading] = useState(false);
-
   const [subjectNames, setSubjectNames] = useState("");
   const [subjectNameId, setSubjectNameId] = useState("");
   const [className, setClassName] = useState("");
+  const [oneToOne, setOneToOne] = useState(true);
+  const [isZoomMeeting, setIsZoomMeeting] = useState(true);
+
 
   const handleDayChange = (event) => {
     setRadioday(event.target.value);
@@ -165,6 +166,7 @@ const AvailableMeetingSchedule = ({ match }) => {
     setSubjectNames(subjectName.data.result);
   };
 
+
   const submitForm = async (e) => {
     setLoading(true);
     e.preventDefault();
@@ -176,18 +178,35 @@ const AvailableMeetingSchedule = ({ match }) => {
         .map((slot) => slot.split("!@#$%^&*($%^")[0]);
     });
 
-    let newZoomLink = "";
-    let newZoomJwt = "";
+    let newZoomLink = undefined;
+    let newZoomJwt = undefined;
+    let getZoomLink = undefined
     try {
-      const getZoomLink = await Axios.post(
-        `${process.env.REACT_APP_API_KEY}/link/getzoomlink`,
-
-        timeSlotState
-      );
-      newZoomLink = getZoomLink.data.result.link;
-      newZoomJwt = getZoomLink.data.result.id;
-
-      if (getZoomLink.status === 200) {
+      if(isZoomMeeting){
+         getZoomLink = await Axios.post(
+          `${process.env.REACT_APP_API_KEY}/link/getzoomlink`,
+          timeSlotState
+        );
+        newZoomLink = getZoomLink.data.result.link;
+        newZoomJwt = getZoomLink.data.result.id;  
+        console.log(getZoomLink)
+      }
+      if(!teacher){
+        setAlertColor("error");
+        setSuccessOpen(true);
+        setAlert("Please Select a Teacher");
+        setLoading(false)
+        return
+      }
+      if(!personName.length){
+        setAlertColor("error");
+        setSuccessOpen(true);
+        setAlert("Please Select a Student");
+        setLoading(false)
+        return
+      }
+      console.log(isZoomMeeting)
+      if (!isZoomMeeting || (getZoomLink && getZoomLink.status === 200)) {
         formData = {
           ...formData,
           meetingLink: newZoomLink,
@@ -195,13 +214,14 @@ const AvailableMeetingSchedule = ({ match }) => {
           teacher: teacher,
           students: personName,
           demo: demo,
-          OneToOne: onetoone,
-          OneToMany: onetomany,
+          OneToOne: oneToOne,
+          OneToMany: !oneToOne,
           subject: subjectNameId,
           startDate: moment(selectedDate).format("DD-MM-YYYY"),
           classname: className,
           Jwtid: newZoomJwt,
           timeSlotState,
+          isZoomMeeting
         };
         try {
           const res = await Axios.post(
@@ -209,8 +229,7 @@ const AvailableMeetingSchedule = ({ match }) => {
             formData
           );
           setDemo(false);
-          setonetoone(false);
-          setonetomany(false);
+          setOneToOne("");
           setPersonName("");
           setZoomLink("");
           setPersonName("");
@@ -463,32 +482,44 @@ const AvailableMeetingSchedule = ({ match }) => {
                 }}
               />
             </FormControl>
-            <div style={{ display: "flex", flexDirection: "row" }}>
+            <ToggleButtonGroup
+      value={isZoomMeeting}
+      exclusive
+      style={{
+        margin:"20px 0"
+      }}
+      onChange={(e,v) =>setIsZoomMeeting(v)}
+      aria-label="Zoom meeting or not"
+    >
+      <ToggleButton value={true} aria-label="left aligned">
+        <Tooltip title="Create Zoom Meeting" >
+        <img style={{width:"30px",height:"30px"}} src={require("../../../Images/ZOOM LOGO.png")} />
+        </Tooltip>
+      </ToggleButton>
+      <ToggleButton value={false} aria-label="centered">
+        <Tooltip title="Create Whereby Meeting" >
+        <img style={{width:"30px",height:"30px"}} src={require("../../../Images/whereby.png")} />
+        </Tooltip>
+      </ToggleButton>
+    </ToggleButtonGroup>
+            <RadioGroup
+              row
+              aria-label="position"
+              onChange={(e) => setOneToOne((prev) => !prev)}
+              name="position"
+              value={oneToOne}
+            >
               <FormControlLabel
-                style={{ marginTop: "20px" }}
-                control={
-                  <Checkbox
-                    checked={onetoone}
-                    onChange={(event) => setonetoone(event.target.checked)}
-                    name="OneToOne"
-                    color="primary"
-                  />
-                }
-                label="One to one ?"
+                value={true}
+                control={<Radio color="primary" />}
+                label="One to One"
               />
               <FormControlLabel
-                style={{ marginTop: "20px" }}
-                control={
-                  <Checkbox
-                    checked={onetomany}
-                    onChange={(event) => setonetomany(event.target.checked)}
-                    name="OneToMany"
-                    color="primary"
-                  />
-                }
-                label="One to many ?"
+                value={false}
+                control={<Radio color="primary" />}
+                label="One to Many"
               />
-            </div>
+            </RadioGroup>
             <FormControlLabel
               style={{ marginTop: "20px" }}
               control={

@@ -14,6 +14,7 @@ import {
   Select,
   InputLabel,
   MenuItem,
+  Tooltip,
 } from "@material-ui/core/";
 import SaveIcon from "@material-ui/icons/Save";
 import { makeStyles } from "@material-ui/core/styles";
@@ -32,6 +33,8 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 let days = [
   "MONDAY",
@@ -81,7 +84,6 @@ const MeetingScheduler = () => {
   const [studentName, setStudentName] = useState([]);
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const [timeSlotState, setTimeSlotState] = useState([]);
-  const [zoomEmail, setZoomEmail] = useState("");
   const [zoomLink, setZoomLink] = useState("");
   const [zoomAccounts, setZoomAccounts] = useState([]);
   const [teacherNameFullObject, setTeacherNameFullObject] = useState({
@@ -95,7 +97,8 @@ const MeetingScheduler = () => {
   const [subjectNames, setSubjectNames] = useState("");
   const [subjectNameId, setSubjectNameId] = useState("");
   const [className, setClassName] = useState("");
-  const [oneToOne, setOneToOne] = useState("");
+  const [oneToOne, setOneToOne] = useState(true);
+  const [isZoomMeeting, setIsZoomMeeting] = useState(true);
 
   const handleDayChange = (event) => {
     setRadioday(event.target.value);
@@ -174,18 +177,34 @@ const MeetingScheduler = () => {
         .map((slot) => slot.split("!@#$%^&*($%^")[0]);
     });
 
-    let newZoomLink = "";
-    let newZoomJwt = "";
+    let newZoomLink = undefined;
+    let newZoomJwt = undefined;
+    let getZoomLink = undefined
     try {
-      const getZoomLink = await Axios.post(
-        `${process.env.REACT_APP_API_KEY}/link/getzoomlink`,
-
-        timeSlotState
-      );
-      newZoomLink = getZoomLink.data.result.link;
-      newZoomJwt = getZoomLink.data.result.id;
-
-      if (getZoomLink.status === 200) {
+      if(isZoomMeeting){
+         getZoomLink = await Axios.post(
+          `${process.env.REACT_APP_API_KEY}/link/getzoomlink`,
+          timeSlotState
+        );
+        newZoomLink = getZoomLink.data.result.link;
+        newZoomJwt = getZoomLink.data.result.id;  
+      }
+      if(!teacher){
+        setAlertColor("error");
+        setSuccessOpen(true);
+        setAlert("Please Select a Teacher");
+        setLoading(false)
+        return
+      }
+      if(!personName.length){
+        setAlertColor("error");
+        setSuccessOpen(true);
+        setAlert("Please Select a Student");
+        setLoading(false)
+        return
+      }
+      console.log(isZoomMeeting)
+      if (!isZoomMeeting || (getZoomLink && getZoomLink.status === 200)) {
         formData = {
           ...formData,
           meetingLink: newZoomLink,
@@ -200,6 +219,7 @@ const MeetingScheduler = () => {
           classname: className,
           Jwtid: newZoomJwt,
           timeSlotState,
+          isZoomMeeting
         };
         try {
           const res = await Axios.post(
@@ -455,6 +475,27 @@ const MeetingScheduler = () => {
                 }}
               />
             </FormControl>
+
+    <ToggleButtonGroup
+      value={isZoomMeeting}
+      exclusive
+      style={{
+        margin:"20px 0"
+      }}
+      onChange={(e,v) =>setIsZoomMeeting(v)}
+      aria-label="Zoom meeting or not"
+    >
+      <ToggleButton value={true} aria-label="left aligned">
+        <Tooltip title="Create Zoom Meeting" >
+        <img style={{width:"30px",height:"30px"}} src={require("../../../Images/ZOOM LOGO.png")} />
+        </Tooltip>
+      </ToggleButton>
+      <ToggleButton value={false} aria-label="centered">
+        <Tooltip title="Create Whereby Meeting" >
+        <img style={{width:"30px",height:"30px"}} src={require("../../../Images/whereby.png")} />
+        </Tooltip>
+      </ToggleButton>
+    </ToggleButtonGroup>
             <RadioGroup
               row
               aria-label="position"
