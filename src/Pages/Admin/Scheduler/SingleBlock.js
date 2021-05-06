@@ -91,7 +91,7 @@ function SingleBlock({
                 ? "#aaa"
                 : schedule.demo
                 ? "linear-gradient(315deg, #e84118 0%, #e84118 74%)"
-                : "linear-gradient(315deg, #f39c12 0%, #f39c12 74%)"
+                : schedule.isSummerCampClass ? "#3867D6" : "linear-gradient(315deg, #f39c12 0%, #f39c12 74%)"
               : categorizedData[category][teacher].availableSlots.includes(
                   `${day.toUpperCase()}-${time}`
                 )

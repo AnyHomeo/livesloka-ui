@@ -98,6 +98,8 @@ const AvailableMeetingSchedule = ({ match }) => {
   const [className, setClassName] = useState("");
   const [oneToOne, setOneToOne] = useState(true);
   const [isZoomMeeting, setIsZoomMeeting] = useState(true);
+  const [isSummerCampClass, setIsSummerCampClass] = useState(false);
+  const [summerCampAmount, setSummerCampAmount] = useState(0);
 
 
   const handleDayChange = (event) => {
@@ -198,13 +200,6 @@ const AvailableMeetingSchedule = ({ match }) => {
         setLoading(false)
         return
       }
-      if(!personName.length){
-        setAlertColor("error");
-        setSuccessOpen(true);
-        setAlert("Please Select a Student");
-        setLoading(false)
-        return
-      }
       console.log(isZoomMeeting)
       if (!isZoomMeeting || (getZoomLink && getZoomLink.status === 200)) {
         formData = {
@@ -221,7 +216,9 @@ const AvailableMeetingSchedule = ({ match }) => {
           classname: className,
           Jwtid: newZoomJwt,
           timeSlotState,
-          isZoomMeeting
+          isZoomMeeting,
+          isSummerCampClass,
+          summerCampAmount
         };
         try {
           const res = await Axios.post(
@@ -244,6 +241,8 @@ const AvailableMeetingSchedule = ({ match }) => {
           setClassName("");
           setTimeSlotState([]);
           setAvailableTimeSlots([]);
+          setIsSummerCampClass(false);
+          setSummerCampAmount(0)
         } catch (error) {
           console.error(error.response);
           if (error.response) {
@@ -532,6 +531,45 @@ const AvailableMeetingSchedule = ({ match }) => {
               }
               label="DEMO"
             />
+            <FormControlLabel
+              style={{ marginTop: "20px" }}
+              control={
+                <Checkbox
+                  checked={isSummerCampClass}
+                  onChange={(event) => setIsSummerCampClass(event.target.checked)}
+                  name="Demo"
+                  color="primary"
+                />
+              }
+              label="Summer Camp Class"
+            />
+            {
+              isSummerCampClass ? (
+                <FormControl
+                style={{
+                  maxWidth: "400px",
+                  minWidth: "300px",
+                  marginTop: "10px",
+                }}
+                variant="outlined"
+              >
+                <TextField
+                  fullWidth
+                  type={"number"}
+                  id="outlined-basic"
+                  label="Summer Camp Class Amount"
+                  variant="outlined"
+                  value={summerCampAmount}
+                  onChange={(e) => setSummerCampAmount(e.target.value)}
+                  style={{
+                    maxWidth: "400px",
+                    minWidth: "300px",
+                    marginTop: "10px",
+                  }}
+                />
+              </FormControl>
+              ) : ""
+            }
           </div>
           <div className={classes.saveButton}>
             {loading ? (

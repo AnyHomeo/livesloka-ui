@@ -34,7 +34,6 @@ import {
 import { Redirect, useParams, useLocation } from "react-router-dom";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 
-
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
@@ -98,7 +97,10 @@ const EditSchedule = () => {
     false
   );
   const [oneToOne, setOneToOne] = useState(true);
-    const [isZoomMeeting, setIsZoomMeeting] = useState(true);
+  const [isZoomMeeting, setIsZoomMeeting] = useState(true);
+  const [isSummerCampClass, setIsSummerCampClass] = useState(false);
+  const [summerCampAmount, setSummerCampAmount] = useState(0);
+
   const { id } = useParams();
 
   const handleDateChange = (date) => {
@@ -182,7 +184,9 @@ const EditSchedule = () => {
         subject,
         startDate,
         students,
-        isZoomMeeting : zoomMeetingOrNot,
+        isSummerCampClass,
+        summerCampAmount,
+        isZoomMeeting: zoomMeetingOrNot,
         slots: {
           monday,
           tuesday,
@@ -201,8 +205,9 @@ const EditSchedule = () => {
       setZoomEmail(meetingAccount || "");
       setDemo(demo);
       setOneToOne(OneToOne);
-      console.log(schedule.data.result)
-      setIsZoomMeeting(zoomMeetingOrNot)
+      setIsSummerCampClass(isSummerCampClass);
+      setSummerCampAmount(summerCampAmount);
+      setIsZoomMeeting(zoomMeetingOrNot);
       setSubjectNameId(subject || "");
       setSelectedDate(
         startDate
@@ -211,6 +216,7 @@ const EditSchedule = () => {
             }`
           : new Date()
       );
+      console.log(students);
       setPersonName(students);
       setTimeSlotState([
         ...monday,
@@ -255,19 +261,12 @@ const EditSchedule = () => {
           .filter((slot) => slot.startsWith(day))
           .map((slot) => slot.split("!@#$%^&*($%^")[0]);
       });
-      if(!teacher){
+      if (!teacher) {
         setAlertColor("error");
         setSuccessOpen(true);
         setAlert("Please Select a Teacher");
-        setLoading(false)
-        return
-      }
-      if(!personName.length){
-        setAlertColor("error");
-        setSuccessOpen(true);
-        setAlert("Please Select a Student");
-        setLoading(false)
-        return
+        setLoading(false);
+        return;
       }
       formData = {
         ...formData,
@@ -282,7 +281,9 @@ const EditSchedule = () => {
         subject: subjectNameId,
         startDate: moment(selectedDate).format("DD-MM-YYYY"),
         isMeetingLinkChangeNeeded,
-        isZoomMeeting
+        isZoomMeeting,
+        summerCampAmount,
+        isSummerCampClass
       };
       try {
         const res = await Axios.post(
@@ -558,28 +559,48 @@ const EditSchedule = () => {
                 marginTop: "10px",
               }}
             />
-    <ToggleButtonGroup
-      value={isZoomMeeting}
-      exclusive
-      style={{
-        margin:"20px 0"
-      }}
-      onChange={(e,v) =>setIsZoomMeeting(v)}
-      aria-label="Zoom meeting or not"
-    >
-      <ToggleButton value={true} aria-label="left aligned">
-        <img style={{width:"30px",height:"30px"}} src={require("../../../Images/ZOOM LOGO.png")} />
-      </ToggleButton>
-      <ToggleButton value={false} aria-label="centered">
-        <img style={{width:"30px",height:"30px"}} src={require("../../../Images/whereby.png")} />
-      </ToggleButton>
-    </ToggleButtonGroup>
+            <ToggleButtonGroup
+              value={isZoomMeeting}
+              exclusive
+              style={{
+                margin: "20px 0",
+              }}
+              onChange={(e, v) => setIsZoomMeeting(v)}
+              aria-label="Zoom meeting or not"
+            >
+              <ToggleButton value={true} aria-label="left aligned">
+                <img
+                  style={{ width: "30px", height: "30px" }}
+                  src={require("../../../Images/ZOOM LOGO.png")}
+                />
+              </ToggleButton>
+              <ToggleButton value={false} aria-label="centered">
+                <img
+                  style={{ width: "30px", height: "30px" }}
+                  src={require("../../../Images/whereby.png")}
+                />
+              </ToggleButton>
+            </ToggleButtonGroup>
             <FormControl component="fieldset">
-      <RadioGroup row aria-label="position" onChange={() => setOneToOne(prev => !prev)}  name="position" value={oneToOne}>
-        <FormControlLabel value={true} control={<Radio color="primary" />} label="One to One" />
-        <FormControlLabel value={false} control={<Radio color="primary" />} label="One to Many" />
-      </RadioGroup>
-    </FormControl>
+              <RadioGroup
+                row
+                aria-label="position"
+                onChange={() => setOneToOne((prev) => !prev)}
+                name="position"
+                value={oneToOne}
+              >
+                <FormControlLabel
+                  value={true}
+                  control={<Radio color="primary" />}
+                  label="One to One"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={<Radio color="primary" />}
+                  label="One to Many"
+                />
+              </RadioGroup>
+            </FormControl>
             <FormControlLabel
               style={{ marginTop: "20px" }}
               control={
@@ -593,6 +614,45 @@ const EditSchedule = () => {
               label="DEMO"
             />
           </div>
+          <FormControlLabel
+              style={{ marginTop: "20px" }}
+              control={
+                <Checkbox
+                  checked={isSummerCampClass}
+                  onChange={(event) => setIsSummerCampClass(event.target.checked)}
+                  name="Demo"
+                  color="primary"
+                />
+              }
+              label="Summer Camp Class"
+            />
+            {
+              isSummerCampClass ? (
+                <FormControl
+                style={{
+                  maxWidth: "400px",
+                  minWidth: "300px",
+                  marginTop: "10px",
+                }}
+                variant="outlined"
+              >
+                <TextField
+                  fullWidth
+                  type={"number"}
+                  id="outlined-basic"
+                  label="Summer Camp Class Amount"
+                  variant="outlined"
+                  value={summerCampAmount}
+                  onChange={(e) => setSummerCampAmount(e.target.value)}
+                  style={{
+                    maxWidth: "400px",
+                    minWidth: "300px",
+                    marginTop: "10px",
+                  }}
+                />
+              </FormControl>
+              ) : ""
+            }
           <FormControlLabel
             control={
               <Switch
