@@ -103,14 +103,14 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
               lookup: categoryLookup,
             };
           }
-          if (key === "zoomJwt" || key === "zoomSecret" || key === "zoomApi") {
+          if (key === "zoomJwt" || key === "zoomSecret" || key === "zoomApi" || key === "summerCampDescription") {
             return {
               title: humanReadable(key),
               field: key,
               render: (rowData) => (
                 <span>
                   {rowData[key]
-                    ? rowData[key].slice(0, 3) +
+                    ? rowData[key].slice(0, 6) +
                       "...." +
                       rowData[key].slice(-10)
                     : ""}
