@@ -86,7 +86,7 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
 						lookup: categoryLookup,
 					};
 				}
-				if (key === 'zoomJwt' || key === 'zoomSecret' || key === 'zoomApi' || key === 'summerCampDescription' || key === "teacherImageLink" ) {
+				if (key === 'zoomJwt' || key === 'zoomSecret' || key === 'zoomApi' || key === 'summerCampDescription' || key === "teacherImageLink" || key == "summerCampImageLink" ) {
 					return {
 						title: humanReadable(key),
 						field: key,
