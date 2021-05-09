@@ -19,7 +19,6 @@ import SaveIcon from "@material-ui/icons/Save";
 import { makeStyles } from "@material-ui/core/styles";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import moment from "moment";
-
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import Axios from "axios";
@@ -33,7 +32,12 @@ import {
 } from "@material-ui/pickers";
 import { Redirect, useParams, useLocation } from "react-router-dom";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
+import { Editor } from 'react-draft-wysiwyg';
+import { EditorState, convertToRaw, ContentState } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from "html-to-draftjs";
 
+const isImageUrl = require('is-image-url');
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
@@ -100,6 +104,12 @@ const EditSchedule = () => {
   const [isZoomMeeting, setIsZoomMeeting] = useState(true);
   const [isSummerCampClass, setIsSummerCampClass] = useState(false);
   const [summerCampAmount, setSummerCampAmount] = useState(0);
+	const [summerCampTitle, setSummerCampTitle] = useState('');
+	const [summerCampDescription, setSummerCampDescription] = useState('');
+	const [summerCampSchedule, setSummerCampSchedule] = useState( EditorState.createEmpty());
+	const [summerCampImage, setSummerCampImage] = useState('');
+	const [summerCampStudentsLimit, setSummerCampStudentsLimit] = useState(0);
+
 
   const { id } = useParams();
 
@@ -187,6 +197,11 @@ const EditSchedule = () => {
         isSummerCampClass,
         summerCampAmount,
         isZoomMeeting: zoomMeetingOrNot,
+        summerCampTitle,
+        summerCampDescription,
+        summerCampSchedule,
+        summerCampImage,
+        summerCampStudentsLimit,
         slots: {
           monday,
           tuesday,
@@ -198,6 +213,15 @@ const EditSchedule = () => {
         },
       } = schedule.data.result;
 
+      if(summerCampSchedule){
+        const contentBlock = htmlToDraft(summerCampSchedule);
+        if(contentBlock){
+          const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+          const editorStateValue = EditorState.createWithContent(contentState);
+          setSummerCampSchedule(editorStateValue)
+        }
+      }
+
       setInputTeacher(teacher);
       setClassName(className);
       setPrevTeacher(teacher);
@@ -207,6 +231,10 @@ const EditSchedule = () => {
       setOneToOne(OneToOne);
       setIsSummerCampClass(isSummerCampClass);
       setSummerCampAmount(summerCampAmount);
+      setSummerCampImage(summerCampImage);
+      setSummerCampDescription(summerCampDescription);
+      setSummerCampTitle(summerCampTitle);
+      setSummerCampStudentsLimit(summerCampStudentsLimit)
       setIsZoomMeeting(zoomMeetingOrNot);
       setSubjectNameId(subject || "");
       setSelectedDate(
@@ -216,7 +244,6 @@ const EditSchedule = () => {
             }`
           : new Date()
       );
-      console.log(students);
       setPersonName(students);
       setTimeSlotState([
         ...monday,
@@ -283,7 +310,12 @@ const EditSchedule = () => {
         isMeetingLinkChangeNeeded,
         isZoomMeeting,
         summerCampAmount,
-        isSummerCampClass
+        isSummerCampClass,
+        summerCampTitle,
+        summerCampDescription,
+        summerCampSchedule:draftToHtml(convertToRaw(summerCampSchedule.getCurrentContent())),
+        summerCampImage,
+        summerCampStudentsLimit
       };
       try {
         const res = await Axios.post(
@@ -626,33 +658,143 @@ const EditSchedule = () => {
               }
               label="Summer Camp Class"
             />
-            {
-              isSummerCampClass ? (
+            						{isSummerCampClass ? (
+                          <>
+							<div
+								style={{
+									maxWidth: '450px',
+									minWidth: '300px',
+									marginTop: '10px',
+								}}
+							>
+								<FormControl
+									variant="outlined"
+									style={{
+										width: '100%',
+									}}
+								>
+									<TextField
+										fullWidth
+										style={{
+											margin: '10px 0',
+										}}
+										type={'number'}
+										id="outlined-basic"
+										label="Summer Camp Class Amount"
+										variant="outlined"
+										value={summerCampAmount}
+										onChange={(e) => setSummerCampAmount(e.target.value)}
+									/>
+								</FormControl>
                 <FormControl
+									variant="outlined"
+									style={{
+										width: '100%',
+									}}
+								>
+									<TextField
+										fullWidth
+										style={{
+											margin: '10px 0',
+										}}
+										type={'number'}
+										id="outlined-basic"
+										label="Summer Camp Students Limit"
+										variant="outlined"
+										value={summerCampStudentsLimit}
+										onChange={(e) => setSummerCampStudentsLimit(e.target.value)}
+									/>
+								</FormControl>
+                <FormControl
+									variant="outlined"
+									style={{
+										width: '100%',
+									}}
+								>
+									<TextField
+										fullWidth
+										style={{
+											margin: '10px 0',
+										}}
+										id="outlined-basic"
+										label="Summer Camp Image"
+										variant="outlined"
+										value={summerCampImage}
+										onChange={(e) => setSummerCampImage(e.target.value)}
+									/>
+								</FormControl>
+                {
+                  !!summerCampImage && isImageUrl(summerCampImage) ? (
+                    <div
+                      style={{
+                        display:"grid",
+                        placeItems:"center"
+                      }}
+                    >
+                      <h5
+                        style={{
+                          textAlign:"center",
+                          margin:"5px 0"
+                        }}
+                      >Image Preview</h5>
+                      <img src={summerCampImage} style={{
+                        width:"100px",
+                        display:"block",
+                      }} alt="Invalid Image Link" />
+                    </div>
+                  ) : ""
+                }
+								<TextField
+									style={{
+										margin: '10px 0',
+									}}
+									id="title"
+									fullWidth
+									label="Summer Camp Class Title"
+                  value={summerCampTitle}
+                  onChange={(e) => setSummerCampTitle(e.target.value)}
+									multiline
+									rows={4}
+									variant="outlined"
+								/>
+								<TextField
+									style={{
+										margin: '10px 0',
+									}}
+									id="desc"
+									fullWidth
+									label="Summer Camp Class Description"
+                  value={summerCampDescription}
+                  onChange={(e) => setSummerCampDescription(e.target.value)}
+									multiline
+									rows={8}
+									variant="outlined"
+								/>
+							</div>
+              {
+              summerCampSchedule && summerCampSchedule.getImmutable ? (
+                <div
                 style={{
-                  maxWidth: "400px",
-                  minWidth: "300px",
-                  marginTop: "10px",
+                  width: '90vw',
+                  height: '400px',
+                  margin: 'auto',
+                  border: '2px solid grey',
+                  borderRadius: '5px',
                 }}
-                variant="outlined"
               >
-                <TextField
-                  fullWidth
-                  type={"number"}
-                  id="outlined-basic"
-                  label="Summer Camp Class Amount"
-                  variant="outlined"
-                  value={summerCampAmount}
-                  onChange={(e) => setSummerCampAmount(e.target.value)}
-                  style={{
-                    maxWidth: "400px",
-                    minWidth: "300px",
-                    marginTop: "10px",
+                <Editor
+                  editorState={summerCampSchedule}
+                  onEditorStateChange={(e) => {
+                    setSummerCampSchedule(e);
                   }}
                 />
-              </FormControl>
+              </div>
               ) : ""
-            }
+              }
+                          </>
+						) : (
+							''
+						)}
           <FormControlLabel
             control={
               <Switch
@@ -663,6 +805,7 @@ const EditSchedule = () => {
             }
             label="Create new Meeting Link"
           />
+
           <div className={classes.saveButton}>
             {loading ? (
               <CircularProgress />

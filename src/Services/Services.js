@@ -250,3 +250,5 @@ export const getAllCustomers = (select) => axios.get(`${API.main}/admin/get/Cust
 export const updateBoughtClasses = (data) => axios.put(`${API.main}/class-history`,data)
 
 export const getEntireDayStatistics = (day) => axios.get(`${API.main}/customer/stats/${day}`)
+
+export const getSummerCampStudents = () => axios.get(`${API.main}/summercamps/students`)

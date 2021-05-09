@@ -14,6 +14,7 @@ import {
   editCustomer,
   deleteUser,
   getByUserSettings,
+  getSummerCampStudents,
 } from "../../../Services/Services";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -260,7 +261,7 @@ const ColumnFilterDrawer = ({
   </Drawer>
 );
 
-const CrmDetails = () => {
+const CrmDetails = ({ isSummerCampStudents }) => {
   const history = useHistory();
   const { height, width } = useWindowDimensions();
   const classes = useStyles();
@@ -852,7 +853,12 @@ const CrmDetails = () => {
   const fetchData = async () => {
     try {
       let id = isAutheticated()._id;
-      const data = await getByUserSettings(id);
+      let data
+      if(isSummerCampStudents){
+        data = await getSummerCampStudents();
+      } else {
+      data = await getByUserSettings(id);
+      }
       let details = data.data.result;
       setData(details);
       setLoading(false);
@@ -1303,13 +1309,13 @@ const CrmDetails = () => {
               <MTableBodyRow
                 {...props}
                 onDoubleClick={(e) => {
-                  props.actions[6]().onClick(e, props.data);
+                  props.actions[isSummerCampStudents ? 5 : 6]().onClick(e, props.data);
                 }}
               />
             ),
           }}
           editable={{
-            onRowAdd: (newData) => {
+            onRowAdd: isSummerCampStudents ? undefined : (newData) => {
               newData.agentId = isAutheticated().agentId;
               return AddCustomer(newData)
                 .then((fetchedData) => {

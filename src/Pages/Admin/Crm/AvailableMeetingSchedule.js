@@ -20,8 +20,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import { makeStyles } from "@material-ui/core/styles";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import moment from "moment";
-import LinkIcon from "@material-ui/icons/Link";
-
+import { Editor } from 'react-draft-wysiwyg';
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import Axios from "axios";
@@ -34,6 +33,9 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
+import { EditorState, convertToRaw, ContentState } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
 
 let days = [
   "MONDAY",
@@ -44,6 +46,7 @@ let days = [
   "SATURDAY",
   "SUNDAY",
 ];
+const isImageUrl = require('is-image-url');
 
 const useStyles = makeStyles((theme) => ({
   saveButton: {
@@ -69,11 +72,9 @@ const AvailableMeetingSchedule = ({ match }) => {
   const classes = useStyles();
 
   const [selectedDate, setSelectedDate] = React.useState(new Date());
-
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-
   const [personName, setPersonName] = useState([]);
   const [teacher, setInputTeacher] = useState(match.params.teacher);
   const [successOpen, setSuccessOpen] = React.useState(false);
@@ -100,7 +101,11 @@ const AvailableMeetingSchedule = ({ match }) => {
   const [isZoomMeeting, setIsZoomMeeting] = useState(true);
   const [isSummerCampClass, setIsSummerCampClass] = useState(false);
   const [summerCampAmount, setSummerCampAmount] = useState(0);
-
+	const [summerCampTitle, setSummerCampTitle] = useState('');
+	const [summerCampDescription, setSummerCampDescription] = useState('');
+	const [summerCampSchedule, setSummerCampSchedule] = useState(EditorState.createEmpty());
+	const [summerCampImage, setSummerCampImage] = useState('');
+	const [summerCampStudentsLimit, setSummerCampStudentsLimit] = useState('');
 
   const handleDayChange = (event) => {
     setRadioday(event.target.value);
@@ -218,7 +223,12 @@ const AvailableMeetingSchedule = ({ match }) => {
           timeSlotState,
           isZoomMeeting,
           isSummerCampClass,
-          summerCampAmount
+          summerCampAmount,
+					summerCampTitle,
+					summerCampDescription,
+					summerCampImage,
+          summerCampStudentsLimit,
+					summerCampSchedule:draftToHtml(convertToRaw(summerCampSchedule.getCurrentContent())),
         };
         try {
           const res = await Axios.post(
@@ -242,7 +252,12 @@ const AvailableMeetingSchedule = ({ match }) => {
           setTimeSlotState([]);
           setAvailableTimeSlots([]);
           setIsSummerCampClass(false);
-          setSummerCampAmount(0)
+          setSummerCampAmount(0);
+          setSummerCampDescription("");
+          setSummerCampSchedule("");
+          setSummerCampImage("");
+          setSummerCampTitle("");
+          setSummerCampStudentsLimit(0);
         } catch (error) {
           console.error(error.response);
           if (error.response) {
@@ -543,33 +558,140 @@ const AvailableMeetingSchedule = ({ match }) => {
               }
               label="Summer Camp Class"
             />
-            {
-              isSummerCampClass ? (
+						{isSummerCampClass ? (
+              <>
+							<div
+								style={{
+									maxWidth: '450px',
+									minWidth: '300px',
+									marginTop: '10px',
+								}}
+							>
+								<FormControl
+									variant="outlined"
+									style={{
+										width: '100%',
+									}}
+								>
+									<TextField
+										fullWidth
+										style={{
+											margin: '10px 0',
+										}}
+										type={'number'}
+										id="outlined-basic"
+										label="Summer Camp Class Amount"
+										variant="outlined"
+										value={summerCampAmount}
+										onChange={(e) => setSummerCampAmount(e.target.value)}
+									/>
+								</FormControl>
                 <FormControl
-                style={{
-                  maxWidth: "400px",
-                  minWidth: "300px",
-                  marginTop: "10px",
+									variant="outlined"
+									style={{
+										width: '100%',
+									}}
+								>
+									<TextField
+										fullWidth
+										style={{
+											margin: '10px 0',
+										}}
+										type={'number'}
+										id="outlined-basic"
+										label="Summer Camp Students Limit"
+										variant="outlined"
+										value={summerCampStudentsLimit}
+										onChange={(e) => setSummerCampStudentsLimit(e.target.value)}
+									/>
+								</FormControl>
+                <FormControl
+									variant="outlined"
+									style={{
+										width: '100%',
+									}}
+								>
+									<TextField
+										fullWidth
+										style={{
+											margin: '10px 0',
+										}}
+										id="outlined-basic"
+										label="Summer Camp Image"
+										variant="outlined"
+										value={summerCampImage}
+										onChange={(e) => setSummerCampImage(e.target.value)}
+									/>
+								</FormControl>
+                {
+                  !!summerCampImage && isImageUrl(summerCampImage) ? (
+                    <div
+                      style={{
+                        display:"grid",
+                        placeItems:"center"
+                      }}
+                    >
+                      <h5
+                        style={{
+                          textAlign:"center",
+                          margin:"5px 0"
+                        }}
+                      >Image Preview</h5>
+                      <img src={summerCampImage} style={{
+                        width:"100px",
+                        display:"block",
+                      }} alt="Invalid Image Link" />
+                    </div>
+                  ) : ""
+                }
+								<TextField
+									style={{
+										margin: '10px 0',
+									}}
+									id="title"
+									fullWidth
+									label="Summer Camp Class Title"
+                  value={summerCampTitle}
+                  onChange={(e) => setSummerCampTitle(e.target.value)}
+									multiline
+									rows={4}
+									variant="outlined"
+								/>
+								<TextField
+									style={{
+										margin: '10px 0',
+									}}
+									id="desc"
+									fullWidth
+									label="Summer Camp Class Description"
+                  value={summerCampDescription}
+                  onChange={(e) => setSummerCampDescription(e.target.value)}
+									multiline
+									rows={8}
+									variant="outlined"
+								/>
+								
+							</div>
+              <div
+              style={{
+                width: '90vw',
+                height: '400px',
+                margin: 'auto',
+                border: '2px solid grey',
+                borderRadius: '5px',
+              }}
+            >
+              <Editor
+                editorState={summerCampSchedule}
+                onEditorStateChange={(e) => {
+                  setSummerCampSchedule(e);
                 }}
-                variant="outlined"
-              >
-                <TextField
-                  fullWidth
-                  type={"number"}
-                  id="outlined-basic"
-                  label="Summer Camp Class Amount"
-                  variant="outlined"
-                  value={summerCampAmount}
-                  onChange={(e) => setSummerCampAmount(e.target.value)}
-                  style={{
-                    maxWidth: "400px",
-                    minWidth: "300px",
-                    marginTop: "10px",
-                  }}
-                />
-              </FormControl>
-              ) : ""
-            }
+              />
+            </div>
+            </>
+						) : (
+							''
+						)}
           </div>
           <div className={classes.saveButton}>
             {loading ? (
