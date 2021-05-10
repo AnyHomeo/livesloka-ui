@@ -81,7 +81,7 @@ function LeavesTable() {
       field: "cancelledDate",
       type: "datetime",
       render: (rowData) =>
-        moment(rowData.cancelledDate).format("DD-MM-YYYY hh:mm A"),
+        moment(rowData.cancelledDate).format("MMMM Do YYYY, h:mm:ss A"),
     },
   ];
 

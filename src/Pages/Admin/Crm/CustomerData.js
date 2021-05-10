@@ -14,6 +14,7 @@ import {
   editCustomer,
   deleteUser,
   getByUserSettings,
+  getSummerCampStudents,
 } from "../../../Services/Services";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -136,7 +137,13 @@ const fetchDropDown = (index) => {
   getData(names[index])
     .then((data) => {
       data.data.result.forEach((item) => {
-        obj[item.id] = item[status[index]];
+        if (names[index] === "Class Status") {
+          if (item.status === "1") {
+            obj[item.id] = item[status[index]];
+          }
+        } else {
+          obj[item.id] = item[status[index]];
+        }
       });
     })
     .catch((err) => {
@@ -254,7 +261,7 @@ const ColumnFilterDrawer = ({
   </Drawer>
 );
 
-const CrmDetails = () => {
+const CrmDetails = ({ isSummerCampStudents }) => {
   const history = useHistory();
   const { height, width } = useWindowDimensions();
   const classes = useStyles();
@@ -300,7 +307,6 @@ const CrmDetails = () => {
   }
 
   useEffect(() => {
-    console.log(isAutheticated()._id);
     getSettings(isAutheticated()._id).then((data) => {
       let settings;
       if (data.data.result.columns) {
@@ -463,8 +469,6 @@ const CrmDetails = () => {
     if (data.status === 200) {
       setHistoryOpen(true);
     }
-    console.log(data);
-    // console.log(id);
   };
 
   useEffect(() => {
@@ -514,6 +518,7 @@ const CrmDetails = () => {
           hidden: !columnFilters["agentId"].selected,
           cellStyle: { whiteSpace: "nowrap" },
           headerStyle: { whiteSpace: "nowrap" },
+          editable: "never",
         },
         {
           title: "Time Zone",
@@ -848,7 +853,12 @@ const CrmDetails = () => {
   const fetchData = async () => {
     try {
       let id = isAutheticated()._id;
-      const data = await getByUserSettings(id);
+      let data
+      if(isSummerCampStudents){
+        data = await getSummerCampStudents();
+      } else {
+      data = await getByUserSettings(id);
+      }
       let details = data.data.result;
       setData(details);
       setLoading(false);
@@ -1245,7 +1255,7 @@ const CrmDetails = () => {
             searchFieldVariant: "outlined",
             actionsColumnIndex: 0,
             addRowPosition: "first",
-            maxBodyHeight: height,
+            maxBodyHeight: height - 220,
             // grouping: true,
             exportButton: true,
             rowStyle: (rowData) => ({
@@ -1299,13 +1309,14 @@ const CrmDetails = () => {
               <MTableBodyRow
                 {...props}
                 onDoubleClick={(e) => {
-                  props.actions[6]().onClick(e, props.data);
+                  props.actions[isSummerCampStudents ? 5 : 6]().onClick(e, props.data);
                 }}
               />
             ),
           }}
           editable={{
-            onRowAdd: (newData) => {
+            onRowAdd: isSummerCampStudents ? undefined : (newData) => {
+              newData.agentId = isAutheticated().agentId;
               return AddCustomer(newData)
                 .then((fetchedData) => {
                   if (fetchedData.data.status === "OK") {
@@ -1341,6 +1352,8 @@ const CrmDetails = () => {
                 !Object.keys(requestBody).includes("numberOfClassesBought") ||
                 window.confirm("Are you sure in updating Classes paid")
               ) {
+                requestBody.agentId = isAutheticated().agentId;
+                newData.agentId = isAutheticated().agentId;
                 return editCustomer({ ...requestBody, _id: oldData._id })
                   .then((fetchedData) => {
                     if (fetchedData.data.status === "OK") {
@@ -1400,6 +1413,7 @@ const CrmDetails = () => {
       <Dialog
         open={open}
         fullWidth
+        maxWidth={"md"}
         onClose={() => setOpen(false)}
         aria-labelledby="form-dialog-title"
         TransitionComponent={Transition}

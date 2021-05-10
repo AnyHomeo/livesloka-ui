@@ -8,6 +8,7 @@ import {
 } from "../../../Services/Services";
 import { isAutheticated } from "../../../auth";
 import MaterialTable from "material-table";
+import moment from "moment";
 
 class Comments extends React.Component {
   constructor(props) {
@@ -60,12 +61,13 @@ class Comments extends React.Component {
           {
             title: "Agent ID",
             field: "auditUserId",
-            editComponent: (props) => <span>{props.value}</span>,
+            editable:"never"
           },
           {
-            title: "Time Stamp",
+            title: "timeStamp",
             field: "timeStamp",
-            editComponent: (props) => <span>{props.value}</span>,
+            editable:"never",
+            render:(rowData) => moment(rowData.timeStamp).format("MMMM Do YYYY, h:mm:ss a")
           },
         ]}
         editable={{
@@ -74,7 +76,7 @@ class Comments extends React.Component {
               comment: newData.comment,
               commentStatus: 1,
               customerId: this.props.id,
-              timeStamp: this.getDate(),
+              timeStamp: moment().format(),
               auditUserId: isAutheticated().userId,
             })
               .then((fetchedData) => {
@@ -86,7 +88,7 @@ class Comments extends React.Component {
               });
           },
           onRowUpdate: (newData, oldData) =>
-            updateComment(newData)
+            updateComment({...newData,timeStamp:moment().format()})
               .then((fetchedData) => {
                 this.fetchData();
                 return fetchedData;

@@ -19,7 +19,6 @@ import SaveIcon from "@material-ui/icons/Save";
 import { makeStyles } from "@material-ui/core/styles";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import moment from "moment";
-
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import Axios from "axios";
@@ -31,8 +30,14 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
-import { Redirect, useParams,useLocation } from "react-router-dom";
+import { Redirect, useParams, useLocation } from "react-router-dom";
+import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
+import { Editor } from 'react-draft-wysiwyg';
+import { EditorState, convertToRaw, ContentState } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from "html-to-draftjs";
 
+const isImageUrl = require('is-image-url');
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
@@ -75,8 +80,6 @@ const EditSchedule = () => {
   const [teacher, setInputTeacher] = useState("");
   const [successOpen, setSuccessOpen] = useState(false);
   const [demo, setDemo] = useState(false);
-  const [onetoone, setonetoone] = useState(false);
-  const [onetomany, setonetomany] = useState(false);
   const [radioday, setRadioday] = useState("");
   const [teacherName, setTeacherName] = useState([]);
   const [studentName, setStudentName] = useState([]);
@@ -97,6 +100,16 @@ const EditSchedule = () => {
   const [isMeetingLinkChangeNeeded, setIsMeetingLinkChangeNeeded] = useState(
     false
   );
+  const [oneToOne, setOneToOne] = useState(true);
+  const [isZoomMeeting, setIsZoomMeeting] = useState(true);
+  const [isSummerCampClass, setIsSummerCampClass] = useState(false);
+  const [summerCampAmount, setSummerCampAmount] = useState(0);
+	const [summerCampTitle, setSummerCampTitle] = useState('');
+	const [summerCampDescription, setSummerCampDescription] = useState('');
+	const [summerCampSchedule, setSummerCampSchedule] = useState( EditorState.createEmpty());
+	const [summerCampImage, setSummerCampImage] = useState('');
+	const [summerCampStudentsLimit, setSummerCampStudentsLimit] = useState(0);
+
 
   const { id } = useParams();
 
@@ -142,7 +155,6 @@ const EditSchedule = () => {
     }
   }, [teacher, prevTeacher, prevSlots]);
 
-  // Get teachers
   const getTeachers = async () => {
     const teacherNames = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/teacher?params=id,TeacherName`
@@ -150,7 +162,6 @@ const EditSchedule = () => {
     setTeacherName(teacherNames.data.result);
   };
 
-  // Get Students
   const getStudents = async () => {
     const studentNames = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/customers/all?params=firstName,lastName`
@@ -173,7 +184,6 @@ const EditSchedule = () => {
       const schedule = await Axios.get(
         `${process.env.REACT_APP_API_KEY}/schedule/${id}`
       );
-      console.log(schedule);
       const {
         teacher,
         className,
@@ -181,10 +191,17 @@ const EditSchedule = () => {
         meetingAccount,
         demo,
         OneToOne,
-        oneToMany,
         subject,
         startDate,
         students,
+        isSummerCampClass,
+        summerCampAmount,
+        isZoomMeeting: zoomMeetingOrNot,
+        summerCampTitle,
+        summerCampDescription,
+        summerCampSchedule,
+        summerCampImage,
+        summerCampStudentsLimit,
         slots: {
           monday,
           tuesday,
@@ -196,14 +213,29 @@ const EditSchedule = () => {
         },
       } = schedule.data.result;
 
+      if(summerCampSchedule){
+        const contentBlock = htmlToDraft(summerCampSchedule);
+        if(contentBlock){
+          const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+          const editorStateValue = EditorState.createWithContent(contentState);
+          setSummerCampSchedule(editorStateValue)
+        }
+      }
+
       setInputTeacher(teacher);
       setClassName(className);
       setPrevTeacher(teacher);
       setZoomLink(meetingLink || "");
       setZoomEmail(meetingAccount || "");
       setDemo(demo);
-      setonetoone(OneToOne);
-      setonetomany(oneToMany);
+      setOneToOne(OneToOne);
+      setIsSummerCampClass(isSummerCampClass);
+      setSummerCampAmount(summerCampAmount);
+      setSummerCampImage(summerCampImage);
+      setSummerCampDescription(summerCampDescription);
+      setSummerCampTitle(summerCampTitle);
+      setSummerCampStudentsLimit(summerCampStudentsLimit)
+      setIsZoomMeeting(zoomMeetingOrNot);
       setSubjectNameId(subject || "");
       setSelectedDate(
         startDate
@@ -242,6 +274,7 @@ const EditSchedule = () => {
     );
     setSubjectNames(subjectName.data.result);
   };
+
   const submitForm = async (e) => {
     e.preventDefault();
     console.log(timeSlotState);
@@ -255,6 +288,13 @@ const EditSchedule = () => {
           .filter((slot) => slot.startsWith(day))
           .map((slot) => slot.split("!@#$%^&*($%^")[0]);
       });
+      if (!teacher) {
+        setAlertColor("error");
+        setSuccessOpen(true);
+        setAlert("Please Select a Teacher");
+        setLoading(false);
+        return;
+      }
       formData = {
         ...formData,
         className: ClassName,
@@ -263,11 +303,19 @@ const EditSchedule = () => {
         teacher: teacher,
         students: personName.map((student) => student._id),
         demo: demo,
-        OneToOne: onetoone,
-        oneToMany: onetomany,
+        OneToOne: oneToOne,
+        oneToMany: !oneToOne,
         subject: subjectNameId,
         startDate: moment(selectedDate).format("DD-MM-YYYY"),
         isMeetingLinkChangeNeeded,
+        isZoomMeeting,
+        summerCampAmount,
+        isSummerCampClass,
+        summerCampTitle,
+        summerCampDescription,
+        summerCampSchedule:draftToHtml(convertToRaw(summerCampSchedule.getCurrentContent())),
+        summerCampImage,
+        summerCampStudentsLimit
       };
       try {
         const res = await Axios.post(
@@ -287,6 +335,8 @@ const EditSchedule = () => {
         setRadioday("");
         setClassName("");
         setTimeSlotState([]);
+        setIsZoomMeeting("");
+        setOneToOne("");
         setTimeout(() => {
           setRedirect(true);
         }, 2000);
@@ -307,7 +357,9 @@ const EditSchedule = () => {
   };
 
   if (redirect) {
-    return <Redirect to={query.get("goto") ?  query.get("goto") : "/scheduler"} />;
+    return (
+      <Redirect to={query.get("goto") ? query.get("goto") : "/scheduler"} />
+    );
   }
 
   return (
@@ -396,7 +448,6 @@ const EditSchedule = () => {
               />
             </div>
           </Grid>
-
           <Grid item xs={12} md={4} />
         </Grid>
         <div
@@ -540,32 +591,48 @@ const EditSchedule = () => {
                 marginTop: "10px",
               }}
             />
-            <div style={{ display: "flex", flexDirection: "row" }}>
-              <FormControlLabel
-                style={{ marginTop: "20px" }}
-                control={
-                  <Checkbox
-                    checked={onetoone}
-                    onChange={(event) => setonetoone(event.target.checked)}
-                    name="OneToOne"
-                    color="primary"
-                  />
-                }
-                label="One to one"
-              />
-              <FormControlLabel
-                style={{ marginTop: "20px" }}
-                control={
-                  <Checkbox
-                    checked={onetomany}
-                    onChange={(event) => setonetomany(event.target.checked)}
-                    name="OneToMany"
-                    color="primary"
-                  />
-                }
-                label="One to many"
-              />
-            </div>
+            <ToggleButtonGroup
+              value={isZoomMeeting}
+              exclusive
+              style={{
+                margin: "20px 0",
+              }}
+              onChange={(e, v) => setIsZoomMeeting(v)}
+              aria-label="Zoom meeting or not"
+            >
+              <ToggleButton value={true} aria-label="left aligned">
+                <img
+                  style={{ width: "30px", height: "30px" }}
+                  src={require("../../../Images/ZOOM LOGO.png")}
+                />
+              </ToggleButton>
+              <ToggleButton value={false} aria-label="centered">
+                <img
+                  style={{ width: "30px", height: "30px" }}
+                  src={require("../../../Images/whereby.png")}
+                />
+              </ToggleButton>
+            </ToggleButtonGroup>
+            <FormControl component="fieldset">
+              <RadioGroup
+                row
+                aria-label="position"
+                onChange={() => setOneToOne((prev) => !prev)}
+                name="position"
+                value={oneToOne}
+              >
+                <FormControlLabel
+                  value={true}
+                  control={<Radio color="primary" />}
+                  label="One to One"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={<Radio color="primary" />}
+                  label="One to Many"
+                />
+              </RadioGroup>
+            </FormControl>
             <FormControlLabel
               style={{ marginTop: "20px" }}
               control={
@@ -580,6 +647,155 @@ const EditSchedule = () => {
             />
           </div>
           <FormControlLabel
+              style={{ marginTop: "20px" }}
+              control={
+                <Checkbox
+                  checked={isSummerCampClass}
+                  onChange={(event) => setIsSummerCampClass(event.target.checked)}
+                  name="Demo"
+                  color="primary"
+                />
+              }
+              label="Summer Camp Class"
+            />
+            						{isSummerCampClass ? (
+                          <>
+							<div
+								style={{
+									maxWidth: '450px',
+									minWidth: '300px',
+									marginTop: '10px',
+								}}
+							>
+								<FormControl
+									variant="outlined"
+									style={{
+										width: '100%',
+									}}
+								>
+									<TextField
+										fullWidth
+										style={{
+											margin: '10px 0',
+										}}
+										type={'number'}
+										id="outlined-basic"
+										label="Summer Camp Class Amount"
+										variant="outlined"
+										value={summerCampAmount}
+										onChange={(e) => setSummerCampAmount(e.target.value)}
+									/>
+								</FormControl>
+                <FormControl
+									variant="outlined"
+									style={{
+										width: '100%',
+									}}
+								>
+									<TextField
+										fullWidth
+										style={{
+											margin: '10px 0',
+										}}
+										type={'number'}
+										id="outlined-basic"
+										label="Summer Camp Students Limit"
+										variant="outlined"
+										value={summerCampStudentsLimit}
+										onChange={(e) => setSummerCampStudentsLimit(e.target.value)}
+									/>
+								</FormControl>
+                <FormControl
+									variant="outlined"
+									style={{
+										width: '100%',
+									}}
+								>
+									<TextField
+										fullWidth
+										style={{
+											margin: '10px 0',
+										}}
+										id="outlined-basic"
+										label="Summer Camp Image"
+										variant="outlined"
+										value={summerCampImage}
+										onChange={(e) => setSummerCampImage(e.target.value)}
+									/>
+								</FormControl>
+                {
+                  !!summerCampImage && isImageUrl(summerCampImage) ? (
+                    <div
+                      style={{
+                        display:"grid",
+                        placeItems:"center"
+                      }}
+                    >
+                      <h5
+                        style={{
+                          textAlign:"center",
+                          margin:"5px 0"
+                        }}
+                      >Image Preview</h5>
+                      <img src={summerCampImage} style={{
+                        width:"100px",
+                        display:"block",
+                      }} alt="Invalid Image Link" />
+                    </div>
+                  ) : ""
+                }
+								<TextField
+									style={{
+										margin: '10px 0',
+									}}
+									id="title"
+									fullWidth
+									label="Summer Camp Class Title"
+                  value={summerCampTitle}
+                  onChange={(e) => setSummerCampTitle(e.target.value)}
+									multiline
+									rows={4}
+									variant="outlined"
+								/>
+								<TextField
+									style={{
+										margin: '10px 0',
+									}}
+									id="desc"
+									fullWidth
+									label="Summer Camp Class Description"
+                  value={summerCampDescription}
+                  onChange={(e) => setSummerCampDescription(e.target.value)}
+									multiline
+									rows={8}
+									variant="outlined"
+								/>
+							</div>
+              {
+              summerCampSchedule && summerCampSchedule.getImmutable ? (
+                <div
+                style={{
+                  width: '90vw',
+                  height: '400px',
+                  margin: 'auto',
+                  border: '2px solid grey',
+                  borderRadius: '5px',
+                }}
+              >
+                <Editor
+                  editorState={summerCampSchedule}
+                  onEditorStateChange={(e) => {
+                    setSummerCampSchedule(e);
+                  }}
+                />
+              </div>
+              ) : ""
+              }
+                          </>
+						) : (
+							''
+						)}
+          <FormControlLabel
             control={
               <Switch
                 checked={isMeetingLinkChangeNeeded}
@@ -589,6 +805,7 @@ const EditSchedule = () => {
             }
             label="Create new Meeting Link"
           />
+
           <div className={classes.saveButton}>
             {loading ? (
               <CircularProgress />

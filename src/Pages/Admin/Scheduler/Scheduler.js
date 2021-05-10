@@ -123,16 +123,12 @@ const hours = [
   "06:30 PM",
   "07:00 PM",
   "07:30 PM",
-
   "08:00 PM",
   "08:30 PM",
-
   "09:00 PM",
   "09:30 PM",
-
   "10:00 PM",
   "10:30 PM",
-
   "11:00 PM",
   "11:30 PM",
 ];
@@ -346,7 +342,6 @@ function Scheduler() {
                             isClassTemperarilyCancelled: !selectedSchedule.isClassTemperarilyCancelled,
                           })
                             .then((response) => {
-                              console.log(response);
                               getAllSchedulesData();
                             })
                             .catch((error) => {
@@ -396,7 +391,6 @@ function Scheduler() {
                               message: selectedSchedule.message,
                             })
                               .then((response) => {
-                                console.log(response);
                                 getAllSchedulesData();
                                 setSuccess(true);
                                 setResponse(response.data.message);

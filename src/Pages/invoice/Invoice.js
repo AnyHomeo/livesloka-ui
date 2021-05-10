@@ -97,11 +97,9 @@ class Invoice extends React.Component {
 
     this.setState(change);
   }
-  submit() {
-    addInvoice(this.state.invoice)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
-
+  async submit() {
+    await addInvoice(this.state.invoice)
+      
     this.props.history.push({
       pathname: "/invoice-generator",
       state: this.state.invoice,

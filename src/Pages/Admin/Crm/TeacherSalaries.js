@@ -58,17 +58,14 @@ function TeacherSalaries() {
       `${process.env.REACT_APP_API_KEY}/teacher?params=id,TeacherName`
     );
     setTeacherName(teacherNames.data.result);
-    console.log(teacherNames.data);
   };
 
   const submitForm = async (e) => {
     // setLoading(true);
     e.preventDefault();
-    // console.log(teacherNameFullObject)
     const teacherAtt = await Axios.get(
       `${process.env.REACT_APP_API_KEY}/teacher/getTeacherAttendence/${teacherNameFullObject.id}`
     );
-    console.log(teacherAtt.data);
   };
 
   return (

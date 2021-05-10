@@ -62,12 +62,14 @@ function UserPasswordReset() {
                 }`
               : name.customerId && name.customerId.email
               ? name.customerId.email
-              : "no data available for this user"
+              : name.userId
           }
           onChange={(event, value) => {
             console.log(event, value);
-            setResponse("");
-            setStudentId(value._id);
+            if(value){
+              setResponse("");
+              setStudentId(value._id);
+            }
           }}
           renderInput={(params) => (
             <TextField

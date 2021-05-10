@@ -25,6 +25,7 @@ import {
   BarChart2,
   UserMinus,
   UserCheck,
+  Sun,
 } from "react-feather";
 import NavItem from "./NavItem";
 import useWindowDimensions from "../../Components/useWindowDimensions";
@@ -72,7 +73,11 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       icon: FileText,
       title: "Customers Data",
     },
-
+    {
+      href: "/summercamps",
+      icon: Sun,
+      title: "Summer Camp Data",
+    },
     {
       href: "/add-fields",
       icon: Edit,
