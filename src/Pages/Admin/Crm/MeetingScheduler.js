@@ -635,7 +635,7 @@ const MeetingScheduler = () => {
 <div
 									style={{
 										width: '90vw',
-										height: '400px',
+										minHeight: '400px',
 										margin: 'auto',
 										border: '2px solid grey',
 										borderRadius: '5px',
