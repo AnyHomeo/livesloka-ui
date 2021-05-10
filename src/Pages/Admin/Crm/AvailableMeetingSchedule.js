@@ -701,7 +701,7 @@ const AvailableMeetingSchedule = ({ match }) => {
                           <img
                             src={URL.createObjectURL(summerCampImage[0])}
                             alt=""
-                            style={{ height: "100%", width: "100%" }}
+                            style={{ height: "100%", width: "100%",objectFit:"cover" }}
                           />
                         ) : (
                           <>

@@ -243,6 +243,7 @@ const MeetingScheduler = () => {
                 ),
                 summerCampImage: url,
                 summerCampStudentsLimit,
+                summerCampClassNumberOfDays
               };
 
               try {
@@ -272,6 +273,7 @@ const MeetingScheduler = () => {
                 setSummerCampImage("");
                 setSummerCampTitle("");
                 setSummerCampStudentsLimit(0);
+                setSummerCampClassNumberOfDays(0)
               } catch (error) {
                 console.error(error.response);
                 if (error.response) {
@@ -697,7 +699,7 @@ const MeetingScheduler = () => {
                           <img
                             src={URL.createObjectURL(summerCampImage[0])}
                             alt=""
-                            style={{ height: "100%", width: "100%" }}
+                            style={{ height: "100%", width: "100%",objectFit:"cover" }}
                           />
                         ) : (
                           <>

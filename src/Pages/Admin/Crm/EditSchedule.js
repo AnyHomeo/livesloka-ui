@@ -303,6 +303,7 @@ const EditSchedule = () => {
               ),
               summerCampImage: url,
               summerCampStudentsLimit,
+              summerCampClassNumberOfDays
             };
             try {
               const res = await Axios.post(
@@ -753,7 +754,7 @@ const EditSchedule = () => {
 								<img
                           src={summerCampImage}
                           alt=""
-                          style={{ height: "300px", width: "100%",margin:"20px 0" }}
+                          style={{ height: "300px", width: "100%",margin:"20px 0",objectFit:"cover" }}
                         />
 							) : ""
 						}
@@ -773,7 +774,7 @@ const EditSchedule = () => {
                         <img
                           src={URL.createObjectURL(summerCampImage[0])}
                           alt=""
-                          style={{ height: "100%", width: "100%" }}
+                          style={{ height: "100%", width: "100%",objectFit:"cover" }}
                         />
                       ) : (
                         <>
