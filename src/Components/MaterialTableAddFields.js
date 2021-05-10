@@ -75,7 +75,7 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
   const [success, setSuccess] = useState(false);
   const [response, setResponse] = useState("");
   const { height } = useWindowDimensions();
-  const [imageLoading, setImageLoading] = useState(true);
+  const [imageLoading, setImageLoading] = useState(false);
   useEffect(() => {
     getData(name).then((response) => {
       setData(response.data.result);
@@ -85,8 +85,7 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
   }, []);
 
   const handleFileUpload = async (e, props) => {
-    setImageLoading(false);
-
+    setImageLoading(true);
     if (e.target.files) {
       let storageRef = firebase
         .storage()
@@ -95,12 +94,16 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
 
       storageRef.getDownloadURL().then(async (url) => {
         if (url) {
+          setImageLoading(false)
           return props.onChange(url);
+        } else {
+          setImageLoading(false)
         }
+      }).catch(err =>{
+        console.log(err)
+        setImageLoading(false)
       });
     }
-
-    setImageLoading(true);
   };
   useEffect(() => {
     if (data.length) {
@@ -211,7 +214,8 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
                 <input
                   type="file"
                   onChange={(e) => handleFileUpload(e, props)}
-                />
+                  style={{width:"200px"}}
+                />                
               ),
             };
           } else {
@@ -247,7 +251,7 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
       <MaterialTable
         title={`${name} Table`}
         columns={column}
-        isLoading={loading}
+        isLoading={loading || imageLoading}
         options={{
           paging: false,
           maxBodyHeight: height - 230,

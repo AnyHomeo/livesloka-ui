@@ -793,6 +793,13 @@ const CrmDetails = ({ isSummerCampStudents }) => {
           field: "scheduleDescription",
           hidden: !columnFilters["scheduleDescription"].selected,
           headerStyle: { whiteSpace: "nowrap" },
+          render:(row) => {
+            return (<div>
+              {isSummerCampStudents ? (
+                row.scheduleDescription.slice(0,40) + "..."
+              ) : row.scheduleDescription }
+            </div>)
+          }
         },
         {
           title: "Category",
