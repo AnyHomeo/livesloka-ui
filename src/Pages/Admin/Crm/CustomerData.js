@@ -796,7 +796,7 @@ const CrmDetails = ({ isSummerCampStudents }) => {
           render:(row) => {
             return (<div>
               {isSummerCampStudents ? (
-                row.scheduleDescription.slice(0,40) + "..."
+                row.scheduleDescription ? row.scheduleDescription.slice(0,40) + "..." : ""
               ) : row.scheduleDescription }
             </div>)
           }
