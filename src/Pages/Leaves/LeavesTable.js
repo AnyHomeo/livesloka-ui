@@ -19,7 +19,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
-import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
+import { MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Axios from "axios";
@@ -175,7 +175,7 @@ function LeavesTable() {
             )}
           />
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <DatePicker
+            <DateTimePicker
               margin="normal"
               fullWidth
               disablePast

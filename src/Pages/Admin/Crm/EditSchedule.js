@@ -252,7 +252,7 @@ const EditSchedule = () => {
 				return;
 			}
 			let url = summerCampImage;
-			if (typeof summerCampImage !== "string") {
+			if (isSummerCampClass && typeof summerCampImage !== 'string') {
 				let storageRef = firebase.storage().ref(`${summerCampImage[0].type}/${summerCampImage[0].name}`);
 				await storageRef.put(summerCampImage[0]);
 				url = await storageRef.getDownloadURL();
@@ -698,7 +698,6 @@ const EditSchedule = () => {
 											src={summerCampImage}
 											alt=""
 											style={{
-												height: '300px',
 												width: '100%',
 												margin: '20px 0',
 												objectFit: 'cover',
@@ -709,7 +708,7 @@ const EditSchedule = () => {
 									)}
 									<div
 										style={{
-											height: '250px',
+											minHeight: '250px',
 											backgroundColor: '#F5F5F5',
 											display: 'flex',
 											justifyContent: 'center',
@@ -717,41 +716,38 @@ const EditSchedule = () => {
 											flexDirection: 'column',
 										}}
 									>
-										{
-											// eslint-disable-next-line
-											summerCampImage &&
-											summerCampImage.length > 0 === true &&
-											typeof summerCampImage !== 'string' ? (
-												<img
-													src={URL.createObjectURL(summerCampImage[0])}
-													alt=""
-													style={{ height: '100%', width: '100%', objectFit: 'cover' }}
-												/>
-											) : (
-												<>
-													<IconButton variant="contained" component="label">
-														<i
-															style={{
-																color: '#C4C4C4',
-																fontSize: 30,
-																marginBottom: 5,
-															}}
-															class="fa fa-camera"
-														></i>
-														<input
-															multiple
-															accept="image/x-png,image/jpeg"
-															onChange={(e) => setSummerCampImage(e.target.files)}
-															type="file"
-															hidden
-														/>
-													</IconButton>
-													<p style={{ color: '#C4C4C4', fontWeight: 'bold' }}>
-														Choose an Image to Update existing Image
-													</p>
-												</>
-											)
-										}
+										{summerCampImage &&
+										summerCampImage.length > 0 === true &&
+										typeof summerCampImage !== 'string' ? (
+											<img
+												src={URL.createObjectURL(summerCampImage[0])}
+												alt=""
+												style={{ height: '100%', width: '100%', objectFit: 'cover' }}
+											/>
+										) : (
+											<>
+												<IconButton variant="contained" component="label">
+													<i
+														style={{
+															color: '#C4C4C4',
+															fontSize: 30,
+															marginBottom: 5,
+														}}
+														class="fa fa-camera"
+													></i>
+													<input
+														multiple
+														accept="image/x-png,image/jpeg"
+														onChange={(e) => setSummerCampImage(e.target.files)}
+														type="file"
+														hidden
+													/>
+												</IconButton>
+												<p style={{ color: '#C4C4C4', fontWeight: 'bold' }}>
+													Choose an Image to Update existing Image
+												</p>
+											</>
+										)}
 									</div>
 									<p
 										style={{
