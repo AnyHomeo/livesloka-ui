@@ -99,6 +99,8 @@ const MeetingScheduler = () => {
 	const [summerCampSchedule, setSummerCampSchedule] = useState(EditorState.createEmpty());
 	const [summerCampImage, setSummerCampImage] = useState('');
 	const [summerCampStudentsLimit, setSummerCampStudentsLimit] = useState('');
+	const [summerCampClassNumberOfDays, setSummerCampClassNumberOfDays] = useState(0);
+
 
 	const handleDayChange = (event) => {
 		setRadioday(event.target.value);
@@ -212,6 +214,7 @@ const MeetingScheduler = () => {
 					summerCampSchedule:draftToHtml(convertToRaw(summerCampSchedule.getCurrentContent())),
 					summerCampImage,
 					summerCampStudentsLimit,
+					summerCampClassNumberOfDays
 				};
 				try {
 					const res = await Axios.post(`${process.env.REACT_APP_API_KEY}/schedule`, formData);
@@ -553,10 +556,29 @@ const MeetingScheduler = () => {
 											}}
 											type={'number'}
 											id="outlined-basic"
-											label="Summer Camp Class Amount"
+											label="Summer Camp Class Limit"
 											variant="outlined"
 											value={summerCampStudentsLimit}
 											onChange={(e) => setSummerCampStudentsLimit(e.target.value)}
+										/>
+									</FormControl>
+									<FormControl
+										variant="outlined"
+										style={{
+											width: '100%',
+										}}
+									>
+										<TextField
+											fullWidth
+											style={{
+												margin: '10px 0',
+											}}
+											type={'number'}
+											id="outlined-basic"
+											label="Summer Camp Days"
+											variant="outlined"
+											value={summerCampClassNumberOfDays}
+											onChange={(e) => setSummerCampClassNumberOfDays(e.target.value)}
 										/>
 									</FormControl>
 									<FormControl

@@ -96,6 +96,7 @@ const EditSchedule = () => {
 	const [summerCampSchedule, setSummerCampSchedule] = useState(EditorState.createEmpty());
 	const [summerCampImage, setSummerCampImage] = useState('');
 	const [summerCampStudentsLimit, setSummerCampStudentsLimit] = useState(0);
+	const [summerCampClassNumberOfDays, setSummerCampClassNumberOfDays,] = useState(0);
 
 	const { id } = useParams();
 
@@ -184,6 +185,7 @@ const EditSchedule = () => {
 				summerCampSchedule,
 				summerCampImage,
 				summerCampStudentsLimit,
+				summerCampClassNumberOfDays,
 				slots: { monday, tuesday, wednesday, thursday, friday, saturday, sunday },
 			} = schedule.data.result;
 
@@ -211,6 +213,7 @@ const EditSchedule = () => {
 			setSummerCampStudentsLimit(summerCampStudentsLimit);
 			setIsZoomMeeting(zoomMeetingOrNot);
 			setSubjectNameId(subject || '');
+			setSummerCampClassNumberOfDays(summerCampClassNumberOfDays)
 			setSelectedDate(
 				startDate
 					? `${startDate.split('-')[1]}-${startDate.split('-')[0]}-${startDate.split('-')[2]}`
@@ -270,6 +273,7 @@ const EditSchedule = () => {
 				summerCampSchedule: draftToHtml(convertToRaw(summerCampSchedule.getCurrentContent())),
 				summerCampImage,
 				summerCampStudentsLimit,
+				summerCampClassNumberOfDays
 			};
 			try {
 				const res = await Axios.post(`${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`, formData);
@@ -632,6 +636,25 @@ const EditSchedule = () => {
 										onChange={(e) => setSummerCampStudentsLimit(e.target.value)}
 									/>
 								</FormControl>
+								<FormControl
+										variant="outlined"
+										style={{
+											width: '100%',
+										}}
+									>
+										<TextField
+											fullWidth
+											style={{
+												margin: '10px 0',
+											}}
+											type={'number'}
+											id="outlined-basic"
+											label="Summer Camp Days"
+											variant="outlined"
+											value={summerCampClassNumberOfDays}
+											onChange={(e) => setSummerCampClassNumberOfDays(e.target.value)}
+										/>
+									</FormControl>
 								<FormControl
 									variant="outlined"
 									style={{
