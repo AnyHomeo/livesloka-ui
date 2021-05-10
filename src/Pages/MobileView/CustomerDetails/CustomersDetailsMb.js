@@ -244,7 +244,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 classStatusDropDown.map((data) => {
                   if (data.id === customersEditData.classStatusId) {
@@ -268,6 +268,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "white",
                 borderRadius: 0,
                 border: "1px solid #2980b9",
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}> Entry Date:</p>
@@ -283,6 +284,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "black",
                 border: "1px solid #2980b9",
                 borderRadius: 0,
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>
@@ -290,7 +292,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 copyToClipboard(customersEditData.createdAt);
               }}
@@ -310,6 +312,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "white",
                 borderRadius: 0,
                 border: "1px solid #2980b9",
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}> Timezone:</p>
@@ -326,6 +329,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "black",
                 border: "1px solid #2980b9",
                 borderRadius: 0,
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>
@@ -338,7 +342,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 timezoneDropdown.map((data) => {
                   if (data.id === customersEditData.timeZoneId) {
@@ -363,6 +367,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "white",
                 borderRadius: 0,
                 border: "1px solid #2980b9",
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}> Firstname:</p>
@@ -378,6 +383,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "black",
                 border: "1px solid #2980b9",
                 borderRadius: 0,
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>
@@ -385,7 +391,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 copyToClipboard(customersEditData.firstName);
               }}
@@ -406,6 +412,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "white",
                 borderRadius: 0,
                 border: "1px solid #2980b9",
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}> Lastname:</p>
@@ -421,6 +428,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "black",
                 border: "1px solid #2980b9",
                 borderRadius: 0,
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>
@@ -428,7 +436,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 copyToClipboard(customersEditData.lastName);
               }}
@@ -449,6 +457,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "white",
                 borderRadius: 0,
                 border: "1px solid #2980b9",
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold", fontSize: 14 }}>
@@ -467,6 +476,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "black",
                 border: "1px solid #2980b9",
                 borderRadius: 0,
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>
@@ -474,7 +484,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 copyToClipboard(customersEditData.noOfClasses);
               }}
@@ -495,6 +505,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "white",
                 borderRadius: 0,
                 border: "1px solid #2980b9",
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>
@@ -514,6 +525,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "black",
                 border: "1px solid #2980b9",
                 borderRadius: 0,
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>
@@ -521,7 +533,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 copyToClipboard(customersEditData.numberOfClassesBought);
               }}
@@ -542,6 +554,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "white",
                 borderRadius: 0,
                 border: "1px solid #2980b9",
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>Gender: </p>
@@ -558,6 +571,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "black",
                 border: "1px solid #2980b9",
                 borderRadius: 0,
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>
@@ -565,7 +579,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 copyToClipboard(customersEditData.gender);
               }}
@@ -584,6 +598,8 @@ const CustomersDetailsMb = ({ location }) => {
                 marginBottom: 10,
                 backgroundColor: "#2980b9",
                 color: "white",
+                marginTop: -5,
+
                 borderRadius: 0,
                 border: "1px solid #2980b9",
               }}
@@ -602,6 +618,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "black",
                 border: "1px solid #2980b9",
                 borderRadius: 0,
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>
@@ -614,7 +631,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 {
                   classesIdDropdown &&
@@ -642,6 +659,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "white",
                 borderRadius: 0,
                 border: "1px solid #2980b9",
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>Subject:</p>
@@ -658,6 +676,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "black",
                 border: "1px solid #2980b9",
                 borderRadius: 0,
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>
@@ -670,7 +689,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 {
                   subjectDropdown &&
@@ -698,6 +717,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "white",
                 borderRadius: 0,
                 border: "1px solid #2980b9",
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>Email:</p>
@@ -714,6 +734,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "black",
                 border: "1px solid #2980b9",
                 borderRadius: 0,
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>
@@ -721,7 +742,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 copyToClipboard(customersEditData.email);
               }}
@@ -742,6 +763,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "white",
                 borderRadius: 0,
                 border: "1px solid #2980b9",
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold", fontSize: 14 }}>
@@ -760,6 +782,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "black",
                 border: "1px solid #2980b9",
                 borderRadius: 0,
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>
@@ -767,7 +790,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 copyToClipboard(customersEditData.whatsAppnumber);
               }}
@@ -788,6 +811,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "white",
                 borderRadius: 0,
                 border: "1px solid #2980b9",
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>Teacher:</p>
@@ -803,6 +827,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "black",
                 border: "1px solid #2980b9",
                 borderRadius: 0,
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>
@@ -815,7 +840,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 {
                   teacherDropdown &&
@@ -843,6 +868,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "white",
                 borderRadius: 0,
                 border: "1px solid #2980b9",
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>Country:</p>
@@ -859,6 +885,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "black",
                 border: "1px solid #2980b9",
                 borderRadius: 0,
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>
@@ -871,7 +898,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 {
                   countryDropdown &&
@@ -899,6 +926,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "white",
                 borderRadius: 0,
                 border: "1px solid #2980b9",
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold", fontSize: 14 }}>
@@ -916,6 +944,8 @@ const CustomersDetailsMb = ({ location }) => {
                 backgroundColor: "#ecf0f1",
                 color: "black",
                 border: "1px solid #2980b9",
+                marginTop: -5,
+
                 borderRadius: 0,
               }}
             >
@@ -924,7 +954,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 copyToClipboard(customersEditData.numberOfStudents);
               }}
@@ -945,6 +975,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "white",
                 borderRadius: 0,
                 border: "1px solid #2980b9",
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>Amount:</p>
@@ -961,6 +992,7 @@ const CustomersDetailsMb = ({ location }) => {
                 color: "black",
                 border: "1px solid #2980b9",
                 borderRadius: 0,
+                marginTop: -5,
               }}
             >
               <p style={{ marginLeft: 5, fontWeight: "bold" }}>
@@ -968,7 +1000,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 copyToClipboard(customersEditData.proposedAmount);
               }}
@@ -987,6 +1019,8 @@ const CustomersDetailsMb = ({ location }) => {
                 marginBottom: 10,
                 backgroundColor: "#2980b9",
                 color: "white",
+                marginTop: -5,
+
                 borderRadius: 0,
                 border: "1px solid #2980b9",
               }}
@@ -1003,6 +1037,8 @@ const CustomersDetailsMb = ({ location }) => {
                 marginBottom: 10,
                 backgroundColor: "#ecf0f1",
                 color: "black",
+                marginTop: -5,
+
                 border: "1px solid #2980b9",
                 borderRadius: 0,
               }}
@@ -1017,7 +1053,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 {
                   currencyDropdown &&
@@ -1040,6 +1076,8 @@ const CustomersDetailsMb = ({ location }) => {
                 width: "40%",
                 display: "flex",
                 alignItems: "center",
+                marginTop: -5,
+
                 marginBottom: 10,
                 backgroundColor: "#2980b9",
                 color: "white",
@@ -1059,6 +1097,8 @@ const CustomersDetailsMb = ({ location }) => {
                 backgroundColor: "#ecf0f1",
                 color: "black",
                 border: "1px solid #2980b9",
+                marginTop: -5,
+
                 borderRadius: 0,
               }}
             >
@@ -1072,7 +1112,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 {
                   agentDropdown &&
@@ -1097,6 +1137,8 @@ const CustomersDetailsMb = ({ location }) => {
                 alignItems: "center",
                 marginBottom: 10,
                 backgroundColor: "#2980b9",
+                marginTop: -5,
+
                 color: "white",
                 borderRadius: 0,
                 border: "1px solid #2980b9",
@@ -1115,6 +1157,8 @@ const CustomersDetailsMb = ({ location }) => {
                 marginBottom: 10,
                 backgroundColor: "#ecf0f1",
                 color: "black",
+                marginTop: -5,
+
                 border: "1px solid #2980b9",
                 borderRadius: 0,
               }}
@@ -1124,7 +1168,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 copyToClipboard(customersEditData.scheduleDescription);
               }}
@@ -1144,6 +1188,8 @@ const CustomersDetailsMb = ({ location }) => {
                 backgroundColor: "#2980b9",
                 color: "white",
                 borderRadius: 0,
+                marginTop: -5,
+
                 border: "1px solid #2980b9",
               }}
             >
@@ -1158,6 +1204,8 @@ const CustomersDetailsMb = ({ location }) => {
                 marginBottom: 10,
                 backgroundColor: "#ecf0f1",
                 color: "black",
+                marginTop: -5,
+
                 border: "1px solid #2980b9",
                 borderRadius: 0,
               }}
@@ -1172,7 +1220,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 {
                   categoryDropdown &&
@@ -1197,6 +1245,8 @@ const CustomersDetailsMb = ({ location }) => {
                 alignItems: "center",
                 marginBottom: 10,
                 backgroundColor: "#2980b9",
+                marginTop: -5,
+
                 color: "white",
                 borderRadius: 0,
                 border: "1px solid #2980b9",
@@ -1213,6 +1263,8 @@ const CustomersDetailsMb = ({ location }) => {
                 marginBottom: 10,
                 backgroundColor: "#ecf0f1",
                 color: "black",
+                marginTop: -5,
+
                 border: "1px solid #2980b9",
                 borderRadius: 0,
               }}
@@ -1222,7 +1274,7 @@ const CustomersDetailsMb = ({ location }) => {
               </p>
             </Card>
             <IconButton
-              style={{ marginTop: -8 }}
+              style={{ marginTop: -15 }}
               onClick={() => {
                 copyToClipboard(customersEditData.meetingLink);
               }}
