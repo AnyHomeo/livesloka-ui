@@ -536,7 +536,7 @@ const MeetingScheduler = () => {
 							/>
 						</FormControl>
 
-						<ToggleButtonGroup
+						{/* <ToggleButtonGroup
 							value={isZoomMeeting}
 							exclusive
 							style={{
@@ -561,7 +561,7 @@ const MeetingScheduler = () => {
 									/>
 								</Tooltip>
 							</ToggleButton>
-						</ToggleButtonGroup>
+						</ToggleButtonGroup> */}
 						<RadioGroup
 							row
 							aria-label="position"

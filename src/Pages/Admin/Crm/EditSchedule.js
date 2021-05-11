@@ -585,7 +585,7 @@ const EditSchedule = () => {
 								marginTop: '10px',
 							}}
 						/>
-						<ToggleButtonGroup
+						{/* <ToggleButtonGroup
 							value={isZoomMeeting}
 							exclusive
 							style={{
@@ -606,7 +606,7 @@ const EditSchedule = () => {
 									src={require('../../../Images/whereby.png')}
 								/>
 							</ToggleButton>
-						</ToggleButtonGroup>
+						</ToggleButtonGroup> */}
 						<FormControl component="fieldset">
 							<RadioGroup
 								row
