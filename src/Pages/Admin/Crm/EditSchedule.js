@@ -256,59 +256,113 @@ const EditSchedule = () => {
 				let storageRef = firebase.storage().ref(`${summerCampImage[0].type}/${summerCampImage[0].name}`);
 				await storageRef.put(summerCampImage[0]);
 				url = await storageRef.getDownloadURL();
-			}
-			formData = {
-				...formData,
-				className: ClassName,
-				meetingLink: zoomLink,
-				meetingAccount: zoomEmail,
-				teacher: teacher,
-				students: personName.map((student) => student._id),
-				demo: demo,
-				OneToOne: oneToOne,
-				oneToMany: !oneToOne,
-				subject: subjectNameId,
-				startDate: moment(selectedDate).format('DD-MM-YYYY'),
-				isMeetingLinkChangeNeeded,
-				isZoomMeeting,
-				summerCampAmount,
-				isSummerCampClass,
-				summerCampTitle,
-				summerCampDescription,
-				summerCampSchedule: draftToHtml(convertToRaw(summerCampSchedule.getCurrentContent())),
-				summerCampImage: url,
-				summerCampStudentsLimit,
-				summerCampClassNumberOfDays,
-			};
-			try {
-				const res = await Axios.post(`${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`, formData);
-				console.log(res);
-				setDemo(false);
-				setPersonName([]);
-				setZoomEmail('');
-				setZoomLink('');
-				setSubjectNameId('');
-				setSuccessOpen(true);
-				setAlert(res.data.message);
-				setAlertColor('success');
-				setLoading(false);
-				setRadioday('');
-				setClassName('');
-				setTimeSlotState([]);
-				setIsZoomMeeting('');
-				setOneToOne('');
-				setTimeout(() => {
-					setRedirect(true);
-				}, 2000);
-			} catch (error) {
-				console.error(error.response);
-				if (error.response) {
+				formData = {
+					...formData,
+					className: ClassName,
+					meetingLink: zoomLink,
+					meetingAccount: zoomEmail,
+					teacher: teacher,
+					students: personName.map((student) => student._id),
+					demo: demo,
+					OneToOne: oneToOne,
+					oneToMany: !oneToOne,
+					subject: subjectNameId,
+					startDate: moment(selectedDate).format('DD-MM-YYYY'),
+					isMeetingLinkChangeNeeded,
+					isZoomMeeting,
+					summerCampAmount,
+					isSummerCampClass,
+					summerCampTitle,
+					summerCampDescription,
+					summerCampSchedule: draftToHtml(convertToRaw(summerCampSchedule.getCurrentContent())),
+					summerCampImage: url,
+					summerCampStudentsLimit,
+					summerCampClassNumberOfDays,
+				};
+				try {
+					const res = await Axios.post(`${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`, formData);
+					console.log(res);
+					setDemo(false);
+					setPersonName([]);
+					setZoomEmail('');
+					setZoomLink('');
+					setSubjectNameId('');
 					setSuccessOpen(true);
-					setAlert(error.response.data.error);
-					setAlertColor('error');
+					setAlert(res.data.message);
+					setAlertColor('success');
 					setLoading(false);
+					setRadioday('');
+					setClassName('');
+					setTimeSlotState([]);
+					setIsZoomMeeting('');
+					setOneToOne('');
+					setTimeout(() => {
+						setRedirect(true);
+					}, 2000);
+				} catch (error) {
+					console.error(error.response);
+					if (error.response) {
+						setSuccessOpen(true);
+						setAlert(error.response.data.error);
+						setAlertColor('error');
+						setLoading(false);
+					}
+				}
+			} else {
+				formData = {
+					...formData,
+					className: ClassName,
+					meetingLink: zoomLink,
+					meetingAccount: zoomEmail,
+					teacher: teacher,
+					students: personName.map((student) => student._id),
+					demo: demo,
+					OneToOne: oneToOne,
+					oneToMany: !oneToOne,
+					subject: subjectNameId,
+					startDate: moment(selectedDate).format('DD-MM-YYYY'),
+					isMeetingLinkChangeNeeded,
+					isZoomMeeting,
+					summerCampAmount,
+					isSummerCampClass,
+					summerCampTitle,
+					summerCampDescription,
+					summerCampSchedule: draftToHtml(convertToRaw(summerCampSchedule.getCurrentContent())),
+					summerCampImage: url,
+					summerCampStudentsLimit,
+					summerCampClassNumberOfDays,
+				};
+				try {
+					const res = await Axios.post(`${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`, formData);
+					console.log(res);
+					setDemo(false);
+					setPersonName([]);
+					setZoomEmail('');
+					setZoomLink('');
+					setSubjectNameId('');
+					setSuccessOpen(true);
+					setAlert(res.data.message);
+					setAlertColor('success');
+					setLoading(false);
+					setRadioday('');
+					setClassName('');
+					setTimeSlotState([]);
+					setIsZoomMeeting('');
+					setOneToOne('');
+					setTimeout(() => {
+						setRedirect(true);
+					}, 2000);
+				} catch (error) {
+					console.error(error.response);
+					if (error.response) {
+						setSuccessOpen(true);
+						setAlert(error.response.data.error);
+						setAlertColor('error');
+						setLoading(false);
+					}
 				}
 			}
+
 		} else {
 			setAlertColor('error');
 			setSuccessOpen(true);
