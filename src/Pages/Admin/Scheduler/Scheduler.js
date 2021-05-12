@@ -31,6 +31,7 @@ import { Link } from "react-router-dom";
 import Axios from "axios";
 import SingleBlock from "./SingleBlock";
 import MuiAlert from "@material-ui/lab/Alert";
+import { useConfirm } from 'material-ui-confirm';
 import AdjustIcon from "@material-ui/icons/Adjust";
 const times = [
   "12:00 AM-12:30 AM",
@@ -163,6 +164,7 @@ function Scheduler() {
   const { width } = useWindowDimensions();
   const [categorizedData, setCategorizedData] = useState({});
   const [allSchedules, setAllSchedules] = useState([]);
+  const confirm = useConfirm();
   const [availableSlotsEditingMode, setAvailableSlotsEditingMode] = useState(
     false
   );
@@ -186,11 +188,17 @@ function Scheduler() {
 
   const deleteSchedule = async () => {
     try {
-      const deleteddata = await Axios.get(
-        `${process.env.REACT_APP_API_KEY}/schedule/delete/${scheduleId}`
-      );
-      getAllSchedulesData();
       setScheduleId("");
+      confirm({ description: 'Do you Really want to Delete!',confirmationText: "Yes! delete" })
+      .then(async () => {
+        await Axios.get(
+          `${process.env.REACT_APP_API_KEY}/schedule/delete/${scheduleId}`
+        );
+        getAllSchedulesData();
+       })
+      .catch(() => { 
+
+       });
     } catch (error) {
       console.log(error.response);
     }
@@ -432,7 +440,6 @@ function Scheduler() {
             to={`/edit-schedule/${scheduleId}`}
           >
             <Button
-              // onClick={() => setScheduleId("")}
               variant="outlined"
               color="primary"
               startIcon={<EditIcon />}

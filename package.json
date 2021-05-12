@@ -25,6 +25,7 @@
     "html-to-draftjs": "^1.5.0",
     "is-image-url": "^1.1.8",
     "material-table": "1.66.0",
+    "material-ui-confirm": "^2.1.2",
     "md5": "2.3.0",
     "moment": "2.27.0",
     "moment-timezone": "^0.5.33",
