@@ -19,8 +19,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import MaterialTable from "material-table";
-import CancelIcon from '@material-ui/icons/Cancel';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CancelIcon from "@material-ui/icons/Cancel";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import momentTZ from "moment-timezone";
 
 let days = [
@@ -59,7 +59,11 @@ function TabPanel(props) {
 }
 
 function Statistics() {
-  const [value, setValue] = useState(days.indexOf(momentTZ(new Date()).tz("Asia/Kolkata").format("dddd").toUpperCase()));
+  const [value, setValue] = useState(
+    days.indexOf(
+      momentTZ(new Date()).tz("Asia/Kolkata").format("dddd").toUpperCase()
+    )
+  );
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogData, setDialogData] = useState({});
 
@@ -81,69 +85,72 @@ function Statistics() {
           <h2>Schedule Details</h2>
         </DialogTitle>
         <DialogContent>
-          <div className="info-wrapper" >
-          <FormControl
-            variant="outlined"
-          >
-            <InputLabel htmlFor="Meeting-Link">Meeting Link</InputLabel>
-            <OutlinedInput
-              id="Meeting-Link"
-              label="Meeting Link"
-              value={dialogData.meetingLink}
-              fullWidth
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={copyToClipboard(dialogData.meetingLink)}
-                    edge="end"
-                  >
-                    <FileCopyIcon />
-                  </IconButton>
-                </InputAdornment>
-              }
-              labelWidth={70}
-            />
-          </FormControl>
-          <FormControl
-            variant="outlined"
-          >
-            <InputLabel htmlFor="teacher-whatsapp">Teacher Details</InputLabel>
-            <OutlinedInput
-              id="teacher-whatsapp"
-              label="Teacher Details"
-              value={dialogData.teacher && dialogData.teacher.TeacherName}
-              fullWidth
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() =>
-                      window.open(
-                        `https://api.whatsapp.com/send?phone=${
-                          dialogData.teacher &&
-                          dialogData.teacher.Phone_number.split("+")[1]
-                            .split(" ")
-                            .join("")
-                        }`
-                      )
-                    }
-                    edge="end"
-                  >
-                    <WhatsAppIcon />
-                  </IconButton>
-                </InputAdornment>
-              }
-              labelWidth={70}
-            />
-          </FormControl>
+          <div className="info-wrapper">
+            <FormControl variant="outlined">
+              <InputLabel htmlFor="Meeting-Link">Meeting Link</InputLabel>
+              <OutlinedInput
+                id="Meeting-Link"
+                label="Meeting Link"
+                value={dialogData.meetingLink}
+                fullWidth
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={copyToClipboard(dialogData.meetingLink)}
+                      edge="end"
+                    >
+                      <FileCopyIcon />
+                    </IconButton>
+                  </InputAdornment>
+                }
+                labelWidth={70}
+              />
+            </FormControl>
+            <FormControl variant="outlined">
+              <InputLabel htmlFor="teacher-whatsapp">
+                Teacher Details
+              </InputLabel>
+              <OutlinedInput
+                id="teacher-whatsapp"
+                label="Teacher Details"
+                value={dialogData.teacher && dialogData.teacher.TeacherName}
+                fullWidth
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() =>
+                        window.open(
+                          `https://api.whatsapp.com/send?phone=${
+                            dialogData.teacher &&
+                            dialogData.teacher.Phone_number.split("+")[1]
+                              .split(" ")
+                              .join("")
+                          }`
+                        )
+                      }
+                      edge="end"
+                    >
+                      <WhatsAppIcon />
+                    </IconButton>
+                  </InputAdornment>
+                }
+                labelWidth={70}
+              />
+            </FormControl>
           </div>
-                    <MaterialTable
+          <MaterialTable
             title="Student Details"
             columns={[
               {
-                field:"isStudentJoined",
-                title:"Present",
-                type:"boolean",
-                render:rowData => rowData.isStudentJoined ?<CheckCircleIcon style={{color:"green"}} /> : <CancelIcon style={{color:"red"}} />
+                field: "isStudentJoined",
+                title: "Present",
+                type: "boolean",
+                render: (rowData) =>
+                  rowData.isStudentJoined ? (
+                    <CheckCircleIcon style={{ color: "green" }} />
+                  ) : (
+                    <CancelIcon style={{ color: "red" }} />
+                  ),
               },
               {
                 field: "firstName",
@@ -170,45 +177,52 @@ function Statistics() {
                 title: "WhatsaApp Number",
                 tooltip: "Sort by WhatsApp Number",
                 render: (rowData) => (
-                  <div style={{display:"flex",alignItems:"center"}} >
-                    <Tooltip title={`Message ${rowData.firstName} on Whatsapp`} >
-                      <IconButton onClick={() => window.open(`https://api.whatsapp.com/send?phone=${
-                          rowData.whatsAppnumber.indexOf("+") !== -1 ?
-                          rowData.whatsAppnumber.split("+")[1]
-                            .split(" ")
-                            .join("") : rowData.whatsAppnumber.split(" ").join("")
-                        }`)} >
-
-                      <WhatsAppIcon/>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <Tooltip title={`Message ${rowData.firstName} on Whatsapp`}>
+                      <IconButton
+                        onClick={() =>
+                          window.open(
+                            `https://api.whatsapp.com/send?phone=${
+                              rowData.whatsAppnumber.indexOf("+") !== -1
+                                ? rowData.whatsAppnumber
+                                    .split("+")[1]
+                                    .split(" ")
+                                    .join("")
+                                : rowData.whatsAppnumber.split(" ").join("")
+                            }`
+                          )
+                        }
+                      >
+                        <WhatsAppIcon />
                       </IconButton>
                     </Tooltip>
                     {rowData.whatsAppnumber}
                   </div>
-                )
+                ),
               },
             ]}
             data={dialogData.students}
             options={{
-              paging:false
+              paging: false,
             }}
           />
         </DialogContent>
       </Dialog>
-      <AppBar position="static" color="default">
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="auto"
-          aria-label="Statistics Page Tabs"
-        >
-          {days.map((day) => (
-            <Tab key={day} label={day} />
-          ))}
-        </Tabs>
-      </AppBar>
+      {/* <AppBar position="static" color="default"> */}
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        indicatorColor="primary"
+        textColor="primary"
+        variant="scrollable"
+        scrollButtons="auto"
+        aria-label="Statistics Page Tabs"
+      >
+        {days.map((day) => (
+          <Tab key={day} label={day} />
+        ))}
+      </Tabs>
+      {/* </AppBar> */}
       {days.map((day, i) => (
         <TabPanel key={day} value={value} index={i}>
           <SingleDayStats

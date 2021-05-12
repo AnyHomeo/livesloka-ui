@@ -44,14 +44,12 @@ const getSlotFromTime = (date) => {
     };
   } else if (hoursRightNow === 0) {
     return {
-      slot: `${daysarr[dayToday]}-12:${is30 ? "30" : "00"} ${isAm ? "AM" : "PM"}-${is30 ? "01" : "12"}:${is30 ? "00":"30"} ${
+      slot: `${daysarr[dayToday]}-12:${is30 ? "30" : "00"} ${
         isAm ? "AM" : "PM"
-      }`,
+      }-${is30 ? "01" : "12"}:${is30 ? "00" : "30"} ${isAm ? "AM" : "PM"}`,
       secondsLeft,
     };
-  }
-  
-  else {
+  } else {
     return {
       slot: `${daysarr[dayToday]}-${("0" + hoursRightNow).slice(-2)}${
         is30 ? ":30" : ":00"
@@ -89,24 +87,24 @@ function SingleDayStats({ day, setDialogOpen, setDialogData }) {
         let prevData = [...prev];
         return prevData.map((singleObj) => {
           return {
-          ...singleObj,
-          students:
-            singleObj._id === scheduleId
-              ? singleObj.students.map((student) => ({
-                  ...student,
-                  isStudentJoined:
-                    email === student.email ? true : student.isStudentJoined,
-                }))
-              : singleObj.students,
-        }
-      });
+            ...singleObj,
+            students:
+              singleObj._id === scheduleId
+                ? singleObj.students.map((student) => ({
+                    ...student,
+                    isStudentJoined:
+                      email === student.email ? true : student.isStudentJoined,
+                  }))
+                : singleObj.students,
+          };
+        });
       });
     });
     let date = new Date().toLocaleString("en-US", {
       timeZone: "Asia/Kolkata",
     });
     const { slot, secondsLeft } = getSlotFromTime(date);
-    console.log(slot)
+    console.log(slot);
     setSelectedSlot(slot);
     setTimeout(() => {
       let date = new Date().toLocaleString("en-US", {

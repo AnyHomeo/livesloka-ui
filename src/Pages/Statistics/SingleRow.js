@@ -2,7 +2,7 @@ import { Card, Chip, Icon, IconButton, Tooltip } from "@material-ui/core";
 import React from "react";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import PersonIcon from "@material-ui/icons/Person";
-import { UserCheck, UserMinus } from "react-feather";
+import { UserCheck, UserMinus, Video, Clipboard } from "react-feather";
 function SingleRow({
   setDialogOpen,
   todayData,
@@ -28,33 +28,27 @@ function SingleRow({
           !singleData.slots[day.toLowerCase()].includes(prevTime) ? (
             <Card
               className="single-card"
-              // style={{
-              //   backgroundColor: !singleData.isTeacherJoined
-              //     ? "rgb(237, 159, 157)"
-              //     : "#38CC77",
-              // }}
               style={{
                 backgroundColor: "white",
-                borderLeft: singleData.isTeacherJoined
-                  ? "10px solid #56AE69"
-                  : "10px solid #ff7675",
+                border: singleData.isTeacherJoined
+                  ? "2px solid #56AE69"
+                  : "2px solid #ff7675",
               }}
             >
               {singleData.demo ? (
-                <Chip
-                  label="Demo"
-                  size="small"
-                  style={{
-                    position: "absolute",
-                    top: "5%",
-                    transform: "translateX(-50%)",
-                    left: "82%",
-                    border: "1px dotted #74b9ff",
-                    backgroundColor: "#74b9ff",
-                    fontWeight: "bold",
-                    color: "#0984e3",
-                  }}
-                />
+                <Tooltip title="Demo" style={{ cursor: "pointer" }}>
+                  <Clipboard
+                    style={{
+                      position: "absolute",
+                      top: "5%",
+                      transform: "translateX(-50%)",
+                      left: "92%",
+                      color: "#0984e3",
+                      height: 18,
+                      width: 18,
+                    }}
+                  />
+                </Tooltip>
               ) : (
                 ""
               )}
@@ -73,7 +67,7 @@ function SingleRow({
               </div>
               <div
                 className="students"
-                style={{ marginLeft: 10, marginBottom: 10, cursor: "pointer" }}
+                style={{ marginLeft: 3, marginBottom: 10, cursor: "pointer" }}
               >
                 {singleData.students.map((student) => (
                   <>
@@ -110,9 +104,8 @@ function SingleRow({
               <a className="zoom-link" href={singleData.meetingLink}>
                 <Tooltip title="Join Zoom">
                   <IconButton size="small">
-                    <img
-                      style={{ height: "18px", width: "18px" }}
-                      src={require("../../Images/ZOOM LOGO.png")}
+                    <Video
+                      style={{ height: 18, width: 18, color: "#0984e3" }}
                     />
                   </IconButton>
                 </Tooltip>
