@@ -195,69 +195,142 @@ const MeetingScheduler = () => {
 				let storageRef = firebase.storage().ref(`${summerCampImage[0].type}/${summerCampImage[0].name}`);
 				await storageRef.put(summerCampImage[0]);
 				url = await storageRef.getDownloadURL();
-			}
-
-			if (!isZoomMeeting || (getZoomLink && getZoomLink.status === 200)) {
-				formData = {
-					...formData,
-					meetingLink: newZoomLink,
-					meetingAccount: newZoomJwt,
-					teacher: teacher,
-					students: personName,
-					demo: demo,
-					OneToOne: oneToOne,
-					OneToMany: !oneToOne,
-					subject: subjectNameId,
-					startDate: moment(selectedDate).format('DD-MM-YYYY'),
-					classname: className,
-					Jwtid: newZoomJwt,
-					timeSlotState,
-					isZoomMeeting,
-					isSummerCampClass,
-					summerCampAmount,
-					summerCampTitle,
-					summerCampDescription,
-					summerCampSchedule: draftToHtml(convertToRaw(summerCampSchedule.getCurrentContent())),
-					summerCampImage: url,
-					summerCampStudentsLimit,
-					summerCampClassNumberOfDays,
-				};
-
-				try {
-					const res = await Axios.post(`${process.env.REACT_APP_API_KEY}/schedule`, formData);
-					setDemo(false);
-					setOneToOne('');
-					setPersonName('');
-					setZoomLink('');
-					setPersonName('');
-					setSubjectNameId('');
-					setSuccessOpen(true);
-					setAlert(res.data.message);
-					setAlertColor('success');
-					setLoading(false);
-					setTeacherNameFullObject({});
-					setStudentNamesFullObject([]);
-					setRadioday('');
-					setClassName('');
-					setTimeSlotState([]);
-					setAvailableTimeSlots([]);
-					setSummerCampAmount(0);
-					setSummerCampDescription('');
-					setSummerCampSchedule('');
-					setSummerCampImage('');
-					setSummerCampTitle('');
-					setSummerCampStudentsLimit(0);
-					setSummerCampClassNumberOfDays(0);
-				} catch (error) {
-					console.error(error.response);
-					if (error.response) {
+				if (!isZoomMeeting || (getZoomLink && getZoomLink.status === 200)) {
+					formData = {
+						...formData,
+						meetingLink: newZoomLink,
+						meetingAccount: newZoomJwt,
+						teacher: teacher,
+						students: personName,
+						demo: demo,
+						OneToOne: oneToOne,
+						OneToMany: !oneToOne,
+						subject: subjectNameId,
+						startDate: moment(selectedDate).format('DD-MM-YYYY'),
+						classname: className,
+						Jwtid: newZoomJwt,
+						timeSlotState,
+						isZoomMeeting,
+						isSummerCampClass,
+						summerCampAmount,
+						summerCampTitle,
+						summerCampDescription,
+						summerCampSchedule: draftToHtml(convertToRaw(summerCampSchedule.getCurrentContent())),
+						summerCampImage: url,
+						summerCampStudentsLimit,
+						summerCampClassNumberOfDays,
+					};
+	
+					try {
+						const res = await Axios.post(`${process.env.REACT_APP_API_KEY}/schedule`, formData);
+						setDemo(false);
+						setOneToOne('');
+						setPersonName('');
+						setZoomLink('');
+						setPersonName('');
+						setSubjectNameId('');
 						setSuccessOpen(true);
-						setAlert(error.response.data.error);
-						setAlertColor('error');
+						setAlert(res.data.message);
+						setAlertColor('success');
 						setLoading(false);
+						setTeacherNameFullObject({});
+						setStudentNamesFullObject([]);
+						setRadioday('');
+						setClassName('');
+						setTimeSlotState([]);
+						setAvailableTimeSlots([]);
+						setSummerCampAmount(0);
+						setSummerCampDescription('');
+						setSummerCampSchedule('');
+						setSummerCampImage('');
+						setSummerCampTitle('');
+						setSummerCampStudentsLimit(0);
+						setSummerCampClassNumberOfDays(0);
+					} catch (error) {
+						console.error(error.response);
+						if (error.response) {
+							setSuccessOpen(true);
+							setAlert(error.response.data.error);
+							setAlertColor('error');
+							setLoading(false);
+						}
 					}
+				} else {
+					setSuccessOpen(true);
+					setAlert("Error in generating Meeting Link!");
+					setAlertColor('error');
+					setLoading(false);
 				}
-			}
+			} else {
+				if (!isZoomMeeting || (getZoomLink && getZoomLink.status === 200)) {
+					formData = {
+						...formData,
+						meetingLink: newZoomLink,
+						meetingAccount: newZoomJwt,
+						teacher: teacher,
+						students: personName,
+						demo: demo,
+						OneToOne: oneToOne,
+						OneToMany: !oneToOne,
+						subject: subjectNameId,
+						startDate: moment(selectedDate).format('DD-MM-YYYY'),
+						classname: className,
+						Jwtid: newZoomJwt,
+						timeSlotState,
+						isZoomMeeting,
+						isSummerCampClass,
+						summerCampAmount,
+						summerCampTitle,
+						summerCampDescription,
+						summerCampSchedule: draftToHtml(convertToRaw(summerCampSchedule.getCurrentContent())),
+						summerCampImage: url,
+						summerCampStudentsLimit,
+						summerCampClassNumberOfDays,
+					};
+	
+					try {
+						const res = await Axios.post(`${process.env.REACT_APP_API_KEY}/schedule`, formData);
+						setDemo(false);
+						setOneToOne('');
+						setPersonName('');
+						setZoomLink('');
+						setPersonName('');
+						setSubjectNameId('');
+						setSuccessOpen(true);
+						setAlert(res.data.message);
+						setAlertColor('success');
+						setLoading(false);
+						setTeacherNameFullObject({});
+						setStudentNamesFullObject([]);
+						setRadioday('');
+						setClassName('');
+						setTimeSlotState([]);
+						setAvailableTimeSlots([]);
+						setSummerCampAmount(0);
+						setSummerCampDescription('');
+						setSummerCampSchedule('');
+						setSummerCampImage('');
+						setSummerCampTitle('');
+						setSummerCampStudentsLimit(0);
+						setSummerCampClassNumberOfDays(0);
+					} catch (error) {
+						console.error(error.response);
+						if (error.response) {
+							setSuccessOpen(true);
+							setAlert(error.response.data.error);
+							setAlertColor('error');
+							setLoading(false);
+						}
+					}
+				} else {
+					setSuccessOpen(true);
+					setAlert("Error in generating Meeting Link!");
+					setAlertColor('error');
+					setLoading(false);
+				}
+			} 
+
+			
 		} catch (error) {
 			console.log(error.response);
 			setSuccessOpen(true);
@@ -463,7 +536,7 @@ const MeetingScheduler = () => {
 							/>
 						</FormControl>
 
-						<ToggleButtonGroup
+						{/* <ToggleButtonGroup
 							value={isZoomMeeting}
 							exclusive
 							style={{
@@ -488,7 +561,7 @@ const MeetingScheduler = () => {
 									/>
 								</Tooltip>
 							</ToggleButton>
-						</ToggleButtonGroup>
+						</ToggleButtonGroup> */}
 						<RadioGroup
 							row
 							aria-label="position"
@@ -564,7 +637,7 @@ const MeetingScheduler = () => {
 											}}
 											type={'number'}
 											id="outlined-basic"
-											label="Summer Camp Class Amount"
+											label="Summer Camp Class Students Limit"
 											variant="outlined"
 											value={summerCampStudentsLimit}
 											onChange={(e) => setSummerCampStudentsLimit(e.target.value)}
