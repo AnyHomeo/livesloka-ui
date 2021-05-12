@@ -5,6 +5,8 @@ import SingleRow from "./SingleRow";
 import momentTZ from "moment-timezone";
 import { getEntireDayStatistics } from "../../Services/Services";
 import io from "socket.io-client";
+import { Card } from "@material-ui/core";
+import { Clock } from "react-feather";
 const socket = io(process.env.REACT_APP_API_KEY);
 
 const getSlotFromTime = (date) => {
@@ -135,7 +137,10 @@ function SingleDayStats({ day, setDialogOpen, setDialogData }) {
       <div className="hours-display">
         {hours.map((hour) => (
           <div key={hour} className="hour">
-            {hour}
+            <Card className="hourCard">
+              <Clock />
+              {hour}
+            </Card>
           </div>
         ))}
       </div>

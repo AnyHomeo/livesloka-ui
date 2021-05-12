@@ -72,3 +72,16 @@
     flex-direction: column;
   }
 }
+
+.hourCard {
+  height: 85%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: #0985e3be !important;
+  color: white !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
