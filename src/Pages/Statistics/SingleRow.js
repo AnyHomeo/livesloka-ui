@@ -49,6 +49,7 @@ function SingleRow({
                 style={{
                   fontSize: 12,
                   width: "67%",
+                  marginTop: singleData.demo ? 10 : 0,
                 }}
               >
                 {singleData.teacher && singleData.teacher.TeacherName}
