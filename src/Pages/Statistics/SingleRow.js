@@ -29,29 +29,17 @@ function SingleRow({
             <Card
               className="single-card"
               style={{
-                backgroundColor: "white",
+                backgroundColor: singleData.isTeacherJoined
+                  ? "#2ecc7075"
+                  : singleData.demo
+                  ? "#f1c40fb6"
+                  : "#ff757562",
                 border: singleData.isTeacherJoined
                   ? "2px solid #56AE69"
-                  : "2px solid #ff7675",
+                  : "2px solid #d63031",
+                overflow: "initial",
               }}
             >
-              {singleData.demo ? (
-                <Tooltip title="Demo" style={{ cursor: "pointer" }}>
-                  <Clipboard
-                    style={{
-                      position: "absolute",
-                      top: "5%",
-                      transform: "translateX(-50%)",
-                      left: "92%",
-                      color: "#0984e3",
-                      height: 18,
-                      width: 18,
-                    }}
-                  />
-                </Tooltip>
-              ) : (
-                ""
-              )}
               <div
                 onClick={() => {
                   setDialogOpen((prev) => !prev);
@@ -61,6 +49,7 @@ function SingleRow({
                 style={{
                   fontSize: 12,
                   width: "67%",
+                  marginTop: singleData.demo ? 10 : 0,
                 }}
               >
                 {singleData.teacher && singleData.teacher.TeacherName}
@@ -110,6 +99,28 @@ function SingleRow({
                   </IconButton>
                 </Tooltip>
               </a>
+
+              {singleData.demo ? (
+                <Tooltip title="Demo" style={{ cursor: "pointer" }}>
+                  <Chip
+                    label="DEMO"
+                    style={{
+                      position: "absolute",
+                      top: "-1%",
+                      transform: "translateX(-50%)",
+                      left: "50%",
+                      height: 40,
+                      width: "100%",
+                      borderRadius: 20,
+                      height: 16,
+                      backgroundColor: "#d63031",
+                      color: "white",
+                    }}
+                  />
+                </Tooltip>
+              ) : (
+                ""
+              )}
             </Card>
           ) : (
             ""
