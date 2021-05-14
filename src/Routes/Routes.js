@@ -36,6 +36,7 @@ import UpdateNumberOfBoughtClasses from './../Pages/Admin/Crm/UpdateNumberOfBoug
 import AvailableMeetingSchedule from '../Pages/Admin/Crm/AvailableMeetingSchedule';
 import Stats from '../Pages/Statistics/Statistics';
 import SummerCampsCustomerTable from '../Pages/Admin/Crm/SummerCampsCustomerTable';
+import DemoAndInclassStudents from '../Components/DemoAndInclassStudents';
 
 function Routes() {
 	return (
@@ -48,6 +49,7 @@ function Routes() {
 					<Route path="/404" exact component={NotFoundView} />
 					<DashboardLayout>
 						<AdminRoute path="/dashboard" exact component={Dashboard} />
+						<AdminRoute path="/inclass" exact component={DemoAndInclassStudents} />
 						<AdminRoute path="/update/classes" exact component={UpdateNumberOfBoughtClasses} />
 						<AdminRoute path="/zoom-dashboard" exact component={ZoomAccountDashboard} />
 						<AdminRoute path="/customer-data" exact component={CustomerData} />

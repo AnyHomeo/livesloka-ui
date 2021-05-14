@@ -26,6 +26,7 @@ import {
   UserMinus,
   UserCheck,
   Sun,
+  Users,
 } from "react-feather";
 import NavItem from "./NavItem";
 import useWindowDimensions from "../../Components/useWindowDimensions";
@@ -142,6 +143,11 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       href: "/update/classes",
       icon: UserCheck,
       title: "Update Classes Paid",
+    },
+    {
+      href: "/inclass",
+      icon: Users,
+      title: "Demo/Inclass Students",
     },
   ];
 

@@ -252,3 +252,5 @@ export const updateBoughtClasses = (data) => axios.put(`${API.main}/class-histor
 export const getEntireDayStatistics = (day) => axios.get(`${API.main}/customer/stats/${day}`)
 
 export const getSummerCampStudents = () => axios.get(`${API.main}/summercamps/students`)
+
+export const getDemoAndInclassStudents = () => axios.get(`${API.main}/all/demo-inclass`);
