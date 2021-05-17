@@ -51,6 +51,7 @@ function Routes() {
 						<AdminRoute path="/dashboard" exact component={Dashboard} />
 						<AdminRoute path="/inclass" exact component={DemoAndInclassStudents} />
 						<AdminRoute path="/update/classes" exact component={UpdateNumberOfBoughtClasses} />
+						<AdminRoute path="/update/classes/:id" exact component={UpdateNumberOfBoughtClasses} />
 						<AdminRoute path="/zoom-dashboard" exact component={ZoomAccountDashboard} />
 						<AdminRoute path="/customer-data" exact component={CustomerData} />
 						<AdminRoute path="/customer-data-mobile" exact component={CustomerDetails} />

@@ -144,7 +144,7 @@ const Attedance = () => {
               return (
                 <TableRow>
                   <TableCell component="th" scope="row">
-                    {row.date}
+                    {moment(row.date,"YYYY-MM-DD").format("MMMM Do YYYY")}
                   </TableCell>
                   <TableCell align="right">{row.time}</TableCell>
                   <TableCell align="right"> {row.timeZone} </TableCell>

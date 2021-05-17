@@ -70,7 +70,8 @@ const AttedanceByClass = () => {
       getAttendanceByScheduleId(selectedScheduleId)
         .then((data) => {
           setLoading(false);
-          setTableData(data.data.result.reverse());
+          data.data.result.reverse()
+          setTableData(data.data.result);
         })
         .catch((err) => {
           console.log(err);
@@ -315,7 +316,7 @@ const AttedanceByClass = () => {
             {tableData.map((data) => (
               <TableRow>
                 <TableCell component="th" scope="row">
-                  {data.date}
+                  {moment(data.date,"YYYY-MM-DD").format("MMMM Do YYYY")}
                 </TableCell>
                 <TableCell align="center">{data.time}</TableCell>
                 <TableCell align="center">

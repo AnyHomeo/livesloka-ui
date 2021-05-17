@@ -57,34 +57,6 @@ function LeavesTable() {
       });
   }, [refresh]);
 
-  let columns = [
-    {
-      title: "First Name",
-      field: "firstName",
-      type: "string",
-      editable: "never",
-    },
-    {
-      title: "Last Name",
-      field: "lastName",
-      type: "string",
-      editable: "never",
-    },
-    {
-      title: "Class Name",
-      field: "className",
-      editable: "never",
-      type: "string",
-    },
-    {
-      title: "Date(User TimeZone)",
-      field: "cancelledDate",
-      type: "datetime",
-      render: (rowData) =>
-        moment(rowData.cancelledDate).format("MMMM Do YYYY, h:mm:ss A"),
-    },
-  ];
-
   const handleSnackBarClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -220,7 +192,37 @@ function LeavesTable() {
       </Button>
       <MaterialTable
         title=""
-        columns={columns}
+        columns={[
+          {
+            title: "First Name",
+            field: "firstName",
+            type: "string",
+            editable: "never",
+          },
+          {
+            title: "Last Name",
+            field: "lastName",
+            type: "string",
+            editable: "never",
+          },
+          {
+            title: "Class Name",
+            field: "className",
+            editable: "never",
+            type: "string",
+          },
+          {
+            title: "Date(User TimeZone)",
+            field: "cancelledDate",
+            type: "datetime",
+            customFilterAndSearch:(filter,row,col)=>{
+              console.log(col.render(row),filter,col.render(row).indexOf(filter))
+              return col.render(row).toLowerCase().indexOf(filter.toLowerCase()) !== -1
+            },
+            render: (rowData) =>
+              moment(rowData.cancelledDate).format("MMMM Do YYYY, h:mm:ss A"),
+          },
+        ]}
         style={{
           margin: "20px",
           padding: "20px",

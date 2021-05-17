@@ -1,12 +1,11 @@
 import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState,useEffect } from "react";
 import { getAllCustomers } from "../../../Services/Services";
 import { Alert, Autocomplete } from "@material-ui/lab";
 import { Button, TextField } from "@material-ui/core";
 import { updateBoughtClasses } from './../../../Services/Services';
 
-function UpdateNumberOfBoughtClasses() {
+function UpdateNumberOfBoughtClasses(props) {
   const [selectedCustomer, setSelectedCustomer] = useState({});
   const [allCustomers, setAllCustomers] = useState([]);
   const [comment, setComment] = useState("");
@@ -40,6 +39,9 @@ function UpdateNumberOfBoughtClasses() {
     getAllCustomers("firstName,lastName,numberOfClassesBought")
       .then((data) => {
         setAllCustomers(data.data.result);
+        if(props.match && props.match.params && props.match.params.id){
+            setSelectedCustomer(data.data.result.filter(student => student._id === props.match.params.id)[0])
+        }
       })
       .catch((err) => {
         console.log(err);
