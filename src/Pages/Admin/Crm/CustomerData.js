@@ -1135,7 +1135,6 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 						actionsColumnIndex: 0,
 						addRowPosition: 'first',
 						maxBodyHeight: height - 220,
-						// grouping: true,
 						exportButton: true,
 						rowStyle: (rowData) => ({
 							backgroundColor: '#FFF',

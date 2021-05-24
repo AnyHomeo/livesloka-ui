@@ -254,3 +254,5 @@ export const getEntireDayStatistics = (day) => axios.get(`${API.main}/customer/s
 export const getSummerCampStudents = () => axios.get(`${API.main}/summercamps/students`)
 
 export const getDemoAndInclassStudents = () => axios.get(`${API.main}/all/demo-inclass`);
+
+export const getCareersApplications = () => axios.get(`${API.main}/careers`);

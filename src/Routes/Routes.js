@@ -37,6 +37,7 @@ import AvailableMeetingSchedule from '../Pages/Admin/Crm/AvailableMeetingSchedul
 import Stats from '../Pages/Statistics/Statistics';
 import SummerCampsCustomerTable from '../Pages/Admin/Crm/SummerCampsCustomerTable';
 import DemoAndInclassStudents from '../Components/DemoAndInclassStudents';
+import Careers from '../Pages/Admin/Crm/Careers';
 
 function Routes() {
 	return (
@@ -74,7 +75,7 @@ function Routes() {
 						<AdminRoute path="/attendance/class" exact component={AttedanceByClass} />
 						<AdminRoute path="/invoice-generator" exact component={Generator} />
 						<AdminRoute path="/payments" exact component={PaymentsPage} />
-
+						<AdminRoute path="/careers" exact component={Careers} />
 						<AdminRoute path="/manual-invoice" exact component={Invoice} />
 						<AdminRoute path="/invoices" exact component={Invoices} />
 						<AdminRoute path="/scheduler" exact component={Scheduler} />

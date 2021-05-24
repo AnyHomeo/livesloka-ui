@@ -149,6 +149,11 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       icon: Users,
       title: "Demo/Inclass Students",
     },
+    {
+      href: "/careers",
+      icon: Trello,
+      title: "Careers Applications",
+    },
   ];
 
   const SalesTeam = [

@@ -83,7 +83,7 @@ const StudentHistoryTable = ({ data, id }) => {
 													{data.nextValue}
 												</TableCell>
 												<TableCell style={{ color: 'black' }}>
-													{moment(data.createdAt).format('l')}
+													{moment(data.createdAt).format('LLL')}
 												</TableCell>
 												<TableCell style={{ color: 'black' }}>{data.comment}</TableCell>
 											</TableRow>
