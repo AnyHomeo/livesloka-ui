@@ -4,8 +4,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import SmsOutlinedIcon from '@material-ui/icons/SmsOutlined';
 import useWindowDimensions from '../../../Components/useWindowDimensions';
 import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
-import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
+import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 import moment from 'moment';
+import CachedIcon from '@material-ui/icons/Cached';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import {
 	getAllCustomerDetails,
@@ -257,6 +258,7 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 	const [subjectDropdown, setSubjectDropdown] = useState({});
 	const [statisticsData, setStatisticsData] = useState();
 	const [historyStudentData, setHistoryStudentData] = useState();
+	const [refresh, setRefresh] = useState(false);
 	const [filters, setFilters] = useState({
 		classStatuses: [],
 		timeZones: [],
@@ -272,6 +274,7 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 	}
 
 	useEffect(() => {
+		setLoading(true)
 		getSettings(isAutheticated()._id).then((data) => {
 			let settings;
 			if (data.data.result.columns) {
@@ -388,7 +391,7 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 			});
 		});
 		fetchData();
-	}, []);
+	}, [refresh]);
 
 	const toggleJoinButton = async (rowData) => {
 		try {
@@ -652,6 +655,34 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 					cellStyle: { whiteSpace: 'nowrap' },
 					headerStyle: { whiteSpace: 'nowrap' },
 					hidden: !columnFilters['whatsAppnumber'].selected,
+					render: (rowData) =>
+						rowData.whatsAppnumber ? (
+							<div style={{ display: 'flex', alignItems: 'center' }}>
+								<a
+									style={{
+										color: 'black',
+										textDecoration: 'none',
+									}}
+									target="__blank"
+									href={`https://api.whatsapp.com/send?phone=${rowData.whatsAppnumber
+										.split('+')
+										.join('')
+										.split(' ')
+										.join('')}`}
+								>
+									<Tooltip title={`Message ${rowData.firstName}`}>
+										<WhatsAppIcon
+											style={{
+												marginRight: '10px',
+											}}
+										/>
+									</Tooltip>
+								</a>
+								{rowData.whatsAppnumber}
+							</div>
+						) : (
+							''
+						),
 				},
 				{
 					title: 'Group',
@@ -828,6 +859,7 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 
 	const fetchData = async () => {
 		try {
+			setLoading(true)
 			let id = isAutheticated()._id;
 			let data;
 			if (isSummerCampStudents) {
@@ -1158,6 +1190,12 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 							},
 						}),
 						{
+							icon: () => <CachedIcon />,
+							tooltip: 'Refresh Data',
+							isFreeAction: true,
+							onClick: (event) => setRefresh(prev => !prev),
+						},
+						{
 							icon: () => <TableChartOutlinedIcon />,
 							tooltip: 'Filter Columns',
 							isFreeAction: true,
@@ -1187,7 +1225,7 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 							<MTableBodyRow
 								{...props}
 								onDoubleClick={(e) => {
-									props.actions[isSummerCampStudents ? 5 : 6]().onClick(e, props.data);
+									props.actions[isSummerCampStudents ? 6 : 7]().onClick(e, props.data);
 								}}
 							/>
 						),
