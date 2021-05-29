@@ -90,7 +90,7 @@ function SingleRow({
                   </>
                 ))}
               </div>
-              <a className="zoom-link" href={singleData.meetingLink}>
+              <a className="zoom-link" target="__blank" href={singleData.meetingLink}>
                 <Tooltip title="Join Zoom">
                   <IconButton size="small">
                     <Video

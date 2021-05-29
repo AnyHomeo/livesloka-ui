@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useRef } from 'react';
 import MaterialTable, { MTableBodyRow, MTableToolbar } from 'material-table';
 import { makeStyles } from '@material-ui/core/styles';
 import SmsOutlinedIcon from '@material-ui/icons/SmsOutlined';
@@ -231,6 +231,7 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 	const history = useHistory();
 	const { height, width } = useWindowDimensions();
 	const classes = useStyles();
+	const materialTableRef = useRef(null);
 
 	const [historyOpen, setHistoryOpen] = useState(false);
 	const [historySelectedId, setHistorySelectedId] = useState('');
@@ -259,6 +260,7 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 	const [statisticsData, setStatisticsData] = useState();
 	const [historyStudentData, setHistoryStudentData] = useState();
 	const [refresh, setRefresh] = useState(false);
+	const [initialFormData, setInitialFormData] = useState({});
 	const [filters, setFilters] = useState({
 		classStatuses: [],
 		timeZones: [],
@@ -274,7 +276,7 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 	}
 
 	useEffect(() => {
-		setLoading(true)
+		setLoading(true);
 		getSettings(isAutheticated()._id).then((data) => {
 			let settings;
 			if (data.data.result.columns) {
@@ -338,6 +340,7 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 					name: 'Payment Date',
 				},
 				oneToOne: { selected: settings.includes('oneToOne'), name: 'Group' },
+				requestedSubjects: { selected: settings.includes('requestedSubjects'), name: 'Requested Subjects' },
 				numberOfClassesBought: {
 					selected: settings.includes('numberOfClassesBought'),
 					name: 'Classes paid',
@@ -514,6 +517,28 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 					hidden: !columnFilters['firstName'].selected,
 				},
 				{
+					title: 'Requested Subjects',
+					field: 'requestedSubjects',
+					width: '1%',
+					cellStyle: { whiteSpace: 'nowrap' },
+					headerStyle: { whiteSpace: 'nowrap' },
+					hidden: !columnFilters['requestedSubjects'].selected,
+					render:(row) => (
+						<div>
+							{
+							
+							Array.isArray(row.requestedSubjects) ? (
+								row.requestedSubjects.map(subject => (
+									<div>
+										{subjectDropdown[subject]}
+									</div>
+								))
+							) : ""
+							}
+						</div>
+					)
+				},
+				{
 					title: 'Guardian',
 					field: 'lastName',
 					width: '1%',
@@ -664,11 +689,7 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 										textDecoration: 'none',
 									}}
 									target="__blank"
-									href={`https://api.whatsapp.com/send?phone=${rowData.whatsAppnumber
-										.split('+')
-										.join('')
-										.split(' ')
-										.join('')}`}
+									href={`https://api.whatsapp.com/send?phone=${rowData.whatsAppnumber.replace("+","").replace(" ","").replace("(","").replace(")","")}`}
 								>
 									<Tooltip title={`Message ${rowData.firstName}`}>
 										<WhatsAppIcon
@@ -859,7 +880,7 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 
 	const fetchData = async () => {
 		try {
-			setLoading(true)
+			setLoading(true);
 			let id = isAutheticated()._id;
 			let data;
 			if (isSummerCampStudents) {
@@ -1159,6 +1180,8 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 					title="Customer data"
 					columns={columns}
 					data={data}
+					tableRef={materialTableRef}
+					initialFormData={initialFormData}
 					options={{
 						pageSize: 20,
 						pageSizeOptions: [20, 30, 40, 50, data.length],
@@ -1193,7 +1216,7 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 							icon: () => <CachedIcon />,
 							tooltip: 'Refresh Data',
 							isFreeAction: true,
-							onClick: (event) => setRefresh(prev => !prev),
+							onClick: (event) => setRefresh((prev) => !prev),
 						},
 						{
 							icon: () => <TableChartOutlinedIcon />,
@@ -1219,6 +1242,24 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 							isFreeAction: true,
 							onClick: () => history.push('/customer-data-mobile'),
 						},
+						{
+							icon: 'library_add',
+							tooltip: 'Duplicate User',
+							onClick: (event, rowData) => {
+								const materialTable = materialTableRef.current;
+								setInitialFormData({
+										...rowData,
+										_id: undefined,
+										subjectId:undefined,
+										requestedSubjects:undefined
+								});
+								materialTable.dataManager.changeRowEditing();
+								materialTable.setState({
+									...materialTable.dataManager.getRenderState(),
+									showAddRow: true,
+								});
+							},
+						},
 					]}
 					components={{
 						Row: (props) => (
@@ -1234,6 +1275,7 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 						onRowAdd: isSummerCampStudents
 							? undefined
 							: (newData) => {
+									setInitialFormData({})
 									newData.agentId = isAutheticated().agentId;
 									return AddCustomer(newData)
 										.then((fetchedData) => {
@@ -1260,6 +1302,7 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 										});
 							  },
 						onRowUpdate: (newData, oldData) => {
+							setInitialFormData({})
 							let requestBody = {};
 							Object.keys(newData).forEach((key) => {
 								if (!(newData[key] === oldData[key])) {
@@ -1309,6 +1352,7 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 						onRowDelete: (oldData) =>
 							deleteUser(oldData._id)
 								.then((res) => {
+									setInitialFormData({})
 									const dataDelete = [...data];
 									const index = oldData.tableData.id;
 									dataDelete.splice(index, 1);
