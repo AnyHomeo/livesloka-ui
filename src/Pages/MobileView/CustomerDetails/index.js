@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { getAllCustomerDetails, getData } from "../../../Services/Services";
+import {
+  getAllCustomerDetails,
+  getByUserSettings,
+  getData,
+  getSummerCampStudents,
+  updateSettings,
+} from "../../../Services/Services";
 import {
   Paper,
   Grid,
@@ -7,14 +13,19 @@ import {
   TextField,
   IconButton,
   Typography,
+  Button,
 } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
-import { PlusSquare, Monitor } from "react-feather";
+import { PlusSquare, Monitor, BarChart2 } from "react-feather";
 import { useHistory } from "react-router-dom";
 import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 import "./style.css";
 import PhoneAndroidIcon from "@material-ui/icons/PhoneAndroid";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import FilterListOutlinedIcon from "@material-ui/icons/FilterListOutlined";
+import StatisticsCards from "./StatisticsCards";
+import { isAutheticated } from "../../../auth";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -37,6 +48,7 @@ const CustomerDetails = () => {
   const [classStatusDrop, setClassStatusDrop] = useState();
   const [timeZoneId, setTimeZoneId] = useState();
   const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
   useEffect(() => {
     fetchCustomerDetails();
     fetchClassStatus();
@@ -49,6 +61,7 @@ const CustomerDetails = () => {
     console.log(data);
     // data && data.data.result.reverse();
     setCustomersData(data && data.data.result);
+    setData(data && data.data.result);
     setLoading(false);
   };
 
@@ -68,8 +81,8 @@ const CustomerDetails = () => {
 
     let regex = new RegExp(`^${value}`, `i`);
     const sortedArr =
-      customersData &&
-      customersData.filter(
+      data &&
+      data.filter(
         (x) =>
           regex.test(x.firstName) ||
           regex.test(x.meetingLink) ||
@@ -149,9 +162,322 @@ const CustomerDetails = () => {
       });
     return <p style={{ color: "white", fontSize: 10 }}>{timeZoneString}</p>;
   }
+
+  const [toggleStatistics, setToggleStatistics] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [classStatusDropdown, setClassStatusDropdown] = useState({});
+  const [timeZoneDropdown, setTimeZoneDropdown] = useState({});
+  const [classDropdown, setClassDropdown] = useState({});
+  const [countryDropdown, setCountryDropdown] = useState({});
+  const [teachersDropdown, setTeachersDropdown] = useState({});
+  const [agentDropdown, setAgentDropdown] = useState({});
+  const [subjectDropdown, setSubjectDropdown] = useState({});
+  const [currencyDropdown, setCurrencyDropdown] = useState({});
+  const [categoryDropdown, setCategoryDropdown] = useState({});
+
+  const [filters, setFilters] = useState({
+    classStatuses: [],
+    timeZones: [],
+    classes: [],
+    teachers: [],
+    countries: [],
+    agents: [],
+    subjects: [],
+    paidClasses: [],
+  });
+
+  const names = [
+    "Class",
+    "Time Zone",
+    "Class Status",
+    "Currency",
+    "Country",
+    "Teacher",
+    "Agent",
+    "Category",
+    "Subject",
+  ];
+
+  const status = [
+    "className",
+    "timeZoneName",
+    "classStatusName",
+    "currencyName",
+    "countryName",
+    "TeacherName",
+    "AgentName",
+    "categoryName",
+    "subjectName",
+  ];
+
+  const fetchDropDown = (index) => {
+    var obj = {};
+    getData(names[index])
+      .then((data) => {
+        data.data.result.forEach((item) => {
+          if (names[index] === "Class Status") {
+            if (item.status === "1") {
+              obj[item.id] = item[status[index]];
+            }
+          } else {
+            obj[item.id] = item[status[index]];
+          }
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    return obj;
+  };
+
+  useEffect(() => {
+    setClassDropdown(fetchDropDown(0));
+    setTimeZoneDropdown(fetchDropDown(1));
+    setClassStatusDropdown(fetchDropDown(2));
+    setCurrencyDropdown(fetchDropDown(3));
+    setCountryDropdown(fetchDropDown(4));
+    setTeachersDropdown(fetchDropDown(5));
+    setAgentDropdown(fetchDropDown(6));
+    setCategoryDropdown(fetchDropDown(7));
+    setSubjectDropdown(fetchDropDown(8));
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      let id = isAutheticated()._id;
+      let data;
+
+      data = await getByUserSettings(id);
+
+      let details = data.data.result;
+      setData(details);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const AutoCompleteFilterData = ({ dropdown, i }) => {
+    return (
+      <Autocomplete
+        multiple
+        size="small"
+        id="tags-standard"
+        filterSelectedOptions
+        options={Object.keys(dropdown).map((id) => ({
+          id,
+          name: dropdown[id],
+        }))}
+        limitTags={1}
+        getOptionSelected={(option, value) => option.id === value.id}
+        value={
+          filters[
+            [
+              "classStatuses",
+              "timeZones",
+              "classes",
+              "teachers",
+              "countries",
+              "agents",
+              "subjects",
+            ][i]
+          ]
+        }
+        onChange={(e, v) => {
+          setFilters((prev) => {
+            let prevFilters = { ...prev };
+            return {
+              ...prevFilters,
+              [[
+                "classStatuses",
+                "timeZones",
+                "classes",
+                "teachers",
+                "countries",
+                "agents",
+                "subjects",
+              ][i]]: v,
+            };
+          });
+        }}
+        getOptionLabel={(option) => option.name}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant="outlined"
+            label={
+              [
+                "Class Status",
+                "Time Zone",
+                "Class",
+                "Teacher",
+                "Country",
+                "Agent",
+                "Subject",
+              ][i]
+            }
+          />
+        )}
+      />
+    );
+  };
+
+  console.log(data);
   return (
     <div className={classes.root}>
+      {toggleStatistics && <StatisticsCards />}
+
+      {filterOpen ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            margin: "30px",
+            alignItems: "center",
+            justifyContent: "space-evenly",
+            flexWrap: "wrap",
+          }}
+        >
+          {[
+            classStatusDropdown,
+            timeZoneDropdown,
+            classDropdown,
+            teachersDropdown,
+            countryDropdown,
+            agentDropdown,
+            subjectDropdown,
+          ].map((dropdown, i) => (
+            <div
+              style={{
+                width: "300px",
+                margin: "10px 0",
+              }}
+            >
+              <AutoCompleteFilterData dropdown={dropdown} i={i} />
+            </div>
+          ))}
+          <div
+            style={{
+              width: "300px",
+              margin: "10px 0",
+            }}
+          >
+            <Autocomplete
+              multiple
+              size="small"
+              filterSelectedOptions
+              options={[
+                -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+                12,
+              ]}
+              limitTags={1}
+              getOptionSelected={(option, value) => option === value}
+              value={filters["paidClasses"]}
+              onChange={(e, v) => {
+                setFilters((prev) => {
+                  let prevFilters = { ...prev };
+                  return {
+                    ...prevFilters,
+                    paidClasses: v,
+                  };
+                });
+              }}
+              getOptionLabel={(option) => option.toString()}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label={"Paid Classes"}
+                />
+              )}
+            />
+          </div>
+          <div
+            style={{
+              width: "300px",
+              margin: "10px 0",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ margin: "5px" }}
+              onClick={(e) => {
+                setLoading(true);
+                let id = isAutheticated()._id;
+                if (id) {
+                  updateSettings(id, {
+                    filters,
+                  })
+                    .then((data) => {
+                      fetchData();
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                }
+              }}
+            >
+              Apply
+            </Button>
+
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ margin: "5px" }}
+              onClick={() => {
+                let id = isAutheticated()._id;
+                setLoading(true);
+                setFilters({
+                  classStatuses: [],
+                  timeZones: [],
+                  classes: [],
+                  teachers: [],
+                  countries: [],
+                  agents: [],
+                  subjects: [],
+                  paidClasses: [],
+                });
+                updateSettings(id, {
+                  filters: {
+                    classStatuses: [],
+                    timeZones: [],
+                    classes: [],
+                    teachers: [],
+                    countries: [],
+                    agents: [],
+                    subjects: [],
+                    paidClasses: [],
+                  },
+                })
+                  .then((data) => {
+                    fetchData();
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              }}
+            >
+              Clear
+            </Button>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
+
       <div style={{ textAlign: "right" }}>
+        <IconButton onClick={() => setFilterOpen(!filterOpen)}>
+          <FilterListOutlinedIcon />
+        </IconButton>
+
+        <IconButton onClick={() => setToggleStatistics(!toggleStatistics)}>
+          <BarChart2 />
+        </IconButton>
         <Link
           to={{
             pathname: "/add-customer-mobile",
@@ -267,8 +593,8 @@ const CustomerDetails = () => {
                 </div>
               </Card>
             ))
-          : customersData &&
-            customersData.map((data) => {
+          : data &&
+            data.map((data) => {
               return (
                 <>
                   <Card
@@ -288,23 +614,23 @@ const CustomerDetails = () => {
                       overflow: "hidden",
                     }}
                   >
-                    <div
+                    <Link
+                      key={data._id}
+                      to={{
+                        pathname: "/customer-data-info",
+                        state: { data },
+                      }}
                       style={{
-                        marginLeft: 10,
-                        display: "flex",
-                        flexDirection: "column",
+                        width: "100%",
+                        textDecoration: "none",
+                        color: "white",
                       }}
                     >
-                      <Link
-                        key={data._id}
-                        to={{
-                          pathname: "/customer-data-info",
-                          state: { data },
-                        }}
+                      <div
                         style={{
-                          width: "100%",
-                          textDecoration: "none",
-                          color: "white",
+                          marginLeft: 10,
+                          display: "flex",
+                          flexDirection: "column",
                         }}
                       >
                         <Typography
@@ -313,33 +639,33 @@ const CustomerDetails = () => {
                         >
                           {data.firstName}
                         </Typography>
-                      </Link>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Typography
-                          className={classes.heading}
-                          style={{ fontSize: 10 }}
-                        >
-                          {data.lastName}
-                        </Typography>
-                        <Typography
-                          // className={classes.heading}
+
+                        <div
                           style={{
-                            fontSize: 10,
-                            marginRight: 10,
-                            marginLeft: 10,
+                            display: "flex",
+                            alignItems: "center",
                           }}
                         >
-                          {data.numberOfClassesBought}
-                        </Typography>
-                        {getTimeZone(data.timeZoneId)}
+                          <Typography
+                            className={classes.heading}
+                            style={{ fontSize: 10 }}
+                          >
+                            {data.lastName}
+                          </Typography>
+                          <Typography
+                            // className={classes.heading}
+                            style={{
+                              fontSize: 10,
+                              marginRight: 10,
+                              marginLeft: 10,
+                            }}
+                          >
+                            {data.numberOfClassesBought}
+                          </Typography>
+                          {getTimeZone(data.timeZoneId)}
+                        </div>
                       </div>
-                    </div>
-
+                    </Link>
                     <div
                       style={{
                         height: "100%",
