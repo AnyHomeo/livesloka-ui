@@ -79,7 +79,6 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
   useEffect(() => {
     getData(name).then((response) => {
       setData(response.data.result);
-      console.log(response.data.result);
       setLoading(false);
     });
   }, []);
@@ -186,7 +185,6 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
             return {
               title: humanReadable(key),
               field: key,
-              type: "",
               lookup: { 3: "Admin", 4: "Sales", 5: "Customer Support" },
               editable: !(isAutheticated().roleId == 3) ? "never" : undefined,
             };

@@ -69,7 +69,7 @@ const PaymentsTable = ({ data }) => {
   data &&
     data.data.result.map((data) => {
       let formData = {};
-      if (data.paymentData !== null) {
+      if (data.paymentData !== null && data.type === "PAYPAL" ) {
         formData = {
           orderRef:
             data.paymentData.transactions[0].related_resources[0].sale.id,

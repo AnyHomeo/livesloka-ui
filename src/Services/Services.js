@@ -256,3 +256,5 @@ export const getSummerCampStudents = () => axios.get(`${API.main}/summercamps/st
 export const getDemoAndInclassStudents = () => axios.get(`${API.main}/all/demo-inclass`);
 
 export const getCareersApplications = () => axios.get(`${API.main}/careers`);
+
+export const getTodayLeaves = () => axios.get(`${API.main}/cancelclass/123?noSchedule=true`)

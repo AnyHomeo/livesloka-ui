@@ -521,12 +521,12 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 					field: 'requestedSubjects',
 					width: '1%',
 					cellStyle: { whiteSpace: 'nowrap' },
+					editable:"never",
 					headerStyle: { whiteSpace: 'nowrap' },
 					hidden: !columnFilters['requestedSubjects'].selected,
 					render:(row) => (
 						<div>
 							{
-							
 							Array.isArray(row.requestedSubjects) ? (
 								row.requestedSubjects.map(subject => (
 									<div>
@@ -1251,7 +1251,13 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 										...rowData,
 										_id: undefined,
 										subjectId:undefined,
-										requestedSubjects:undefined
+										requestedSubjects:undefined,
+										numberOfClassesBought:undefined,
+										classStatusId:undefined,
+										createdAt:undefined,
+										teacherId:undefined,
+										className:undefined,
+										proposedAmount:undefined
 								});
 								materialTable.dataManager.changeRowEditing();
 								materialTable.setState({
@@ -1266,7 +1272,7 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 							<MTableBodyRow
 								{...props}
 								onDoubleClick={(e) => {
-									props.actions[isSummerCampStudents ? 6 : 7]().onClick(e, props.data);
+									props.actions[isSummerCampStudents ? 7 : 8]().onClick(e, props.data);
 								}}
 							/>
 						),
@@ -1313,8 +1319,8 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 								!Object.keys(requestBody).includes('numberOfClassesBought') ||
 								window.confirm('Are you sure in updating Classes paid')
 							) {
-								requestBody.agentId = isAutheticated().agentId;
-								newData.agentId = isAutheticated().agentId;
+								requestBody.agentId = requestBody.agentId ? requestBody.agentId :  isAutheticated().agentId;
+								newData.agentId = requestBody.agentId ? requestBody.agentId : isAutheticated().agentId;
 								return editCustomer({ ...requestBody, _id: oldData._id })
 									.then((fetchedData) => {
 										if (fetchedData.data.status === 'OK') {
