@@ -232,7 +232,8 @@ const Login = () => {
         <div className={classes.paper}>
           <img
             className={classes.Logo}
-            src={require("../../Images/Logo.png")}
+            // src={require("../../Images/Logo.png")}
+            src="https://firebasestorage.googleapis.com/v0/b/livesloka-93a02.appspot.com/o/LiveSlokaLogoFiles%2FOriginal%20on%20Transparent.png?alt=media&token=fc19ecef-e7d5-45aa-b7b8-ac49689eb008"
             alt=""
           />
           <Typography component="h1" variant="h5">
