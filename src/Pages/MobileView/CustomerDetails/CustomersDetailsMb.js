@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import CloseIcon from "@material-ui/icons/Close";
+
 import {
   Button,
   TextField,
@@ -9,18 +11,19 @@ import {
   FormControl,
   IconButton,
   Card,
+  Dialog,
+  AppBar,
+  Toolbar,
+  Slide,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import moment from "moment";
-import {
-  AddCustomer,
-  getData,
-  editCustomer,
-  deleteUser,
-} from "../../../Services/Services";
+import { getData, editCustomer, deleteUser } from "../../../Services/Services";
 import { Edit, Trash, ArrowRightCircle } from "react-feather";
 import { isAutheticated } from "../../../auth";
+import StudentHistoryTable from "../../Admin/Crm/StudentsHistoryTable";
+import Axios from "axios";
 const useStyles = makeStyles((theme) => ({
   textLable: {
     marginBottom: "10px",
@@ -30,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "10px",
     marginBottom: "10px",
     width: "100%",
+  },
+  appBar: {
+    position: "relative",
   },
 }));
 const CustomersDetailsMb = ({ location }) => {
@@ -81,7 +87,7 @@ const CustomersDetailsMb = ({ location }) => {
   const handleSwitchChange = (event) => {
     setCustomersEditData({
       ...customersEditData,
-      agentId:isAutheticated().agentId,
+      agentId: isAutheticated().agentId,
       isJoinButtonEnabledByAdmin: event.target.checked,
     });
   };
@@ -172,6 +178,26 @@ const CustomersDetailsMb = ({ location }) => {
     textField.remove();
   };
 
+  const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
+
+  const [historyStudentData, setHistoryStudentData] = useState();
+  const [historySelectedId, setHistorySelectedId] = useState("");
+  const [historyOpen, setHistoryOpen] = useState(false);
+
+  const studentsHistorytable = async (id) => {
+    const data = await Axios.get(
+      `${process.env.REACT_APP_API_KEY}/class-history/${id}`
+    );
+    setHistoryStudentData(data);
+    setHistorySelectedId(id);
+
+    if (data.status === 200) {
+      setHistoryOpen(true);
+    }
+  };
+
   return (
     <div
       style={{
@@ -181,21 +207,6 @@ const CustomersDetailsMb = ({ location }) => {
         flexDirection: "column",
       }}
     >
-      <div style={{ textAlign: "right" }}>
-        {disableEditButton ? (
-          <IconButton onClick={() => setDisableEditButton(false)}>
-            <Edit style={{ fontSize: 24 }} />
-          </IconButton>
-        ) : (
-          <IconButton onClick={onCustomerUpdate}>
-            <ArrowRightCircle style={{ fontSize: 24 }} />
-          </IconButton>
-        )}
-
-        <IconButton onClick={onUserDelete}>
-          <Trash style={{ fontSize: 24 }} />
-        </IconButton>
-      </div>
       {disableEditButton ? (
         <>
           <div
@@ -528,9 +539,18 @@ const CustomersDetailsMb = ({ location }) => {
                 marginTop: -5,
               }}
             >
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+              <IconButton
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  color: "black",
+                  marginLeft: -7,
+                }}
+                onClick={() => studentsHistorytable(customersEditData._id)}
+              >
                 {customersEditData.numberOfClassesBought}
-              </p>
+              </IconButton>
             </Card>
             <IconButton
               style={{ marginTop: -15 }}
@@ -1697,6 +1717,22 @@ const CustomersDetailsMb = ({ location }) => {
           </div>
         </>
       )}
+
+      <div style={{ textAlign: "right" }}>
+        {disableEditButton ? (
+          <IconButton onClick={() => setDisableEditButton(false)}>
+            <Edit style={{ fontSize: 24 }} />
+          </IconButton>
+        ) : (
+          <IconButton onClick={onCustomerUpdate}>
+            <ArrowRightCircle style={{ fontSize: 24 }} />
+          </IconButton>
+        )}
+
+        <IconButton onClick={onUserDelete}>
+          <Trash style={{ fontSize: 24 }} />
+        </IconButton>
+      </div>
       <div
         style={{
           display: "flex",
@@ -1741,6 +1777,32 @@ const CustomersDetailsMb = ({ location }) => {
           Delete
         </Button>
       </div>
+
+      {historyStudentData && (
+        <Dialog
+          open={historyOpen}
+          fullWidth
+          onClose={() => setHistoryOpen(false)}
+        >
+          <AppBar className={classes.appBar}>
+            <Toolbar>
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={() => setHistoryOpen(false)}
+                aria-label="close"
+              >
+                <CloseIcon />
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+
+          <StudentHistoryTable
+            data={historyStudentData}
+            id={historySelectedId}
+          />
+        </Dialog>
+      )}
     </div>
   );
 };
