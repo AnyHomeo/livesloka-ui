@@ -36,8 +36,8 @@ const useStyles = makeStyles((theme) => ({
     width: "auto",
   },
   card: {
-    width: 80,
-    height: 80,
+    width: 50,
+    height: 50,
     marginTop: "10px",
     marginBottom: "10px",
     textAlign: "center",
@@ -47,6 +47,14 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     marginBottom: "10px",
     marginTop: "10px",
+  },
+
+  h1umber: {
+    color: "white",
+    fontSize: 18,
+  },
+  h2Text: {
+    fontSize: 12,
   },
 }));
 
@@ -124,92 +132,74 @@ const StatisticsCards = () => {
   return (
     <div>
       {statisticsData && (
-        <div style={{ backgroundColor: "white" }}>
-          <Grid container style={{ margin: "0 auto", width: "90%" }}>
-            <Grid item xs={12} md={6}>
-              <div>
-                <h1 className={classes.titleCard}>
-                  No Of Classes for In Classes Status
+        <div>
+          <Grid container spacing={2}>
+            <Grid item xs={2}>
+              <Card
+                className={classes.card}
+                style={{ backgroundColor: "#e74c3c" }}
+              >
+                <h2 className={classes.h2Text}>{"-Two"}</h2>
+                <h1 className={classes.h1umber}>
+                  {statisticsData.customersLessThanMinus2}
                 </h1>
-              </div>
-              <Grid container style={{ display: "flex", flexDirection: "row" }}>
-                <Grid item xs={4} sm={4}>
-                  <Card
-                    className={classes.card}
-                    style={{ backgroundColor: "#e74c3c" }}
-                  >
-                    <h2>{"<-2"}</h2>
-                    <h1 style={{ color: "white" }}>
-                      {statisticsData.customersLessThanMinus2}
-                    </h1>
-                  </Card>
-                </Grid>
-                <Grid item xs={4} sm={4}>
-                  <Card
-                    className={classes.card}
-                    style={{ backgroundColor: "#e67e22" }}
-                  >
-                    <h2>{"<-1"}</h2>
-                    <h1 style={{ color: "white" }}>
-                      {statisticsData.customersEqualToMinus1}
-                    </h1>
-                  </Card>
-                </Grid>
-                <Grid item xs={4} sm={4}>
-                  <Card
-                    className={classes.card}
-                    style={{ backgroundColor: "#2ecc71" }}
-                  >
-                    <h2>{"0"}</h2>
-                    <h1 style={{ color: "white" }}>
-                      {statisticsData.customersEqualTo0}
-                    </h1>
-                  </Card>
-                </Grid>
-              </Grid>
+              </Card>
+            </Grid>
+            <Grid item xs={2}>
+              <Card
+                className={classes.card}
+                style={{ backgroundColor: "#e67e22" }}
+              >
+                <h2 className={classes.h2Text}>{"-One"}</h2>
+                <h1 className={classes.h1umber}>
+                  {statisticsData.customersEqualToMinus1}
+                </h1>
+              </Card>
+            </Grid>
+            <Grid item xs={2}>
+              <Card
+                className={classes.card}
+                style={{ backgroundColor: "#2ecc71" }}
+              >
+                <h2 className={classes.h2Text}>{"Zero"}</h2>
+                <h1 className={classes.h1umber}>
+                  {statisticsData.customersEqualTo0}
+                </h1>
+              </Card>
             </Grid>
 
-            <Grid item xs={12} md={6}>
-              <div>
-                <h1 className={classes.titleCard}>
-                  No Of Classes for In Classes Status
+            <Grid item xs={2}>
+              <Card
+                className={classes.card}
+                style={{ backgroundColor: "#d35400" }}
+              >
+                <h2 className={classes.h2Text}>New</h2>
+                <h1 className={classes.h1umber}>
+                  {statisticsData.newCustomers}
                 </h1>
-              </div>
-              <Grid container style={{ display: "flex", flexDirection: "row" }}>
-                <Grid item xs={4} sm={4}>
-                  <Card
-                    className={classes.card}
-                    style={{ backgroundColor: "#d35400" }}
-                  >
-                    <h2>New</h2>
-                    <h1 style={{ color: "white" }}>
-                      {statisticsData.newCustomers}
-                    </h1>
-                  </Card>
-                </Grid>
-                <Grid item xs={4} sm={4}>
-                  <Card
-                    className={classes.card}
-                    style={{ backgroundColor: "#3498db" }}
-                  >
-                    <h2>Demo</h2>
-                    <h1 style={{ color: "white" }}>
-                      {statisticsData.demoCustomers}
-                    </h1>
-                  </Card>
-                </Grid>
-                <Grid item xs={4} sm={4}>
-                  <Card
-                    className={classes.card}
-                    style={{ backgroundColor: "#27ae60" }}
-                  >
-                    <h2>InClass</h2>
-                    <h1 style={{ color: "white" }}>
-                      {statisticsData.customersInClass}
-                    </h1>
-                  </Card>
-                </Grid>
-              </Grid>
+              </Card>
+            </Grid>
+            <Grid item xs={2}>
+              <Card
+                className={classes.card}
+                style={{ backgroundColor: "#3498db" }}
+              >
+                <h2 className={classes.h2Text}>Demo</h2>
+                <h1 className={classes.h1umber}>
+                  {statisticsData.demoCustomers}
+                </h1>
+              </Card>
+            </Grid>
+            <Grid item xs={2}>
+              <Card
+                className={classes.card}
+                style={{ backgroundColor: "#27ae60" }}
+              >
+                <h2 className={classes.h2Text}>InClass</h2>
+                <h1 className={classes.h1umber}>
+                  {statisticsData.customersInClass}
+                </h1>
+              </Card>
             </Grid>
           </Grid>
         </div>

@@ -504,7 +504,10 @@ const CustomersDetailsMb = ({ location }) => {
             </IconButton>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "row" }}>
+          <div
+            style={{ display: "flex", flexDirection: "row", cursor: "pointer" }}
+            onClick={() => studentsHistorytable(customersEditData._id)}
+          >
             <Card
               style={{
                 height: 30,
@@ -547,7 +550,6 @@ const CustomersDetailsMb = ({ location }) => {
                   color: "black",
                   marginLeft: -7,
                 }}
-                onClick={() => studentsHistorytable(customersEditData._id)}
               >
                 {customersEditData.numberOfClassesBought}
               </IconButton>
