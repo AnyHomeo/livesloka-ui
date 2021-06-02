@@ -37,6 +37,11 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     opacity: 0.8,
   },
+  flexContainer: {
+    display: "flex",
+    alignItems: "center",
+    flexWrap: "wrap",
+  },
 }));
 
 const AttendanceByClassMobile = ({ data }) => {
@@ -64,7 +69,7 @@ const AttendanceByClassMobile = ({ data }) => {
         </AccordionSummary>
         <AccordionDetails>
           <div>
-            <div>
+            <div className={classes.flexContainer}>
               <p className={classes.subTitle}>Attended:</p>{" "}
               {data.customers.length === 0 && (
                 <p className={classes.noStudent}>No students</p>
@@ -78,7 +83,7 @@ const AttendanceByClassMobile = ({ data }) => {
                     backgroundColor: "#2ecc704d",
                     border: "1px solid #27ae60",
                     color: "#27ae60",
-                    fontWeight: "bold",
+                    // fontWeight: "bold",
                   }}
                   label={
                     student.firstName
@@ -87,11 +92,11 @@ const AttendanceByClassMobile = ({ data }) => {
                       ? student.email
                       : "Noname"
                   }
-                  size="medium"
+                  size="small"
                 />
               ))}
             </div>
-            <div>
+            <div className={classes.flexContainer}>
               <p className={classes.subTitle}>Requested:</p>{" "}
               {data.requestedStudents.length === 0 && (
                 <p className={classes.noStudent}>No students</p>
@@ -105,7 +110,7 @@ const AttendanceByClassMobile = ({ data }) => {
                     backgroundColor: "#f1c40f63",
                     border: "1px solid #f39c12",
                     color: "#f39c12",
-                    fontWeight: "bold",
+                    // fontWeight: "bold",
                   }}
                   label={
                     student.firstName
@@ -114,11 +119,11 @@ const AttendanceByClassMobile = ({ data }) => {
                       ? student.email
                       : "Noname"
                   }
-                  size="medium"
+                  size="small"
                 />
               ))}
             </div>
-            <div>
+            <div className={classes.flexContainer}>
               <p className={classes.subTitle}>Requested Paid:</p>
               {data.requestedPaidStudents.length === 0 && (
                 <p className={classes.noStudent}>No students</p>
@@ -132,7 +137,7 @@ const AttendanceByClassMobile = ({ data }) => {
                     backgroundColor: "#e74c3c4d",
                     border: "1px solid #c0392b",
                     color: "#c0392b",
-                    fontWeight: "bold",
+                    // fontWeight: "bold",
                   }}
                   label={
                     student.firstName
@@ -141,11 +146,11 @@ const AttendanceByClassMobile = ({ data }) => {
                       ? student.email
                       : "Noname"
                   }
-                  size="medium"
+                  size="small"
                 />
               ))}
             </div>
-            <div>
+            <div className={classes.flexContainer}>
               <p className={classes.subTitle}>Absent:</p>{" "}
               {data.absentees.length === 0 && (
                 <p className={classes.noStudent}>No students</p>
@@ -159,7 +164,7 @@ const AttendanceByClassMobile = ({ data }) => {
                     backgroundColor: "#e74c3c4d",
                     border: "1px solid #c0392b",
                     color: "#c0392b",
-                    fontWeight: "bold",
+                    // fontWeight: "bold",
                   }}
                   label={
                     student.firstName
@@ -168,7 +173,7 @@ const AttendanceByClassMobile = ({ data }) => {
                       ? student.email
                       : "Noname"
                   }
-                  size="medium"
+                  size="small"
                 />
               ))}
             </div>
