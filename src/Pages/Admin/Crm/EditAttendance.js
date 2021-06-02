@@ -17,19 +17,23 @@ import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import MoneyOffIcon from "@material-ui/icons/MoneyOff";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import ToggleButton from "@material-ui/lab/ToggleButton";
+import useWindowDimensions from "../../../Components/useWindowDimensions";
 
 const BooleanRadioBox = ({ value, onChange, label }) => {
+  const { width } = useWindowDimensions();
+
   return (
     <div
       style={{
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        width: "500px",
+        width: width > 700 ? "500px" : "90%",
         margin: "0 auto",
         padding: "3px 0",
         flexDirection: "row",
         marginBottom: 3,
+        flexDirection: width > 700 ? "row" : "column",
       }}
     >
       <Card
@@ -41,27 +45,12 @@ const BooleanRadioBox = ({ value, onChange, label }) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          width: width > 700 ? "110%" : "100%",
         }}
       >
         {label}
       </Card>
-      {/* <p></p> */}
       <div style={{ display: "flex" }}>
-        {/* <Radio
-          checked={value === "present"}
-          onChange={() => onChange("present")}
-        />
-        <Radio
-          checked={value === "absent"}
-          style={{ marginLeft: "15px" }}
-          onChange={() => onChange("absent")}
-        />
-        <Radio checked={value === "paid"} onChange={() => onChange("paid")} />
-        <Radio
-          checked={value === "unpaid"}
-          onChange={() => onChange("unpaid")}
-        /> */}
-
         <ToggleButtonGroup
           value={value}
           exclusive
@@ -76,7 +65,8 @@ const BooleanRadioBox = ({ value, onChange, label }) => {
               color: "white",
               fontWeight: "bold",
               border: "0.1px solid #ecf0f1",
-              marginTop: -10,
+              marginTop: width > 700 ? -10 : 10,
+              marginBottom: width > 700 ? -10 : 10,
             }}
             aria-label="left aligned"
           >
@@ -94,7 +84,8 @@ const BooleanRadioBox = ({ value, onChange, label }) => {
               color: "white",
               fontWeight: "bold",
               border: "0.1px solid #ecf0f1",
-              marginTop: -10,
+              marginTop: width > 700 ? -10 : 10,
+              marginBottom: width > 700 ? -10 : 10,
             }}
           >
             <CancelIcon style={{ marginRight: 5, fontWeight: "bold" }} />
@@ -109,7 +100,8 @@ const BooleanRadioBox = ({ value, onChange, label }) => {
               color: "white",
               fontWeight: "bold",
               border: "0.1px solid #ecf0f1",
-              marginTop: -10,
+              marginTop: width > 700 ? -10 : 10,
+              marginBottom: width > 700 ? -10 : 10,
             }}
           >
             <AttachMoneyIcon style={{ marginRight: 5, fontWeight: "bold" }} />{" "}
@@ -124,7 +116,8 @@ const BooleanRadioBox = ({ value, onChange, label }) => {
               color: "white",
               fontWeight: "bold",
               border: "0.1px solid #ecf0f1",
-              marginTop: -10,
+              marginTop: width > 700 ? -10 : 10,
+              marginBottom: width > 700 ? -10 : 10,
             }}
           >
             <MoneyOffIcon style={{ marginRight: 5, fontWeight: "bold" }} />{" "}

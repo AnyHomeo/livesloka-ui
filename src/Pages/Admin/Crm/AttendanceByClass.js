@@ -9,6 +9,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Snackbar from "@material-ui/core/Snackbar";
+import useWindowDimensions from "../../../Components/useWindowDimensions";
+
 import "date-fns";
 import {
   Button,
@@ -36,6 +38,7 @@ import {
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import moment from "moment";
+import AttendanceByClassMobile from "./MobileViews/AttendanceByClassMobile";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
@@ -46,6 +49,8 @@ function Alert(props) {
 }
 
 const AttedanceByClass = () => {
+  const { width } = useWindowDimensions();
+
   const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
@@ -70,7 +75,7 @@ const AttedanceByClass = () => {
       getAttendanceByScheduleId(selectedScheduleId)
         .then((data) => {
           setLoading(false);
-          data.data.result.reverse()
+          data.data.result.reverse();
           setTableData(data.data.result);
         })
         .catch((err) => {
@@ -138,6 +143,8 @@ const AttedanceByClass = () => {
         setSnackBarOpen(true);
       });
   };
+
+  console.log(tableData);
 
   return (
     <>
@@ -296,111 +303,124 @@ const AttedanceByClass = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <TableContainer
-        component={Paper}
-        style={{ width: "90vw", margin: "0 auto", marginTop: "10px" }}
-      >
-        <Table aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell align="center">Time</TableCell>
-              <TableCell align="center">Attedended Students</TableCell>
-              <TableCell align="center">Requested Students</TableCell>
-              <TableCell align="center">Requested Paid Students</TableCell>
-              <TableCell align="center">Absent Students</TableCell>
-              <TableCell align="right">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {tableData.map((data) => (
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  {moment(data.date,"YYYY-MM-DD").format("MMMM Do YYYY")}
-                </TableCell>
-                <TableCell align="center">{data.time}</TableCell>
-                <TableCell align="center">
-                  {data.customers.map((student) => (
-                    <Chip
-                      key={student._id}
-                      style={{ margin: "0 5px" }}
-                      label={
-                        student.firstName
-                          ? student.firstName
-                          : student.email
-                          ? student.email
-                          : "Noname"
-                      }
-                      size="medium"
-                    />
-                  ))}
-                </TableCell>
-                <TableCell align="center">
-                  {data.requestedStudents.map((student) => (
-                    <Chip
-                      key={student._id}
-                      style={{ margin: "0 5px" }}
-                      label={
-                        student.firstName
-                          ? student.firstName
-                          : student.email
-                          ? student.email
-                          : "Noname"
-                      }
-                      size="medium"
-                      color="primary"
-                    />
-                  ))}
-                </TableCell>
-                <TableCell align="center">
-                  {data.requestedPaidStudents.map((student) => (
-                    <Chip
-                      key={student._id}
-                      style={{ margin: "0 5px" }}
-                      label={
-                        student.firstName
-                          ? student.firstName
-                          : student.email
-                          ? student.email
-                          : "Noname"
-                      }
-                      size="medium"
-                      color="primary"
-                    />
-                  ))}
-                </TableCell>
-                <TableCell align="center">
-                  {data.absentees.map((student) => (
-                    <Chip
-                      key={student._id}
-                      style={{ margin: "0 5px" }}
-                      label={
-                        student.firstName
-                          ? student.firstName
-                          : student.email
-                          ? student.email
-                          : "Noname"
-                      }
-                      size="medium"
-                      color="secondary"
-                    />
-                  ))}
-                </TableCell>
-                <TableCell align="right">
-                  <Link
-                    to={`/edit/attendance/${data.scheduleId}/${data.date}`}
-                    style={{ textDecoration: "none" }}
-                  >
-                    <Button variant="contained" color="primary">
-                      Edit
-                    </Button>
-                  </Link>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+
+      {console.log(width)}
+
+      {width > 768 ? (
+        <>
+          <TableContainer
+            component={Paper}
+            style={{ width: "90vw", margin: "0 auto", marginTop: "10px" }}
+          >
+            <Table aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Date</TableCell>
+                  <TableCell align="center">Time</TableCell>
+                  <TableCell align="center">Attedended Students</TableCell>
+                  <TableCell align="center">Requested Students</TableCell>
+                  <TableCell align="center">Requested Paid Students</TableCell>
+                  <TableCell align="center">Absent Students</TableCell>
+                  <TableCell align="right">Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {tableData.map((data) => (
+                  <TableRow>
+                    <TableCell component="th" scope="row">
+                      {moment(data.date, "YYYY-MM-DD").format("MMMM Do YYYY")}
+                    </TableCell>
+                    <TableCell align="center">{data.time}</TableCell>
+                    <TableCell align="center">
+                      {data.customers.map((student) => (
+                        <Chip
+                          key={student._id}
+                          style={{ margin: "0 5px" }}
+                          label={
+                            student.firstName
+                              ? student.firstName
+                              : student.email
+                              ? student.email
+                              : "Noname"
+                          }
+                          size="medium"
+                        />
+                      ))}
+                    </TableCell>
+                    <TableCell align="center">
+                      {data.requestedStudents.map((student) => (
+                        <Chip
+                          key={student._id}
+                          style={{ margin: "0 5px" }}
+                          label={
+                            student.firstName
+                              ? student.firstName
+                              : student.email
+                              ? student.email
+                              : "Noname"
+                          }
+                          size="medium"
+                          color="primary"
+                        />
+                      ))}
+                    </TableCell>
+                    <TableCell align="center">
+                      {data.requestedPaidStudents.map((student) => (
+                        <Chip
+                          key={student._id}
+                          style={{ margin: "0 5px" }}
+                          label={
+                            student.firstName
+                              ? student.firstName
+                              : student.email
+                              ? student.email
+                              : "Noname"
+                          }
+                          size="medium"
+                          color="primary"
+                        />
+                      ))}
+                    </TableCell>
+                    <TableCell align="center">
+                      {data.absentees.map((student) => (
+                        <Chip
+                          key={student._id}
+                          style={{ margin: "0 5px" }}
+                          label={
+                            student.firstName
+                              ? student.firstName
+                              : student.email
+                              ? student.email
+                              : "Noname"
+                          }
+                          size="medium"
+                          color="secondary"
+                        />
+                      ))}
+                    </TableCell>
+                    <TableCell align="right">
+                      <Link
+                        to={`/edit/attendance/${data.scheduleId}/${data.date}`}
+                        style={{ textDecoration: "none" }}
+                      >
+                        <Button variant="contained" color="primary">
+                          Edit
+                        </Button>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </>
+      ) : (
+        <>
+          {tableData.map((data) => (
+            <AttendanceByClassMobile data={data} />
+          ))}
+        </>
+      )}
     </>
   );
 };
