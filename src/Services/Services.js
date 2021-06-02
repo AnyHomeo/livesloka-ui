@@ -258,3 +258,5 @@ export const getDemoAndInclassStudents = () => axios.get(`${API.main}/all/demo-i
 export const getCareersApplications = () => axios.get(`${API.main}/careers`);
 
 export const getTodayLeaves = () => axios.get(`${API.main}/cancelclass/123?noSchedule=true`)
+
+export const getCustomerDatFromFilterName = (name) => axios.get(`${API.main}/customer/filters?filter=${name}`)
