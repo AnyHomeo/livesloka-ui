@@ -3,7 +3,6 @@ import {
   getAllCustomerDetails,
   getByUserSettings,
   getData,
-  getSummerCampStudents,
   updateSettings,
 } from "../../../Services/Services";
 import {
@@ -26,6 +25,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import FilterListOutlinedIcon from "@material-ui/icons/FilterListOutlined";
 import StatisticsCards from "./StatisticsCards";
 import { isAutheticated } from "../../../auth";
+import { Copy } from "react-feather";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -506,97 +506,111 @@ const CustomerDetails = () => {
           : searchKeyword
           ? filteredData &&
             filteredData.map((data) => (
-              <Card
-                style={{
-                  width: "100%",
-                  height: 60,
-                  marginBottom: 5,
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  border: "1px solid #ecf0f1",
-                  backgroundColor: backgroundColorReturn(data.classStatusId),
-                  color: "white",
-                  overflow: "hidden",
-                }}
-              >
-                <div
+              <div style={{ display: "flex", width: "100%" }}>
+                <Card
                   style={{
-                    marginLeft: 10,
+                    width: "100%",
+                    height: 60,
+                    marginBottom: 5,
                     display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <Link
-                    key={data._id}
-                    to={{
-                      pathname: "/customer-data-info",
-                      state: { data },
-                    }}
-                    style={{
-                      width: "100%",
-                      textDecoration: "none",
-                      color: "white",
-                    }}
-                  >
-                    <Typography
-                      className={classes.heading}
-                      style={{ fontSize: 14 }}
-                    >
-                      {data.firstName}
-                    </Typography>
-                  </Link>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Typography
-                      className={classes.heading}
-                      style={{ fontSize: 10 }}
-                    >
-                      {data.lastName}
-                    </Typography>
-                    <Typography
-                      // className={classes.heading}
-                      style={{
-                        fontSize: 10,
-                        marginRight: 10,
-                        marginLeft: 10,
-                      }}
-                    >
-                      {data.numberOfClassesBought}
-                    </Typography>
-                    {getTimeZone(data.timeZoneId)}
-                  </div>
-                </div>
-                <div
-                  style={{
-                    height: "100%",
-                    width: "70px",
-                    backgroundColor: backgroundColorReturn2(data.classStatusId),
-                    borderRadius: "0px 7px 5px 0px",
-                    display: "flex",
-                    justifyContent: "center",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
                     alignItems: "center",
-                    flexDirection: "column",
+                    border: "1px solid #ecf0f1",
+                    backgroundColor: backgroundColorReturn(data.classStatusId),
+                    color: "white",
                     overflow: "hidden",
                   }}
                 >
-                  <a href={`https://wa.me/${data.whatsAppnumber}`}>
-                    <IconButton>
-                      <WhatsAppIcon style={{ color: "#fff" }} />
-                    </IconButton>
-                  </a>
-                </div>
-              </Card>
+                  <div
+                    style={{
+                      marginLeft: 10,
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <Link
+                      key={data._id}
+                      to={{
+                        pathname: "/customer-data-info",
+                        state: { data },
+                      }}
+                      style={{
+                        width: "100%",
+                        textDecoration: "none",
+                        color: "white",
+                      }}
+                    >
+                      <Typography
+                        className={classes.heading}
+                        style={{ fontSize: 14 }}
+                      >
+                        {data.firstName}
+                      </Typography>
+                    </Link>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography
+                        className={classes.heading}
+                        style={{ fontSize: 10 }}
+                      >
+                        {data.lastName}
+                      </Typography>
+                      <Typography
+                        // className={classes.heading}
+                        style={{
+                          fontSize: 10,
+                          marginRight: 10,
+                          marginLeft: 10,
+                        }}
+                      >
+                        {data.numberOfClassesBought}
+                      </Typography>
+                      {getTimeZone(data.timeZoneId)}
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      height: "100%",
+                      width: "70px",
+                      backgroundColor: backgroundColorReturn2(
+                        data.classStatusId
+                      ),
+                      borderRadius: "0px 7px 5px 0px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexDirection: "column",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <a href={`https://wa.me/${data.whatsAppnumber}`}>
+                      <IconButton>
+                        <WhatsAppIcon style={{ color: "#fff" }} />
+                      </IconButton>
+                    </a>
+                  </div>
+                </Card>
+                <Link
+                  to={{
+                    pathname: "/add-customer-mobile",
+                    state: { data },
+                  }}
+                >
+                  <IconButton>
+                    <Copy />
+                  </IconButton>
+                </Link>
+              </div>
             ))
           : data &&
             data.map((data) => {
               return (
-                <>
+                <div style={{ display: "flex", width: "100%" }}>
                   <Card
                     style={{
                       width: "100%",
@@ -688,7 +702,17 @@ const CustomerDetails = () => {
                       </a>
                     </div>
                   </Card>
-                </>
+                  <Link
+                    to={{
+                      pathname: "/add-customer-mobile",
+                      state: { data },
+                    }}
+                  >
+                    <IconButton>
+                      <Copy />
+                    </IconButton>
+                  </Link>
+                </div>
               );
             })}
       </Grid>
