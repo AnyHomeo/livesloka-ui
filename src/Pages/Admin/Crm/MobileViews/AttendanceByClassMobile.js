@@ -11,7 +11,7 @@ import { Edit } from "react-feather";
 import { Link } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "90%",
+    width: "100%",
     margin: "0 auto",
     marginTop: 5,
     marginBottom: 5,

@@ -10,7 +10,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Snackbar from "@material-ui/core/Snackbar";
 import useWindowDimensions from "../../../Components/useWindowDimensions";
-
+import { FilePlus } from "react-feather";
 import "date-fns";
 import {
   Button,
@@ -20,6 +20,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
   Slide,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
@@ -160,47 +161,61 @@ const AttedanceByClass = () => {
           {response}
         </Alert>
       </Snackbar>
-      <div style={{ textAlign: "center", marginTop: "30px" }}>
+      {/* <div style={{ textAlign: "center", marginTop: "30px" }}>
         <Link to="/attendance" style={{ textDecoration: "none" }}>
           <Button style={{ marginRight: "20px" }}>Attendance By Student</Button>
         </Link>
         <Button color="primary" variant="contained">
           Attendance By Class
         </Button>
-      </div>
+      </div> */}
       <div
         style={{
           margin: "0 auto",
           maxWidth: 400,
         }}
       >
-        <Autocomplete
-          id="free-solo-demo"
-          freeSolo
-          options={classes}
-          getOptionLabel={(option) => option.className}
-          onChange={(e, v) => {
-            if (v && v._id) {
-              setSelectedScheduleId(v._id);
-            } else {
-              setSelectedScheduleId("");
-            }
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Select ClassName"
-              margin="normal"
-              variant="outlined"
-            />
+        >
+          {selectedScheduleId && (
+            <IconButton>
+              <FilePlus onClick={() => setDialogOpen(true)} />
+            </IconButton>
           )}
-        />
+          <Autocomplete
+            id="free-solo-demo"
+            freeSolo
+            options={classes}
+            getOptionLabel={(option) => option.className}
+            onChange={(e, v) => {
+              if (v && v._id) {
+                setSelectedScheduleId(v._id);
+              } else {
+                setSelectedScheduleId("");
+              }
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Select ClassName"
+                margin="normal"
+                variant="outlined"
+                style={{ width: 300 }}
+              />
+            )}
+          />
+        </div>
 
         <div style={{ textAlign: "center", height: "40px" }}>
           {loading ? <CircularProgress /> : ""}
         </div>
       </div>
-      <h3 style={{ textAlign: "center", marginTop: "20px" }}>
+      {/* <h3 style={{ textAlign: "center", marginTop: "20px" }}>
         {" "}
         Classes Completed:{" "}
         <span
@@ -212,8 +227,8 @@ const AttedanceByClass = () => {
         >
           {tableData.length}
         </span>
-      </h3>
-      <div style={{ width: "90vw", margin: "0 auto", height: "40px" }}>
+      </h3> */}
+      {/* <div style={{ width: "90vw", margin: "0 auto", height: "40px" }}>
         {selectedScheduleId ? (
           <Button
             variant="contained"
@@ -226,7 +241,7 @@ const AttedanceByClass = () => {
         ) : (
           ""
         )}
-      </div>
+      </div> */}
       <Dialog
         open={dialogOpen}
         TransitionComponent={Transition}
@@ -416,9 +431,11 @@ const AttedanceByClass = () => {
         </>
       ) : (
         <>
-          {tableData.map((data) => (
-            <AttendanceByClassMobile data={data} />
-          ))}
+          <div style={{ marginTop: -20 }}>
+            {tableData.map((data) => (
+              <AttendanceByClassMobile data={data} />
+            ))}
+          </div>
         </>
       )}
     </>
