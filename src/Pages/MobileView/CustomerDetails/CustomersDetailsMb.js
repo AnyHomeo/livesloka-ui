@@ -1786,7 +1786,7 @@ const CustomersDetailsMb = ({ location }) => {
           fullWidth
           onClose={() => setHistoryOpen(false)}
         >
-          <AppBar className={classes.appBar}>
+          {/* <AppBar className={classes.appBar}>
             <Toolbar>
               <IconButton
                 edge="start"
@@ -1797,11 +1797,12 @@ const CustomersDetailsMb = ({ location }) => {
                 <CloseIcon />
               </IconButton>
             </Toolbar>
-          </AppBar>
+          </AppBar> */}
 
           <StudentHistoryTable
             data={historyStudentData}
             id={historySelectedId}
+            setHistoryOpen={setHistoryOpen}
           />
         </Dialog>
       )}

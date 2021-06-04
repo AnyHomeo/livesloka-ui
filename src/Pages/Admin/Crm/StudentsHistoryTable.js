@@ -1,15 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import useWindowDimensions from "../../../Components/useWindowDimensions";
 
 import { makeStyles } from "@material-ui/core/styles";
 import moment from "moment";
-import {
-  InputLabel,
-  MenuItem,
-  FormControl,
-  Select,
-  Button,
-} from "@material-ui/core";
+import { Button, IconButton } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -19,6 +13,8 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { Link } from "react-router-dom";
 import { isAutheticated } from "../../../auth";
+import ClassesLeftMobile from "./MobileViews/ClassesLeftMobile";
+import { Edit, X } from "react-feather";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "90%",
@@ -36,28 +32,31 @@ const useStyles = makeStyles((theme) => ({
   isPresentClass: {},
 }));
 
-const StudentHistoryTable = ({ data, id }) => {
+const StudentHistoryTable = ({ data, id, setHistoryOpen }) => {
   const { width } = useWindowDimensions();
 
   const classes = useStyles();
   return (
     <div>
       <div className={classes.root}>
-        {isAutheticated().roleId === 3 ? (
-          <Link to={"/update/classes/" + id}>
-            <Button
-              variant="contained"
-              color="primary"
-              style={{
-                marginTop: "20px",
-              }}
-            >
-              update classes Left
-            </Button>
-          </Link>
-        ) : (
-          ""
-        )}
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div>
+            {isAutheticated().roleId === 3 ? (
+              <Link to={"/update/classes/" + id}>
+                <IconButton>
+                  <Edit />
+                </IconButton>
+              </Link>
+            ) : (
+              ""
+            )}
+          </div>
+
+          <IconButton onClick={() => setHistoryOpen(false)}>
+            <X />
+          </IconButton>
+        </div>
+
         {width > 768 ? (
           <>
             {" "}
@@ -116,7 +115,12 @@ const StudentHistoryTable = ({ data, id }) => {
             )}
           </>
         ) : (
-          "HELlo"
+          <>
+            {data &&
+              data.data.result.map((data) => {
+                return <ClassesLeftMobile data={data} />;
+              })}
+          </>
         )}
       </div>
     </div>
