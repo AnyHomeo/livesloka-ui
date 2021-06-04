@@ -319,8 +319,6 @@ const AttedanceByClass = () => {
         </DialogActions>
       </Dialog>
 
-      {console.log(width)}
-
       {width > 768 ? (
         <>
           <TableContainer
