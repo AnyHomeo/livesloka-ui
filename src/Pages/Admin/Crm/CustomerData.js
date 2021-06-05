@@ -791,6 +791,29 @@ const CrmDetails = ({ isSummerCampStudents }) => {
 					),
 				},
 				{
+					title: 'Discount',
+					field: 'discount',
+					type: 'numeric',
+					width: '1%',
+					hidden: !columnFilters['proposedAmount'].selected,
+					cellStyle: { whiteSpace: 'nowrap' },
+					headerStyle: { whiteSpace: 'nowrap' },
+					editComponent: (props) => (
+						<TextField
+							type="number"
+							inputProps={{ min: '0', step: '1' }}
+							value={props.value}
+							onChange={(e) => {
+								if (e.target.value < 0) {
+									return props.onChange(0);
+								} else {
+									return props.onChange(e.target.value);
+								}
+							}}
+						/>
+					),
+				},
+				{
 					title: 'Currency',
 					field: 'proposedCurrencyId',
 					hidden: !columnFilters['proposedCurrencyId'].selected,
