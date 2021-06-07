@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 5,
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: 15,
     fontWeight: theme.typography.fontWeightRegular,
     // marginRight: 20,
   },
@@ -58,7 +58,16 @@ const ClassesLeftMobile = ({ data }) => {
       <Accordion>
         <AccordionSummary
           classes={{ content: classes.content, expanded: classes.expanded }}
-          expandIcon={<ExpandMoreIcon />}
+          expandIcon={<ExpandMoreIcon style={{ color: "white" }} />}
+          style={{
+            backgroundColor:
+              data.comment === "Successful Payment!"
+                ? "#2ecc71"
+                : data.comment === "Attendance Taken!"
+                ? "#f1c40f"
+                : "#3498db",
+            color: "white",
+          }}
         >
           <div
             style={{
@@ -67,10 +76,12 @@ const ClassesLeftMobile = ({ data }) => {
               width: "100%",
             }}
           >
-            {/* <Typography className={classes.heading}>
-              {moment(data.date, "YYYY-MM-DD").format("MMMM Do YYYY")}
-            </Typography> */}
-            <Typography className={classes.heading}>{data.comment}</Typography>
+            <Typography className={classes.heading}>
+              {moment(data.createdAt).format("MMMM Do YYYY")}
+            </Typography>
+            <Typography className={classes.heading}>
+              {data.previousValue}
+            </Typography>
           </div>
         </AccordionSummary>
         <AccordionDetails>
@@ -83,13 +94,17 @@ const ClassesLeftMobile = ({ data }) => {
             </div>
 
             <div className={classes.flexContainer}>
-              <p className={classes.subTitle}>Prev Class Count:</p>{" "}
+              <p className={classes.subTitle}>Prev:</p>{" "}
               <p className={classes.mainTitle}>{data.previousValue}</p>
             </div>
 
             <div className={classes.flexContainer}>
-              <p className={classes.subTitle}>Next Class Count:</p>{" "}
+              <p className={classes.subTitle}>Next:</p>{" "}
               <p className={classes.mainTitle}>{data.nextValue}</p>
+            </div>
+            <div className={classes.flexContainer}>
+              <p className={classes.subTitle}>Comment:</p>{" "}
+              <p className={classes.mainTitle}>{data.comment}</p>
             </div>
           </div>
         </AccordionDetails>
