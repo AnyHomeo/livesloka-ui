@@ -145,8 +145,6 @@ const AttedanceByClass = () => {
       });
   };
 
-  console.log(tableData);
-
   return (
     <>
       <Snackbar

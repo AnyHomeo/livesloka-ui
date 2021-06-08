@@ -91,17 +91,20 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
         .ref(`${e.target.files[0].type}/${e.target.files[0].name}`);
       await storageRef.put(e.target.files[0]);
 
-      storageRef.getDownloadURL().then(async (url) => {
-        if (url) {
-          setImageLoading(false)
-          return props.onChange(url);
-        } else {
-          setImageLoading(false)
-        }
-      }).catch(err =>{
-        console.log(err)
-        setImageLoading(false)
-      });
+      storageRef
+        .getDownloadURL()
+        .then(async (url) => {
+          if (url) {
+            setImageLoading(false);
+            return props.onChange(url);
+          } else {
+            setImageLoading(false);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          setImageLoading(false);
+        });
     }
   };
   useEffect(() => {
@@ -212,8 +215,8 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
                 <input
                   type="file"
                   onChange={(e) => handleFileUpload(e, props)}
-                  style={{width:"200px"}}
-                />                
+                  style={{ width: "200px" }}
+                />
               ),
             };
           } else {
@@ -272,7 +275,8 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
           isDeleteHidden: (rowData) =>
             (rowData && rowData.statusId) || data.length === 1,
           onRowAdd: (newData) => {
-            newData.isDemoIncludedInSalaries = !!newData.isDemoIncludedInSalaries;
+            newData.isDemoIncludedInSalaries =
+              !!newData.isDemoIncludedInSalaries;
             return addInField(`Add ${name}`, newData)
               .then((fetchedData) => {
                 if (fetchedData.data.status === "ok") {
@@ -299,8 +303,8 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
               });
           },
           onRowUpdate: (newData, oldData) => {
-            console.log(newData);
-            newData.isDemoIncludedInSalaries = !!newData.isDemoIncludedInSalaries;
+            newData.isDemoIncludedInSalaries =
+              !!newData.isDemoIncludedInSalaries;
 
             return editField(`Update ${name}`, newData).then((fetchedData) => {
               if (fetchedData.data.status === "OK") {

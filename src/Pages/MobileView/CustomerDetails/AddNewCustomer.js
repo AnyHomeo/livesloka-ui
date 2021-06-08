@@ -152,8 +152,6 @@ const AddNewCustomer = () => {
     });
   };
 
-  console.log(customersEditData);
-
   const addNewCustomer = async () => {
     try {
       const res = await AddCustomer(customersEditData);
