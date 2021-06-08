@@ -76,6 +76,7 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
   const [response, setResponse] = useState("");
   const { height } = useWindowDimensions();
   const [imageLoading, setImageLoading] = useState(false);
+
   useEffect(() => {
     getData(name).then((response) => {
       setData(response.data.result);
@@ -234,6 +235,8 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
     }
     setOpen(false);
   };
+
+  console.log(data);
 
   return (
     <>

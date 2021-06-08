@@ -80,7 +80,7 @@ const ClassesLeftMobile = ({ data }) => {
               {moment(data.createdAt).format("MMMM Do YYYY")}
             </Typography>
             <Typography className={classes.heading}>
-              {data.previousValue}
+              {data.nextValue}
             </Typography>
           </div>
         </AccordionSummary>

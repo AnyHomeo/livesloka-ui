@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { getData } from "../../../Services/Services";
 import MaterialTableAddFields from "../../../Components/MaterialTableAddFields";
+import TeacherDetailsTableMobile from "./MobileViews/TeacherDetailsTableMobile";
+import useWindowDimensions from "../../../Components/useWindowDimensions";
 
 const useStyles = makeStyles((theme) => ({
   saveButton: {
@@ -29,14 +31,17 @@ export default function TeacherDetails() {
   const [lookup, setLookup] = useState({});
   const [categoryLookup, setCategoryLookup] = useState({});
   const [item, setitem] = useState("Teacher");
-
-  useEffect(() => {
+  const [teachersdata, setTeachersdata] = useState();
+  const [categoryData, setCategoryData] = useState();
+  const [statusData, setStatusData] = useState();
+  useEffect(async () => {
     getData("Status").then((data) => {
       let dummyLookup = {};
       data.data.result.forEach((data) => {
         dummyLookup[data.statusId] = data.statusName;
       });
       setLookup(dummyLookup);
+      setStatusData(data);
     });
     getData("Category").then((data) => {
       let dummyLookup = {};
@@ -44,18 +49,40 @@ export default function TeacherDetails() {
         dummyLookup[data.id] = data.categoryName;
       });
       setCategoryLookup(dummyLookup);
+      setCategoryData(data);
     });
+
+    try {
+      const res = await getData("Teacher");
+      if (res.status === 200) {
+        setTeachersdata(res.data);
+      }
+    } catch (error) {}
   }, []);
 
+  const { width } = useWindowDimensions();
   return (
     <div style={{ width: "95%", margin: "0 auto", marginTop: "20px" }}>
-      <MaterialTableAddFields
-        style={{ height: "100vh !important" }}
-        name={item}
-        status={"TeacherStatus"}
-        lookup={lookup}
-        categoryLookup={categoryLookup}
-      />
+      {width > 768 ? (
+        <MaterialTableAddFields
+          style={{ height: "100vh !important" }}
+          name={item}
+          status={"TeacherStatus"}
+          lookup={lookup}
+          categoryLookup={categoryLookup}
+        />
+      ) : (
+        <>
+          {teachersdata &&
+            teachersdata.result.map((item) => (
+              <TeacherDetailsTableMobile
+                data={item}
+                categoryData={categoryData}
+                statusData={statusData}
+              />
+            ))}
+        </>
+      )}
     </div>
   );
 }
