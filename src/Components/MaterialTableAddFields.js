@@ -236,8 +236,6 @@ const MaterialTableAddFields = ({ name, status, lookup, categoryLookup }) => {
     setOpen(false);
   };
 
-  console.log(data);
-
   return (
     <>
       <Snackbar
