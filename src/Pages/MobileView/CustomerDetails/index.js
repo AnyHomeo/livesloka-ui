@@ -26,6 +26,7 @@ import FilterListOutlinedIcon from "@material-ui/icons/FilterListOutlined";
 import StatisticsCards from "./StatisticsCards";
 import { isAutheticated } from "../../../auth";
 import { Copy } from "react-feather";
+import useDocumentTitle from "../../../Components/useDocumentTitle";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -39,6 +40,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CustomerDetails = () => {
+  useDocumentTitle("Customer Data Mobile - LiveSloka");
+
   const history = useHistory();
   const classes = useStyles();
 

@@ -2,8 +2,11 @@ import { Button, TextField } from "@material-ui/core";
 import { Alert, Autocomplete } from "@material-ui/lab";
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
+import useDocumentTitle from "../../../Components/useDocumentTitle";
 
 function UserPasswordReset() {
+  useDocumentTitle("Password Reset Admin - LiveSloka");
+
   const [studentsData, setStudentsData] = useState([]);
   const [studentId, setStudentId] = useState("");
   const [response, setResponse] = useState("");
@@ -66,7 +69,7 @@ function UserPasswordReset() {
           }
           onChange={(event, value) => {
             console.log(event, value);
-            if(value){
+            if (value) {
               setResponse("");
               setStudentId(value._id);
             }

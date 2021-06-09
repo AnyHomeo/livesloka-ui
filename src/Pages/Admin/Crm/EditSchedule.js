@@ -38,6 +38,7 @@ import { EditorState, convertToRaw, ContentState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import { firebase } from "../../../Firebase";
+import useDocumentTitle from "../../../Components/useDocumentTitle";
 
 const isImageUrl = require("is-image-url");
 function useQuery() {
@@ -75,6 +76,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EditSchedule = () => {
+  useDocumentTitle("Edit Schedule - LiveSloka");
+
   const classes = useStyles();
   let query = useQuery();
   const [selectedDate, setSelectedDate] = useState(new Date());

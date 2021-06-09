@@ -24,6 +24,7 @@ import { Edit, Trash, ArrowRightCircle } from "react-feather";
 import { isAutheticated } from "../../../auth";
 import StudentHistoryTable from "../../Admin/Crm/StudentsHistoryTable";
 import Axios from "axios";
+import useDocumentTitle from "../../../Components/useDocumentTitle";
 const useStyles = makeStyles((theme) => ({
   textLable: {
     marginBottom: "10px",
@@ -39,6 +40,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const CustomersDetailsMb = ({ location }) => {
+  useDocumentTitle("Customer Info - LiveSloka");
+
   const classes = useStyles();
 
   const {

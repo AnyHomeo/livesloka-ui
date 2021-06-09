@@ -21,7 +21,8 @@ import { authenticate, isAutheticated } from "../../auth/index";
 import Background from "../../Images/Captureblue_buuble.PNG";
 import Copyright from "../../Components/Copyright";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
-import axios from "axios";
+import useDocumentTitle from "../../Components/useDocumentTitle";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "100vh",
@@ -92,6 +93,7 @@ function Alert(props) {
 }
 
 const Login = () => {
+  useDocumentTitle("Login - LiveSloka");
   const classes = useStyles();
   const [user, setUser] = useState({
     userId: "",

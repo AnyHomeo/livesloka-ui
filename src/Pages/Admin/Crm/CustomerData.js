@@ -50,6 +50,7 @@ import axios from "axios";
 import StudentHistoryTable from "./StudentsHistoryTable";
 import { useHistory, Redirect } from "react-router-dom";
 import { Smartphone } from "react-feather";
+import useDocumentTitle from "../../../Components/useDocumentTitle";
 
 const copyToClipboard = (text) => {
   var textField = document.createElement("textarea");
@@ -262,6 +263,8 @@ const ColumnFilterDrawer = ({
 );
 
 const CrmDetails = ({ isSummerCampStudents }) => {
+  useDocumentTitle("Customer Data - LiveSloka");
+
   const history = useHistory();
   const { height, width } = useWindowDimensions();
   const classes = useStyles();

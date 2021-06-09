@@ -112,7 +112,11 @@ const LeavesTableMobile = ({ data, setRefresh }) => {
             }}
           >
             <Typography className={classes.heading}>
-              {data.className}
+              {data.firstName} {`(${data.lastName})`}
+            </Typography>
+
+            <Typography className={classes.heading}>
+              {moment(data.cancelledDate).format("MMMM Do YYYY")}
             </Typography>
           </div>
         </AccordionSummary>

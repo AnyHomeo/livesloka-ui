@@ -14,6 +14,7 @@ import { isAutheticated } from "../../auth";
 import { updatePassword } from "../../Services/Services";
 import { Redirect } from "react-router-dom";
 import Copyright from "../../Components/Copyright";
+import useDocumentTitle from "../../Components/useDocumentTitle";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -44,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PasswordReset = () => {
+  useDocumentTitle("Password Reset - LiveSloka");
   const [user, setUser] = useState({
     currentPassword: "",
     newPassword: "",

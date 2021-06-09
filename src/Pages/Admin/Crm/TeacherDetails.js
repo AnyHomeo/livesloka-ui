@@ -4,6 +4,7 @@ import { getData } from "../../../Services/Services";
 import MaterialTableAddFields from "../../../Components/MaterialTableAddFields";
 import TeacherDetailsTableMobile from "./MobileViews/TeacherDetailsTableMobile";
 import useWindowDimensions from "../../../Components/useWindowDimensions";
+import useDocumentTitle from "../../../Components/useDocumentTitle";
 
 const useStyles = makeStyles((theme) => ({
   saveButton: {
@@ -26,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function TeacherDetails() {
+  useDocumentTitle("Teacher Details - LiveSloka");
   const classes = useStyles();
   //states
   const [lookup, setLookup] = useState({});

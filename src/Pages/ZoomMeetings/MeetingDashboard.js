@@ -1,6 +1,7 @@
 import { TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import React, { useEffect, useState } from "react";
+import useDocumentTitle from "../../Components/useDocumentTitle";
 import useWindowDimensions from "../../Components/useWindowDimensions";
 import {
   getAllSchedulesByZoomAccountId,
@@ -93,13 +94,13 @@ const days = [
 ];
 
 function MeetingDashboard() {
+  useDocumentTitle("Zoom Account Dashboard - LiveSloka");
+
   const { width } = useWindowDimensions();
   const [zoomAccounts, setZoomAccounts] = useState([]);
   const [selectedZoomAccount, setSelectedZoomAccount] = useState({});
-  const [
-    selectedZoomAccountSchedules,
-    setSelectedZoomAccountSchedules,
-  ] = useState([]);
+  const [selectedZoomAccountSchedules, setSelectedZoomAccountSchedules] =
+    useState([]);
 
   useEffect(() => {
     getData("Zoom Account")

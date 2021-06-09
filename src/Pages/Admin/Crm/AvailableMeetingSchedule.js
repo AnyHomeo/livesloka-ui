@@ -38,6 +38,7 @@ import { EditorState, convertToRaw, ContentState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import { firebase } from "../../../Firebase";
+import useDocumentTitle from "../../../Components/useDocumentTitle";
 
 let days = [
   "MONDAY",
@@ -71,6 +72,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AvailableMeetingSchedule = ({ match }) => {
+  useDocumentTitle("Available Meeting Schedule - LiveSloka");
   const classes = useStyles();
 
   const [selectedDate, setSelectedDate] = React.useState(new Date());

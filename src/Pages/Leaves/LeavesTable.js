@@ -23,6 +23,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import Axios from "axios";
 import { isAutheticated } from "../../auth";
 import LeavesTableMobile from "../Admin/Crm/MobileViews/LeavesTableMobile";
+import useDocumentTitle from "../../Components/useDocumentTitle";
 let arr = [
   "Sunday",
   "Monday",
@@ -34,6 +35,8 @@ let arr = [
 ];
 
 function LeavesTable() {
+  useDocumentTitle("Leaves - LiveSloka");
+
   const { height } = useWindowDimensions();
   const [rows, setRows] = useState([]);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -148,6 +151,36 @@ function LeavesTable() {
   }, [selectedCustomer]);
 
   const { width } = useWindowDimensions();
+
+  const [searchField, setSearchField] = useState();
+  const [filteredData, setFilteredData] = useState();
+
+  useEffect(() => {
+    filterData();
+  }, [searchField]);
+
+  const filterData = () => {
+    function capitalizeFirstLetter(string) {
+      return string?.charAt(0)?.toUpperCase() + string.slice(1);
+    }
+
+    let value = searchField;
+
+    let regex = new RegExp(`^${value}`, `i`);
+    const sortedArr =
+      rows &&
+      rows.filter(
+        (x) =>
+          regex.test(x.className) ||
+          regex.test(x.firstName) ||
+          regex.test(x.lastName) ||
+          regex.test(moment(x.cancelledDate).format("MMMM")) ||
+          regex.test(moment(x.cancelledDate).format("Do")) ||
+          regex.test(moment(x.cancelledDate).format("YYYY"))
+      );
+
+    setFilteredData(sortedArr);
+  };
 
   return (
     <div>
@@ -350,9 +383,37 @@ function LeavesTable() {
         </>
       ) : (
         <div>
-          {rows.map((data) => (
-            <LeavesTableMobile data={data} setRefresh={setRefresh} />
-          ))}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 15,
+              marginBottom: 10,
+            }}
+          >
+            <TextField
+              onChange={(e) => setSearchField(e.target.value)}
+              variant="outlined"
+              label="Search"
+              style={{ width: "95%" }}
+            />
+          </div>
+
+          {searchField ? (
+            <>
+              {filteredData.map((data) => (
+                <LeavesTableMobile data={data} setRefresh={setRefresh} />
+              ))}
+            </>
+          ) : (
+            <>
+              {" "}
+              {rows.map((data) => (
+                <LeavesTableMobile data={data} setRefresh={setRefresh} />
+              ))}
+            </>
+          )}
         </div>
       )}
     </div>

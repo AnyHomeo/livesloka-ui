@@ -11,6 +11,7 @@ import moment from "moment";
 import axios from "axios";
 import AmountChart from "./AmountChart";
 import PaymentsTable from "./PaymentsTable";
+import useDocumentTitle from "../../Components/useDocumentTitle";
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -21,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Dashboard = () => {
+  useDocumentTitle("Financial dashboard - LiveSloka");
   const classes = useStyles();
 
   useEffect(() => {
@@ -73,7 +75,7 @@ const Dashboard = () => {
   };
 
   return (
-    <Page className={classes.root} title="Dashboard">
+    <Page className={classes.root}>
       <Container maxWidth={false}>
         <Grid container spacing={3}>
           <Grid item lg={3} sm={6} xl={3} xs={12}>

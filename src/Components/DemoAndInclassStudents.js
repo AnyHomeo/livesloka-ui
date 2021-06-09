@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import MaterialTable from "material-table";
 import { getDemoAndInclassStudents } from "../Services/Services";
 import { Card } from "@material-ui/core";
+import useDocumentTitle from "./useDocumentTitle";
 
 function DemoAndInclassStudents() {
+  useDocumentTitle("In Class - LiveSloka");
   const [customers, setCustomers] = useState([]);
 
   useEffect(() => {

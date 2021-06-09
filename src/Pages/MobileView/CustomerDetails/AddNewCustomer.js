@@ -17,6 +17,7 @@ import { isAutheticated } from "../../../auth";
 import moment from "moment";
 import { Edit, Trash, ArrowRightCircle } from "react-feather";
 import MuiAlert from "@material-ui/lab/Alert";
+import useDocumentTitle from "../../../Components/useDocumentTitle";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -34,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AddNewCustomer = () => {
+  useDocumentTitle("Add New Customer - LiveSloka");
   const classes = useStyles();
   const location = useLocation();
   const history = useHistory();

@@ -5,6 +5,7 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import MaterialTableAddFields from "./MaterialTableAddFields";
 import { getData } from "../Services/Services";
+import useDocumentTitle from "./useDocumentTitle";
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props;
@@ -47,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CustomTabs = () => {
+  useDocumentTitle("Add Fields - LiveSloka");
   const classes = useStyles();
   const [value, setValue] = useState(0);
   const [lookup, setLookup] = useState({});

@@ -18,6 +18,7 @@ import MoneyOffIcon from "@material-ui/icons/MoneyOff";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import useWindowDimensions from "../../../Components/useWindowDimensions";
+import useDocumentTitle from "../../../Components/useDocumentTitle";
 
 const BooleanRadioBox = ({ value, onChange, label }) => {
   const { width } = useWindowDimensions();
@@ -140,6 +141,7 @@ const GreenCheckbox = withStyles({
 })((props) => <Checkbox color="default" {...props} />);
 
 const EditAttendance = ({ match }) => {
+  useDocumentTitle("Edit Attendance - LiveSloka");
   const [alignment, setAlignment] = React.useState("left");
 
   const handleAlignment = (event, newAlignment) => {

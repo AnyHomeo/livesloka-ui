@@ -40,6 +40,7 @@ import {
 import DateFnsUtils from "@date-io/date-fns";
 import moment from "moment";
 import AttendanceByClassMobile from "./MobileViews/AttendanceByClassMobile";
+import useDocumentTitle from "../../../Components/useDocumentTitle";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
@@ -50,6 +51,7 @@ function Alert(props) {
 }
 
 const AttedanceByClass = () => {
+  useDocumentTitle("Attendance By Class - LiveSloka");
   const { width } = useWindowDimensions();
 
   const [classes, setClasses] = useState([]);

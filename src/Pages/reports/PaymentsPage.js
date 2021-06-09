@@ -4,10 +4,12 @@ import { Chip } from "@material-ui/core";
 import axios from "axios";
 import moment from "moment";
 import paypal from "../../Images/paypal.png";
-import razorpay from "../../Images/Razorpay_logo.svg"
+import razorpay from "../../Images/Razorpay_logo.svg";
 import useWindowDimensions from "../../Components/useWindowDimensions";
+import useDocumentTitle from "../../Components/useDocumentTitle";
 
 const PaymentsPage = () => {
+  useDocumentTitle("Payments Info - LiveSloka");
   const [allData, setAllData] = useState([]);
   const [loading, setLoading] = useState(false);
   const { height } = useWindowDimensions();
@@ -19,12 +21,11 @@ const PaymentsPage = () => {
     setLoading(true);
     const data = await axios.get(
       `${process.env.REACT_APP_API_KEY}/payment/get/alltransactions/`
-    ); 
-    let fullTableData =  data.data.result.map((data) => {
-      if(data.type === "RAZORPAY"){
+    );
+    let fullTableData = data.data.result.map((data) => {
+      if (data.type === "RAZORPAY") {
         return {
-          orderRef:
-            data.paymentData.payload.payment.entity.id,
+          orderRef: data.paymentData.payload.payment.entity.id,
           paypalCustomerName: "NA",
           paypalEmail: data.paymentData.payload.payment.entity.email,
           studentName:
@@ -33,12 +34,14 @@ const PaymentsPage = () => {
             data.customerId === null ? "NA" : data.customerId.lastName,
           customerEmail:
             data.customerId === null ? "NA" : data.customerId.email,
-          totalAmount: `${data.paymentData.payload.payment.entity.amount/100} ${data.paymentData.payload.payment.entity.currency}`,
+          totalAmount: `${
+            data.paymentData.payload.payment.entity.amount / 100
+          } ${data.paymentData.payload.payment.entity.currency}`,
           date: moment(data.createdAt).format("MMM Do YYYY h:mm A"),
           status: data.status,
-          type:data.type
-        }
-      } else if ((data.paymentData !== null) && (data.type === "PAYPAL")) {
+          type: data.type,
+        };
+      } else if (data.paymentData !== null && data.type === "PAYPAL") {
         return {
           orderRef:
             data.paymentData.transactions[0].related_resources[0].sale.id,
@@ -53,7 +56,7 @@ const PaymentsPage = () => {
           totalAmount: `${data.paymentData.transactions[0].amount.total} ${data.paymentData.transactions[0].amount.currency}`,
           date: moment(data.createdAt).format("MMM Do YYYY h:mm A"),
           status: data.status,
-          type:data.type
+          type: data.type,
         };
       } else {
         return {
@@ -66,7 +69,7 @@ const PaymentsPage = () => {
           totalAmount: "NA",
           date: moment(data.createdAt).format("MMM Do YYYY h:mm A"),
           status: data.status,
-          type:data.type
+          type: data.type,
         };
       }
     });
@@ -118,15 +121,14 @@ const PaymentsPage = () => {
       field: "date",
     },
     {
-      title:"Payment Type",
-      field:"type",
-      render: (row) => (
+      title: "Payment Type",
+      field: "type",
+      render: (row) =>
         row.type === "PAYPAL" ? (
-          <img src={paypal} style={{height:"20px"}} />
+          <img src={paypal} style={{ height: "20px" }} />
         ) : (
-          <img src={razorpay} style={{height:"20px"}} />
-        )
-      )
+          <img src={razorpay} style={{ height: "20px" }} />
+        ),
     },
     {
       title: "Status",
@@ -147,25 +149,24 @@ const PaymentsPage = () => {
   ];
 
   return (
-      <MaterialTable
-        title="Payments"
-        columns={columnData}
-        data={allData}
-				isLoading={loading}
-        style={{
-          margin:"20px",
-          padding:"20px"
-        }}
-        options={{
-          search: true,
-          pageSizeOptions: [5, 20, 30, 40, 50, allData.length],
-					maxBodyHeight: height - 270,
-          exportButton: true,
-					paginationType: 'stepped',
-          searchFieldVariant: 'outlined',
-
-        }}
-      />
+    <MaterialTable
+      title="Payments"
+      columns={columnData}
+      data={allData}
+      isLoading={loading}
+      style={{
+        margin: "20px",
+        padding: "20px",
+      }}
+      options={{
+        search: true,
+        pageSizeOptions: [5, 20, 30, 40, 50, allData.length],
+        maxBodyHeight: height - 270,
+        exportButton: true,
+        paginationType: "stepped",
+        searchFieldVariant: "outlined",
+      }}
+    />
   );
 };
 

@@ -8,6 +8,7 @@ import highchartsExporting from "highcharts/modules/exporting";
 import highchartsExport from "highcharts/modules/export-data";
 import "./style.css";
 import CountUp from "react-countup";
+import useDocumentTitle from "../../Components/useDocumentTitle";
 
 highchartsDrilldown(Highcharts);
 highchartsExporting(Highcharts);
@@ -20,6 +21,8 @@ Highcharts.setOptions({
 });
 
 function FinancialAnalytics() {
+  useDocumentTitle("Financial Analytics - LiveSloka");
+
   const [options, setOptions] = useState({});
   const [totalAmount, setTotalAmount] = useState(0);
   const [totalStudents, setTotalStudents] = useState(0);
