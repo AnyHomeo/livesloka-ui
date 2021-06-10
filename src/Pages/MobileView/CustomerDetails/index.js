@@ -27,6 +27,7 @@ import StatisticsCards from "./StatisticsCards";
 import { isAutheticated } from "../../../auth";
 import { Copy } from "react-feather";
 import useDocumentTitle from "../../../Components/useDocumentTitle";
+import AddToPhotosIcon from "@material-ui/icons/AddToPhotos";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -604,7 +605,7 @@ const CustomerDetails = () => {
                   }}
                 >
                   <IconButton>
-                    <Copy />
+                    <AddToPhotosIcon />
                   </IconButton>
                 </Link>
               </div>
@@ -711,7 +712,7 @@ const CustomerDetails = () => {
                     }}
                   >
                     <IconButton>
-                      <Copy />
+                      <AddToPhotosIcon />
                     </IconButton>
                   </Link>
                 </div>
