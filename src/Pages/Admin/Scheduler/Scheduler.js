@@ -159,7 +159,7 @@ function Alert(props) {
 }
 
 function Scheduler() {
-  useDocumentTitle("Timetable - LiveSloka");
+  useDocumentTitle("Timetable");
 
   const [teacher, setTeacher] = useState("");
   const [teacherId, setTeacherId] = useState("");

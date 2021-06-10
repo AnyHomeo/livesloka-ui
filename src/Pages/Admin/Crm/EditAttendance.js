@@ -141,7 +141,7 @@ const GreenCheckbox = withStyles({
 })((props) => <Checkbox color="default" {...props} />);
 
 const EditAttendance = ({ match }) => {
-  useDocumentTitle("Edit Attendance - LiveSloka");
+  useDocumentTitle("Edit Attendance");
   const [alignment, setAlignment] = React.useState("left");
 
   const handleAlignment = (event, newAlignment) => {

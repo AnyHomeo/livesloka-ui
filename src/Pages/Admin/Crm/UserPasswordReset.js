@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import useDocumentTitle from "../../../Components/useDocumentTitle";
 
 function UserPasswordReset() {
-  useDocumentTitle("Password Reset Admin - LiveSloka");
+  useDocumentTitle("Password Reset");
 
   const [studentsData, setStudentsData] = useState([]);
   const [studentId, setStudentId] = useState("");

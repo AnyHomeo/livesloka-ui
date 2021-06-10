@@ -6,7 +6,7 @@ import LaunchIcon from "@material-ui/icons/Launch";
 import useDocumentTitle from "../../../Components/useDocumentTitle";
 
 function Careers() {
-  useDocumentTitle("Careers - LiveSloka");
+  useDocumentTitle("Careers");
 
   const [applications, setApplications] = useState([]);
   useEffect(() => {

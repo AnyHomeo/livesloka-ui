@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NotFoundView = () => {
-  useDocumentTitle("404 - LiveSloka");
+  useDocumentTitle("404");
   const classes = useStyles();
 
   return (

@@ -21,7 +21,7 @@ Highcharts.setOptions({
 });
 
 function FinancialAnalytics() {
-  useDocumentTitle("Financial Analytics - LiveSloka");
+  useDocumentTitle("Financial Analytics");
 
   const [options, setOptions] = useState({});
   const [totalAmount, setTotalAmount] = useState(0);

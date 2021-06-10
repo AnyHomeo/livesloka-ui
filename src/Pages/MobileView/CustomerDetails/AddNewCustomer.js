@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AddNewCustomer = () => {
-  useDocumentTitle("Add New Customer - LiveSloka");
+  useDocumentTitle("Add New Customer");
   const classes = useStyles();
   const location = useLocation();
   const history = useHistory();

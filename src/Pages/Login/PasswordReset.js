@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PasswordReset = () => {
-  useDocumentTitle("Password Reset - LiveSloka");
+  useDocumentTitle("Password Reset");
   const [user, setUser] = useState({
     currentPassword: "",
     newPassword: "",

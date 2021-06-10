@@ -9,7 +9,7 @@ import useWindowDimensions from "../../Components/useWindowDimensions";
 import useDocumentTitle from "../../Components/useDocumentTitle";
 
 const PaymentsPage = () => {
-  useDocumentTitle("Payments Info - LiveSloka");
+  useDocumentTitle("Payments Info");
   const [allData, setAllData] = useState([]);
   const [loading, setLoading] = useState(false);
   const { height } = useWindowDimensions();

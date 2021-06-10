@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AvailableMeetingSchedule = ({ match }) => {
-  useDocumentTitle("Available Meeting Schedule - LiveSloka");
+  useDocumentTitle("Meeting Schedule");
   const classes = useStyles();
 
   const [selectedDate, setSelectedDate] = React.useState(new Date());

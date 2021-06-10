@@ -122,7 +122,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ZoomAccountDashboard() {
-  useDocumentTitle("Zoom Dashboard - LiveSloka");
+  useDocumentTitle("Zoom Dashboard");
 
   const classes = useStyles();
   const { width } = useWindowDimensions();

@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const CustomersDetailsMb = ({ location }) => {
-  useDocumentTitle("Customer Info - LiveSloka");
+  useDocumentTitle("Customer Info");
 
   const classes = useStyles();
 
@@ -450,18 +450,26 @@ const CustomersDetailsMb = ({ location }) => {
             </p>
           </Card>{" "}
           <Card className={classes.card2}>
-            {subjectDropdown &&
-              subjectDropdown.map((data) => {
-                return customersEditData.requestedSubjects.map((sub) => {
-                  if (data.id === sub) {
-                    return (
-                      <p style={{ marginLeft: 5, fontWeight: "bold" }}>
-                        {data.subjectName}
-                      </p>
-                    );
-                  }
-                });
-              })}
+            <div sytle={{ display: "flex", flexDirection: "column" }}>
+              {subjectDropdown &&
+                subjectDropdown.map((data) => {
+                  return customersEditData.requestedSubjects.map((sub) => {
+                    if (data.id === sub) {
+                      return (
+                        <p
+                          style={{
+                            marginLeft: 5,
+                            fontWeight: "bold",
+                            fontSize: 13,
+                          }}
+                        >
+                          {data.subjectName}
+                        </p>
+                      );
+                    }
+                  });
+                })}
+            </div>
           </Card>
           <IconButton
             style={{ marginTop: -15 }}

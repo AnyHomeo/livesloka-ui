@@ -94,7 +94,7 @@ const days = [
 ];
 
 function MeetingDashboard() {
-  useDocumentTitle("Zoom Account Dashboard - LiveSloka");
+  useDocumentTitle("Zoom Dashboard");
 
   const { width } = useWindowDimensions();
   const [zoomAccounts, setZoomAccounts] = useState([]);

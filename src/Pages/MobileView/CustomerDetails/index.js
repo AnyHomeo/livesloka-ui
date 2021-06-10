@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CustomerDetails = () => {
-  useDocumentTitle("Customer Data Mobile - LiveSloka");
+  useDocumentTitle("Customer Data Mobile");
 
   const history = useHistory();
   const classes = useStyles();

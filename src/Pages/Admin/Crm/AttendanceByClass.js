@@ -51,7 +51,7 @@ function Alert(props) {
 }
 
 const AttedanceByClass = () => {
-  useDocumentTitle("Attendance By Class - LiveSloka");
+  useDocumentTitle("Attendance By Class");
   const { width } = useWindowDimensions();
 
   const [classes, setClasses] = useState([]);

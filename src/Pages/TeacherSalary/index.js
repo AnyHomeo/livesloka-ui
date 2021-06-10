@@ -291,7 +291,7 @@ function Row(props) {
 }
 
 const TeacherSalary = () => {
-  useDocumentTitle("Teacher's Salary - LiveSloka");
+  useDocumentTitle("Teacher's Salary");
   const [salaryData, setSalaryData] = useState();
   const [getDate, setGetDate] = useState();
   const [loading, setLoading] = useState(false);

@@ -263,7 +263,7 @@ const ColumnFilterDrawer = ({
 );
 
 const CrmDetails = ({ isSummerCampStudents }) => {
-  useDocumentTitle("Customer Data - LiveSloka");
+  useDocumentTitle("Customer Data");
 
   const history = useHistory();
   const { height, width } = useWindowDimensions();

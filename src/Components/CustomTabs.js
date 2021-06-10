@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CustomTabs = () => {
-  useDocumentTitle("Add Fields - LiveSloka");
+  useDocumentTitle("Add Fields");
   const classes = useStyles();
   const [value, setValue] = useState(0);
   const [lookup, setLookup] = useState({});

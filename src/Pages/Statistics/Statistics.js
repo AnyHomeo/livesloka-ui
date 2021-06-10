@@ -60,7 +60,7 @@ function TabPanel(props) {
 }
 
 function Statistics() {
-  useDocumentTitle("Statistics - LiveSloka");
+  useDocumentTitle("Statistics");
 
   const [value, setValue] = useState(
     days.indexOf(

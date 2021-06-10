@@ -73,7 +73,7 @@ function LinkTab(props) {
   );
 }
 const Attedance = () => {
-  useDocumentTitle("Attendance - LiveSloka");
+  useDocumentTitle("Attendance");
   const classes = useStyles();
   const [user, setUser] = useState({});
   const [names, setNames] = useState([]);

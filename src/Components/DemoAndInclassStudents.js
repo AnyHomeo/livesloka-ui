@@ -5,7 +5,7 @@ import { Card } from "@material-ui/core";
 import useDocumentTitle from "./useDocumentTitle";
 
 function DemoAndInclassStudents() {
-  useDocumentTitle("In Class - LiveSloka");
+  useDocumentTitle("In Class");
   const [customers, setCustomers] = useState([]);
 
   useEffect(() => {

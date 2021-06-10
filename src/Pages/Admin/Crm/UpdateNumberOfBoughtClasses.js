@@ -7,7 +7,7 @@ import { updateBoughtClasses } from "./../../../Services/Services";
 import useDocumentTitle from "../../../Components/useDocumentTitle";
 
 function UpdateNumberOfBoughtClasses(props) {
-  useDocumentTitle("Update Classes Paid - LiveSloka");
+  useDocumentTitle("Classes Paid");
   const [selectedCustomer, setSelectedCustomer] = useState({});
   const [allCustomers, setAllCustomers] = useState([]);
   const [comment, setComment] = useState("");

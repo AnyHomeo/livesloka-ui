@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EditSchedule = () => {
-  useDocumentTitle("Edit Schedule - LiveSloka");
+  useDocumentTitle("Edit Schedule");
 
   const classes = useStyles();
   let query = useQuery();

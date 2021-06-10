@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function TeacherSalaries() {
-  useDocumentTitle("Teacher Salary - LiveSloka");
+  useDocumentTitle("Teacher Salary");
 
   const classes = useStyles();
 

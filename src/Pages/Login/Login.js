@@ -93,7 +93,7 @@ function Alert(props) {
 }
 
 const Login = () => {
-  useDocumentTitle("Login - LiveSloka");
+  useDocumentTitle("Login");
   const classes = useStyles();
   const [user, setUser] = useState({
     userId: "",

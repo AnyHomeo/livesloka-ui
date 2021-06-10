@@ -35,7 +35,7 @@ let arr = [
 ];
 
 function LeavesTable() {
-  useDocumentTitle("Leaves - LiveSloka");
+  useDocumentTitle("Leaves");
 
   const { height } = useWindowDimensions();
   const [rows, setRows] = useState([]);

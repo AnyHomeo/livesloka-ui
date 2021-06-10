@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   editText: {
-    height: 30,
+    height: 40,
     display: "flex",
     alignItems: "center",
     marginTop: -5,
@@ -202,6 +202,11 @@ const TeacherDetailsTableMobile = ({
                 if (humanReadable(k) === "Id") {
                   return null;
                 }
+
+                if (humanReadable(k) === "Id") {
+                  return null;
+                }
+
                 if (humanReadable(k) === "Teacher Image Link") {
                   return null;
                 }

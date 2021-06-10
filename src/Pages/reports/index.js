@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Dashboard = () => {
-  useDocumentTitle("Financial dashboard - LiveSloka");
+  useDocumentTitle("Financial dashboard");
   const classes = useStyles();
 
   useEffect(() => {

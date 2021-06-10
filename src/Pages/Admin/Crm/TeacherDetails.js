@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function TeacherDetails() {
-  useDocumentTitle("Teacher Details - LiveSloka");
+  useDocumentTitle("Teacher Details");
   const classes = useStyles();
   //states
   const [lookup, setLookup] = useState({});
