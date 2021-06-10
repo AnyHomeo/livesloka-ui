@@ -334,7 +334,6 @@ function LeavesTable() {
             }}
             editable={{
               onRowUpdate: (newData, oldData) => {
-                console.log(newData);
                 return updateLeave(newData)
                   .then((fetchedData) => {
                     if (fetchedData.data) {

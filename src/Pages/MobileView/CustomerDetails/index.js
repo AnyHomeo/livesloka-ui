@@ -61,7 +61,6 @@ const CustomerDetails = () => {
     setLoading(true);
     const data = await getAllCustomerDetails();
 
-    console.log(data);
     // data && data.data.result.reverse();
     setCustomersData(data && data.data.result);
     setData(data && data.data.result);
@@ -326,7 +325,6 @@ const CustomerDetails = () => {
     );
   };
 
-  console.log(data);
   return (
     <div className={classes.root}>
       {toggleStatistics && <StatisticsCards />}
@@ -352,12 +350,13 @@ const CustomerDetails = () => {
             subjectDropdown,
           ].map((dropdown, i) => (
             <div
+              key={data._id}
               style={{
                 width: "300px",
                 margin: "10px 0",
               }}
             >
-              <AutoCompleteFilterData dropdown={dropdown} i={i} />
+              <AutoCompleteFilterData dropdown={dropdown} i={i} key={i} />
             </div>
           ))}
           <div
@@ -509,7 +508,7 @@ const CustomerDetails = () => {
           : searchKeyword
           ? filteredData &&
             filteredData.map((data) => (
-              <div style={{ display: "flex", width: "100%" }}>
+              <div key={data._id} style={{ display: "flex", width: "100%" }}>
                 <Card
                   style={{
                     width: "100%",
@@ -533,7 +532,6 @@ const CustomerDetails = () => {
                     }}
                   >
                     <Link
-                      key={data._id}
                       to={{
                         pathname: "/customer-data-info",
                         state: { data },
@@ -613,7 +611,7 @@ const CustomerDetails = () => {
           : data &&
             data.map((data) => {
               return (
-                <div style={{ display: "flex", width: "100%" }}>
+                <div key={data._id} style={{ display: "flex", width: "100%" }}>
                   <Card
                     style={{
                       width: "100%",

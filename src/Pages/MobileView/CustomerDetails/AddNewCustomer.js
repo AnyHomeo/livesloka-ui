@@ -64,7 +64,7 @@ const AddNewCustomer = () => {
   const [customersEditData, setCustomersEditData] = useState({
     age: state ? state?.data?.age : "",
     classId: state ? state?.data?.classId : "",
-    classStatusId: state ? state?.data?.classStatusId : "",
+    classStatusId: "",
     countryId: state ? state?.data?.countryId : "",
     email: state ? state?.data?.email : "",
     firstName: state ? state?.data?.firstName : "",
@@ -74,7 +74,7 @@ const AddNewCustomer = () => {
       : "",
     lastName: state ? state?.data?.lastName : "",
     noOfClasses: state ? state?.data?.noOfClasses : "",
-    numberOfClassesBought: state ? state?.data?.numberOfClassesBought : "",
+    numberOfClassesBought: "",
     numberOfStudents: state ? state?.data?.numberOfStudents : "",
     proposedAmount: state ? state?.data?.proposedAmount : "",
     proposedCurrencyId: state ? state?.data?.proposedCurrencyId : "",
@@ -82,15 +82,15 @@ const AddNewCustomer = () => {
     timeZoneId: state ? state?.data?.timeZoneId : "",
     updatedAt: state ? state?.data?.updatedAt : "",
     whatsAppnumber: state ? state?.data?.whatsAppnumber : "",
-    meetingLink: state ? state?.data?.meetingLink : "",
-    scheduleDescription: state ? state?.data?.scheduleDescription : "",
+    meetingLink: "",
+    scheduleDescription: "",
     categoryId: state ? state?.data?.categoryId : "",
-    teacherId: state ? state?.data?.teacherId : "",
+    teacherId: "",
     isJoinButtonEnabledByAdmin: state
       ? state?.data?.isJoinButtonEnabledByAdmin
       : "",
-    agentId: state ? state?.data?.agentId : "",
-    createdAt: state ? state?.data?.createdAt : "",
+    agentId: "",
+    createdAt: moment(new Date()).format("l"),
   });
 
   const handleSwitchChange = (event) => {

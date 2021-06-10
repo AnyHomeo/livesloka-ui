@@ -36,7 +36,7 @@ export default function TeacherDetails() {
   const [teachersdata, setTeachersdata] = useState();
   const [categoryData, setCategoryData] = useState();
   const [statusData, setStatusData] = useState();
-  useEffect(async () => {
+  useEffect(() => {
     getData("Status").then((data) => {
       let dummyLookup = {};
       data.data.result.forEach((data) => {
@@ -53,16 +53,26 @@ export default function TeacherDetails() {
       setCategoryLookup(dummyLookup);
       setCategoryData(data);
     });
+    fetchTeachersData();
+  }, []);
 
+  const { width } = useWindowDimensions();
+
+  const getbackdata = (data) => {
+    if (data === 200) {
+      fetchTeachersData();
+    }
+  };
+
+  const fetchTeachersData = async () => {
     try {
       const res = await getData("Teacher");
       if (res.status === 200) {
         setTeachersdata(res.data);
       }
     } catch (error) {}
-  }, []);
+  };
 
-  const { width } = useWindowDimensions();
   return (
     <div style={{ width: "95%", margin: "0 auto", marginTop: "20px" }}>
       {width > 768 ? (
@@ -78,9 +88,11 @@ export default function TeacherDetails() {
           {teachersdata &&
             teachersdata.result.map((item) => (
               <TeacherDetailsTableMobile
+                key={item.id}
                 data={item}
                 categoryData={categoryData}
                 statusData={statusData}
+                getbackdata={getbackdata}
               />
             ))}
         </>
