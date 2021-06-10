@@ -524,22 +524,22 @@ const CustomerDetails = () => {
                     overflow: "hidden",
                   }}
                 >
-                  <div
+                  <Link
+                    to={{
+                      pathname: "/customer-data-info",
+                      state: { data },
+                    }}
                     style={{
-                      marginLeft: 10,
-                      display: "flex",
-                      flexDirection: "column",
+                      width: "100%",
+                      textDecoration: "none",
+                      color: "white",
                     }}
                   >
-                    <Link
-                      to={{
-                        pathname: "/customer-data-info",
-                        state: { data },
-                      }}
+                    <div
                       style={{
-                        width: "100%",
-                        textDecoration: "none",
-                        color: "white",
+                        marginLeft: 10,
+                        display: "flex",
+                        flexDirection: "column",
                       }}
                     >
                       <Typography
@@ -548,32 +548,33 @@ const CustomerDetails = () => {
                       >
                         {data.firstName}
                       </Typography>
-                    </Link>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography
-                        className={classes.heading}
-                        style={{ fontSize: 10 }}
-                      >
-                        {data.lastName}
-                      </Typography>
-                      <Typography
-                        // className={classes.heading}
+
+                      <div
                         style={{
-                          fontSize: 10,
-                          marginRight: 10,
-                          marginLeft: 10,
+                          display: "flex",
+                          alignItems: "center",
                         }}
                       >
-                        {data.numberOfClassesBought}
-                      </Typography>
-                      {getTimeZone(data.timeZoneId)}
+                        <Typography
+                          className={classes.heading}
+                          style={{ fontSize: 10 }}
+                        >
+                          {data.lastName}
+                        </Typography>
+                        <Typography
+                          // className={classes.heading}
+                          style={{
+                            fontSize: 10,
+                            marginRight: 10,
+                            marginLeft: 10,
+                          }}
+                        >
+                          {data.numberOfClassesBought}
+                        </Typography>
+                        {getTimeZone(data.timeZoneId)}
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                   <div
                     style={{
                       height: "100%",
