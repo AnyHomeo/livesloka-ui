@@ -102,7 +102,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     {
       href: "/leaves",
       icon: UserMinus,
-      title: "Customer Leaves",
+      title: "Leaves",
     },
     {
       href: "/reset/password",
@@ -242,7 +242,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     {
       href: "/leaves",
       icon: UserMinus,
-      title: "Customer Leaves",
+      title: "Leaves",
     },
     {
       href: "/teacher",
