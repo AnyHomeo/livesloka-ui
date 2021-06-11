@@ -62,6 +62,18 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid #2980b9",
     borderRadius: 0,
   },
+  subText: {
+    fontSize: 15,
+    fontWeight: "bold",
+    width: "100%",
+    textAlign: "right",
+    marginRight: 7,
+  },
+  subText1: {
+    fontSize: 15,
+    fontWeight: "bold",
+    marginLeft: 5,
+  },
 }));
 const CustomersDetailsMb = ({ location }) => {
   useDocumentTitle("Customer Info");
@@ -244,14 +256,12 @@ const CustomersDetailsMb = ({ location }) => {
           }}
         >
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}>
-              Join Button By Admin:
-            </p>
+            <p className={classes.subText}>Join Button By Admin:</p>
           </Card>
 
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+              <p className={classes.subText1}>
                 {customersEditData.isJoinButtonEnabledByAdmin
                   ? "Enabled"
                   : "Not enabled"}
@@ -300,12 +310,12 @@ const CustomersDetailsMb = ({ location }) => {
           }}
         >
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}>Class Status:</p>
+            <p className={classes.subText}>Class Status:</p>
           </Card>
 
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+              <p className={classes.subText1}>
                 {classStatusDropDown &&
                   classStatusDropDown.map((data) => {
                     if (data.id === customersEditData.classStatusId) {
@@ -347,10 +357,10 @@ const CustomersDetailsMb = ({ location }) => {
         </div>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}> Entry Date:</p>
+            <p className={classes.subText}> Entry Date:</p>
           </Card>
           <Card className={classes.card2}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+            <p className={classes.subText1}>
               {moment(customersEditData.createdAt).format("l")}
             </p>
           </Card>
@@ -365,12 +375,12 @@ const CustomersDetailsMb = ({ location }) => {
         </div>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}> Timezone:</p>
+            <p className={classes.subText}> Timezone:</p>
           </Card>
 
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+              <p className={classes.subText1}>
                 {timezoneDropdown &&
                   timezoneDropdown.map((data) => {
                     if (data.id === customersEditData.timeZoneId) {
@@ -412,13 +422,11 @@ const CustomersDetailsMb = ({ location }) => {
 
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}> Firstname:</p>
+            <p className={classes.subText}> Firstname:</p>
           </Card>{" "}
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
-                {customersEditData.firstName}
-              </p>
+              <p className={classes.subText1}>{customersEditData.firstName}</p>
             ) : (
               <TextField
                 fullWidth
@@ -444,10 +452,7 @@ const CustomersDetailsMb = ({ location }) => {
 
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}>
-              {" "}
-              Requested Subject:
-            </p>
+            <p className={classes.subText}> Requested Subject:</p>
           </Card>{" "}
           <Card className={classes.card2}>
             <div sytle={{ display: "flex", flexDirection: "column" }}>
@@ -483,13 +488,11 @@ const CustomersDetailsMb = ({ location }) => {
 
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}> Lastname:</p>
+            <p className={classes.subText}> Lastname:</p>
           </Card>{" "}
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
-                {customersEditData.lastName}
-              </p>
+              <p className={classes.subText1}>{customersEditData.lastName}</p>
             ) : (
               <TextField
                 variant="outlined"
@@ -516,14 +519,11 @@ const CustomersDetailsMb = ({ location }) => {
 
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold", fontSize: 14 }}>
-              {" "}
-              No Of Classes:
-            </p>
+            <p className={classes.subText}> No Of Classes:</p>
           </Card>{" "}
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+              <p className={classes.subText1}>
                 {customersEditData.noOfClasses}
               </p>
             ) : (
@@ -555,12 +555,12 @@ const CustomersDetailsMb = ({ location }) => {
           onClick={() => studentsHistorytable(customersEditData._id)}
         >
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}> Classes Left: </p>
+            <p className={classes.subText}> Classes Left: </p>
           </Card>
 
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+              <p className={classes.subText1}>
                 {customersEditData.numberOfClassesBought}
               </p>
             ) : (
@@ -589,14 +589,12 @@ const CustomersDetailsMb = ({ location }) => {
 
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}>Gender: </p>
+            <p className={classes.subText}>Gender: </p>
           </Card>
 
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
-                {customersEditData.gender}
-              </p>
+              <p className={classes.subText1}>{customersEditData.gender}</p>
             ) : (
               <TextField
                 label="Gender"
@@ -623,12 +621,12 @@ const CustomersDetailsMb = ({ location }) => {
 
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}>Class Name:</p>
+            <p className={classes.subText}>Class Name:</p>
           </Card>
 
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+              <p className={classes.subText1}>
                 {classesIdDropdown &&
                   classesIdDropdown.map((data) => {
                     if (data.id === customersEditData.classId) {
@@ -674,12 +672,12 @@ const CustomersDetailsMb = ({ location }) => {
 
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}>Subject:</p>
+            <p className={classes.subText}>Subject:</p>
           </Card>
 
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+              <p className={classes.subText1}>
                 {subjectDropdown &&
                   subjectDropdown.map((data) => {
                     if (data.id === customersEditData.subjectId) {
@@ -727,14 +725,12 @@ const CustomersDetailsMb = ({ location }) => {
 
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}>Email:</p>
+            <p className={classes.subText}>Email:</p>
           </Card>
 
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
-                {customersEditData.email}
-              </p>
+              <p className={classes.subText1}>{customersEditData.email}</p>
             ) : (
               <TextField
                 label="Email"
@@ -761,14 +757,12 @@ const CustomersDetailsMb = ({ location }) => {
 
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold", fontSize: 14 }}>
-              Whatsapp No:
-            </p>
+            <p className={classes.subText}>Whatsapp No:</p>
           </Card>
 
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+              <p className={classes.subText1}>
                 {customersEditData.whatsAppnumber}
               </p>
             ) : (
@@ -797,11 +791,11 @@ const CustomersDetailsMb = ({ location }) => {
 
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}>Teacher:</p>
+            <p className={classes.subText}>Teacher:</p>
           </Card>{" "}
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+              <p className={classes.subText1}>
                 {teacherDropdown &&
                   teacherDropdown.map((data) => {
                     if (data.id === customersEditData.teacherId) {
@@ -849,12 +843,12 @@ const CustomersDetailsMb = ({ location }) => {
 
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}>Country:</p>
+            <p className={classes.subText}>Country:</p>
           </Card>
 
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+              <p className={classes.subText1}>
                 {countryDropdown &&
                   countryDropdown.map((data) => {
                     if (data.id === customersEditData.countryId) {
@@ -900,14 +894,12 @@ const CustomersDetailsMb = ({ location }) => {
 
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold", fontSize: 14 }}>
-              No Of Students:{" "}
-            </p>
+            <p className={classes.subText}>No Of Students: </p>
           </Card>
 
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+              <p className={classes.subText1}>
                 {customersEditData.numberOfStudents}
               </p>
             ) : (
@@ -936,12 +928,12 @@ const CustomersDetailsMb = ({ location }) => {
 
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}>Amount:</p>
+            <p className={classes.subText}>Amount:</p>
           </Card>
 
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+              <p className={classes.subText1}>
                 {customersEditData.proposedAmount}
               </p>
             ) : (
@@ -970,12 +962,12 @@ const CustomersDetailsMb = ({ location }) => {
 
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}>Currency:</p>
+            <p className={classes.subText}>Currency:</p>
           </Card>
 
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+              <p className={classes.subText1}>
                 {currencyDropdown &&
                   currencyDropdown.map((data) => {
                     if (data.id === customersEditData.proposedCurrencyId) {
@@ -1023,11 +1015,11 @@ const CustomersDetailsMb = ({ location }) => {
 
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}>Agent:</p>
+            <p className={classes.subText}>Agent:</p>
           </Card>{" "}
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+              <p className={classes.subText1}>
                 {agentDropdown &&
                   agentDropdown.map((data) => {
                     if (data.id === customersEditData.agentId) {
@@ -1074,9 +1066,7 @@ const CustomersDetailsMb = ({ location }) => {
 
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold", fontSize: 14 }}>
-              Schedule Des:
-            </p>
+            <p className={classes.subText}>Schedule Des:</p>
           </Card>
           <Card className={classes.card2}>
             {disableEditButton ? (
@@ -1109,11 +1099,11 @@ const CustomersDetailsMb = ({ location }) => {
 
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}>Agent:</p>
+            <p className={classes.subText}>Agent:</p>
           </Card>
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
+              <p className={classes.subText1}>
                 {categoryDropdown &&
                   categoryDropdown.map((data) => {
                     if (data.id === customersEditData.categoryId) {
@@ -1163,13 +1153,11 @@ const CustomersDetailsMb = ({ location }) => {
 
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Card className={classes.card1}>
-            <p style={{ marginLeft: 5, fontWeight: "bold" }}>Meeting Link:</p>
+            <p className={classes.subText}>Meeting Link:</p>
           </Card>{" "}
           <Card className={classes.card2}>
             {disableEditButton ? (
-              <p style={{ marginLeft: 5, fontWeight: "bold" }}>
-                {customersEditData.meetingLink}
-              </p>
+              <p className={classes.subText}>{customersEditData.meetingLink}</p>
             ) : (
               <TextField
                 label="Meeting Link"
