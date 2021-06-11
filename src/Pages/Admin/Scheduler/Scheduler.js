@@ -31,8 +31,9 @@ import { Link } from "react-router-dom";
 import Axios from "axios";
 import SingleBlock from "./SingleBlock";
 import MuiAlert from "@material-ui/lab/Alert";
-import { useConfirm } from 'material-ui-confirm';
+import { useConfirm } from "material-ui-confirm";
 import AdjustIcon from "@material-ui/icons/Adjust";
+import useDocumentTitle from "../../../Components/useDocumentTitle";
 const times = [
   "12:00 AM-12:30 AM",
   "12:30 AM-01:00 AM",
@@ -158,6 +159,8 @@ function Alert(props) {
 }
 
 function Scheduler() {
+  useDocumentTitle("Timetable");
+
   const [teacher, setTeacher] = useState("");
   const [teacherId, setTeacherId] = useState("");
   const [category, setCategory] = useState("");
@@ -165,9 +168,8 @@ function Scheduler() {
   const [categorizedData, setCategorizedData] = useState({});
   const [allSchedules, setAllSchedules] = useState([]);
   const confirm = useConfirm();
-  const [availableSlotsEditingMode, setAvailableSlotsEditingMode] = useState(
-    false
-  );
+  const [availableSlotsEditingMode, setAvailableSlotsEditingMode] =
+    useState(false);
   const [scheduleId, setScheduleId] = useState("");
   const [selectedSchedule, setSelectedSchedule] = useState({});
   const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -189,16 +191,17 @@ function Scheduler() {
   const deleteSchedule = async () => {
     try {
       setScheduleId("");
-      confirm({ description: 'Do you Really want to Delete!',confirmationText: "Yes! delete" })
-      .then(async () => {
-        await Axios.get(
-          `${process.env.REACT_APP_API_KEY}/schedule/delete/${scheduleId}`
-        );
-        getAllSchedulesData();
-       })
-      .catch(() => { 
-
-       });
+      confirm({
+        description: "Do you Really want to Delete!",
+        confirmationText: "Yes! delete",
+      })
+        .then(async () => {
+          await Axios.get(
+            `${process.env.REACT_APP_API_KEY}/schedule/delete/${scheduleId}`
+          );
+          getAllSchedulesData();
+        })
+        .catch(() => {});
     } catch (error) {
       console.log(error.response);
     }
@@ -347,7 +350,8 @@ function Scheduler() {
                         checked={selectedSchedule.isClassTemperarilyCancelled}
                         onChange={() => {
                           updateScheduleDangerously(selectedSchedule._id, {
-                            isClassTemperarilyCancelled: !selectedSchedule.isClassTemperarilyCancelled,
+                            isClassTemperarilyCancelled:
+                              !selectedSchedule.isClassTemperarilyCancelled,
                           })
                             .then((response) => {
                               getAllSchedulesData();
@@ -439,11 +443,7 @@ function Scheduler() {
             style={{ textDecoration: "none" }}
             to={`/edit-schedule/${scheduleId}`}
           >
-            <Button
-              variant="outlined"
-              color="primary"
-              startIcon={<EditIcon />}
-            >
+            <Button variant="outlined" color="primary" startIcon={<EditIcon />}>
               Edit
             </Button>
           </Link>

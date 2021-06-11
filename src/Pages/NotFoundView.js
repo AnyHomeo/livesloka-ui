@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Container, Typography, makeStyles } from "@material-ui/core";
 import Page from "./Page";
+import useDocumentTitle from "../Components/useDocumentTitle";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NotFoundView = () => {
+  useDocumentTitle("404");
   const classes = useStyles();
 
   return (

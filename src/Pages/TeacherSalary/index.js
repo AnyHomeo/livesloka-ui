@@ -30,6 +30,7 @@ import { Alert } from "@material-ui/lab";
 import moment from "moment";
 import Select from "@material-ui/core/Select";
 import "./HistoryCells.css";
+import useDocumentTitle from "../../Components/useDocumentTitle";
 const useRowStyles = makeStyles({
   root: {
     "& > *": {
@@ -290,6 +291,7 @@ function Row(props) {
 }
 
 const TeacherSalary = () => {
+  useDocumentTitle("Teacher's Salary");
   const [salaryData, setSalaryData] = useState();
   const [getDate, setGetDate] = useState();
   const [loading, setLoading] = useState(false);

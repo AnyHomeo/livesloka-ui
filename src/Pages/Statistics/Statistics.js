@@ -22,6 +22,7 @@ import MaterialTable from "material-table";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import momentTZ from "moment-timezone";
+import useDocumentTitle from "../../Components/useDocumentTitle";
 
 let days = [
   "SUNDAY",
@@ -59,6 +60,8 @@ function TabPanel(props) {
 }
 
 function Statistics() {
+  useDocumentTitle("Statistics");
+
   const [value, setValue] = useState(
     days.indexOf(
       momentTZ(new Date()).tz("Asia/Kolkata").format("dddd").toUpperCase()

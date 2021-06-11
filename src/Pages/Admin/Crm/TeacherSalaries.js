@@ -18,6 +18,7 @@ import Axios from "axios";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { makeStyles } from "@material-ui/core/styles";
 import SaveIcon from "@material-ui/icons/Save";
+import useDocumentTitle from "../../../Components/useDocumentTitle";
 
 const useStyles = makeStyles((theme) => ({
   saveButton: {
@@ -40,6 +41,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function TeacherSalaries() {
+  useDocumentTitle("Teacher Salary");
+
   const classes = useStyles();
 
   const [teacherName, setTeacherName] = useState([]);

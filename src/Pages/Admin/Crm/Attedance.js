@@ -20,6 +20,7 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import { getUsers, getUserAttendance } from "../../../Services/Services";
 import AttedanceByClass from "./AttendanceByClass";
+import useDocumentTitle from "../../../Components/useDocumentTitle";
 
 const useStyles = makeStyles({
   table: {
@@ -72,6 +73,7 @@ function LinkTab(props) {
   );
 }
 const Attedance = () => {
+  useDocumentTitle("Attendance");
   const classes = useStyles();
   const [user, setUser] = useState({});
   const [names, setNames] = useState([]);

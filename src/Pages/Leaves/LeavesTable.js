@@ -18,9 +18,13 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Axios from 'axios';
 import { isAutheticated } from '../../auth';
+import LeavesTableMobile from '../Admin/Crm/MobileViews/LeavesTableMobile';
+import useDocumentTitle from '../../Components/useDocumentTitle';
 let arr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 function LeavesTable() {
+	useDocumentTitle('Leaves');
+
 	const { height } = useWindowDimensions();
 	const [rows, setRows] = useState([]);
 	const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -32,7 +36,7 @@ function LeavesTable() {
 	const [selectedCustomer, setSelectedCustomer] = useState({});
 	const [refresh, setRefresh] = useState(false);
 	const [scheduleDays, setScheduleDays] = useState([]);
-	const [time, setTime] = useState("");
+	const [time, setTime] = useState('');
 
 	useEffect(() => {
 		getAllLeaves()
@@ -45,7 +49,6 @@ function LeavesTable() {
 							lastName: leave.studentId.lastName,
 							className: leave.scheduleId.className,
 							cancelledDate: leave.cancelledDate,
-							date:moment(leave.cancelledDate).format("MMMM Do YYYY")
 						};
 					})
 				);
@@ -128,6 +131,38 @@ function LeavesTable() {
 				});
 		}
 	}, [selectedCustomer]);
+
+	const { width } = useWindowDimensions();
+
+	const [searchField, setSearchField] = useState();
+	const [filteredData, setFilteredData] = useState();
+
+	useEffect(() => {
+		filterData();
+	}, [searchField]);
+
+	const filterData = () => {
+		function capitalizeFirstLetter(string) {
+			return string?.charAt(0)?.toUpperCase() + string.slice(1);
+		}
+
+		let value = searchField;
+
+		let regex = new RegExp(`^${value}`, `i`);
+		const sortedArr =
+			rows &&
+			rows.filter(
+				(x) =>
+					regex.test(x.className) ||
+					regex.test(x.firstName) ||
+					regex.test(x.lastName) ||
+					regex.test(moment(x.cancelledDate).format('MMMM')) ||
+					regex.test(moment(x.cancelledDate).format('Do')) ||
+					regex.test(moment(x.cancelledDate).format('YYYY'))
+			);
+
+		setFilteredData(sortedArr);
+	};
 
 	return (
 		<div>
@@ -214,100 +249,132 @@ function LeavesTable() {
 			>
 				Apply Leave
 			</Button>
-			<MaterialTable
-				title=""
-				columns={[
-					{
-						title: 'First Name',
-						field: 'firstName',
-						type: 'string',
-						editable: 'never',
-					},
-					{
-						title: 'Last Name',
-						field: 'lastName',
-						type: 'string',
-						editable: 'never',
-					},
-					{
-						title: 'Class Name',
-						field: 'className',
-						editable: 'never',
-						type: 'string',
-					},
-					{
-						title:"Date",
-						field:"date",
-						editable: 'never',
-						type:'string',
-						defaultGroupOrder: 0,
-						hidden:true
-					},
-					{
-						title: 'Timestamp',
-						field: 'cancelledDate',
-						type: 'datetime',
-						customFilterAndSearch: (filter, row, col) => {
-							return col.render(row).toLowerCase().indexOf(filter.toLowerCase()) !== -1;
-						},
-						render: (rowData) => moment(rowData.cancelledDate).format('MMMM Do YYYY, h:mm:ss A'),
-					},
-				]}
-				style={{
-					margin: '20px',
-					padding: '20px',
-				}}
-				data={rows}
-				options={{
-					exportButton: true,
-					paging: false,
-					maxBodyHeight: height - 240,
-					grouping:true
-				}}
-				editable={{
-					onRowUpdate: (newData, oldData) => {
-						return updateLeave(newData)
-							.then((fetchedData) => {
-								if (fetchedData.data) {
-									const dataUpdate = [...rows];
-									const index = oldData.tableData.id;
-									dataUpdate[index] = newData;
-									setRows([...dataUpdate]);
-									setSuccess(true);
-									setResponse(fetchedData.data.message);
-									setSnackBarOpen(true);
-								} else {
-									setSuccess(false);
-									setResponse(fetchedData.data.error || 'Something went wrong,Try again later');
-									setSnackBarOpen(true);
-								}
-							})
-							.catch((err) => {
-								console.error(err);
-								setSuccess(false);
-								setResponse('Something went wrong,Try again later');
-								setSnackBarOpen(true);
-							});
-					},
-					onRowDelete: (oldData) =>
-						deleteALeave(oldData._id)
-							.then((res) => {
-								const dataDelete = [...rows];
-								const index = oldData.tableData.id;
-								dataDelete.splice(index, 1);
-								setRows([...dataDelete]);
-								setSuccess(true);
-								setResponse(res.data.message);
-								setSnackBarOpen(true);
-							})
-							.catch((err) => {
-								console.error(err, err.response);
-								setSuccess(false);
-								setResponse('unable to delete customer, Try again');
-								setSnackBarOpen(true);
-							}),
-				}}
-			/>
+			{width > 768 ? (
+				<>
+					{' '}
+					<MaterialTable
+						title=""
+						columns={[
+							{
+								title: 'First Name',
+								field: 'firstName',
+								type: 'string',
+								editable: 'never',
+							},
+							{
+								title: 'Last Name',
+								field: 'lastName',
+								type: 'string',
+								editable: 'never',
+							},
+							{
+								title: 'Class Name',
+								field: 'className',
+								editable: 'never',
+								type: 'string',
+							},
+							{
+								title: 'Date(User TimeZone)',
+								field: 'cancelledDate',
+								type: 'datetime',
+								customFilterAndSearch: (filter, row, col) => {
+									return col.render(row).toLowerCase().indexOf(filter.toLowerCase()) !== -1;
+								},
+								render: (rowData) => moment(rowData.cancelledDate).format('MMMM Do YYYY, h:mm:ss A'),
+							},
+						]}
+						style={{
+							margin: '20px',
+							padding: '20px',
+						}}
+						data={rows}
+						options={{
+							exportButton: true,
+							paging: false,
+							maxBodyHeight: height - 240,
+						}}
+						editable={{
+							onRowUpdate: (newData, oldData) => {
+								return updateLeave(newData)
+									.then((fetchedData) => {
+										if (fetchedData.data) {
+											const dataUpdate = [...rows];
+											const index = oldData.tableData.id;
+											dataUpdate[index] = newData;
+											setRows([...dataUpdate]);
+											setSuccess(true);
+											setResponse(fetchedData.data.message);
+											setSnackBarOpen(true);
+										} else {
+											setSuccess(false);
+											setResponse(
+												fetchedData.data.error || 'Something went wrong,Try again later'
+											);
+											setSnackBarOpen(true);
+										}
+									})
+									.catch((err) => {
+										console.error(err);
+										setSuccess(false);
+										setResponse('Something went wrong,Try again later');
+										setSnackBarOpen(true);
+									});
+							},
+							onRowDelete: (oldData) =>
+								deleteALeave(oldData._id)
+									.then((res) => {
+										const dataDelete = [...rows];
+										const index = oldData.tableData.id;
+										dataDelete.splice(index, 1);
+										setRows([...dataDelete]);
+										setSuccess(true);
+										setResponse(res.data.message);
+										setSnackBarOpen(true);
+									})
+									.catch((err) => {
+										console.error(err, err.response);
+										setSuccess(false);
+										setResponse('unable to delete customer, Try again');
+										setSnackBarOpen(true);
+									}),
+						}}
+					/>
+				</>
+			) : (
+				<div>
+					<div
+						style={{
+							display: 'flex',
+							justifyContent: 'center',
+							alignItems: 'center',
+							marginTop: 15,
+							marginBottom: 10,
+						}}
+					>
+						<TextField
+							onChange={(e) => setSearchField(e.target.value)}
+							variant="outlined"
+							label="Search"
+							style={{ width: '95%' }}
+						/>
+					</div>
+
+					{searchField ? (
+						<>
+							{filteredData.map((data) => (
+								<LeavesTableMobile data={data} setRefresh={setRefresh} />
+							))}
+						</>
+					) : (
+						<>
+							{' '}
+							{rows.map((data) => (
+								<LeavesTableMobile data={data} setRefresh={setRefresh} />
+							))}
+						</>
+					)}
+				</div>
+			)}
 		</div>
 	);
 }

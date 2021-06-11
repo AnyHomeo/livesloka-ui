@@ -6,6 +6,7 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import useWindowDimensions from "../../Components/useWindowDimensions";
 import { getSchedulesByDayForZoomAccountDashboard } from "../../Services/Services";
+import useDocumentTitle from "../../Components/useDocumentTitle";
 const times = [
   "12:00 AM-12:30 AM",
   "12:30 AM-01:00 AM",
@@ -121,6 +122,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ZoomAccountDashboard() {
+  useDocumentTitle("Zoom Dashboard");
+
   const classes = useStyles();
   const { width } = useWindowDimensions();
   const [allDays] = useState([

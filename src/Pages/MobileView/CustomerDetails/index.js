@@ -26,6 +26,8 @@ import FilterListOutlinedIcon from "@material-ui/icons/FilterListOutlined";
 import StatisticsCards from "./StatisticsCards";
 import { isAutheticated } from "../../../auth";
 import { Copy } from "react-feather";
+import useDocumentTitle from "../../../Components/useDocumentTitle";
+import AddToPhotosIcon from "@material-ui/icons/AddToPhotos";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -39,6 +41,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CustomerDetails = () => {
+  useDocumentTitle("Customer Data Mobile");
+
   const history = useHistory();
   const classes = useStyles();
 
@@ -58,7 +62,6 @@ const CustomerDetails = () => {
     setLoading(true);
     const data = await getAllCustomerDetails();
 
-    console.log(data);
     // data && data.data.result.reverse();
     setCustomersData(data && data.data.result);
     setData(data && data.data.result);
@@ -323,7 +326,6 @@ const CustomerDetails = () => {
     );
   };
 
-  console.log(data);
   return (
     <div className={classes.root}>
       {toggleStatistics && <StatisticsCards />}
@@ -349,12 +351,13 @@ const CustomerDetails = () => {
             subjectDropdown,
           ].map((dropdown, i) => (
             <div
+              key={data._id}
               style={{
                 width: "300px",
                 margin: "10px 0",
               }}
             >
-              <AutoCompleteFilterData dropdown={dropdown} i={i} />
+              <AutoCompleteFilterData dropdown={dropdown} i={i} key={i} />
             </div>
           ))}
           <div
@@ -506,7 +509,7 @@ const CustomerDetails = () => {
           : searchKeyword
           ? filteredData &&
             filteredData.map((data) => (
-              <div style={{ display: "flex", width: "100%" }}>
+              <div key={data._id} style={{ display: "flex", width: "100%" }}>
                 <Card
                   style={{
                     width: "100%",
@@ -522,23 +525,22 @@ const CustomerDetails = () => {
                     overflow: "hidden",
                   }}
                 >
-                  <div
+                  <Link
+                    to={{
+                      pathname: "/customer-data-info",
+                      state: { data },
+                    }}
                     style={{
-                      marginLeft: 10,
-                      display: "flex",
-                      flexDirection: "column",
+                      width: "100%",
+                      textDecoration: "none",
+                      color: "white",
                     }}
                   >
-                    <Link
-                      key={data._id}
-                      to={{
-                        pathname: "/customer-data-info",
-                        state: { data },
-                      }}
+                    <div
                       style={{
-                        width: "100%",
-                        textDecoration: "none",
-                        color: "white",
+                        marginLeft: 10,
+                        display: "flex",
+                        flexDirection: "column",
                       }}
                     >
                       <Typography
@@ -547,32 +549,33 @@ const CustomerDetails = () => {
                       >
                         {data.firstName}
                       </Typography>
-                    </Link>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography
-                        className={classes.heading}
-                        style={{ fontSize: 10 }}
-                      >
-                        {data.lastName}
-                      </Typography>
-                      <Typography
-                        // className={classes.heading}
+
+                      <div
                         style={{
-                          fontSize: 10,
-                          marginRight: 10,
-                          marginLeft: 10,
+                          display: "flex",
+                          alignItems: "center",
                         }}
                       >
-                        {data.numberOfClassesBought}
-                      </Typography>
-                      {getTimeZone(data.timeZoneId)}
+                        <Typography
+                          className={classes.heading}
+                          style={{ fontSize: 10 }}
+                        >
+                          {data.lastName}
+                        </Typography>
+                        <Typography
+                          // className={classes.heading}
+                          style={{
+                            fontSize: 10,
+                            marginRight: 10,
+                            marginLeft: 10,
+                          }}
+                        >
+                          {data.numberOfClassesBought}
+                        </Typography>
+                        {getTimeZone(data.timeZoneId)}
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                   <div
                     style={{
                       height: "100%",
@@ -602,7 +605,7 @@ const CustomerDetails = () => {
                   }}
                 >
                   <IconButton>
-                    <Copy />
+                    <AddToPhotosIcon />
                   </IconButton>
                 </Link>
               </div>
@@ -610,7 +613,7 @@ const CustomerDetails = () => {
           : data &&
             data.map((data) => {
               return (
-                <div style={{ display: "flex", width: "100%" }}>
+                <div key={data._id} style={{ display: "flex", width: "100%" }}>
                   <Card
                     style={{
                       width: "100%",
@@ -709,7 +712,7 @@ const CustomerDetails = () => {
                     }}
                   >
                     <IconButton>
-                      <Copy />
+                      <AddToPhotosIcon />
                     </IconButton>
                   </Link>
                 </div>
