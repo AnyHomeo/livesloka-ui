@@ -45,6 +45,7 @@ function LeavesTable() {
 							lastName: leave.studentId.lastName,
 							className: leave.scheduleId.className,
 							cancelledDate: leave.cancelledDate,
+							date:moment(leave.cancelledDate).format("MMMM Do YYYY")
 						};
 					})
 				);
@@ -235,7 +236,15 @@ function LeavesTable() {
 						type: 'string',
 					},
 					{
-						title: 'Date(User TimeZone)',
+						title:"Date",
+						field:"date",
+						editable: 'never',
+						type:'string',
+						defaultGroupOrder: 0,
+						hidden:true
+					},
+					{
+						title: 'Timestamp',
 						field: 'cancelledDate',
 						type: 'datetime',
 						customFilterAndSearch: (filter, row, col) => {
@@ -253,6 +262,7 @@ function LeavesTable() {
 					exportButton: true,
 					paging: false,
 					maxBodyHeight: height - 240,
+					grouping:true
 				}}
 				editable={{
 					onRowUpdate: (newData, oldData) => {

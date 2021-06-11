@@ -1,7 +1,7 @@
 import MaterialTable from 'material-table';
 import React from 'react';
 import useWindowDimensions from './../../Components/useWindowDimensions';
-import { deleteATeacherLeave, getAllTeacherLeaves, updateTeacherLeave } from './../../Services/Services';
+import { deleteATeacherLeave, getAllTeacherLeaves, getData, updateTeacherLeave } from './../../Services/Services';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { Button, Chip, Snackbar } from '@material-ui/core';
@@ -15,15 +15,15 @@ import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Axios from 'axios';
 import { isAutheticated } from '../../auth';
 let arr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 function TeacherLeaves() {
-	const { width,height } = useWindowDimensions();
+	const { width, height } = useWindowDimensions();
 	const [rows, setRows] = useState([]);
 	const [teachers, setTeachers] = useState([]);
 	const [schedulesOfTeacher, setSchedulesOfTeacher] = useState([]);
@@ -47,6 +47,13 @@ function TeacherLeaves() {
 			})
 			.catch((error) => {
 				console.log(error);
+			});
+		getData('Teacher')
+			.then((data) => {
+				console.log(data);
+			})
+			.catch((err) => {
+				console.log(err);
 			});
 	}, [refresh]);
 
@@ -81,11 +88,9 @@ function TeacherLeaves() {
 				fullScreen={width < 400}
 				aria-labelledby="form-dialog-title"
 			>
-				<DialogTitle id="form-dialog-title">
-					Apply Leave for a Teacher
-				</DialogTitle>
+				<DialogTitle id="form-dialog-title">Apply Leave for a Teacher</DialogTitle>
 				<DialogContent>
-				<Autocomplete
+					<Autocomplete
 						id="auto-com-1"
 						options={[]}
 						fullWidth
@@ -103,7 +108,9 @@ function TeacherLeaves() {
 							margin: '10px 0',
 							minWidth: 310,
 						}}
-						renderInput={(params) => <TextField {...params} label="Select Schedule Of the Teacher" variant="outlined" />}
+						renderInput={(params) => (
+							<TextField {...params} label="Select Schedule Of the Teacher" variant="outlined" />
+						)}
 					/>
 					<FormControlLabel
 						control={
@@ -164,11 +171,14 @@ function TeacherLeaves() {
 				{' '}
 				Leaves Applied by Teachers{' '}
 			</h1>
-			<Button style={{ marginLeft: '20px' }}
-			onClick={() => {
-				setLeaveData(prev => ({...prev,isHidden:false}))
-			}}
-			color="primary" variant="contained">
+			<Button
+				style={{ marginLeft: '20px' }}
+				onClick={() => {
+					setLeaveData((prev) => ({ ...prev, isHidden: false }));
+				}}
+				color="primary"
+				variant="contained"
+			>
 				Apply Leave
 			</Button>
 			<MaterialTable
@@ -233,7 +243,7 @@ function TeacherLeaves() {
 								});
 							}),
 					onRowDelete: (oldData) =>
-					deleteATeacherLeave(oldData._id)
+						deleteATeacherLeave(oldData._id)
 							.then((data) => {
 								setRefresh((prev) => !prev);
 								setAlert({
