@@ -260,3 +260,9 @@ export const getCareersApplications = () => axios.get(`${API.main}/careers`);
 export const getTodayLeaves = () => axios.get(`${API.main}/cancelclass/123?noSchedule=true`)
 
 export const getCustomerDatFromFilterName = (name) => axios.get(`${API.main}/customer/filters?filter=${name}`)
+
+export const getAllTeacherLeaves = () => axios.get(`${API.main}/teacher-leaves`)
+
+export const updateTeacherLeave = (id,data) => axios.put(`${API.main}/teacher-leaves/${id}`,data)
+
+export const deleteATeacherLeave = (id) => axios.delete(`${API.main}/teacher-leaves/${id}`)
