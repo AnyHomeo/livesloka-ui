@@ -68,16 +68,16 @@ function SingleRow({
 														display: "flex",
 														justifyContent: "center",
 														alignItems: "center",
-														width: 30,
-														height: 30,
+														width: 20,
+														height: 20,
 														marginRight: 2,
 													}}
 												>
 													<UserCheck
 														style={{
 															color: "white",
-															height: 18,
-															width: 18,
+															height: 12,
+															width: 12,
 														}}
 													/>
 												</Avatar>
@@ -91,16 +91,16 @@ function SingleRow({
 															display: "flex",
 															justifyContent: "center",
 															alignItems: "center",
-															width: 30,
-															height: 30,
+															width: 20,
+															height: 20,
 															marginRight: 2,
 														}}
 													>
 														<UserX
 															style={{
 																color: "white",
-																height: 14,
-																width: 14,
+																height: 12,
+																width: 12,
 																marginLeft: 2,
 															}}
 														/>
@@ -112,16 +112,16 @@ function SingleRow({
 															display: "flex",
 															justifyContent: "center",
 															alignItems: "center",
-															width: 30,
-															height: 30,
+															width: 20,
+															height: 20,
 															marginRight: 2,
 														}}
 													>
 														<UserMinus
 															style={{
 																color: "white",
-																height: 14,
-																width: 14,
+																height: 12,
+																width: 12,
 																marginLeft: 2,
 															}}
 														/>
