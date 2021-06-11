@@ -25,7 +25,10 @@ function SingleRow({
 					{singleData.slots[day.toLowerCase()].includes(time) &&
 					!singleData.slots[day.toLowerCase()].includes(prevTime) ? (
 						<Card
-							className="single-card"
+							// style={{minWidth: singleData.students.length > 4 ? "250px !important" : ""}}
+							className={
+								singleData.students.length > 4 ? "single-card single-card-2" : "single-card"
+							}
 							style={{
 								backgroundColor: singleData.isTeacherJoined
 									? "#2ecc7075"
@@ -59,25 +62,37 @@ function SingleRow({
 									<>
 										{student.isStudentJoined ? (
 											<Tooltip title={student.firstName} key={student.firstName}>
-												<UserCheck
+												<Avatar
 													style={{
-														color: "#2ecc71",
-														height: 18,
-														width: 18,
+														background: "#007500",
+														display: "flex",
+														justifyContent: "center",
+														alignItems: "center",
+														width: 30,
+														height: 30,
+														marginRight: 2,
 													}}
-												/>
+												>
+													<UserCheck
+														style={{
+															color: "white",
+															height: 18,
+															width: 18,
+														}}
+													/>
+												</Avatar>
 											</Tooltip>
 										) : (
 											<Tooltip title={student.firstName} key={student.firstName}>
 												{leaves.find((leave) => leave.studentId === student._id) ? (
 													<Avatar
 														style={{
-															background: "#758283",
+															background: "black",
 															display: "flex",
 															justifyContent: "center",
 															alignItems: "center",
-															width: 20,
-															height: 20,
+															width: 30,
+															height: 30,
 															marginRight: 2,
 														}}
 													>
@@ -93,12 +108,12 @@ function SingleRow({
 												) : (
 													<Avatar
 														style={{
-															background: "#ff7675",
+															background: "#b33939",
 															display: "flex",
 															justifyContent: "center",
 															alignItems: "center",
-															width: 20,
-															height: 20,
+															width: 30,
+															height: 30,
 															marginRight: 2,
 														}}
 													>
