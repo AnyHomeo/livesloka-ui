@@ -39,6 +39,7 @@ import SummerCampsCustomerTable from "../Pages/Admin/Crm/SummerCampsCustomerTabl
 import DemoAndInclassStudents from "../Components/DemoAndInclassStudents";
 import Careers from "../Pages/Admin/Crm/Careers";
 import MessagesTable from "../Pages/AdMessages/MessagesTable";
+import NotificationSettings from "../Pages/BroadcastMessages/NotificationSettings";
 
 function Routes() {
   return (
@@ -133,7 +134,7 @@ function Routes() {
             <AdminRoute path="/invoices" exact component={Invoices} />
             <AdminRoute path="/scheduler" exact component={Scheduler} />
             <AdminRoute path="/leaves" exact component={LeavesTabs} />
-            <AdminRoute path="/Messages" exact component={MessagesTable} />
+            <AdminRoute path="/Messages" exact component={NotificationSettings} />
             <AdminRoute
               path="/analytics"
               exact

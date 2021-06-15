@@ -94,6 +94,11 @@ function MessagesTable() {
 
 	return (
 		<div className="messages-table">
+			<h2
+				style={{
+					textAlign:'center'
+				}}
+			>Broadcast Notifications to Customers</h2>
 			<Button
 				className="button-pos"
 				variant="contained"
