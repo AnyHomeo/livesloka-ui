@@ -259,11 +259,7 @@ const LeavesTableMobile = ({data, setRefresh, tables}) => {
 									padding: "20px",
 								}}
 								data={rows}
-								options={{
-									exportButton: true,
-									paging: false,
-									maxBodyHeight: height - 240,
-								}}
+								options={{search: false}}
 								editable={{
 									onRowUpdate: (newData, oldData) => {
 										return updateLeave(newData)

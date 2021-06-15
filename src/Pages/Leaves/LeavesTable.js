@@ -1,7 +1,7 @@
 import MaterialTable from "material-table"
 import React from "react"
 import useWindowDimensions from "./../../Components/useWindowDimensions"
-import {ExternalLink} from "react-feather"
+import {PlusCircle} from "react-feather"
 import {useEffect} from "react"
 import {useState} from "react"
 import {Button, IconButton, Snackbar} from "@material-ui/core"
@@ -379,7 +379,7 @@ function LeavesTable() {
 						/>
 
 						<IconButton onClick={() => setDialogOpen(true)}>
-							<ExternalLink />
+							<PlusCircle />
 						</IconButton>
 					</div>
 
@@ -415,7 +415,7 @@ function LeavesTable() {
 							style={{width: "79%"}}
 						/>
 						<IconButton onClick={() => setDialogOpen(true)}>
-							<ExternalLink />
+							<PlusCircle />
 						</IconButton>
 					</div>
 
