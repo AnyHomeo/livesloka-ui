@@ -10,8 +10,11 @@ import {MuiPickersUtilsProvider, DateTimePicker} from "@material-ui/pickers"
 import moment from "moment"
 import {CircularProgress, IconButton, Snackbar} from "@material-ui/core"
 import {Edit, ArrowRightCircle} from "react-feather"
-import {updateLeave} from "../../../../Services/Services"
+import {deleteALeave, updateLeave} from "../../../../Services/Services"
 import Alert from "@material-ui/lab/Alert"
+import MaterialTable from "material-table"
+import useWindowDimensions from "../../../../Components/useWindowDimensions"
+import {useEffect} from "react"
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -48,7 +51,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const AccordianInside = ({data, setRefresh}) => {
+const AccordianInside = ({data, setRefresh, tables}) => {
+	const [rows, setRows] = useState(data)
 	const classes = useStyles()
 
 	const handleSnackBarClose = (event, reason) => {
@@ -175,9 +179,26 @@ const AccordianInside = ({data, setRefresh}) => {
 	)
 }
 
-const LeavesTableMobile = ({data, setRefresh}) => {
-	const classes = useStyles()
+const LeavesTableMobile = ({data, setRefresh, tables}) => {
+	const [rows, setRows] = useState([])
 
+	const handleSnackBarClose = (event, reason) => {
+		if (reason === "clickaway") {
+			return
+		}
+		setSnackBarOpen(false)
+	}
+
+	const [snackBarOpen, setSnackBarOpen] = useState(false)
+	const [success, setSuccess] = useState(false)
+	const [response, setResponse] = useState("")
+	useEffect(() => {
+		setRows(data.data)
+	}, [])
+	const classes = useStyles()
+	const {height} = useWindowDimensions()
+
+	console.log(rows)
 	return (
 		<div className={classes.root}>
 			<Accordion>
@@ -199,13 +220,113 @@ const LeavesTableMobile = ({data, setRefresh}) => {
 					</div>
 				</AccordionSummary>
 				<AccordionDetails>
-					{data.data.map((item) => (
-						<div style={{display: "flex", flexDirection: "column", flex: 1}}>
-							<AccordianInside data={item} setRefresh={setRefresh} />
-						</div>
-					))}
+					{tables ? (
+						<>
+							<MaterialTable
+								title=""
+								columns={[
+									{
+										title: "First Name",
+										field: "studentId.firstName",
+										type: "string",
+										editable: "never",
+									},
+									{
+										title: "Last Name",
+										field: "studentId.lastName",
+										type: "string",
+										editable: "never",
+									},
+									{
+										title: "Class Name",
+										field: "scheduleId.className",
+										editable: "never",
+										type: "string",
+									},
+									{
+										title: "Date(User TimeZone)",
+										field: "cancelledDate",
+										type: "datetime",
+										customFilterAndSearch: (filter, row, col) => {
+											return col.render(row).toLowerCase().indexOf(filter.toLowerCase()) !== -1
+										},
+										render: (rowData) =>
+											moment(rowData.cancelledDate).format("MMMM Do YYYY, h:mm:ss A"),
+									},
+								]}
+								style={{
+									margin: "20px",
+									padding: "20px",
+								}}
+								data={rows}
+								options={{
+									exportButton: true,
+									paging: false,
+									maxBodyHeight: height - 240,
+								}}
+								editable={{
+									onRowUpdate: (newData, oldData) => {
+										return updateLeave(newData)
+											.then((fetchedData) => {
+												if (fetchedData.data) {
+													const dataUpdate = [...rows]
+													const index = oldData.tableData.id
+													dataUpdate[index] = newData
+													setRows([...dataUpdate])
+													setSuccess(true)
+													setResponse(fetchedData.data.message)
+													setSnackBarOpen(true)
+												} else {
+													setSuccess(false)
+													setResponse(
+														fetchedData.data.error || "Something went wrong,Try again later"
+													)
+													setSnackBarOpen(true)
+												}
+											})
+											.catch((err) => {
+												console.error(err)
+												setSuccess(false)
+												setResponse("Something went wrong,Try again later")
+												setSnackBarOpen(true)
+											})
+									},
+									onRowDelete: (oldData) =>
+										deleteALeave(oldData._id)
+											.then((res) => {
+												const dataDelete = [...rows]
+												const index = oldData.tableData.id
+												dataDelete.splice(index, 1)
+												setRows([...dataDelete])
+												setSuccess(true)
+												setResponse(res.data.message)
+												setSnackBarOpen(true)
+											})
+											.catch((err) => {
+												console.error(err, err.response)
+												setSuccess(false)
+												setResponse("unable to delete customer, Try again")
+												setSnackBarOpen(true)
+											}),
+								}}
+							/>
+						</>
+					) : (
+						<>
+							{data.data.map((item) => (
+								<div style={{display: "flex", flexDirection: "column", flex: 1}}>
+									<AccordianInside data={item} setRefresh={setRefresh} tables={tables} />
+								</div>
+							))}
+						</>
+					)}
 				</AccordionDetails>
 			</Accordion>
+			<Snackbar open={snackBarOpen} autoHideDuration={6000} onClose={handleSnackBarClose}>
+				<Alert onClose={handleSnackBarClose} severity={success ? "success" : "warning"}>
+					{response}
+				</Alert>
+			</Snackbar>
 		</div>
 	)
 }

@@ -1,10 +1,10 @@
 import MaterialTable from "material-table"
 import React from "react"
 import useWindowDimensions from "./../../Components/useWindowDimensions"
-import {deleteALeave, getAllLeaves, updateLeave} from "./../../Services/Services"
+import {ExternalLink} from "react-feather"
 import {useEffect} from "react"
 import {useState} from "react"
-import {Button, Snackbar} from "@material-ui/core"
+import {Button, IconButton, Snackbar} from "@material-ui/core"
 import Alert from "@material-ui/lab/Alert"
 import moment from "moment"
 import Dialog from "@material-ui/core/Dialog"
@@ -20,6 +20,7 @@ import Axios from "axios"
 import {isAutheticated} from "../../auth"
 import LeavesTableMobile from "../Admin/Crm/MobileViews/LeavesTableMobile"
 import useDocumentTitle from "../../Components/useDocumentTitle"
+import {getAllLeaves} from "../../Services/Services"
 let arr = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
 function LeavesTable() {
@@ -154,15 +155,18 @@ function LeavesTable() {
 
 		let regex = new RegExp(`^${value}`, `i`)
 		const sortedArr =
-			rows &&
-			rows.filter(
-				(x) =>
-					regex.test(x.className) ||
-					regex.test(x.firstName) ||
-					regex.test(x.lastName) ||
-					regex.test(moment(x.cancelledDate).format("MMMM")) ||
-					regex.test(moment(x.cancelledDate).format("Do")) ||
-					regex.test(moment(x.cancelledDate).format("YYYY"))
+			groupedData &&
+			groupedData.filter(
+				(x) => {
+					return regex.test(x.date)
+				}
+
+				// ||
+				// regex.test(x.firstName) ||
+				// regex.test(x.lastName) ||
+				// regex.test(moment(x.cancelledDate).format("MMMM")) ||
+				// regex.test(moment(x.cancelledDate).format("Do")) ||
+				// regex.test(moment(x.cancelledDate).format("YYYY"))
 			)
 
 		setFilteredData(sortedArr)
@@ -187,7 +191,7 @@ function LeavesTable() {
 			console.log(error.response)
 		}
 	}
-
+	console.log(rows)
 	return (
 		<div>
 			<Snackbar open={snackBarOpen} autoHideDuration={6000} onClose={handleSnackBarClose}>
@@ -260,17 +264,17 @@ function LeavesTable() {
 				</DialogActions>
 			</Dialog>
 
-			<Button
+			{/* <Button
 				style={{marginLeft: "20px"}}
 				color="primary"
 				onClick={() => setDialogOpen(true)}
 				variant="contained"
 			>
 				Apply Leave
-			</Button>
+			</Button> */}
 			{width > 768 ? (
 				<>
-					{" "}
+					{/* {" "}
 					<MaterialTable
 						title=""
 						columns={[
@@ -356,7 +360,42 @@ function LeavesTable() {
 										setSnackBarOpen(true)
 									}),
 						}}
-					/>
+					/> */}
+
+					<div
+						style={{
+							display: "flex",
+							justifyContent: "center",
+							alignItems: "center",
+							marginTop: 15,
+							marginBottom: 10,
+						}}
+					>
+						<TextField
+							onChange={(e) => setSearchField(e.target.value)}
+							variant="outlined"
+							label="Search"
+							style={{width: "91%"}}
+						/>
+
+						<IconButton onClick={() => setDialogOpen(true)}>
+							<ExternalLink />
+						</IconButton>
+					</div>
+
+					{searchField ? (
+						<>
+							{filteredData?.map((data) => (
+								<LeavesTableMobile data={data} setRefresh={setRefresh} tables={true} />
+							))}
+						</>
+					) : (
+						<>
+							{groupedData?.map((data) => (
+								<LeavesTableMobile data={data} setRefresh={setRefresh} tables={true} />
+							))}
+						</>
+					)}
 				</>
 			) : (
 				<div>
@@ -373,15 +412,19 @@ function LeavesTable() {
 							onChange={(e) => setSearchField(e.target.value)}
 							variant="outlined"
 							label="Search"
-							style={{width: "95%"}}
+							style={{width: "79%"}}
 						/>
+						<IconButton onClick={() => setDialogOpen(true)}>
+							<ExternalLink />
+						</IconButton>
 					</div>
 
 					{searchField ? (
 						<>
-							{filteredData.map((data) => (
-								<LeavesTableMobile data={data} setRefresh={setRefresh} />
-							))}
+							{filteredData &&
+								filteredData.map((data) => (
+									<LeavesTableMobile data={data} setRefresh={setRefresh} />
+								))}
 						</>
 					) : (
 						<>
