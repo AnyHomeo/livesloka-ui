@@ -128,11 +128,11 @@ const AccordianInside = ({data, setRefresh, tables}) => {
 
 						<div style={{marginTop: 5}}>
 							<p className={classes.subTitle}>
-								First Name: <span>{data.studentId.firstName}</span>{" "}
+								Student: <span>{data.studentId.firstName}</span>{" "}
 							</p>
 
 							<p className={classes.subTitle}>
-								Last Name: <span>{data.studentId.lastName}</span>{" "}
+								Parent: <span>{data.studentId.lastName}</span>{" "}
 							</p>
 
 							{editableDate ? (
@@ -149,7 +149,7 @@ const AccordianInside = ({data, setRefresh, tables}) => {
 							) : (
 								<p className={classes.subTitle}>
 									Date (User Timezone):{" "}
-									<span>{moment(data.cancelledDate).format("MMMM Do YYYY, h:mm:ss A")}</span>{" "}
+									<span>{moment(data.cancelledDate).format("MMMM Do YYYY,")}</span>{" "}
 								</p>
 							)}
 
@@ -219,20 +219,20 @@ const LeavesTableMobile = ({data, setRefresh, tables}) => {
 						</Typography>
 					</div>
 				</AccordionSummary>
-				<AccordionDetails>
+				<AccordionDetails style={{backgroundColor: "#3498db"}}>
 					{tables ? (
 						<>
 							<MaterialTable
 								title=""
 								columns={[
 									{
-										title: "First Name",
+										title: "Student",
 										field: "studentId.firstName",
 										type: "string",
 										editable: "never",
 									},
 									{
-										title: "Last Name",
+										title: "Parent",
 										field: "studentId.lastName",
 										type: "string",
 										editable: "never",
