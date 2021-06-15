@@ -31,7 +31,9 @@
     "moment-timezone": "^0.5.33",
     "node-sass": "4.14.1",
     "react": "16.13.1",
+    "react-autosize-textarea": "^7.1.0",
     "react-chartjs-2": "^2.11.1",
+    "react-color": "^2.19.3",
     "react-countup": "^4.3.3",
     "react-dom": "16.13.1",
     "react-draft-wysiwyg": "^1.14.7",
@@ -41,6 +43,7 @@
     "react-router-dom": "5.2.0",
     "react-scripts": "3.4.1",
     "react-spinners": "0.9.0",
+    "react-svg": "^14.0.1",
     "socket.io-client": "3.0.3"
   },
   "scripts": {
