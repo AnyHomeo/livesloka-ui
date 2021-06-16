@@ -538,9 +538,6 @@ const MeetingScheduler = () => {
                   label="Start Date"
                   value={selectedDate}
                   onChange={handleDateChange}
-                  KeyboardButtonProps={{
-                    "aria-label": "change date",
-                  }}
                 />
               </MuiPickersUtilsProvider>
               <FormControl

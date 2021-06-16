@@ -4,18 +4,20 @@ import {TextField} from "@material-ui/core"
 import Autocomplete from "@material-ui/lab/Autocomplete"
 import {getAdminsFromQuery, getClasses} from "../../Services/Services"
 
-function SelectTeacher({setAllAdminIds}) {
-	const [allTeachers, setAllTeachers] = useState([])
-	const [selectedTeachers, setSelectedTeachers] = useState([])
+function SelectTeacher({ setAllAdminIds, teacherStateAndSetState }) {
+
+	const { allTeachers, setAllTeachers, selectedTeachers, setSelectedTeachers } = teacherStateAndSetState
 
 	useEffect(() => {
-		Axios.get(`${process.env.REACT_APP_API_KEY}/teacher?params=id,TeacherName`)
+		if(!allTeachers.length){
+			Axios.get(`${process.env.REACT_APP_API_KEY}/teacher?params=id,TeacherName`)
 			.then((data) => {
 				setAllTeachers(data.data.result)
 			})
 			.catch((err) => {
 				console.log(err)
 			})
+		}
 	}, [])
 
 	useEffect(() => {
@@ -42,6 +44,7 @@ function SelectTeacher({setAllAdminIds}) {
 				margin: "auto",
 			}}
 			limitTags={5}
+			getOptionSelected={(option,value) => option.id === value.id}
 			fullWidth
 			options={allTeachers}
 			getOptionLabel={(name) => name.TeacherName}

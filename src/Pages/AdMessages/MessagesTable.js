@@ -80,7 +80,6 @@ function MessagesTable() {
 			.then((data) => {
 				deleteField("Delete AdMessage", id)
 					.then((data) => {
-						console.log(data)
 						setRefresh((prev) => !prev)
 					})
 					.catch((err) => {

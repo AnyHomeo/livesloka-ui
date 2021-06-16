@@ -339,7 +339,6 @@ const EditSchedule = () => {
             `${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`,
             formData
           );
-          console.log(res);
           setDemo(false);
           setPersonName([]);
           setZoomEmail("");
@@ -397,7 +396,6 @@ const EditSchedule = () => {
             `${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`,
             formData
           );
-          console.log(res);
           setDemo(false);
           setPersonName([]);
           setZoomEmail("");
@@ -596,9 +594,6 @@ const EditSchedule = () => {
                 label="Start Date"
                 value={selectedDate}
                 onChange={handleDateChange}
-                KeyboardButtonProps={{
-                  "aria-label": "change date",
-                }}
               />
             </MuiPickersUtilsProvider>
             <FormControl

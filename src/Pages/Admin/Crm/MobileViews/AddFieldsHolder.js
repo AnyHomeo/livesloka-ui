@@ -21,7 +21,6 @@ const AddFieldsHolder = ({name, status, lookup, categoryLookup}) => {
 	const [imageLoading, setImageLoading] = useState(false)
 	useEffect(() => {
 		getData(name).then((response) => {
-			console.log(response)
 			setData(response.data.result)
 			setLoading(false)
 		})
@@ -50,7 +49,6 @@ const AddFieldsHolder = ({name, status, lookup, categoryLookup}) => {
 		}
 	}
 
-	console.log(data)
 	return (
 		<>
 			{data.map((item) => {

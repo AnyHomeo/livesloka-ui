@@ -52,7 +52,6 @@ const useStyles = makeStyles((theme) => ({
 const ClassesLeftMobile = ({ data }) => {
   const classes = useStyles();
 
-  console.log(data);
   return (
     <div className={classes.root}>
       <Accordion>

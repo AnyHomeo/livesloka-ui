@@ -198,7 +198,6 @@ const LeavesTableMobile = ({data, setRefresh, tables}) => {
 	const classes = useStyles()
 	const {height} = useWindowDimensions()
 
-	console.log(rows)
 	return (
 		<div className={classes.root}>
 			<Accordion>

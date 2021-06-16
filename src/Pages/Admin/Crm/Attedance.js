@@ -164,9 +164,6 @@ const Attedance = () => {
                 inputVariant="outlined"
                 value={selectedDate}
                 onChange={handleDateChange}
-                KeyboardButtonProps={{
-                  "aria-label": "change date",
-                }}
               />
             </MuiPickersUtilsProvider>
             <Button

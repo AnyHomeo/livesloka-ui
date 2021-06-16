@@ -12,6 +12,10 @@ import {addInField} from "../../Services/Services"
 import Snackbar from "@material-ui/core/Snackbar"
 import Alert from "@material-ui/lab/Alert"
 import useWindowDimensions from "../../Components/useWindowDimensions"
+import DateFnsUtils from "@date-io/date-fns"
+import {DateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers"
+import { isAutheticated } from "../../auth"
+
 function NotificationSettings() {
 	let initialNotificationDataState = {
 		title: "Title",
@@ -30,7 +34,14 @@ function NotificationSettings() {
 		message: "",
 		severity: "error",
 	})
-	const { width,height } = useWindowDimensions(); 
+	const {width, height} = useWindowDimensions()
+	const [allClassNames, setAllClassNames] = useState([])
+	const [selectedClassNames, setSelectedClassNames] = useState([])
+	const [allTeachers, setAllTeachers] = useState([])
+	const [selectedTeachers, setSelectedTeachers] = useState([])
+	const [allAgents, setAllAgents] = useState([])
+	const [selectedAgents, setSelectedAgents] = useState([])
+	const [expiryDate, setExpiryDate] = useState(new Date())
 
 	const submitForm = () => {
 		if (!allAdminIds.length && !isForAll) {
@@ -47,15 +58,24 @@ function NotificationSettings() {
 				open: true,
 				severity: "warning",
 			})
-			return 
+			return
 		}
 		let formData = {
-			background: typeof notificationData.color === "object" ? notificationData.color.hex :notificationData.color ,
+			background:
+				typeof notificationData.color === "object"
+					? notificationData.color.hex
+					: notificationData.color,
 			icon: notificationData.icon,
-			adminIds: allAdminIds.map((customer) => customer._id),
+			adminIds: isForAll ? [] : allAdminIds.map((customer) => customer._id),
 			message: notificationData.text,
 			title: notificationData.title,
 			isForAll,
+			queryType:queryFrom,
+			broadcastedBy:isAutheticated().agentId,
+			scheduleIds: selectedClassNames.map(schedule => schedule._id),
+			teacherIds: selectedTeachers.map(teacher => teacher.id),
+			agentIds: selectedAgents.map(agent => agent.id),
+			expiryDate
 		}
 		addInField("Add AdMessage", formData)
 			.then((data) => {
@@ -81,7 +101,6 @@ function NotificationSettings() {
 	useEffect(() => {
 		Axios.get(`${process.env.REACT_APP_API_KEY}/all/admins`)
 			.then((data) => {
-				console.log(data.data.result)
 				setAllCustomers(data.data.result)
 			})
 			.catch((err) => {
@@ -103,16 +122,17 @@ function NotificationSettings() {
 
 	useEffect(() => {
 		setAllAdminIds([])
+		setSelectedAgents([])
+		setSelectedClassNames([])
+		setSelectedTeachers([])
 		setIsForAll(false)
 	}, [queryFrom])
 
-	
 	useEffect(() => {
 		setAllAdminIds([])
 		setIsForAll(false)
 		setQueryFrom("customers")
 	}, [refresh])
-
 
 	const handleQueryFrom = (e, n) => {
 		setQueryFrom(n)
@@ -170,8 +190,41 @@ function NotificationSettings() {
 								allAdminIds={allAdminIds}
 								setAllAdminIds={setAllAdminIds}
 								allCustomers={allCustomers}
-								refresh={refresh}
+								agentStateAndSetStates={{
+									allAgents,
+									setAllAgents,
+									selectedAgents,
+									setSelectedAgents,
+								}}
+								teacherStateAndSetState={{
+									allTeachers,
+									setAllTeachers,
+									selectedTeachers,
+									setSelectedTeachers,
+								}}
+								classStateAndSetStates={{
+									selectedClassNames,
+									setSelectedClassNames,
+									allClassNames,
+									setAllClassNames,
+								}}
 							/>
+							<div style={{width:400}} >
+							<MuiPickersUtilsProvider utils={DateFnsUtils}>
+								<DateTimePicker
+									margin="normal"
+									fullWidth
+									disablePast
+									id="date-picker-dialog"
+									label="Select Leave Date"
+									inputVariant="outlined"
+									value={expiryDate}
+									onChange={(date) => {
+										setExpiryDate(new Date(date))
+									}}
+								/>
+							</MuiPickersUtilsProvider>
+							</div>
 							<div
 								style={{
 									display: "flex",
@@ -192,10 +245,12 @@ function NotificationSettings() {
 						<CardContent className={"space-between"}>
 							<h2
 								style={{
-									textAlign:'center',
-									margin:10
+									textAlign: "center",
+									margin: 10,
 								}}
-							>Live Preview</h2>
+							>
+								Live Preview
+							</h2>
 							<div style={{position: "relative"}}>
 								<div className="pickers-row-icons">
 									<div

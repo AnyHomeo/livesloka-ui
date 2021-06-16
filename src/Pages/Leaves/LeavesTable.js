@@ -182,8 +182,6 @@ function LeavesTable() {
 		try {
 			const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/cancelclass?groupedByDate=yes
 		`)
-
-			console.log(data)
 			if (data) {
 				setGroupedData(data?.data?.result)
 			}
@@ -191,7 +189,6 @@ function LeavesTable() {
 			console.log(error.response)
 		}
 	}
-	console.log(rows)
 	return (
 		<div>
 			<Snackbar open={snackBarOpen} autoHideDuration={6000} onClose={handleSnackBarClose}>
@@ -247,9 +244,6 @@ function LeavesTable() {
 							}}
 							shouldDisableDate={(date) => {
 								return !scheduleDays.includes(arr[new Date(date).getDay()])
-							}}
-							KeyboardButtonProps={{
-								"aria-label": "change date",
 							}}
 						/>
 					</MuiPickersUtilsProvider>
