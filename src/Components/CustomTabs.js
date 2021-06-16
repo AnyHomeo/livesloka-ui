@@ -65,7 +65,6 @@ const CustomTabs = () => {
 		"Currency",
 		"Status",
 		"Country",
-		"Teacher",
 		"Agent",
 		"Category",
 	]
@@ -88,6 +87,9 @@ const CustomTabs = () => {
 		setValue(newValue)
 	}
 
+	const [statusMobile, setStatusMobile] = useState()
+	const [catogeryMob, setcatogeryMob] = useState()
+
 	useEffect(() => {
 		getData("Status").then((data) => {
 			let dummyLookup = {}
@@ -95,6 +97,7 @@ const CustomTabs = () => {
 				dummyLookup[data.statusId] = data.statusName
 			})
 			setLookup(dummyLookup)
+			setStatusMobile(data)
 		})
 		if (value === 8) {
 			getData("Category").then((data) => {
@@ -103,6 +106,7 @@ const CustomTabs = () => {
 					dummyLookup[data.id] = data.categoryName
 				})
 				setCategoryLookup(dummyLookup)
+				setcatogeryMob(data)
 			})
 		}
 	}, [value])
@@ -134,6 +138,8 @@ const CustomTabs = () => {
 						/>
 					) : (
 						<AddFieldsHolder
+							statusMob={statusMobile}
+							category={catogeryMob}
 							name={item}
 							status={status[index]}
 							lookup={lookup}

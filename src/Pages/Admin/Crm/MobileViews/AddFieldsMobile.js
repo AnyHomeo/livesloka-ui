@@ -19,6 +19,7 @@ import {
 import {Edit, Trash2, ArrowRightCircle, XCircle} from "react-feather"
 import {getData, updateLeave, editField} from "../../../../Services/Services"
 import Alert from "@material-ui/lab/Alert"
+import {ChromePicker} from "react-color"
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -103,7 +104,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const AddFieldsMobile = ({data, categoryData, statusData, getbackdata}) => {
+const AddFieldsMobile = ({data, categoryData, statusData, getbackdata, name}) => {
 	const classes = useStyles()
 
 	const handleSnackBarClose = (event, reason) => {
@@ -155,10 +156,10 @@ const AddFieldsMobile = ({data, categoryData, statusData, getbackdata}) => {
 	}, [data])
 
 	const updateData = async () => {
-		const res = await editField(`Update Teacher`, textFieldData)
+		const res = await editField(`Update ${name}`, textFieldData)
 
 		if (res.status === 200) {
-			getbackdata(res.status)
+			getbackdata(200)
 			setEditOption(false)
 		}
 	}
@@ -178,7 +179,29 @@ const AddFieldsMobile = ({data, categoryData, statusData, getbackdata}) => {
 								width: "100%",
 							}}
 						>
-							<Typography className={classes.heading}>{data?.TeacherName}</Typography>
+							{name === "Class" ? (
+								<Typography className={classes.heading}>{data?.classDesc}</Typography>
+							) : name === "Time Zone" ? (
+								<Typography className={classes.heading}>{data?.timeZoneDesc}</Typography>
+							) : name === "Subject" ? (
+								<Typography className={classes.heading}>{data?.subjectName}</Typography>
+							) : name === "Zoom Account" ? (
+								<Typography className={classes.heading}>{data?.ZoomAccountName}</Typography>
+							) : name === "Class Status" ? (
+								<Typography className={classes.heading}>{data?.classStatusName}</Typography>
+							) : name === "Currency" ? (
+								<Typography className={classes.heading}>{data?.currencyName}</Typography>
+							) : name === "Status" ? (
+								<Typography className={classes.heading}>{data?.statusName}</Typography>
+							) : name === "Country" ? (
+								<Typography className={classes.heading}>{data?.countryName}</Typography>
+							) : name === "Agent" ? (
+								<Typography className={classes.heading}>{data?.AgentName}</Typography>
+							) : name === "Category" ? (
+								<Typography className={classes.heading}>{data?.categoryName}</Typography>
+							) : (
+								""
+							)}
 						</div>
 					</AccordionSummary>
 					<AccordionDetails>
@@ -194,12 +217,270 @@ const AddFieldsMobile = ({data, categoryData, statusData, getbackdata}) => {
 									return null
 								}
 
-								if (humanReadable(k) === "Id") {
+								if (k === "timeSlots") {
 									return null
 								}
-
-								if (humanReadable(k) === "Teacher Image Link") {
+								if (k === "statusId") {
 									return null
+								}
+								if (k === "color") {
+									return (
+										<div key={i} className={classes.cardContainer}>
+											<Card className={classes.card1}>
+												<p style={{marginLeft: 5, fontSize: 12}}>{humanReadable(k)}</p>
+											</Card>
+											{editOption ? (
+												<>
+													{/* <TextField
+													size="small"
+													variant="outlined"
+													className={classes.editText}
+													onChange={(e) => {
+														e.persist()
+														setTextFieldData((prev) => {
+															return {
+																...prev,
+																[k]: e.target.value,
+															}
+														})
+													}}
+													value={textFieldData[k]}
+												/> */}
+
+													<ChromePicker
+														color={textFieldData[k]}
+														onChangeComplete={(color) => {
+															setTextFieldData((prev) => {
+																return {
+																	...prev,
+																	[k]: color.hex,
+																}
+															})
+														}}
+													/>
+												</>
+											) : (
+												<Card className={classes.card2}>
+													<p style={{marginLeft: 5, fontSize: 12}}>{data[k]}</p>
+												</Card>
+											)}
+										</div>
+									)
+								}
+
+								if (k === "classesStatus") {
+									return (
+										<div key={i} className={classes.cardContainer}>
+											<Card className={classes.card1}>
+												<p style={{marginLeft: 5, fontSize: 12}}>{humanReadable(k)}</p>
+											</Card>
+											{editOption ? (
+												<>
+													<FormControl size="small" variant="outlined" className={classes.editText}>
+														<Select
+															style={{minWidth: "100%"}}
+															value={textFieldData[k]}
+															onChange={(e) => {
+																e.persist()
+																setTextFieldData((prev) => {
+																	return {
+																		...prev,
+																		[k]: e.target.value,
+																	}
+																})
+															}}
+														>
+															{statusData &&
+																statusData?.data?.result?.map((cat) => {
+																	return <MenuItem value={cat.statusId}>{cat.statusName}</MenuItem>
+																})}
+														</Select>
+													</FormControl>
+												</>
+											) : (
+												<Card className={classes.card2}>
+													{statusData &&
+														statusData?.data?.result?.map((cat) => {
+															if (cat.statusId === data.classesStatus) {
+																return <p style={{marginLeft: 5, fontSize: 12}}>{cat.statusName}</p>
+															}
+														})}
+												</Card>
+											)}
+										</div>
+									)
+								}
+
+								if (k === "timeZoneStatus") {
+									return (
+										<div key={i} className={classes.cardContainer}>
+											<Card className={classes.card1}>
+												<p style={{marginLeft: 5, fontSize: 12}}>{humanReadable(k)}</p>
+											</Card>
+											{editOption ? (
+												<>
+													<FormControl size="small" variant="outlined" className={classes.editText}>
+														<Select
+															style={{minWidth: "100%"}}
+															value={textFieldData[k]}
+															onChange={(e) => {
+																e.persist()
+																setTextFieldData((prev) => {
+																	return {
+																		...prev,
+																		[k]: e.target.value,
+																	}
+																})
+															}}
+														>
+															{statusData &&
+																statusData?.data?.result?.map((cat) => {
+																	return <MenuItem value={cat.statusId}>{cat.statusName}</MenuItem>
+																})}
+														</Select>
+													</FormControl>
+												</>
+											) : (
+												<Card className={classes.card2}>
+													{statusData &&
+														statusData?.data?.result?.map((cat) => {
+															if (cat.statusId === data.timeZoneStatus) {
+																return <p style={{marginLeft: 5, fontSize: 12}}>{cat.statusName}</p>
+															}
+														})}
+												</Card>
+											)}
+										</div>
+									)
+								}
+
+								if (k === "status") {
+									return (
+										<div key={i} className={classes.cardContainer}>
+											<Card className={classes.card1}>
+												<p style={{marginLeft: 5, fontSize: 12}}>{humanReadable(k)}</p>
+											</Card>
+											{editOption ? (
+												<>
+													<FormControl size="small" variant="outlined" className={classes.editText}>
+														<Select
+															style={{minWidth: "100%"}}
+															value={textFieldData[k]}
+															onChange={(e) => {
+																e.persist()
+																setTextFieldData((prev) => {
+																	return {
+																		...prev,
+																		[k]: e.target.value,
+																	}
+																})
+															}}
+														>
+															{statusData &&
+																statusData?.data?.result?.map((cat) => {
+																	return <MenuItem value={cat.statusId}>{cat.statusName}</MenuItem>
+																})}
+														</Select>
+													</FormControl>
+												</>
+											) : (
+												<Card className={classes.card2}>
+													{statusData &&
+														statusData?.data?.result?.map((cat) => {
+															if (cat.statusId === data.status) {
+																return <p style={{marginLeft: 5, fontSize: 12}}>{cat.statusName}</p>
+															}
+														})}
+												</Card>
+											)}
+										</div>
+									)
+								}
+
+								if (k === "currencyStatus") {
+									return (
+										<div key={i} className={classes.cardContainer}>
+											<Card className={classes.card1}>
+												<p style={{marginLeft: 5, fontSize: 12}}>{humanReadable(k)}</p>
+											</Card>
+											{editOption ? (
+												<>
+													<FormControl size="small" variant="outlined" className={classes.editText}>
+														<Select
+															style={{minWidth: "100%"}}
+															value={textFieldData[k]}
+															onChange={(e) => {
+																e.persist()
+																setTextFieldData((prev) => {
+																	return {
+																		...prev,
+																		[k]: e.target.value,
+																	}
+																})
+															}}
+														>
+															{statusData &&
+																statusData?.data?.result?.map((cat) => {
+																	return <MenuItem value={cat.statusId}>{cat.statusName}</MenuItem>
+																})}
+														</Select>
+													</FormControl>
+												</>
+											) : (
+												<Card className={classes.card2}>
+													{statusData &&
+														statusData?.data?.result?.map((cat) => {
+															if (cat.statusId === data.currencyStatus) {
+																return <p style={{marginLeft: 5, fontSize: 12}}>{cat.statusName}</p>
+															}
+														})}
+												</Card>
+											)}
+										</div>
+									)
+								}
+
+								if (k === "countryStatus") {
+									return (
+										<div key={i} className={classes.cardContainer}>
+											<Card className={classes.card1}>
+												<p style={{marginLeft: 5, fontSize: 12}}>{humanReadable(k)}</p>
+											</Card>
+											{editOption ? (
+												<>
+													<FormControl size="small" variant="outlined" className={classes.editText}>
+														<Select
+															style={{minWidth: "100%"}}
+															value={textFieldData[k]}
+															onChange={(e) => {
+																e.persist()
+																setTextFieldData((prev) => {
+																	return {
+																		...prev,
+																		[k]: e.target.value,
+																	}
+																})
+															}}
+														>
+															{statusData &&
+																statusData?.data?.result?.map((cat) => {
+																	return <MenuItem value={cat.statusId}>{cat.statusName}</MenuItem>
+																})}
+														</Select>
+													</FormControl>
+												</>
+											) : (
+												<Card className={classes.card2}>
+													{statusData &&
+														statusData?.data?.result?.map((cat) => {
+															if (cat.statusId === data.countryStatus) {
+																return <p style={{marginLeft: 5, fontSize: 12}}>{cat.statusName}</p>
+															}
+														})}
+												</Card>
+											)}
+										</div>
+									)
 								}
 
 								if (humanReadable(k) === "Category") {
