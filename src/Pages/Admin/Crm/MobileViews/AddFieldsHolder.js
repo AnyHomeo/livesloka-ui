@@ -10,7 +10,7 @@ import {getData} from "../../../../Services/Services"
 import useWindowDimensions from "../../../../Components/useWindowDimensions"
 import AddFieldsMobile from "./AddFieldsMobile"
 
-const AddFieldsHolder = ({name, status, lookup, categoryLookup}) => {
+const AddFieldsHolder = ({name, status, lookup, categoryLookup, statusMob, category}) => {
 	const [data, setData] = useState([])
 
 	const [loading, setLoading] = useState(true)
@@ -20,12 +20,22 @@ const AddFieldsHolder = ({name, status, lookup, categoryLookup}) => {
 	const {height} = useWindowDimensions()
 	const [imageLoading, setImageLoading] = useState(false)
 	useEffect(() => {
+		fetchTableData()
+	}, [])
+
+	const fetchTableData = () => {
 		getData(name).then((response) => {
 			setData(response.data.result)
 			setLoading(false)
 		})
-	}, [])
+	}
 
+	const getbackdata = (res) => {
+		if (res === 200) {
+			console.log("HEllo")
+			fetchTableData()
+		}
+	}
 	const handleFileUpload = async (e, props) => {
 		setImageLoading(true)
 		if (e.target.files) {
@@ -52,7 +62,15 @@ const AddFieldsHolder = ({name, status, lookup, categoryLookup}) => {
 	return (
 		<>
 			{data.map((item) => {
-				return <AddFieldsMobile data={item} />
+				return (
+					<AddFieldsMobile
+						data={item}
+						name={name}
+						categoryData={category}
+						statusData={statusMob}
+						getbackdata={getbackdata}
+					/>
+				)
 			})}
 		</>
 	)
