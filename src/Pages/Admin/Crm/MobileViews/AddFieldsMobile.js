@@ -19,6 +19,7 @@ import {
 import {Edit, Trash2, ArrowRightCircle, XCircle} from "react-feather"
 import {getData, updateLeave, editField} from "../../../../Services/Services"
 import Alert from "@material-ui/lab/Alert"
+import {ChromePicker} from "react-color"
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -221,6 +222,50 @@ const AddFieldsMobile = ({data, categoryData, statusData, getbackdata, name}) =>
 								}
 								if (k === "statusId") {
 									return null
+								}
+								if (k === "color") {
+									return (
+										<div key={i} className={classes.cardContainer}>
+											<Card className={classes.card1}>
+												<p style={{marginLeft: 5, fontSize: 12}}>{humanReadable(k)}</p>
+											</Card>
+											{editOption ? (
+												<>
+													{/* <TextField
+													size="small"
+													variant="outlined"
+													className={classes.editText}
+													onChange={(e) => {
+														e.persist()
+														setTextFieldData((prev) => {
+															return {
+																...prev,
+																[k]: e.target.value,
+															}
+														})
+													}}
+													value={textFieldData[k]}
+												/> */}
+
+													<ChromePicker
+														color={textFieldData[k]}
+														onChangeComplete={(color) => {
+															setTextFieldData((prev) => {
+																return {
+																	...prev,
+																	[k]: color.hex,
+																}
+															})
+														}}
+													/>
+												</>
+											) : (
+												<Card className={classes.card2}>
+													<p style={{marginLeft: 5, fontSize: 12}}>{data[k]}</p>
+												</Card>
+											)}
+										</div>
+									)
 								}
 
 								if (k === "classesStatus") {
