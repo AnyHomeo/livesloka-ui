@@ -158,7 +158,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     {
       href: "/messages",
       icon: MessageCircle,
-      title: "Messages to Customer",
+      title: "Broadcast a Notification",
     },
   ];
 
