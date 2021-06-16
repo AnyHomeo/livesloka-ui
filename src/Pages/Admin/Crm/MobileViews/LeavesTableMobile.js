@@ -198,7 +198,7 @@ const LeavesTableMobile = ({data, setRefresh, tables}) => {
 	const classes = useStyles()
 	const {height} = useWindowDimensions()
 
-	console.log(rows)
+	console.log(data)
 	return (
 		<div className={classes.root}>
 			<Accordion>
@@ -214,8 +214,7 @@ const LeavesTableMobile = ({data, setRefresh, tables}) => {
 						}}
 					>
 						<Typography className={classes.heading}>
-							{/* {moment(data.cancelledDate).format("MMMM Do YYYY")} */}
-							{data.date}
+							{moment.unix(data.date / 1000).format("MMMM Do YYYY")}
 						</Typography>
 					</div>
 				</AccordionSummary>
