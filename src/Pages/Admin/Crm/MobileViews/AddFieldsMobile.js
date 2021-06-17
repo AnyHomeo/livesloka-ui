@@ -15,6 +15,7 @@ import {
 	FormControl,
 	Select,
 	MenuItem,
+	Button,
 } from "@material-ui/core"
 import {Edit, Trash2, ArrowRightCircle, XCircle} from "react-feather"
 import {getData, updateLeave, editField} from "../../../../Services/Services"
@@ -231,22 +232,6 @@ const AddFieldsMobile = ({data, categoryData, statusData, getbackdata, name}) =>
 											</Card>
 											{editOption ? (
 												<>
-													{/* <TextField
-													size="small"
-													variant="outlined"
-													className={classes.editText}
-													onChange={(e) => {
-														e.persist()
-														setTextFieldData((prev) => {
-															return {
-																...prev,
-																[k]: e.target.value,
-															}
-														})
-													}}
-													value={textFieldData[k]}
-												/> */}
-
 													<ChromePicker
 														color={textFieldData[k]}
 														onChangeComplete={(color) => {
@@ -261,7 +246,10 @@ const AddFieldsMobile = ({data, categoryData, statusData, getbackdata, name}) =>
 												</>
 											) : (
 												<Card className={classes.card2}>
-													<p style={{marginLeft: 5, fontSize: 12}}>{data[k]}</p>
+													<Button
+														variant="contained"
+														style={{background: data[k], height: 28, width: 100, marginLeft: 10}}
+													></Button>
 												</Card>
 											)}
 										</div>
