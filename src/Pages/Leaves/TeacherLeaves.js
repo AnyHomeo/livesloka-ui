@@ -48,13 +48,6 @@ function TeacherLeaves() {
 			.catch((error) => {
 				console.log(error);
 			});
-		getData('Teacher')
-			.then((data) => {
-				console.log(data);
-			})
-			.catch((err) => {
-				console.log(err);
-			});
 	}, [refresh]);
 
 	return (
@@ -135,9 +128,6 @@ function TeacherLeaves() {
 							value={leaveData.date}
 							onChange={(date) => {
 								setLeaveData((prev) => ({ ...prev, date: new Date(date) }));
-							}}
-							KeyboardButtonProps={{
-								'aria-label': 'change date',
 							}}
 						/>
 					</MuiPickersUtilsProvider>

@@ -3,15 +3,16 @@ import Autocomplete from "@material-ui/lab/Autocomplete"
 import React, {useEffect, useState} from "react"
 import {getAdminsFromQuery, getClasses} from "../../Services/Services"
 
-function SelectClassName({ setAllAdminIds,refresh }) {
-	const [allClassNames, setAllClassNames] = useState([])
-	const [selectedClassNames, setSelectedClassNames] = useState([])
+function SelectClassName({ setAllAdminIds,classStateAndSetStates }) {
+
+	const { selectedClassNames, setSelectedClassNames, allClassNames, setAllClassNames } = classStateAndSetStates
 
 	useEffect(() => {
-		getClasses().then((data) => {
-			console.log(data.data.result)
-			setAllClassNames(data.data.result)
-		})
+		if(!allClassNames.length){
+			getClasses().then((data) => {
+				setAllClassNames(data.data.result)
+			})
+		}
 	}, [])
 
 	useEffect(() => {
@@ -21,7 +22,6 @@ function SelectClassName({ setAllAdminIds,refresh }) {
 				selectedClassNames.map((schedule) => schedule._id)
 			)
 				.then((data) => {
-                    console.log(data.data.result)
 					setAllAdminIds(data.data.result)
 				})
 				.catch((err) => {
@@ -40,6 +40,7 @@ function SelectClassName({ setAllAdminIds,refresh }) {
 			}}
 			limitTags={5}
 			fullWidth
+			getOptionSelected={(option,value) => option._id === value._id}
 			options={allClassNames}
 			getOptionLabel={(name) => name.className}
 			onChange={(event, value) => {

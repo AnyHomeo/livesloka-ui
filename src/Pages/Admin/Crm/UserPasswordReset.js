@@ -67,7 +67,6 @@ function UserPasswordReset() {
 							: name.userId
 					}
 					onChange={(event, value) => {
-						console.log(event, value)
 						if (value) {
 							setResponse("")
 							setStudentId(value._id)

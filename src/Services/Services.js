@@ -201,3 +201,4 @@ export const updateTeacherLeave = (id, data) => axios.put(`${API.main}/teacher-l
 export const deleteATeacherLeave = (id) => axios.delete(`${API.main}/teacher-leaves/${id}`)
 export const getAdminsFromQuery = (queryBy, ids) =>
 	axios.get(`${API.main}/messages/query/admins/${queryBy}?ids=${ids.join(",")}`)
+export const getAllNotifications = () => axios.get(`${API.main}/messages`)

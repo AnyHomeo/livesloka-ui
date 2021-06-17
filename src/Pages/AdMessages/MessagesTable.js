@@ -30,7 +30,6 @@ function MessagesTable() {
 	useEffect(() => {
 		Axios.get(`${process.env.REACT_APP_API_KEY}/all/admins`)
 			.then((data) => {
-				console.log(data.data.result)
 				setAllCustomers(data.data.result)
 			})
 			.catch((err) => {
@@ -43,7 +42,6 @@ function MessagesTable() {
 			`${process.env.REACT_APP_API_KEY}/Admin/get/AdMessage?populate=adminIds&populateFields=userId`
 		)
 			.then((data) => {
-				console.log(data)
 				setAllData(data.data.result)
 			})
 			.catch((err) => {
@@ -80,7 +78,6 @@ function MessagesTable() {
 			.then((data) => {
 				deleteField("Delete AdMessage", id)
 					.then((data) => {
-						console.log(data)
 						setRefresh((prev) => !prev)
 					})
 					.catch((err) => {
@@ -150,7 +147,6 @@ function MessagesTable() {
 					<ChromePicker
 						color={selectedBGColor}
 						onChangeComplete={(color) => {
-							console.log(color)
 							setSelectedBGColor(color)
 						}}
 					/>

@@ -198,7 +198,6 @@ const LeavesTableMobile = ({data, setRefresh, tables}) => {
 	const classes = useStyles()
 	const {height} = useWindowDimensions()
 
-	console.log(data)
 	return (
 		<div className={classes.root}>
 			<Accordion>
@@ -214,7 +213,7 @@ const LeavesTableMobile = ({data, setRefresh, tables}) => {
 						}}
 					>
 						<Typography className={classes.heading}>
-							{moment.unix(data.date / 1000).format("MMMM Do YYYY")}
+							{moment.unix(data.date / 1000).format("MMMM Do YYYY") + "(IST)"}
 						</Typography>
 					</div>
 				</AccordionSummary>

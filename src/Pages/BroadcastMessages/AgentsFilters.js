@@ -4,22 +4,23 @@ import {TextField} from "@material-ui/core"
 import Autocomplete from "@material-ui/lab/Autocomplete"
 import {useEffect, useState} from "react"
 
-function AgentsFilters({ setAllAdminIds }) {
-	const [allAgents, setAllAgents] = useState([])
-	const [selectedAgents, setSelectedAgents] = useState([])
+function AgentsFilters({ setAllAdminIds,agentStateAndSetStates }) {
+	const { allAgents, setAllAgents, selectedAgents, setSelectedAgents } = agentStateAndSetStates
 
 	useEffect(() => {
-		getData("Agent")
+		if(allAgents && !allAgents.length){
+			getData("Agent")
 			.then((data) => {
 				setAllAgents(data.data.result)
 			})
 			.catch((err) => {
 				console.log(err)
 			})
+		}
 	}, [])
 
     useEffect(() => {
-        if (selectedAgents.length) {
+        if (selectedAgents && selectedAgents.length) {
 			getAdminsFromQuery(
 				"agent",
 				selectedAgents.map((agent) => agent.id)
@@ -43,7 +44,8 @@ function AgentsFilters({ setAllAdminIds }) {
 			}}
 			limitTags={5}
 			fullWidth
-			options={allAgents}
+			getOptionSelected={(option,value) => option.id === value.id}
+			options={allAgents ? allAgents : []}
 			getOptionLabel={(name) => name.AgentName}
 			onChange={(event, value) => {
 				if (value) {

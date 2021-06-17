@@ -25,7 +25,6 @@ const AddFieldsHolder = ({name, status, lookup, categoryLookup, statusMob, categ
 
 	const fetchTableData = () => {
 		getData(name).then((response) => {
-			console.log(response)
 			setData(response.data.result)
 			setLoading(false)
 		})
@@ -33,7 +32,6 @@ const AddFieldsHolder = ({name, status, lookup, categoryLookup, statusMob, categ
 
 	const getbackdata = (res) => {
 		if (res === 200) {
-			console.log("HEllo")
 			fetchTableData()
 		}
 	}

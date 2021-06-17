@@ -12,6 +12,9 @@ function RenderAllFilters({
 	allCustomers,
 	isForAll,
 	setIsForAll,
+	agentStateAndSetStates,
+	teacherStateAndSetState,
+	classStateAndSetStates,
 }) {
 	switch (queryFrom) {
 		case "customers":
@@ -40,7 +43,11 @@ function RenderAllFilters({
 		case "classname":
 			return (
 				<>
-					<SelectClassName allAdminIds={allAdminIds} setAllAdminIds={setAllAdminIds} />
+					<SelectClassName
+						allAdminIds={allAdminIds}
+						setAllAdminIds={setAllAdminIds}
+						classStateAndSetStates={classStateAndSetStates}
+					/>
 					<CustomerFilters
 						allAdminIds={allAdminIds}
 						setAllAdminIds={setAllAdminIds}
@@ -51,7 +58,11 @@ function RenderAllFilters({
 		case "teacher":
 			return (
 				<>
-					<SelectTeacher allAdminIds={allAdminIds} setAllAdminIds={setAllAdminIds} />
+					<SelectTeacher
+						allAdminIds={allAdminIds}
+						setAllAdminIds={setAllAdminIds}
+						teacherStateAndSetState={teacherStateAndSetState}
+					/>
 					<CustomerFilters
 						allAdminIds={allAdminIds}
 						setAllAdminIds={setAllAdminIds}
@@ -62,7 +73,11 @@ function RenderAllFilters({
 		case "agent":
 			return (
 				<>
-					<AgentsFilters allAdminIds={allAdminIds} setAllAdminIds={setAllAdminIds} />
+					<AgentsFilters
+						allAdminIds={allAdminIds}
+						setAllAdminIds={setAllAdminIds}
+						agentStateAndSetStates={agentStateAndSetStates}
+					/>
 					<CustomerFilters
 						allAdminIds={allAdminIds}
 						setAllAdminIds={setAllAdminIds}

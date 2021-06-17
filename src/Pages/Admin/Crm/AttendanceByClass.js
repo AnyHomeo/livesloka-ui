@@ -270,9 +270,6 @@ const AttedanceByClass = () => {
                 label="Attendance Date"
                 value={selectedDate}
                 onChange={(d) => setSelectedDate(d)}
-                KeyboardButtonProps={{
-                  "aria-label": "change date",
-                }}
               />
             </MuiPickersUtilsProvider>
             <Autocomplete

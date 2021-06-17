@@ -85,7 +85,6 @@ function SingleDayStats({day, setDialogOpen, setDialogData}) {
 			timeZone: "Asia/Kolkata",
 		})
 		const {slot, secondsLeft} = getSlotFromTime(date)
-		console.log(slot)
 		setSelectedSlot(slot)
 		setTimeout(() => {
 			let date = new Date().toLocaleString("en-US", {

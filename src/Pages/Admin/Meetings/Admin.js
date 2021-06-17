@@ -254,9 +254,6 @@ const Admin = () => {
               format="MM/dd/yyyy"
               value={startDate}
               onChange={handleStartDateChange}
-              KeyboardButtonProps={{
-                "aria-label": "change date",
-              }}
             />
             <KeyboardDatePicker
               margin="normal"
@@ -265,9 +262,6 @@ const Admin = () => {
               format="MM/dd/yyyy"
               value={endDate}
               onChange={handleEndDateChange}
-              KeyboardButtonProps={{
-                "aria-label": "change date",
-              }}
             />
           </div>
 
@@ -279,9 +273,6 @@ const Admin = () => {
               label="StartTime"
               value={startTime}
               onChange={handleStartTimeChange}
-              KeyboardButtonProps={{
-                "aria-label": "change time",
-              }}
             />
 
             <KeyboardTimePicker
@@ -290,9 +281,7 @@ const Admin = () => {
               label="End Time"
               value={endTime}
               onChange={handleEndTimeChange}
-              KeyboardButtonProps={{
-                "aria-label": "change time",
-              }}
+
             />
           </div>
         </MuiPickersUtilsProvider>
