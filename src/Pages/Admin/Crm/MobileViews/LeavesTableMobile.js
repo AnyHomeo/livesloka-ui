@@ -213,7 +213,7 @@ const LeavesTableMobile = ({data, setRefresh, tables}) => {
 						}}
 					>
 						<Typography className={classes.heading}>
-							{moment.unix(data.date / 1000).format("MMMM Do YYYY")}
+							{moment.unix(data.date / 1000).format("MMMM Do YYYY") + "(IST)"}
 						</Typography>
 					</div>
 				</AccordionSummary>
