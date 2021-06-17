@@ -79,7 +79,6 @@ function NotificationSettings() {
 		}
 		addInField("Add AdMessage", formData)
 			.then((data) => {
-				console.log(data)
 				setRefresh((prev) => !prev)
 				setSnackbar({
 					message: "Notification Broadcasted Successfully!",

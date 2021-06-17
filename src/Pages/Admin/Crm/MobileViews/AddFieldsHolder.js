@@ -32,7 +32,6 @@ const AddFieldsHolder = ({name, status, lookup, categoryLookup, statusMob, categ
 
 	const getbackdata = (res) => {
 		if (res === 200) {
-			console.log("HEllo")
 			fetchTableData()
 		}
 	}

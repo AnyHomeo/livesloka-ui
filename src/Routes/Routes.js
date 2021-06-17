@@ -40,6 +40,7 @@ import DemoAndInclassStudents from "../Components/DemoAndInclassStudents"
 import Careers from "../Pages/Admin/Crm/Careers"
 import MessagesTable from "../Pages/AdMessages/MessagesTable"
 import NotificationSettings from "../Pages/BroadcastMessages/NotificationSettings"
+import NotificationsTable from "../Pages/BroadcastMessages/NotificationsTable"
 
 function Routes() {
 	return (
@@ -93,7 +94,7 @@ function Routes() {
 						<AdminRoute path="/zoom/dashboard" exact component={MeetingDashboard} />
 						<AdminRoute path="/teacherSalaries" exact component={TeacherSalaries} />
 						<AdminRoute path="/test" exact component={ZoomAccountDashboard} />
-						<AdminRoute path="/notifications" exact component={NotificationsT} />
+						<AdminRoute path="/notifications" exact component={NotificationsTable} />
 					</DashboardLayout>
 					<Route path="*" component={NotFoundView} />
 				</Switch>

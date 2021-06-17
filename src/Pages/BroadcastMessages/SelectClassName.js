@@ -10,7 +10,6 @@ function SelectClassName({ setAllAdminIds,classStateAndSetStates }) {
 	useEffect(() => {
 		if(!allClassNames.length){
 			getClasses().then((data) => {
-				console.log(data.data.result)
 				setAllClassNames(data.data.result)
 			})
 		}
@@ -23,7 +22,6 @@ function SelectClassName({ setAllAdminIds,classStateAndSetStates }) {
 				selectedClassNames.map((schedule) => schedule._id)
 			)
 				.then((data) => {
-                    console.log(data.data.result)
 					setAllAdminIds(data.data.result)
 				})
 				.catch((err) => {
