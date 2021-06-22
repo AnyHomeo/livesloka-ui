@@ -8,6 +8,7 @@ import WhatsAppIcon from "@material-ui/icons/WhatsApp"
 import moment from "moment"
 import CachedIcon from "@material-ui/icons/Cached"
 import FilterListIcon from "@material-ui/icons/FilterList"
+import QueryBuilderOutlinedIcon from "@material-ui/icons/QueryBuilderOutlined"
 import {
 	AddCustomer,
 	getData,
@@ -52,6 +53,7 @@ import {useHistory, Redirect} from "react-router-dom"
 import {Smartphone} from "react-feather"
 import useDocumentTitle from "../../../Components/useDocumentTitle"
 import MoreModal from "./MoreModal"
+import AnalogClockTime from "../../../Components/AnalogClockTime"
 
 const copyToClipboard = (text) => {
 	var textField = document.createElement("textarea")
@@ -1026,8 +1028,12 @@ const CrmDetails = ({isSummerCampStudents}) => {
 	const [moreOptionOpen, setMoreOptionOpen] = useState(false)
 	const [moreOptionSelectedData, setMoreOptionSelectedData] = useState()
 
+	const [analogClockOpen, setAnalogClockOpen] = useState(false)
+
 	return (
 		<>
+			{analogClockOpen ? <AnalogClockTime /> : null}
+
 			<MoreModal
 				open={moreOptionOpen}
 				setOpen={setMoreOptionOpen}
@@ -1326,6 +1332,13 @@ const CrmDetails = ({isSummerCampStudents}) => {
 							tooltip: "Statistics",
 							isFreeAction: true,
 							onClick: (event) => setStatisticsOpen(!statisticsOpen),
+						},
+
+						{
+							icon: () => <QueryBuilderOutlinedIcon />,
+							tooltip: "Analog Clock",
+							isFreeAction: true,
+							onClick: (event) => setAnalogClockOpen(!analogClockOpen),
 						},
 						{
 							icon: () => <FilterListIcon />,
