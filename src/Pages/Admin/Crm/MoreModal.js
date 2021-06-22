@@ -9,9 +9,19 @@ import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
 import LibraryAddIcon from "@material-ui/icons/LibraryAdd"
 import SmsIcon from "@material-ui/icons/Sms"
-import {IconButton} from "@material-ui/core"
+import {IconButton, makeStyles, Snackbar} from "@material-ui/core"
+import MuiAlert from "@material-ui/lab/Alert"
+
 import {Alert} from "@material-ui/lab"
 import Axios from "axios"
+import {useConfirm} from "material-ui-confirm"
+const useStyles = makeStyles((theme) => ({
+	iconCont: {
+		display: "flex",
+		alignItems: "center",
+		cursor: "pointer",
+	},
+}))
 const MoreModal = ({
 	open,
 	setOpen,
@@ -22,34 +32,54 @@ const MoreModal = ({
 	materialTableRef,
 	setInitialFormData,
 }) => {
+	const confirm = useConfirm()
+
+	const classes = useStyles()
 	const [response, setResponse] = useState("")
 	const [success, setSuccess] = useState(false)
+	const [modalOpen, setModalOpen] = useState(false)
+
 	const handleClose = () => {
 		setOpen(false)
 	}
 
-	const resetPassword = () => {
-		Axios.get(`${process.env.REACT_APP_API_KEY}/admin/reset/${data._id}`)
-			.then((data) => {
-				setSuccess(true)
-				setResponse("Password Updated Successfully")
+	const handleAlert = (event, reason) => {
+		if (reason === "clickaway") {
+			return
+		}
+		setModalOpen(false)
+	}
+
+	const handleDelete = () => {
+		confirm({description: `This will reset password for ${data.firstName}.`})
+			.then(() => {
+				Axios.get(`${process.env.REACT_APP_API_KEY}/admin/reset/${data.email}?isEmail=1`)
+					.then((data) => {
+						setModalOpen(true)
+						setSuccess(true)
+						setResponse("Password Updated Successfully")
+					})
+					.catch((err) => {
+						setModalOpen(true)
+						setSuccess(false)
+						setResponse("Problem in Password reset,Try again")
+					})
 			})
-			.catch((err) => {
-				setSuccess(false)
-				setResponse("Problem in Password reset,Try again")
-			})
+			.catch(() => console.log("Deletion cancelled."))
+	}
+
+	function Alert(props) {
+		return <MuiAlert elevation={6} variant="filled" {...props} />
 	}
 
 	return (
 		<div>
-			{response && (
-				<Alert
-					variant="filled"
-					style={{width: "40%", margin: "0 auto"}}
-					severity={success ? "success" : "error"}
-				>
-					{response}
-				</Alert>
+			{open && (
+				<Snackbar open={modalOpen} autoHideDuration={1000} onClose={() => handleAlert()}>
+					<Alert onClose={() => handleAlert()} severity={success ? "success" : "warning"}>
+						{response}
+					</Alert>
+				</Snackbar>
 			)}
 
 			<Dialog
@@ -62,53 +92,79 @@ const MoreModal = ({
 					<p style={{fontSize: 18, fontWeight: "bold", textAlign: "center"}}>More Options</p>
 				</DialogTitle>
 				<DialogContent>
-					<DialogContentText id="alert-dialog-description">
-						<IconButton onClick={resetPassword}>
-							<LockIcon />
-						</IconButton>
-						<IconButton>
-							<EditIcon />
-						</IconButton>
-						<IconButton>
-							<DeleteIcon />
-						</IconButton>
-						<IconButton
-							onClick={() => {
-								const materialTable = materialTableRef.current
-
-								setInitialFormData({
-									...data,
-									_id: undefined,
-									subjectId: undefined,
-									requestedSubjects: undefined,
-									numberOfClassesBought: undefined,
-									classStatusId: undefined,
-									createdAt: undefined,
-									teacherId: undefined,
-									className: undefined,
-									proposedAmount: undefined,
-								})
-
-								materialTable.dataManager.changeRowEditing()
-								materialTable.setState({
-									...materialTable.dataManager.getRenderState(),
-									showAddRow: true,
-								})
-
-								setOpen(false)
-							}}
+					<DialogContentText
+						id="alert-dialog-description"
+						style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}
+					>
+						<div
+							style={{display: "flex", flexDirection: "column", justifyContent: "space-between"}}
 						>
-							<LibraryAddIcon />
-						</IconButton>
-						<IconButton
-							onClick={() => {
-								commentModalOpen(true)
-								setNameComment(data.firstName)
-								setIdComment(data._id)
-							}}
-						>
-							<SmsIcon />
-						</IconButton>
+							<div className={classes.iconCont} onClick={handleDelete}>
+								<IconButton>
+									<LockIcon />
+								</IconButton>
+								<p>Password Reset</p>
+							</div>
+							<div className={classes.iconCont}>
+								<IconButton>
+									<EditIcon />
+								</IconButton>
+								<p>Edit</p>
+							</div>
+							<div className={classes.iconCont}>
+								<IconButton>
+									<DeleteIcon />
+								</IconButton>
+								<p>Delete</p>
+							</div>
+							<div
+								className={classes.iconCont}
+								onClick={() => {
+									const materialTable = materialTableRef.current
+
+									setInitialFormData({
+										...data,
+										_id: undefined,
+										subjectId: undefined,
+										requestedSubjects: undefined,
+										numberOfClassesBought: undefined,
+										classStatusId: undefined,
+										createdAt: undefined,
+										teacherId: undefined,
+										className: undefined,
+										proposedAmount: undefined,
+									})
+
+									materialTable.dataManager.changeRowEditing()
+									materialTable.setState({
+										...materialTable.dataManager.getRenderState(),
+										showAddRow: true,
+									})
+
+									setOpen(false)
+								}}
+							>
+								<IconButton>
+									<LibraryAddIcon />
+								</IconButton>
+								<p>Duplicate User</p>
+							</div>
+							<div
+								className={classes.iconCont}
+								onClick={() => {
+									commentModalOpen(true)
+									setNameComment(data.firstName)
+									setIdComment(data._id)
+								}}
+							>
+								<IconButton>
+									<SmsIcon />
+								</IconButton>
+								<p>Comment</p>
+							</div>
+						</div>
+
+						<div></div>
 					</DialogContentText>
 				</DialogContent>
 				<DialogActions></DialogActions>
