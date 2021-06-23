@@ -49,7 +49,7 @@ const getSlotFromTime = (date) => {
 	}
 }
 
-function SingleDayStats({day, setDialogOpen, setDialogData}) {
+function SingleDayStats({day, setDialogOpen, setDialogData,refresh}) {
 	const [todayData, setTodayData] = useState([])
 	const [selectedSlot, setSelectedSlot] = useState("")
 	const [leaves, setLeaves] = useState([])
@@ -115,6 +115,16 @@ function SingleDayStats({day, setDialogOpen, setDialogData}) {
 				console.log(err)
 			})
 	}, [])
+
+	useEffect(() => {
+		getEntireDayStatistics(day.toLowerCase())
+			.then((data) => {
+				setTodayData(data.data.result)
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+	},[refresh])
 
 	return (
 		<section className="statistics-container">

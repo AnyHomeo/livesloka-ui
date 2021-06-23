@@ -202,3 +202,4 @@ export const deleteATeacherLeave = (id) => axios.delete(`${API.main}/teacher-lea
 export const getAdminsFromQuery = (queryBy, ids) =>
 	axios.get(`${API.main}/messages/query/admins/${queryBy}?ids=${ids.join(",")}`)
 export const getAllNotifications = () => axios.get(`${API.main}/messages`)
+export const updateZoomLinkToNewOne = (id) => axios.put(`${API.main}/schedule/zoom/${id}`)

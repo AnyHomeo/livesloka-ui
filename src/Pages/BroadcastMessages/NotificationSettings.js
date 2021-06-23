@@ -14,7 +14,9 @@ import Alert from "@material-ui/lab/Alert"
 import useWindowDimensions from "../../Components/useWindowDimensions"
 import DateFnsUtils from "@date-io/date-fns"
 import {DateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers"
-import { isAutheticated } from "../../auth"
+import {isAutheticated} from "../../auth"
+import {TextField} from "@material-ui/core"
+import Autocomplete from "@material-ui/lab/Autocomplete"
 
 function NotificationSettings() {
 	let initialNotificationDataState = {
@@ -42,11 +44,21 @@ function NotificationSettings() {
 	const [allAgents, setAllAgents] = useState([])
 	const [selectedAgents, setSelectedAgents] = useState([])
 	const [expiryDate, setExpiryDate] = useState(new Date())
+	const [broadCastTo, setBroadCastTo] = useState("customers")
+	const [broadCastedToTeachers, setbroadCastedToTeachers] = useState([]);
 
 	const submitForm = () => {
-		if (!allAdminIds.length && !isForAll) {
+		if (!allAdminIds.length && !isForAll && broadCastTo==='customers') {
 			setSnackbar({
 				message: "Please Select Customers to Broadcast!",
+				open: true,
+				severity: "warning",
+			})
+			return
+		}
+		if (!broadCastedToTeachers.length && broadCastTo==='teachers') {
+			setSnackbar({
+				message: "Please Select Teachers to Broadcast!",
 				open: true,
 				severity: "warning",
 			})
@@ -70,12 +82,14 @@ function NotificationSettings() {
 			message: notificationData.text,
 			title: notificationData.title,
 			isForAll,
-			queryType:queryFrom,
-			broadcastedBy:isAutheticated().agentId,
-			scheduleIds: selectedClassNames.map(schedule => schedule._id),
-			teacherIds: selectedTeachers.map(teacher => teacher.id),
-			agentIds: selectedAgents.map(agent => agent.id),
-			expiryDate
+			broadCastedToTeachers:broadCastedToTeachers.map(i => i.id),
+			broadCastTo,
+			queryType: queryFrom,
+			broadcastedBy: isAutheticated().agentId,
+			scheduleIds: selectedClassNames.map((schedule) => schedule._id),
+			teacherIds: selectedTeachers.map((teacher) => teacher.id),
+			agentIds: selectedAgents.map((agent) => agent.id),
+			expiryDate,
 		}
 		addInField("Add AdMessage", formData)
 			.then((data) => {
@@ -125,7 +139,7 @@ function NotificationSettings() {
 		setSelectedClassNames([])
 		setSelectedTeachers([])
 		setIsForAll(false)
-	}, [queryFrom])
+	}, [queryFrom, broadCastTo])
 
 	useEffect(() => {
 		setAllAdminIds([])
@@ -136,6 +150,18 @@ function NotificationSettings() {
 	const handleQueryFrom = (e, n) => {
 		setQueryFrom(n)
 	}
+
+	useEffect(() => {
+		if (!allTeachers.length) {
+			Axios.get(`${process.env.REACT_APP_API_KEY}/teacher?params=id,TeacherName`)
+				.then((data) => {
+					setAllTeachers(data.data.result)
+				})
+				.catch((err) => {
+					console.log(err)
+				})
+		}
+	}, [])
 
 	return (
 		<div className={"fluid-container"}>
@@ -160,69 +186,119 @@ function NotificationSettings() {
 				<Grid item xs={12} sm={12} md={6}>
 					<Card className="messages-card">
 						<CardContent className={"space-between"}>
-							<div>
+							<div style={{marginBottom: 30}}>
+								<div style={{textAlign: "center"}}>Broadcast Notification to</div>
 								<ToggleButtonGroup
-									value={queryFrom}
+									value={broadCastTo}
 									size={width < 500 ? "small" : "medium"}
 									exclusive
-									onChange={handleQueryFrom}
-									aria-label="text formatting"
+									onChange={(e, n) => setBroadCastTo(n)}
+									aria-label="Send to"
 								>
 									<ToggleButton value="customers" aria-label="customers">
 										Customers
 									</ToggleButton>
-									<ToggleButton value="classname" aria-label="classname">
-										Class Name
-									</ToggleButton>
-									<ToggleButton value="teacher" aria-label="teacher">
-										Teacher
-									</ToggleButton>
-									<ToggleButton value="agent" aria-label="agent">
-										Agent
+									<ToggleButton value="teachers" aria-label="classname">
+										Teachers
 									</ToggleButton>
 								</ToggleButtonGroup>
 							</div>
-							<RenderAllFilters
-								isForAll={isForAll}
-								setIsForAll={setIsForAll}
-								queryFrom={queryFrom}
-								allAdminIds={allAdminIds}
-								setAllAdminIds={setAllAdminIds}
-								allCustomers={allCustomers}
-								agentStateAndSetStates={{
-									allAgents,
-									setAllAgents,
-									selectedAgents,
-									setSelectedAgents,
-								}}
-								teacherStateAndSetState={{
-									allTeachers,
-									setAllTeachers,
-									selectedTeachers,
-									setSelectedTeachers,
-								}}
-								classStateAndSetStates={{
-									selectedClassNames,
-									setSelectedClassNames,
-									allClassNames,
-									setAllClassNames,
-								}}
-							/>
-							<div style={{width:400}} >
-							<MuiPickersUtilsProvider utils={DateFnsUtils}>
-								<DateTimePicker
-									margin="normal"
-									fullWidth
-									disablePast
-									id="date-picker-dialog"
-									label="Select Expiry date"
-									inputVariant="outlined"
-									value={expiryDate}
-									onChange={(date) => {
-										setExpiryDate(new Date(date))
+							{broadCastTo === "customers" ? (
+								<>
+									<div>Filter Customers By</div>
+									<div>
+										<ToggleButtonGroup
+											value={queryFrom}
+											size={width < 500 ? "small" : "medium"}
+											exclusive
+											onChange={handleQueryFrom}
+											aria-label="text formatting"
+										>
+											<ToggleButton value="customers" aria-label="customers">
+												Customers
+											</ToggleButton>
+											<ToggleButton value="classname" aria-label="classname">
+												Class Name
+											</ToggleButton>
+											<ToggleButton value="teacher" aria-label="teacher">
+												Teacher
+											</ToggleButton>
+											<ToggleButton value="agent" aria-label="agent">
+												Agent
+											</ToggleButton>
+										</ToggleButtonGroup>
+									</div>
+									<RenderAllFilters
+										isForAll={isForAll}
+										setIsForAll={setIsForAll}
+										queryFrom={queryFrom}
+										allAdminIds={allAdminIds}
+										setAllAdminIds={setAllAdminIds}
+										allCustomers={allCustomers}
+										agentStateAndSetStates={{
+											allAgents,
+											setAllAgents,
+											selectedAgents,
+											setSelectedAgents,
+										}}
+										teacherStateAndSetState={{
+											allTeachers,
+											setAllTeachers,
+											selectedTeachers,
+											setSelectedTeachers,
+										}}
+										classStateAndSetStates={{
+											selectedClassNames,
+											setSelectedClassNames,
+											allClassNames,
+											setAllClassNames,
+										}}
+									/>
+								</>
+							) : (
+								<Autocomplete
+									style={{
+										maxWidth: 400,
+										margin: "auto",
 									}}
+									limitTags={5}
+									getOptionSelected={(option, value) => option.id === value.id}
+									fullWidth
+									options={allTeachers}
+									getOptionLabel={(name) => name.TeacherName}
+									onChange={(event, value) => {
+										if (value) {
+											setbroadCastedToTeachers(value)
+										}
+									}}
+									multiple
+									value={broadCastedToTeachers}
+									renderInput={(params) => (
+										<TextField
+											{...params}
+											label="Select Teachers"
+											variant="outlined"
+											placeholder="Customers"
+											margin="normal"
+										/>
+									)}
 								/>
-							</MuiPickersUtilsProvider>
+							)}
+							<div style={{width: 400}}>
+								<MuiPickersUtilsProvider utils={DateFnsUtils}>
+									<DateTimePicker
+										margin="normal"
+										fullWidth
+										disablePast
+										id="date-picker-dialog"
+										label="Select Expiry date"
+										inputVariant="outlined"
+										value={expiryDate}
+										onChange={(date) => {
+											setExpiryDate(new Date(date))
+										}}
+									/>
+								</MuiPickersUtilsProvider>
 							</div>
 							<div
 								style={{

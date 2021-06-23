@@ -1,5 +1,5 @@
 import {Avatar, Card, Chip, Icon, IconButton, Tooltip} from "@material-ui/core"
-import React from "react"
+import React, {useEffect, useRef} from "react"
 import {UserCheck, UserMinus, Video, Clipboard, UserX} from "react-feather"
 
 function SingleRow({
@@ -12,6 +12,13 @@ function SingleRow({
 	setDialogData,
 	leaves,
 }) {
+	const divRef = useRef(null)
+	useEffect(() => {
+		if (divRef.current) {
+			divRef.current.scrollIntoView({behavior: "smooth"})
+		}
+	}, [selectedSlot])
+
 	return (
 		<div
 			className="single-row-container"
@@ -20,6 +27,7 @@ function SingleRow({
 					selectedSlot === time || selectedSlot === prevTime ? "rgba(56,103,214,0.5)" : undefined,
 			}}
 		>
+			{selectedSlot === time ? <div ref={divRef} /> : ""}
 			{todayData.map((singleData) => (
 				<>
 					{singleData.slots[day.toLowerCase()].includes(time) &&

@@ -36,6 +36,8 @@ function NotificationsTable() {
 								message: text,
 								title,
 								_id,
+								broadCastTo,
+								broadcastedTeachers,
 							} = message
 							let remainingStudentsCount = usersCount - users.length
 							let customersDescription = isForAll ? (
@@ -100,12 +102,17 @@ function NotificationsTable() {
 							}
 
 							return {
-								acknowledgedBy: acknowledgedBy.length + " Customers",
+								acknowledgedBy: acknowledgedBy.length,
 								agent: admin?.AgentName || "BOT",
-								customersDescription,
+								customersDescription:
+									broadCastTo === "teachers"
+										? broadcastedTeachers.map((teacher) => (
+												<Chip label={teacher.TeacherName} size="small" />
+										  ))
+										: customersDescription,
 								iconWithColor: icon + background,
-								referedBy: referenceObject[queryType](),
-								reference: referenceObjectOnlyText[queryType](),
+								referedBy: broadCastTo === "teachers" ? "NA" : referenceObject[queryType](),
+								reference: broadCastTo === "teachers" ? "NA" : referenceObjectOnlyText[queryType](),
 								iconAndColor: (
 									<ReactSVG
 										className="color-with-icon"
@@ -146,10 +153,10 @@ function NotificationsTable() {
 					data={data}
 					title="Broadcasted Notifications"
 					columns={[
-						{
-							title: "Options",
-							render: (data) => <NotificationsTableRowOptions id={data._id} />,
-						},
+						// {
+						// 	title: "Options",
+						// 	render: (data) => <NotificationsTableRowOptions id={data._id} />,
+						// },
 						{
 							title: "Broadcasted By",
 							field: "agent",
@@ -163,7 +170,7 @@ function NotificationsTable() {
 							field: "message",
 						},
 						{
-							title: "Customers",
+							title: "Customers/Teachers",
 							field: "customersDescription",
 						},
 						{
