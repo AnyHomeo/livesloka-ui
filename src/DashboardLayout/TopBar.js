@@ -13,16 +13,25 @@ import {
 	Typography,
 	Popover,
 	Chip,
+	Dialog,
+	DialogActions,
+	Button,
 } from "@material-ui/core"
 import MenuIcon from "@material-ui/icons/Menu"
 import NotificationsIcon from "@material-ui/icons/NotificationsOutlined"
 import TimerOutlinedIcon from "@material-ui/icons/TimerOutlined"
 import InputIcon from "@material-ui/icons/Input"
+import {TimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers"
+import "date-fns"
+import DateFnsUtils from "@date-io/date-fns"
 // import Logo from 'src/components/Logo';
 import "./Topbar.css"
 import {logout} from "../Services/Services"
 import moment from "moment-timezone"
 import useWindowDimensions from "../Components/useWindowDimensions"
+import useInterval from "../Components/useInterval"
+
+import {useCallback} from "react"
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -66,30 +75,30 @@ const useStyles = makeStyles((theme) => ({
 const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 	const classes = useStyles()
 
-	const [AllTimeZones, setAllTimeZones] = useState()
+	const [AllTimeZones, setAllTimeZones] = useState(new Date())
+	const [customTime, setCustomTime] = useState(false)
 
-	useEffect(() => {
-		let timeinterval = setInterval(() => {
+	// const timeInverval = useCallback(() => {
+	// 	if (!customTime) {
+	// 		setAllTimeZones(new Date())
+	// 	}
+	// }, [customTime])
+
+	// console.log(customTime)
+	// useEffect(() => {
+	// 	let timeinterval = setInterval(timeInverval, 1000)
+
+	// 	return () => {
+	// 		clearInterval(timeinterval)
+	// 	}
+	// }, [])
+
+	useInterval(() => {
+		if (!customTime) {
+			// Your custom logic here
 			setAllTimeZones(new Date())
-		}, 1000)
-
-		return () => {
-			clearInterval(timeinterval)
 		}
-	}, [])
-
-	const [anchorEl, setAnchorEl] = React.useState(null)
-
-	const handleClick = (event) => {
-		setAnchorEl(event.currentTarget)
-	}
-
-	const handleClose = () => {
-		setAnchorEl(null)
-	}
-
-	const open = Boolean(anchorEl)
-	const id = open ? "simple-popover" : undefined
+	}, 1000)
 
 	// const timezoneArr = [
 	// 	{
@@ -182,6 +191,18 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 	]
 
 	const {width} = useWindowDimensions()
+
+	const [open, setOpen] = React.useState(false)
+
+	const handleClickOpen = () => {
+		setCustomTime(true)
+		setOpen(true)
+	}
+
+	const handleClose = () => {
+		setOpen(false)
+	}
+
 	return (
 		<AppBar className={clsx(classes.root, className)} elevation={0} {...rest}>
 			<Toolbar>
@@ -204,6 +225,7 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 
 							<div>
 								<Chip
+									onClick={handleClickOpen}
 									style={{fontWeight: "bold"}}
 									size={width > 700 ? "large" : "small"}
 									label={moment(AllTimeZones).tz(time.tz).format("h:mm A")}
@@ -223,47 +245,28 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 				{/* <IconButton aria-describedby={id} onClick={handleClick}>
 					<TimerOutlinedIcon style={{color: "white"}} />
 				</IconButton> */}
+				<div>
+					<Dialog open={open} onClose={handleClose}>
+						<MuiPickersUtilsProvider utils={DateFnsUtils}>
+							<TimePicker
+								value={AllTimeZones}
+								onChange={setAllTimeZones}
+								variant="static"
+								todayLabel="now"
+								label="12 hours"
+							/>
+						</MuiPickersUtilsProvider>
+						<DialogActions>
+							<Button onClick={() => setCustomTime(false)} color="primary">
+								Reset
+							</Button>
+							<Button onClick={handleClose} color="primary" autoFocus>
+								Ok
+							</Button>
+						</DialogActions>
+					</Dialog>
+				</div>
 
-				<Popover
-					id={id}
-					open={open}
-					anchorEl={anchorEl}
-					onClose={handleClose}
-					anchorOrigin={{
-						vertical: "bottom",
-						horizontal: "center",
-					}}
-					transformOrigin={{
-						vertical: "top",
-						horizontal: "center",
-					}}
-				>
-					<div style={{width: 300}}>
-						<div className={classes.topContainer}>
-							<p style={{fontSize: 18, fontWeight: "bold", color: "white"}}>Timezones</p>
-
-							<IconButton>
-								<TimerOutlinedIcon style={{color: "white"}} />
-							</IconButton>
-						</div>
-						<div style={{padding: 20}}>
-							{timezoneArr.map((time, i) => (
-								<div>
-									<div className={classes.textContainer} key={time.id}>
-										<p className={classes.timeText}>{time.title}: </p>
-
-										<p className={classes.timeText}>
-											{moment(AllTimeZones).tz(time.tz).format("MMMM Do YYYY, h:mm:ss a")}
-										</p>
-									</div>
-									{i === timezoneArr.length - 1 ? null : (
-										<hr style={{marginTop: 20, width: "90%", opacity: 0.5}} />
-									)}
-								</div>
-							))}
-						</div>
-					</div>
-				</Popover>
 				<a
 					href="/login"
 					onClick={() => logout(() => console.log("logout successful"))}
