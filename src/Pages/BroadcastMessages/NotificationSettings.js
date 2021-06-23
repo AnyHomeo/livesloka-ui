@@ -215,7 +215,7 @@ function NotificationSettings() {
 									fullWidth
 									disablePast
 									id="date-picker-dialog"
-									label="Select Leave Date"
+									label="Select Expiry date"
 									inputVariant="outlined"
 									value={expiryDate}
 									onChange={(date) => {
