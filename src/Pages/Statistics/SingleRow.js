@@ -1,6 +1,14 @@
-import {Avatar, Card, Chip, Icon, IconButton, Tooltip} from "@material-ui/core"
+import {Avatar, Card, Chip, IconButton, Tooltip} from "@material-ui/core"
 import React, {useEffect, useRef} from "react"
-import {UserCheck, UserMinus, Video, Clipboard, UserX} from "react-feather"
+import {UserCheck, UserMinus, Video, UserX} from "react-feather"
+import LoopIcon from "@material-ui/icons/Loop"
+import {useConfirm} from "material-ui-confirm"
+import {updateSchedulesOfAdminToday, updateZoomLinkToNewOne} from "../../Services/Services"
+import DoneIcon from "@material-ui/icons/Done"
+import Checkbox from "@material-ui/core/Checkbox"
+import { isAutheticated } from "../../auth"
+import io from "socket.io-client"
+const socket = io(process.env.REACT_APP_API_KEY)
 
 function SingleRow({
 	setDialogOpen,
@@ -11,13 +19,72 @@ function SingleRow({
 	selectedSlot,
 	setDialogData,
 	leaves,
+	alertSetStates,
+	schedulesAssignedToMe,
+	setSchedulesAssignedToMe,
+	otherSchedules,
+	allAgents
 }) {
 	const divRef = useRef(null)
+	const confirm = useConfirm()
+	const {setAlert, setAlertColor, setRefresh, setSuccessOpen} = alertSetStates
+
 	useEffect(() => {
 		if (divRef.current) {
 			divRef.current.scrollIntoView({behavior: "smooth"})
 		}
-	}, [selectedSlot])
+	}, [selectedSlot,time])
+	const updateClassesAssignedToMe = async (id) => {
+		if (schedulesAssignedToMe.includes(id)) {
+			let updatedSchedules = []
+			setSchedulesAssignedToMe((prev) => {
+				let prevIds = [...prev]
+				let index = prevIds.indexOf(id)
+				prevIds.splice(index, 1)
+				updatedSchedules = prevIds
+				return prevIds
+			})
+			let data = await updateSchedulesOfAdminToday(updatedSchedules)
+			console.log(data)
+			socket.emit('agent-assigned-class', {
+				[allAgents[isAutheticated().agentId]]:id
+			});
+		} else {
+			let updatedSchedules = [...schedulesAssignedToMe, id]
+			setSchedulesAssignedToMe((prev) => [...prev, id])
+			let data = await updateSchedulesOfAdminToday(updatedSchedules)
+			console.log(data)
+			socket.emit('agent-assigned-class', {
+				[allAgents[isAutheticated().agentId]]:id
+			});
+		}
+	}
+
+	const resetZoomLink = (id) => {
+		confirm({
+			description: "Do you Really want to Update Zoom Link!",
+			confirmationText: "Yes!",
+		})
+			.then(() => {
+				updateZoomLinkToNewOne(id)
+					.then((data) => {
+						console.log(data)
+						setRefresh((prev) => !prev)
+						setAlert(data.data.message)
+						setAlertColor("success")
+						setSuccessOpen(true)
+					})
+					.catch((err) => {
+						console.log(err)
+						setAlert(err.response.data.error)
+						setAlertColor("warning")
+						setSuccessOpen(true)
+					})
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+	}
 
 	return (
 		<div
@@ -33,9 +100,8 @@ function SingleRow({
 					{singleData.slots[day.toLowerCase()].includes(time) &&
 					!singleData.slots[day.toLowerCase()].includes(prevTime) ? (
 						<Card
-							// style={{minWidth: singleData.students.length > 4 ? "250px !important" : ""}}
 							className={
-								singleData.students.length > 4 ? "single-card single-card-2" : "single-card"
+								singleData.students.length >= 3 ? "single-card single-card-2" : "single-card"
 							}
 							style={{
 								backgroundColor: singleData.isTeacherJoined
@@ -47,10 +113,6 @@ function SingleRow({
 								overflow: "initial",
 								cursor: "pointer",
 							}}
-							onClick={() => {
-								setDialogOpen((prev) => !prev)
-								setDialogData(singleData)
-							}}
 						>
 							<div
 								className="teacher-name"
@@ -59,26 +121,29 @@ function SingleRow({
 									width: "67%",
 									marginTop: singleData.demo ? 10 : 0,
 								}}
+								onClick={() => {
+									setDialogOpen((prev) => !prev)
+									setDialogData(singleData)
+								}}
 							>
 								{singleData.teacher && singleData.teacher.TeacherName}
 							</div>
 							<div
 								className="students"
 								style={{marginLeft: 3, marginBottom: 10, cursor: "pointer"}}
+								onClick={() => {
+									setDialogOpen((prev) => !prev)
+									setDialogData(singleData)
+								}}
 							>
 								{singleData.students.map((student) => (
 									<>
 										{student.isStudentJoined ? (
 											<Tooltip title={student.firstName} key={student.firstName}>
-												<Avatar
+												<div
+													className="small-chip"
 													style={{
 														background: "#007500",
-														display: "flex",
-														justifyContent: "center",
-														alignItems: "center",
-														width: 20,
-														height: 20,
-														marginRight: 2,
 													}}
 												>
 													<UserCheck
@@ -88,20 +153,15 @@ function SingleRow({
 															width: 12,
 														}}
 													/>
-												</Avatar>
+												</div>
 											</Tooltip>
 										) : (
 											<Tooltip title={student.firstName} key={student.firstName}>
 												{leaves.find((leave) => leave.studentId === student._id) ? (
-													<Avatar
+													<div
+														className="small-chip"
 														style={{
 															background: "black",
-															display: "flex",
-															justifyContent: "center",
-															alignItems: "center",
-															width: 20,
-															height: 20,
-															marginRight: 2,
 														}}
 													>
 														<UserX
@@ -112,17 +172,12 @@ function SingleRow({
 																marginLeft: 2,
 															}}
 														/>
-													</Avatar>
+													</div>
 												) : (
-													<Avatar
+													<div
+														className="small-chip"
 														style={{
 															background: "#b33939",
-															display: "flex",
-															justifyContent: "center",
-															alignItems: "center",
-															width: 20,
-															height: 20,
-															marginRight: 2,
 														}}
 													>
 														<UserMinus
@@ -133,23 +188,68 @@ function SingleRow({
 																marginLeft: 2,
 															}}
 														/>
-													</Avatar>
+													</div>
 												)}
 											</Tooltip>
 										)}
 									</>
 								))}
 							</div>
-							<a className="zoom-link" target="__blank" href={singleData.meetingLink}>
+							<div className="bottom-left-buttons">
+								<Tooltip title="Create New Zoom Link">
+									<IconButton size="small" onClick={() => resetZoomLink(singleData._id)} edge="end">
+										<LoopIcon />
+									</IconButton>
+								</Tooltip>
 								<Tooltip title="Join Zoom">
-									<IconButton size="small">
+									<IconButton onClick={() => window.open(singleData.meetingLink)} size="small">
 										<Video style={{height: 18, width: 18, color: "#0984e3"}} />
 									</IconButton>
 								</Tooltip>
-							</a>
+								{Object.keys(otherSchedules)
+									.filter((agentName) => otherSchedules[agentName].includes(singleData._id))
+									.map((agentName) => (
+										<Tooltip title={'assigned to ' + agentName}>
+											<IconButton size="small">
+												<div className="small-chip">
+													{agentName.split(" ").map((word) => word[0].toUpperCase())}
+												</div>
+											</IconButton>
+										</Tooltip>
+									))}
+								{!Object.keys(otherSchedules).some((agentName) =>
+									otherSchedules[agentName].includes(singleData._id)
+								) ? (
+									<Tooltip
+										title={
+											schedulesAssignedToMe && schedulesAssignedToMe.includes(singleData._id)
+												? "Assigned to you"
+												: "Assign this class"
+										}
+									>
+										<Checkbox
+											size="small"
+											checkedIcon={<DoneIcon />}
+											onChange={() => updateClassesAssignedToMe(singleData._id)}
+											checked={
+												schedulesAssignedToMe && schedulesAssignedToMe.includes(singleData._id)
+											}
+										/>
+									</Tooltip>
+								) : (
+									""
+								)}
+							</div>
 
 							{singleData.demo ? (
-								<Tooltip title="Demo" style={{cursor: "pointer"}}>
+								<Tooltip
+									title="Demo"
+									style={{cursor: "pointer"}}
+									onClick={() => {
+										setDialogOpen((prev) => !prev)
+										setDialogData(singleData)
+									}}
+								>
 									<Chip
 										label="DEMO"
 										style={{

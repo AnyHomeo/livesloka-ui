@@ -2,7 +2,12 @@ import React, {useEffect, useState} from "react"
 import hours from "../../Services/hours.json"
 import times from "../../Services/times.json"
 import SingleRow from "./SingleRow"
-import {getEntireDayStatistics, getTodayLeaves} from "../../Services/Services"
+import {
+	getAdminAssignedClasses,
+	getData,
+	getEntireDayStatistics,
+	getTodayLeaves,
+} from "../../Services/Services"
 import io from "socket.io-client"
 import {Card} from "@material-ui/core"
 import {Clock} from "react-feather"
@@ -49,10 +54,13 @@ const getSlotFromTime = (date) => {
 	}
 }
 
-function SingleDayStats({day, setDialogOpen, setDialogData,refresh}) {
+function SingleDayStats({day, setDialogOpen, setDialogData, refresh, alertSetStates}) {
 	const [todayData, setTodayData] = useState([])
 	const [selectedSlot, setSelectedSlot] = useState("")
 	const [leaves, setLeaves] = useState([])
+	const [schedulesAssignedToMe, setSchedulesAssignedToMe] = useState([])
+	const [otherSchedules, setOtherSchedules] = useState({})
+	const [allAgents, setAllAgents] = useState({})
 
 	useEffect(() => {
 		socket.on("teacher-joined", ({scheduleId}) => {
@@ -79,6 +87,27 @@ function SingleDayStats({day, setDialogOpen, setDialogData,refresh}) {
 								: singleObj.students,
 					}
 				})
+			})
+		})
+		socket.on("agent-assigned", (data) => {
+			let key = Object.keys(data)[0]
+			let value = data[key]
+			setOtherSchedules((prev) => {
+				let prevObject = {...prev}
+				if (prevObject[key]) {
+					if (prevObject[key].includes(value)) {
+						let index = prevObject[key].indexOf(value)
+						prevObject[key].splice(index, 1)
+						console.log("Spliced Data", prevObject)
+						return prevObject
+					} else {
+						prevObject[key] = [...prevObject[key], value]
+						console.log("Added Data", prevObject)
+						return prevObject
+					}
+				} else {
+					return prevObject
+				}
 			})
 		})
 		let date = new Date().toLocaleString("en-US", {
@@ -114,6 +143,13 @@ function SingleDayStats({day, setDialogOpen, setDialogData,refresh}) {
 			.catch((err) => {
 				console.log(err)
 			})
+		getData("Agent").then((data) => {
+			let objectToSet = {}
+			data.data.result.forEach((agent) => {
+				objectToSet[agent.id] = agent.AgentName
+			})
+			setAllAgents(objectToSet)
+		})
 	}, [])
 
 	useEffect(() => {
@@ -124,7 +160,18 @@ function SingleDayStats({day, setDialogOpen, setDialogData,refresh}) {
 			.catch((err) => {
 				console.log(err)
 			})
-	},[refresh])
+	}, [refresh])
+
+	useEffect(() => {
+		getAdminAssignedClasses()
+			.then((data) => {
+				setSchedulesAssignedToMe(data.data.result.mySchedules)
+				setOtherSchedules(data.data.result.finalObject)
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+	}, [])
 
 	return (
 		<section className="statistics-container">
@@ -150,6 +197,11 @@ function SingleDayStats({day, setDialogOpen, setDialogData,refresh}) {
 						todayData={todayData}
 						setDialogOpen={setDialogOpen}
 						leaves={leaves}
+						alertSetStates={alertSetStates}
+						schedulesAssignedToMe={schedulesAssignedToMe}
+						setSchedulesAssignedToMe={setSchedulesAssignedToMe}
+						otherSchedules={otherSchedules}
+						allAgents={allAgents}
 					/>
 				))}
 			</div>
