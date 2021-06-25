@@ -15,9 +15,6 @@ import CancelIcon from "@material-ui/icons/Cancel"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import momentTZ from "moment-timezone"
 import useDocumentTitle from "../../Components/useDocumentTitle"
-import LoopIcon from "@material-ui/icons/Loop"
-import {useConfirm} from "material-ui-confirm"
-import {updateZoomLinkToNewOne} from "../../Services/Services"
 import Snackbar from "@material-ui/core/Snackbar"
 import Alert from "@material-ui/lab/Alert"
 
@@ -61,40 +58,12 @@ function Statistics() {
 	const [alertColor, setAlertColor] = useState("")
   const [refresh, setRefresh] = useState(false);
 
-	const confirm = useConfirm()
 
 	const handleSuccessClose = (event, reason) => {
 		if (reason === "clickaway") {
 			return
 		}
 		setSuccessOpen(false)
-	}
-
-	const resetZoomLink = (id) => {
-		setDialogData({})
-		setDialogOpen(false)
-		confirm({
-			description: "Do you Really want to Update Zoom Link!",
-			confirmationText: "Yes!",
-		})
-			.then(() => {
-				updateZoomLinkToNewOne(id)
-					.then((data) => {
-						console.log(data)
-						setRefresh((prev) => !prev)
-						setAlert(data.data.message)
-            setAlertColor("success")
-						setSuccessOpen(true)
-
-          })
-					.catch((err) => {
-						console.log(err)
-						setAlert(err.response.data.error)
-						setAlertColor("warning")
-            setSuccessOpen(true)
-          })
-			})
-			.catch((err) => {})
 	}
 
 	const handleChange = (event, newValue) => {
@@ -138,9 +107,7 @@ function Statistics() {
 										<IconButton onClick={() => copyToClipboard(dialogData.meetingLink)} edge="end">
 											<FileCopyIcon />
 										</IconButton>
-										<IconButton onClick={() => resetZoomLink(dialogData._id)} edge="end">
-											<LoopIcon />
-										</IconButton>
+										
 									</InputAdornment>
 								}
 								labelWidth={70}
@@ -261,6 +228,7 @@ function Statistics() {
 						day={day}
 						setDialogOpen={setDialogOpen}
 						setDialogData={setDialogData}
+						alertSetStates={{setAlert,setAlertColor,setRefresh,setSuccessOpen}}
 					/>
 				</TabPanel>
 			))}

@@ -4,18 +4,7 @@ import {services} from "./config"
 import Axios from "axios"
 const API = services["prod"]
 
-export const login = (userId, password) => {
-	var postData = {
-		userId,
-		password,
-	}
-	return Axios.post(`${API.main}${API.login}`, postData, {
-		headers: {
-			"Content-Type": "application/json",
-		},
-		method: "POST",
-	})
-}
+export const login = (userId, password) => Axios.post(`${API.main}${API.login}`, {userId, password})
 
 export const logout = (next) => {
 	localStorage.removeItem("roleID")
@@ -203,3 +192,7 @@ export const getAdminsFromQuery = (queryBy, ids) =>
 	axios.get(`${API.main}/messages/query/admins/${queryBy}?ids=${ids.join(",")}`)
 export const getAllNotifications = () => axios.get(`${API.main}/messages`)
 export const updateZoomLinkToNewOne = (id) => axios.put(`${API.main}/schedule/zoom/${id}`)
+
+export const updateSchedulesOfAdminToday = (scheduleIds) =>
+	axios.post(`${API.main}/allocate`, {scheduleIds, agentId: isAutheticated().agentId})
+export const getAdminAssignedClasses = () => axios.get(`${API.main}/allocate/${isAutheticated().agentId}`)
