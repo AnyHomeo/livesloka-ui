@@ -168,8 +168,6 @@ function Scheduler() {
 	const [response, setResponse] = useState("")
 	const [selectedSlots, setSelectedSlots] = useState([])
 
-	console.log(selectedSlots)
-
 	useEffect(() => {
 		getAllSchedulesData()
 	}, [])

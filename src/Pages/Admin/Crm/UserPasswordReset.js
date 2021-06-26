@@ -19,7 +19,6 @@ function UserPasswordReset() {
 		setStudentsData(studentNames.data.result)
 	}
 
-	console.log(studentId)
 	const resetPassword = () => {
 		Axios.get(`${process.env.REACT_APP_API_KEY}/admin/reset/${studentId}`)
 			.then((data) => {
