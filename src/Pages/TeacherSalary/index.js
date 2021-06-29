@@ -13,6 +13,7 @@ import Paper from "@material-ui/core/Paper"
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown"
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp"
 import TextField from "@material-ui/core/TextField"
+import moment from "moment";
 import axios from "axios"
 import {getAttendanceByScheduleId, getSchedulesByMonthAndScheduleId} from "../../Services/Services"
 import {
@@ -27,7 +28,6 @@ import {
 	Card,
 } from "@material-ui/core"
 import {Alert} from "@material-ui/lab"
-import moment from "moment"
 import Select from "@material-ui/core/Select"
 import "./HistoryCells.css"
 import useDocumentTitle from "../../Components/useDocumentTitle"
@@ -39,27 +39,20 @@ const useRowStyles = makeStyles({
 	},
 })
 
-const ExtraTeacherDetails = ({open, scheduleId,date}) => {
+const ExtraTeacherDetails = ({open, scheduleId, date}) => {
 	const [scheduleData, setscheduleData] = useState()
 
-  useEffect(() => {
-    if(open === true){
-      getSchedulesByMonthAndScheduleId(scheduleId,date)
-      .then((data) => {
-        setscheduleData(data.data.result)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-      // getClassesBySchedule()
-    }
-  },[date,scheduleId,open])
-
-	const getClassesBySchedule = async () => {
-		const data = await getAttendanceByScheduleId(scheduleId)
-    console.log(data)
-		setscheduleData(data && data.data.result)
-	}
+	useEffect(() => {
+		if (open === true) {
+			getSchedulesByMonthAndScheduleId(scheduleId, date)
+				.then((data) => {
+					setscheduleData(data.data.result)
+				})
+				.catch((err) => {
+					console.log(err)
+				})
+		}
+	}, [date, scheduleId, open])
 
 	return (
 		<Collapse in={open} timeout="auto" unmountOnExit>
@@ -67,9 +60,9 @@ const ExtraTeacherDetails = ({open, scheduleId,date}) => {
 				<TableHead>
 					<TableRow>
 						<TableCell>Date</TableCell>
-						<TableCell align="center">Time</TableCell>
 						<TableCell align="center">Attedended Students</TableCell>
 						<TableCell align="center">Requested Students</TableCell>
+						<TableCell align="center">Requested Paid Students</TableCell>
 						<TableCell align="center">Absent Students</TableCell>
 					</TableRow>
 				</TableHead>
@@ -78,9 +71,8 @@ const ExtraTeacherDetails = ({open, scheduleId,date}) => {
 						scheduleData.map((data) => (
 							<TableRow>
 								<TableCell component="th" scope="row">
-									{data.date}
+									{moment(data.createdAt).format("MMMM Do, h:mm a")}
 								</TableCell>
-								<TableCell align="center">{data.time}</TableCell>
 								<TableCell align="center">
 									{data.customers.map((student) => (
 										<Chip
@@ -99,6 +91,23 @@ const ExtraTeacherDetails = ({open, scheduleId,date}) => {
 								</TableCell>
 								<TableCell align="center">
 									{data.requestedStudents.map((student) => (
+										<Chip
+											key={student._id}
+											style={{marginBottom: 5}}
+											label={
+												student.firstName
+													? student.firstName
+													: student.email
+													? student.email
+													: "No name"
+											}
+											size="medium"
+											color="primary"
+										/>
+									))}
+								</TableCell>
+								<TableCell align="center">
+									{data.requestedPaidStudents.map((student) => (
 										<Chip
 											key={student._id}
 											style={{marginBottom: 5}}
@@ -146,7 +155,7 @@ const ExtraTeacherDetails = ({open, scheduleId,date}) => {
 	)
 }
 function Row(props) {
-	const {row,date} = props
+	const {row, date} = props
 	const [open, setOpen] = React.useState(false)
 	const classes = useRowStyles()
 
@@ -417,7 +426,8 @@ const TeacherSalary = () => {
 									</TableRow>
 								</TableHead>
 								<TableBody>
-									{salaryData && salaryData.map((row) => <Row key={row.id} date={getDate} row={row} />)}
+									{salaryData &&
+										salaryData.map((row) => <Row key={row.id} date={getDate} row={row} />)}
 								</TableBody>
 							</Table>
 						</TableContainer>
