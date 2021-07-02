@@ -118,7 +118,7 @@ const AccordianInside = ({data, setRefresh, tables}) => {
 						}}
 					>
 						<Typography className={classes.heading}>
-							{data.studentId.firstName} {`(${data.studentId.lastName})`}
+							{data.studentId && data.studentId.firstName} {`(${data.studentId && data.studentId.lastName})`}
 						</Typography>
 					</div>
 				</AccordionSummary>
@@ -128,11 +128,11 @@ const AccordianInside = ({data, setRefresh, tables}) => {
 
 						<div style={{marginTop: 5}}>
 							<p className={classes.subTitle}>
-								Student: <span>{data.studentId.firstName}</span>{" "}
+								Student: <span>{data.studentId && data.studentId.firstName}</span>{" "}
 							</p>
 
 							<p className={classes.subTitle}>
-								Parent: <span>{data.studentId.lastName}</span>{" "}
+								Parent: <span>{data.studentId && data.studentId.lastName}</span>{" "}
 							</p>
 
 							{editableDate ? (

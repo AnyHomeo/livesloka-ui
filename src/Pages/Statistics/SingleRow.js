@@ -45,7 +45,6 @@ function SingleRow({
 				return prevIds
 			})
 			let data = await updateSchedulesOfAdminToday(updatedSchedules)
-			console.log(data)
 			socket.emit('agent-assigned-class', {
 				[allAgents[isAutheticated().agentId]]:id
 			});
@@ -53,7 +52,6 @@ function SingleRow({
 			let updatedSchedules = [...schedulesAssignedToMe, id]
 			setSchedulesAssignedToMe((prev) => [...prev, id])
 			let data = await updateSchedulesOfAdminToday(updatedSchedules)
-			console.log(data)
 			socket.emit('agent-assigned-class', {
 				[allAgents[isAutheticated().agentId]]:id
 			});
@@ -68,7 +66,6 @@ function SingleRow({
 			.then(() => {
 				updateZoomLinkToNewOne(id)
 					.then((data) => {
-						console.log(data)
 						setRefresh((prev) => !prev)
 						setAlert(data.data.message)
 						setAlertColor("success")

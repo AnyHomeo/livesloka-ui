@@ -6,8 +6,6 @@ import {
   Typography,
   Box,
   LinearProgress,
-  List,
-  ListItem,
   Chip,
 } from "@material-ui/core/";
 
@@ -77,57 +75,6 @@ const OccupancyBars = ({
                                   100;
                               }
                               return (
-                                // <Grid
-                                //   item
-                                //   xs={4}
-                                //   style={{
-                                //     display: "flex",
-                                //     justifyContent: "space-around",
-                                //     alignItems: "center",
-                                //     marginTop: 20,
-                                //   }}
-                                // >
-                                //   {/* <ListItem
-                                //     style={{
-                                //       height: "50px",
-                                //       width: "100%",
-                                //       background:
-                                //         "linear-gradient(315deg, #3bb78f 0%, #0bab64 74%)",
-                                //       marginBottom: 10,
-                                //       marginLeft: 10,
-                                //       display: "flex",
-                                //       justifyContent: "center",
-                                //       alignItems: "center",
-
-                                //       borderRadius: 10,
-                                //     }}
-                                //     button
-                                //     key={teacher}
-                                //     onClick={() => {
-                                //       setTeacher(teacher);
-                                //       setTeacherId(id);
-                                //       setCategory(category);
-                                //     }}
-                                //   >
-                                //     <Typography
-                                //       color="textSecondary"
-                                //       style={{ color: "white" }}
-                                //     >
-                                //       {teacher}
-                                //     </Typography>
-                                //   </ListItem> */}
-
-                                //   <Chip
-                                //     onClick={() => {
-                                //       setTeacher(teacher);
-                                //       setTeacherId(id);
-                                //       setCategory(category);
-                                //     }}
-                                //     label={teacher}
-                                //     size="small"
-                                //   />
-                                // </Grid>
-
                                 <Chip
                                   onClick={() => {
                                     setTeacher(teacher);

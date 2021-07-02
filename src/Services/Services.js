@@ -192,7 +192,9 @@ export const getAdminsFromQuery = (queryBy, ids) =>
 	axios.get(`${API.main}/messages/query/admins/${queryBy}?ids=${ids.join(",")}`)
 export const getAllNotifications = () => axios.get(`${API.main}/messages`)
 export const updateZoomLinkToNewOne = (id) => axios.put(`${API.main}/schedule/zoom/${id}`)
-
 export const updateSchedulesOfAdminToday = (scheduleIds) =>
 	axios.post(`${API.main}/allocate`, {scheduleIds, agentId: isAutheticated().agentId})
-export const getAdminAssignedClasses = () => axios.get(`${API.main}/allocate/${isAutheticated().agentId}`)
+export const getAdminAssignedClasses = () =>
+	axios.get(`${API.main}/allocate/${isAutheticated().agentId}`)
+export const getSchedulesByMonthAndScheduleId = (scheduleId, date) =>
+	axios.get(`${API.main}/schedule/salary/${scheduleId}/${date}`)

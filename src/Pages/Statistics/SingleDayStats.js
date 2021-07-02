@@ -98,11 +98,9 @@ function SingleDayStats({day, setDialogOpen, setDialogData, refresh, alertSetSta
 					if (prevObject[key].includes(value)) {
 						let index = prevObject[key].indexOf(value)
 						prevObject[key].splice(index, 1)
-						console.log("Spliced Data", prevObject)
 						return prevObject
 					} else {
 						prevObject[key] = [...prevObject[key], value]
-						console.log("Added Data", prevObject)
 						return prevObject
 					}
 				} else {
