@@ -196,13 +196,13 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 
 	const handleClickOpen = (data) => {
 		setCustomTimeArr(data.tz)
-		moment.tz(AllTimeZones, data.tz)
 		setCustomTime(true)
 		setOpen(true)
 	}
 
 	const handleClose = () => {
 		setOpen(false)
+		setCustomTimeArr("Asia/Kolkata")
 	}
 
 	return (
@@ -231,7 +231,7 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 									onClick={() => handleClickOpen(time)}
 									style={{fontWeight: "bold"}}
 									size={width > 700 ? "large" : "small"}
-									label={moment(AllTimeZones).tz(time.tz).format("h:mm A")}
+									label={moment.tz(AllTimeZones,customTimeArr).clone().tz(time.tz).format("h:mm A")}
 								/>
 								{/* <p
 									className={classes.timeText}

@@ -403,9 +403,8 @@ const TeacherSalary = () => {
           }}
         >
           <h1 style={{ fontSize: "20px" }}>
-            Total Salary :{" "}
+            Total Salary : ₹
             {totalSalaryVariable.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}{" "}
-            rs
           </h1>
         </Card>
         {loading ? (
