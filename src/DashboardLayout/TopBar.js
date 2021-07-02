@@ -77,7 +77,7 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 
 	const [AllTimeZones, setAllTimeZones] = useState(new Date())
 	const [customTime, setCustomTime] = useState(false)
-
+	const [customTimeArr, setCustomTimeArr] = useState("Asia/Kolkata")
 	// const timeInverval = useCallback(() => {
 	// 	if (!customTime) {
 	// 		setAllTimeZones(new Date())
@@ -194,13 +194,15 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 
 	const [open, setOpen] = React.useState(false)
 
-	const handleClickOpen = () => {
+	const handleClickOpen = (data) => {
+		setCustomTimeArr(data.tz)
 		setCustomTime(true)
 		setOpen(true)
 	}
 
 	const handleClose = () => {
 		setOpen(false)
+		setCustomTimeArr("Asia/Kolkata")
 	}
 
 	return (
@@ -212,6 +214,7 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 
 				{timezoneArr.map((time, i) => (
 					<div
+						key={time.id}
 						style={{display: "flex", width: "100%", justifyContent: "center", alignItems: "center"}}
 					>
 						<div
@@ -225,10 +228,10 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 
 							<div>
 								<Chip
-									onClick={handleClickOpen}
+									onClick={() => handleClickOpen(time)}
 									style={{fontWeight: "bold"}}
 									size={width > 700 ? "large" : "small"}
-									label={moment(AllTimeZones).tz(time.tz).format("h:mm A")}
+									label={moment.tz(AllTimeZones,customTimeArr).clone().tz(time.tz).format("h:mm A")}
 								/>
 								{/* <p
 									className={classes.timeText}
