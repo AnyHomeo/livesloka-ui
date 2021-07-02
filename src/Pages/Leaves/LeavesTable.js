@@ -156,18 +156,9 @@ function LeavesTable() {
 		let regex = new RegExp(`^${value}`, `i`)
 		const sortedArr =
 			groupedData &&
-			groupedData.filter(
-				(x) => {
-					return regex.test(x.date)
-				}
-
-				// ||
-				// regex.test(x.firstName) ||
-				// regex.test(x.lastName) ||
-				// regex.test(moment(x.cancelledDate).format("MMMM")) ||
-				// regex.test(moment(x.cancelledDate).format("Do")) ||
-				// regex.test(moment(x.cancelledDate).format("YYYY"))
-			)
+			groupedData.filter((x) => {
+				return regex.test(x.date)
+			})
 
 		setFilteredData(sortedArr)
 	}
@@ -258,104 +249,8 @@ function LeavesTable() {
 				</DialogActions>
 			</Dialog>
 
-			{/* <Button
-				style={{marginLeft: "20px"}}
-				color="primary"
-				onClick={() => setDialogOpen(true)}
-				variant="contained"
-			>
-				Apply Leave
-			</Button> */}
 			{width > 768 ? (
 				<>
-					{/* {" "}
-					<MaterialTable
-						title=""
-						columns={[
-							{
-								title: "First Name",
-								field: "firstName",
-								type: "string",
-								editable: "never",
-							},
-							{
-								title: "Last Name",
-								field: "lastName",
-								type: "string",
-								editable: "never",
-							},
-							{
-								title: "Class Name",
-								field: "className",
-								editable: "never",
-								type: "string",
-							},
-							{
-								title: "Date(User TimeZone)",
-								field: "cancelledDate",
-								type: "datetime",
-								customFilterAndSearch: (filter, row, col) => {
-									return col.render(row).toLowerCase().indexOf(filter.toLowerCase()) !== -1
-								},
-								render: (rowData) =>
-									moment(rowData.cancelledDate).format("MMMM Do YYYY, h:mm:ss A"),
-							},
-						]}
-						style={{
-							margin: "20px",
-							padding: "20px",
-						}}
-						data={rows}
-						options={{
-							exportButton: true,
-							paging: false,
-							maxBodyHeight: height - 240,
-						}}
-						editable={{
-							onRowUpdate: (newData, oldData) => {
-								return updateLeave(newData)
-									.then((fetchedData) => {
-										if (fetchedData.data) {
-											const dataUpdate = [...rows]
-											const index = oldData.tableData.id
-											dataUpdate[index] = newData
-											setRows([...dataUpdate])
-											setSuccess(true)
-											setResponse(fetchedData.data.message)
-											setSnackBarOpen(true)
-										} else {
-											setSuccess(false)
-											setResponse(fetchedData.data.error || "Something went wrong,Try again later")
-											setSnackBarOpen(true)
-										}
-									})
-									.catch((err) => {
-										console.error(err)
-										setSuccess(false)
-										setResponse("Something went wrong,Try again later")
-										setSnackBarOpen(true)
-									})
-							},
-							onRowDelete: (oldData) =>
-								deleteALeave(oldData._id)
-									.then((res) => {
-										const dataDelete = [...rows]
-										const index = oldData.tableData.id
-										dataDelete.splice(index, 1)
-										setRows([...dataDelete])
-										setSuccess(true)
-										setResponse(res.data.message)
-										setSnackBarOpen(true)
-									})
-									.catch((err) => {
-										console.error(err, err.response)
-										setSuccess(false)
-										setResponse("unable to delete customer, Try again")
-										setSnackBarOpen(true)
-									}),
-						}}
-					/> */}
-
 					<div
 						style={{
 							display: "flex",
