@@ -1,39 +1,28 @@
 import React, {useEffect, useState} from "react"
-import {Link, Link as RouterLink} from "react-router-dom"
 import clsx from "clsx"
 import PropTypes from "prop-types"
 import MomentUtils from "@date-io/moment"
 
 import {
 	AppBar,
-	Badge,
 	Box,
-	Hidden,
 	IconButton,
 	Toolbar,
 	makeStyles,
-	Typography,
-	Popover,
 	Chip,
 	Dialog,
 	DialogActions,
 	Button,
 } from "@material-ui/core"
 import MenuIcon from "@material-ui/icons/Menu"
-import NotificationsIcon from "@material-ui/icons/NotificationsOutlined"
-import TimerOutlinedIcon from "@material-ui/icons/TimerOutlined"
 import InputIcon from "@material-ui/icons/Input"
 import {TimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers"
 import "date-fns"
-import DateFnsUtils from "@date-io/date-fns"
-// import Logo from 'src/components/Logo';
 import "./Topbar.css"
 import {logout} from "../Services/Services"
 import moment from "moment-timezone"
 import useWindowDimensions from "../Components/useWindowDimensions"
 import useInterval from "../Components/useInterval"
-
-import {useCallback} from "react"
 
 const useStyles = makeStyles((theme) => ({
 	root: {
