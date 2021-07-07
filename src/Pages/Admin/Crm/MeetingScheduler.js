@@ -356,20 +356,22 @@ const MeetingScheduler = () => {
 
 		let names =
 			studentNamesFullObject &&
-			studentNamesFullObject.map((item) => {
+			studentNamesFullObject.map((item, i) => {
 				if (item.age) {
-					return `${item.firstName} ${item.age}Y (${item.lastName}), `
+					return `${item.firstName} ${item.age}Y (${item.lastName}) ${
+						studentNamesFullObject.length - 1 === i ? "" : ","
+					} `
 				} else {
-					return `${item.firstName} (${item.lastName}), `
+					return `${item.firstName} (${item.lastName})${
+						studentNamesFullObject.length - 1 === i ? "" : ","
+					} `
 				}
 			})
 
 		let nameString = names.join(" ")
 
-		console.log(nameString)
-
 		let name =
-			`${nameString} ${selectedSub[0]?.subjectName} - ${teacherNameFullObject.TeacherName}`.replace(
+			`${nameString} ${selectedSub[0]?.subjectName}- ${teacherNameFullObject.TeacherName}`.replace(
 				undefined,
 				""
 			)
