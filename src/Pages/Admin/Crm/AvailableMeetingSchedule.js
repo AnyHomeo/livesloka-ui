@@ -351,11 +351,12 @@ const AvailableMeetingSchedule = ({match}) => {
 	}, [])
 
 	useEffect(() => {
-		classNameGenerator()
-	}, [teacher, studentNamesFullObject, subjectNameId, match.params])
+		if (teacherName.length !== 0) {
+			classNameGenerator()
+		}
+	}, [teacher, studentNamesFullObject, subjectNameId, teacherName])
 
 	const classNameGenerator = () => {
-		console.log(teacher)
 		let selectedSub = subjectNames && subjectNames.filter((sub) => sub._id === subjectNameId)
 
 		let selectedTeacher = teacherName && teacherName.filter((tea) => tea.id === teacher)
@@ -604,7 +605,7 @@ const AvailableMeetingSchedule = ({match}) => {
 							aria-label="position"
 							onChange={(e) => setOneToOne((prev) => !prev)}
 							name="position"
-							value={oneToOne}
+							value={!oneToOne}
 						>
 							<FormControlLabel
 								value={true}
