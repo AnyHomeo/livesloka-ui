@@ -13,9 +13,12 @@ import Paper from "@material-ui/core/Paper"
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown"
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp"
 import TextField from "@material-ui/core/TextField"
-import moment from "moment";
 import axios from "axios"
-import {getAttendanceByScheduleId, getSchedulesByMonthAndScheduleId} from "../../Services/Services"
+import {Edit, Delete} from "react-feather"
+import Grid from "@material-ui/core/Grid"
+
+import {getAttendanceByScheduleId} from "../../Services/Services"
+
 import {
 	Button,
 	InputLabel,
@@ -28,9 +31,12 @@ import {
 	Card,
 } from "@material-ui/core"
 import {Alert} from "@material-ui/lab"
+import moment from "moment"
 import Select from "@material-ui/core/Select"
 import "./HistoryCells.css"
 import useDocumentTitle from "../../Components/useDocumentTitle"
+import {useQuery} from "react-query"
+import {EnhancedEncryptionOutlined} from "@material-ui/icons"
 const useRowStyles = makeStyles({
 	root: {
 		"& > *": {
@@ -39,20 +45,30 @@ const useRowStyles = makeStyles({
 	},
 })
 
-const ExtraTeacherDetails = ({open, scheduleId, date}) => {
+const useStyles = makeStyles((theme) => ({
+	root: {
+		flexGrow: 1,
+	},
+	paper: {
+		padding: theme.spacing(2),
+		textAlign: "center",
+		color: theme.palette.text.secondary,
+	},
+}))
+
+const ExtraTeacherDetails = ({open, scheduleId}) => {
 	const [scheduleData, setscheduleData] = useState()
 
 	useEffect(() => {
-		if (open === true) {
-			getSchedulesByMonthAndScheduleId(scheduleId, date)
-				.then((data) => {
-					setscheduleData(data.data.result)
-				})
-				.catch((err) => {
-					console.log(err)
-				})
+		if (scheduleId && open === true && !scheduleData) {
+			getClassesBySchedule()
 		}
-	}, [date, scheduleId, open])
+	}, [open, scheduleId, scheduleData])
+
+	const getClassesBySchedule = async () => {
+		const data = await getAttendanceByScheduleId(scheduleId)
+		setscheduleData(data && data.data.result)
+	}
 
 	return (
 		<Collapse in={open} timeout="auto" unmountOnExit>
@@ -60,9 +76,9 @@ const ExtraTeacherDetails = ({open, scheduleId, date}) => {
 				<TableHead>
 					<TableRow>
 						<TableCell>Date</TableCell>
+						<TableCell align="center">Time</TableCell>
 						<TableCell align="center">Attedended Students</TableCell>
 						<TableCell align="center">Requested Students</TableCell>
-						<TableCell align="center">Requested Paid Students</TableCell>
 						<TableCell align="center">Absent Students</TableCell>
 					</TableRow>
 				</TableHead>
@@ -71,8 +87,9 @@ const ExtraTeacherDetails = ({open, scheduleId, date}) => {
 						scheduleData.map((data) => (
 							<TableRow>
 								<TableCell component="th" scope="row">
-									{moment(data.createdAt).format("MMMM Do, h:mm a")}
+									{data.date}
 								</TableCell>
+								<TableCell align="center">{data.time}</TableCell>
 								<TableCell align="center">
 									{data.customers.map((student) => (
 										<Chip
@@ -91,23 +108,6 @@ const ExtraTeacherDetails = ({open, scheduleId, date}) => {
 								</TableCell>
 								<TableCell align="center">
 									{data.requestedStudents.map((student) => (
-										<Chip
-											key={student._id}
-											style={{marginBottom: 5}}
-											label={
-												student.firstName
-													? student.firstName
-													: student.email
-													? student.email
-													: "No name"
-											}
-											size="medium"
-											color="primary"
-										/>
-									))}
-								</TableCell>
-								<TableCell align="center">
-									{data.requestedPaidStudents.map((student) => (
 										<Chip
 											key={student._id}
 											style={{marginBottom: 5}}
@@ -154,10 +154,93 @@ const ExtraTeacherDetails = ({open, scheduleId, date}) => {
 		</Collapse>
 	)
 }
-function Row(props) {
-	const {row, date} = props
+function Row({setEditTotalSalary, EditTotalSalary, ...props}) {
+	const {row} = props
 	const [open, setOpen] = React.useState(false)
 	const classes = useRowStyles()
+	const [addAmount, setAddAmount] = useState("")
+	const [addCommentText, setAddCommentText] = useState("")
+	const [addCommentLoading, setAddCommentLoading] = useState(false)
+	const [extrasInfo, setExtrasInfo] = useState(props.row.extras)
+	const [editComment, setEditComment] = useState(false)
+	const [editInfoItem, setEditInfoItem] = useState()
+
+	const handleEditFields = (item) => {
+		console.log(item)
+		setEditComment(true)
+		setEditInfoItem(item)
+		setAddAmount(item.amount)
+		setAddCommentText(item.comment)
+		setEditTotalSalary(row.totalSalary)
+	}
+
+	const addComment = async (type) => {
+		setAddCommentLoading(true)
+
+		let formData = {}
+
+		if (type === "add") {
+			// row.totalSalary = parseInt(row.totalSalary) + parseInt(addAmount)
+			formData = {
+				month: props.date.split("-")[1] * 1,
+				year: props.date.split("-")[0] * 1,
+				comment: addCommentText,
+				amount: addAmount,
+				teacherId: props.row.id,
+			}
+		} else if (type === "update") {
+			formData = {
+				month: props.date.split("-")[1] * 1,
+				year: props.date.split("-")[0] * 1,
+				comment: addCommentText,
+				amount: addAmount,
+				teacherId: props.row.id,
+				id: editInfoItem.id,
+			}
+		}
+
+		try {
+			const data = await axios.post(
+				`${process.env.REACT_APP_API_KEY}/admin/${type}/ExtraAmounts`,
+				formData
+			)
+
+			if (data.status === 200) {
+				if (editComment) {
+					const editedComment = extrasInfo.map((value) => {
+						if (value.id === editInfoItem.id) {
+							let editedObj = value
+							editedObj.amount = addAmount
+							editedObj.comment = addCommentText
+							return editedObj
+						} else {
+							return value
+						}
+					})
+
+					setExtrasInfo(editedComment)
+				} else {
+					setExtrasInfo((prev) => [...prev, data?.data?.result])
+				}
+			}
+			setAddCommentText("")
+			setAddAmount("")
+			setEditComment(false)
+		} catch (error) {}
+		setAddCommentLoading(false)
+	}
+
+	const onDeleteComment = async (item) => {
+		try {
+			const data = await axios.post(
+				`${process.env.REACT_APP_API_KEY}/admin/delete/ExtraAmounts/${item.id}`
+			)
+			if (data.status === 200) {
+				let removeDeletedItem = extrasInfo.filter((arr) => arr.id !== item.id)
+				setExtrasInfo(removeDeletedItem)
+			}
+		} catch (error) {}
+	}
 
 	const TableRowDetails = ({
 		noOfDays,
@@ -205,13 +288,16 @@ function Row(props) {
 
 				<TableRow>
 					<TableCell colSpan="6">
-						<ExtraTeacherDetails date={date} open={newOpen} scheduleId={scheduleId} />
+						<ExtraTeacherDetails open={newOpen} scheduleId={scheduleId} />
 					</TableCell>
 				</TableRow>
 			</>
 		)
 	}
 
+	const cclasses = useStyles()
+
+	console.log(EditTotalSalary)
 	return (
 		<React.Fragment>
 			<TableRow className={classes.root}>
@@ -241,13 +327,87 @@ function Row(props) {
 									alignItems: "center",
 								}}
 							>
-								<TextField id="outlined-basic" label="Add Amount" variant="outlined" />
+								<div>
+									<TextField
+										id="outlined-basic"
+										label="Amount"
+										variant="outlined"
+										onChange={(e) => setAddAmount(e.target.value)}
+										value={addAmount}
+									/>
 
-								<Button color="primary" variant="contained">
-									Finalize Amount
+									<TextField
+										id="outlined-basic"
+										label="Comment"
+										variant="outlined"
+										onChange={(e) => setAddCommentText(e.target.value)}
+										value={addCommentText}
+										style={{marginLeft: 20}}
+									/>
+								</div>
+
+								<Button
+									color="primary"
+									variant="contained"
+									disabled={addCommentLoading}
+									onClick={() => {
+										if (editComment) {
+											addComment("update")
+										} else {
+											addComment("add")
+										}
+									}}
+								>
+									{addCommentLoading ? <CircularProgress /> : editComment ? "Update" : "Add"}
 								</Button>
 							</div>
+							<div>
+								<div className={cclasses.root}>
+									<Grid container spacing={3}>
+										{extrasInfo.map((item) => (
+											<Grid key={item._id} item sm={3}>
+												<Card
+													style={{
+														display: "flex",
+														flexDirection: "column",
+														padding: 10,
+														marginTop: 5,
+														width: 250,
+													}}
+												>
+													<div
+														style={{
+															display: "flex",
+															flexDirection: "column",
+														}}
+													>
+														<p style={{fontSize: 15, fontWeight: "bold", marginTop: 5}}>
+															{item.amount}
+														</p>
 
+														<p style={{fontSize: 15}}>{item.comment}</p>
+													</div>
+
+													<div
+														style={{
+															display: "flex",
+															width: 100,
+														}}
+													>
+														<IconButton onClick={() => handleEditFields(item)}>
+															<Edit />
+														</IconButton>
+
+														<IconButton onClick={() => onDeleteComment(item)}>
+															<Delete />
+														</IconButton>
+													</div>
+												</Card>
+											</Grid>
+										))}
+									</Grid>
+								</div>
+							</div>
 							<Table size="small" aria-label="purchases">
 								<TableHead>
 									<TableRow>
@@ -304,8 +464,9 @@ const TeacherSalary = () => {
 	const [loading, setLoading] = useState(false)
 	const [salDates, setSalDates] = useState([])
 	const [successOpen, setSuccessOpen] = React.useState(false)
-	const [totalSalaryVariable, setTotalSalaryVariable] = useState(0)
 
+	const [totalSalaryVariable, setTotalSalaryVariable] = useState(0)
+	const [EditTotalSalary, setEditTotalSalary] = useState()
 	let totalSalaryVar = 0
 
 	const handleChange = (event) => {
@@ -370,10 +531,10 @@ const TeacherSalary = () => {
 			>
 				<div style={{marginTop: "20px", width: 300}}>
 					<FormControl variant="outlined" style={{width: "100%"}}>
-						<InputLabel id="select-month-label">Select Month</InputLabel>
+						<InputLabel id="demo-simple-select-outlined-label">Select Month</InputLabel>
 						<Select
-							labelId="select-month-label"
-							id="select-month"
+							labelId="demo-simple-select-outlined-label"
+							id="demo-simple-select-outlined"
 							value={getDate}
 							onChange={handleChange}
 							label="Select Month"
@@ -403,7 +564,7 @@ const TeacherSalary = () => {
 					}}
 				>
 					<h1 style={{fontSize: "20px"}}>
-						Total Salary : ₹ {totalSalaryVariable.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+						Total Salary : ₹{totalSalaryVariable.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}{" "}
 					</h1>
 				</Card>
 				{loading ? (
@@ -411,7 +572,7 @@ const TeacherSalary = () => {
 						<CircularProgress />
 					</div>
 				) : (
-					<div style={{width: "50%", marginTop: "40px"}}>
+					<div style={{width: "80%", marginTop: "40px"}}>
 						<TableContainer component={Paper}>
 							<Table aria-label="collapsible table">
 								<TableHead>
@@ -427,7 +588,15 @@ const TeacherSalary = () => {
 								</TableHead>
 								<TableBody>
 									{salaryData &&
-										salaryData.map((row) => <Row key={row.id} date={getDate} row={row} />)}
+										salaryData.map((row) => (
+											<Row
+												key={row.id}
+												row={row}
+												date={getDate}
+												setEditTotalSalary={setEditTotalSalary}
+												EditTotalSalary={EditTotalSalary}
+											/>
+										))}
 								</TableBody>
 							</Table>
 						</TableContainer>
@@ -439,5 +608,3 @@ const TeacherSalary = () => {
 }
 
 export default TeacherSalary
-
-const top100Films = [{title: "2021-01", value: "Jan 2021"}]

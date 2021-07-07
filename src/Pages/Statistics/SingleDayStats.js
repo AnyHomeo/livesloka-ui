@@ -11,6 +11,7 @@ import {
 import io from "socket.io-client"
 import {Card} from "@material-ui/core"
 import {Clock} from "react-feather"
+import Axios from "axios"
 const socket = io(process.env.REACT_APP_API_KEY)
 
 const getSlotFromTime = (date) => {
@@ -171,6 +172,16 @@ function SingleDayStats({day, setDialogOpen, setDialogData, refresh, alertSetSta
 			})
 	}, [])
 
+	useEffect(() => {
+		getTeacherLeaves()
+	}, [])
+
+	const [teacherLeaves, setTeacherLeaves] = useState()
+	const getTeacherLeaves = async () => {
+		const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/teacher-leaves/today`)
+		setTeacherLeaves(data?.data)
+	}
+
 	return (
 		<section className="statistics-container">
 			<div className="hours-display">
@@ -200,6 +211,7 @@ function SingleDayStats({day, setDialogOpen, setDialogData, refresh, alertSetSta
 						setSchedulesAssignedToMe={setSchedulesAssignedToMe}
 						otherSchedules={otherSchedules}
 						allAgents={allAgents}
+						teacherLeaves={teacherLeaves}
 					/>
 				))}
 			</div>
