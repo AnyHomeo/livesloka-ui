@@ -19,12 +19,8 @@ function SingleBlock({
 	setSelectedSlots,
 }) {
 	const [schedule, setSchedule] = useState({})
-
-	console.log(schedule)
 	let history = useHistory()
-
 	const [checked, setChecked] = React.useState(false)
-
 	const handleChange = (event) => {
 		setChecked(event.target.checked)
 	}

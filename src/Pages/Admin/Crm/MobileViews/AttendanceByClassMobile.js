@@ -14,12 +14,11 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     margin: "0 auto",
     marginTop: 5,
-    marginBottom: 5,
+    marginBottom: 5
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
-    // marginRight: 20,
   },
   expanded: {},
   content: {

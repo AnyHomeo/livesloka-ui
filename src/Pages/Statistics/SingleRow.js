@@ -69,7 +69,6 @@ function SingleRow({
 			.then(() => {
 				updateZoomLinkToNewOne(id)
 					.then((data) => {
-						console.log(data)
 						setRefresh((prev) => !prev)
 						setAlert(data.data.message)
 						setAlertColor("success")
