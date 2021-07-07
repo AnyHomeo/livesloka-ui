@@ -358,7 +358,7 @@ const MeetingScheduler = () => {
 			studentNamesFullObject &&
 			studentNamesFullObject.map((item, i) => {
 				if (item.age) {
-					return `${item.firstName} ${item.age}Y (${item.lastName}) ${
+					return `${item.firstName} ${item.age}Y (${item.lastName})${
 						studentNamesFullObject.length - 1 === i ? "" : ","
 					} `
 				} else {

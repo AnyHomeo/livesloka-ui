@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react"
 import {Link, Link as RouterLink} from "react-router-dom"
 import clsx from "clsx"
 import PropTypes from "prop-types"
+import MomentUtils from "@date-io/moment"
+
 import {
 	AppBar,
 	Badge,
@@ -78,9 +80,7 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 	const [AllTimeZones, setAllTimeZones] = useState(new Date())
 	const [customTime, setCustomTime] = useState(false)
 	const [customTimeArr, setCustomTimeArr] = useState("Asia/Kolkata")
-
-	const [modalTime, setModalTime] = useState()
-
+	moment.tz.setDefault(customTimeArr)
 	useInterval(() => {
 		if (!customTime) {
 			// Your custom logic here
@@ -123,17 +123,10 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 
 	const [open, setOpen] = React.useState(false)
 
-	const [tempTime, setTempTime] = useState()
 	const handleClickOpen = (data) => {
-		var newYork = moment.tz(AllTimeZones, data.tz)
-		var time = newYork.clone().tz(data.tz).format()
-
-		console.log(time)
-		setTempTime(time)
-		// setCustomTimeArr(data.tz)
+		setCustomTimeArr(data.tz)
 		setCustomTime(true)
 		setOpen(true)
-		console.log(tempTime)
 	}
 
 	const handleClose = () => {
@@ -188,10 +181,10 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 
 				<div>
 					<Dialog open={open} onClose={handleClose}>
-						<MuiPickersUtilsProvider utils={DateFnsUtils}>
+						<MuiPickersUtilsProvider utils={MomentUtils}>
 							<TimePicker
-								value={tempTime}
-								onChange={setTempTime}
+								value={AllTimeZones}
+								onChange={setAllTimeZones}
 								variant="static"
 								todayLabel="now"
 								label="12 hours"

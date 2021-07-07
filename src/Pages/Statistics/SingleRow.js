@@ -137,7 +137,11 @@ function SingleRow({
 								style={{
 									fontSize: 12,
 									width: "67%",
-									marginTop: singleData.demo ? 10 : 0,
+									marginTop: teacherIds?.includes(singleData.teacher._id)
+										? 10
+										: singleData.demo
+										? 10
+										: 0,
 								}}
 								onClick={() => {
 									setDialogOpen((prev) => !prev)
@@ -281,6 +285,32 @@ function SingleRow({
 											height: 16,
 											backgroundColor: "#d63031",
 											color: "white",
+										}}
+									/>
+								</Tooltip>
+							) : teacherIds?.includes(singleData.teacher._id) ? (
+								<Tooltip
+									title="Demo"
+									style={{cursor: "pointer"}}
+									onClick={() => {
+										setDialogOpen((prev) => !prev)
+										setDialogData(singleData)
+									}}
+								>
+									<Chip
+										label="Entire day leave"
+										style={{
+											position: "absolute",
+											top: "-1%",
+											transform: "translateX(-50%)",
+											left: "50%",
+											height: 40,
+											width: "100%",
+											borderRadius: 20,
+											height: 16,
+											backgroundColor: "#3867d6",
+											color: "white",
+											border: "2px solid #3867d6",
 										}}
 									/>
 								</Tooltip>
