@@ -1,12 +1,12 @@
 import {Avatar, Card, Chip, IconButton, Tooltip} from "@material-ui/core"
-import React, {useEffect, useRef} from "react"
+import React, {useEffect, useRef, useState} from "react"
 import {UserCheck, UserMinus, Video, UserX} from "react-feather"
 import LoopIcon from "@material-ui/icons/Loop"
 import {useConfirm} from "material-ui-confirm"
 import {updateSchedulesOfAdminToday, updateZoomLinkToNewOne} from "../../Services/Services"
 import DoneIcon from "@material-ui/icons/Done"
 import Checkbox from "@material-ui/core/Checkbox"
-import { isAutheticated } from "../../auth"
+import {isAutheticated} from "../../auth"
 import io from "socket.io-client"
 const socket = io(process.env.REACT_APP_API_KEY)
 
@@ -23,7 +23,8 @@ function SingleRow({
 	schedulesAssignedToMe,
 	setSchedulesAssignedToMe,
 	otherSchedules,
-	allAgents
+	allAgents,
+	teacherLeaves,
 }) {
 	const divRef = useRef(null)
 	const confirm = useConfirm()
@@ -33,7 +34,7 @@ function SingleRow({
 		if (divRef.current) {
 			divRef.current.scrollIntoView({behavior: "smooth"})
 		}
-	}, [selectedSlot,time])
+	}, [selectedSlot, time])
 	const updateClassesAssignedToMe = async (id) => {
 		if (schedulesAssignedToMe.includes(id)) {
 			let updatedSchedules = []
@@ -46,17 +47,17 @@ function SingleRow({
 			})
 			let data = await updateSchedulesOfAdminToday(updatedSchedules)
 			console.log(data)
-			socket.emit('agent-assigned-class', {
-				[allAgents[isAutheticated().agentId]]:id
-			});
+			socket.emit("agent-assigned-class", {
+				[allAgents[isAutheticated().agentId]]: id,
+			})
 		} else {
 			let updatedSchedules = [...schedulesAssignedToMe, id]
 			setSchedulesAssignedToMe((prev) => [...prev, id])
 			let data = await updateSchedulesOfAdminToday(updatedSchedules)
 			console.log(data)
-			socket.emit('agent-assigned-class', {
-				[allAgents[isAutheticated().agentId]]:id
-			});
+			socket.emit("agent-assigned-class", {
+				[allAgents[isAutheticated().agentId]]: id,
+			})
 		}
 	}
 
@@ -86,6 +87,27 @@ function SingleRow({
 			})
 	}
 
+	const [entireDayLeaves, setEntireDayLeaves] = useState()
+
+	useEffect(() => {
+		// setEntireDayLeaves(teacherLeaves?.result?.entireDayLeaves)
+		arrayOfTeacherIds()
+	}, [teacherLeaves])
+
+	const [teacherIds, setTeacherIds] = useState()
+	const arrayOfTeacherIds = () => {
+		let ids = []
+		teacherLeaves && teacherLeaves.result.entireDayLeaves.map((id) => ids.push(id._id))
+
+		// console.log(ids)
+		setTeacherIds(ids)
+	}
+
+	todayData.map((singleData) => {
+		console.log(singleData.teacher._id)
+		console.log(teacherIds.includes(singleData.teacher._id))
+		// console.log()
+	})
 	return (
 		<div
 			className="single-row-container"
@@ -108,6 +130,8 @@ function SingleRow({
 									? "#2ecc7075"
 									: singleData.demo
 									? "#f1c40fb6"
+									: teacherIds?.includes(singleData.teacher._id)
+									? "black"
 									: "#ff757562",
 								border: singleData.isTeacherJoined ? "2px solid #56AE69" : "2px solid #d63031",
 								overflow: "initial",
@@ -209,7 +233,7 @@ function SingleRow({
 								{Object.keys(otherSchedules)
 									.filter((agentName) => otherSchedules[agentName].includes(singleData._id))
 									.map((agentName) => (
-										<Tooltip title={'assigned to ' + agentName}>
+										<Tooltip title={"assigned to " + agentName}>
 											<IconButton size="small">
 												<div className="small-chip">
 													{agentName.split(" ").map((word) => word[0].toUpperCase())}
