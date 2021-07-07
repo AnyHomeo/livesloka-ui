@@ -8,8 +8,8 @@ import DoneIcon from "@material-ui/icons/Done"
 import Checkbox from "@material-ui/core/Checkbox"
 import {isAutheticated} from "../../auth"
 import io from "socket.io-client"
+import {getSlotFromTime} from "../../Services/getSlotFromTime"
 const socket = io(process.env.REACT_APP_API_KEY)
-
 function SingleRow({
 	setDialogOpen,
 	todayData,
@@ -24,7 +24,8 @@ function SingleRow({
 	setSchedulesAssignedToMe,
 	otherSchedules,
 	allAgents,
-	teacherLeaves,
+	teacherIds,
+	scheduleLeaves,
 }) {
 	const divRef = useRef(null)
 	const confirm = useConfirm()
@@ -86,27 +87,15 @@ function SingleRow({
 			})
 	}
 
-	const [entireDayLeaves, setEntireDayLeaves] = useState()
-
-	useEffect(() => {
-		// setEntireDayLeaves(teacherLeaves?.result?.entireDayLeaves)
-		arrayOfTeacherIds()
-	}, [teacherLeaves])
-
-	const [teacherIds, setTeacherIds] = useState()
-	const arrayOfTeacherIds = () => {
-		let ids = []
-		teacherLeaves && teacherLeaves.result.entireDayLeaves.map((id) => ids.push(id._id))
-
-		// console.log(ids)
-		setTeacherIds(ids)
+	const scheduleLeavesGen = (id) => {
+		console.table(
+			id,
+			scheduleLeaves && scheduleLeaves[time],
+			scheduleLeaves && scheduleLeaves[time]?.includes(id)
+		)
+		return scheduleLeaves && scheduleLeaves[time]?.includes(id)
+		// console.log(id)
 	}
-
-	todayData.map((singleData) => {
-		console.log(singleData.teacher._id)
-		console.log(teacherIds.includes(singleData.teacher._id))
-		// console.log()
-	})
 	return (
 		<div
 			className="single-row-container"
@@ -125,14 +114,20 @@ function SingleRow({
 								singleData.students.length >= 3 ? "single-card single-card-2" : "single-card"
 							}
 							style={{
-								backgroundColor: singleData.isTeacherJoined
+								backgroundColor: scheduleLeavesGen(singleData.teacher._id)
+									? "black"
+									: singleData.isTeacherJoined
 									? "#2ecc7075"
 									: singleData.demo
 									? "#f1c40fb6"
 									: teacherIds?.includes(singleData.teacher._id)
-									? "black"
+									? "rgb(56, 103, 214, 0.5)"
 									: "#ff757562",
-								border: singleData.isTeacherJoined ? "2px solid #56AE69" : "2px solid #d63031",
+								border: singleData.isTeacherJoined
+									? "2px solid #56AE69"
+									: teacherIds?.includes(singleData.teacher._id)
+									? "2px solid #3867d6"
+									: "2px solid #d63031",
 								overflow: "initial",
 								cursor: "pointer",
 							}}

@@ -182,6 +182,34 @@ function SingleDayStats({day, setDialogOpen, setDialogData, refresh, alertSetSta
 		setTeacherLeaves(data?.data)
 	}
 
+	useEffect(() => {
+		arrayOfTeacherIds()
+	}, [teacherLeaves])
+
+	const [teacherIds, setTeacherIds] = useState()
+
+	const [scheduleLeaves, setscheduleLeaves] = useState()
+	const arrayOfTeacherIds = () => {
+		let arrofObj = {}
+		let ids = []
+		teacherLeaves && teacherLeaves.result.entireDayLeaves.map((id) => ids.push(id.teacherId))
+		setTeacherIds(ids)
+
+		teacherLeaves &&
+			teacherLeaves.result.scheduleLeaves.forEach((id) => {
+				console.log(id)
+				let date = getSlotFromTime(id.date)
+
+				if (arrofObj[date.slot]) {
+					arrofObj[date.slot].push(id.teacherId)
+				} else {
+					arrofObj[date.slot] = [id.teacherId]
+				}
+			})
+
+		setscheduleLeaves(arrofObj)
+	}
+
 	return (
 		<section className="statistics-container">
 			<div className="hours-display">
@@ -211,7 +239,8 @@ function SingleDayStats({day, setDialogOpen, setDialogData, refresh, alertSetSta
 						setSchedulesAssignedToMe={setSchedulesAssignedToMe}
 						otherSchedules={otherSchedules}
 						allAgents={allAgents}
-						teacherLeaves={teacherLeaves}
+						teacherIds={teacherIds}
+						scheduleLeaves={scheduleLeaves}
 					/>
 				))}
 			</div>

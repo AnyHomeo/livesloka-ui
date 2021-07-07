@@ -21,12 +21,14 @@ import Alert from "@material-ui/lab/Alert"
 let days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
 
 const copyToClipboard = (text) => {
-	var textField = document.createElement("textarea")
-	textField.innerText = text
-	document.body.appendChild(textField)
-	textField.select()
-	document.execCommand("copy")
-	textField.remove()
+	navigator.clipboard.writeText(text).then(
+		function () {
+			console.log("Async: Copying to clipboard was successful!")
+		},
+		function (err) {
+			console.error("Async: Could not copy text: ", err)
+		}
+	)
 }
 
 function TabPanel(props) {
@@ -56,8 +58,7 @@ function Statistics() {
 	const [successOpen, setSuccessOpen] = React.useState(false)
 	const [alert, setAlert] = useState("")
 	const [alertColor, setAlertColor] = useState("")
-  const [refresh, setRefresh] = useState(false);
-
+	const [refresh, setRefresh] = useState(false)
 
 	const handleSuccessClose = (event, reason) => {
 		if (reason === "clickaway") {
@@ -107,7 +108,6 @@ function Statistics() {
 										<IconButton onClick={() => copyToClipboard(dialogData.meetingLink)} edge="end">
 											<FileCopyIcon />
 										</IconButton>
-										
 									</InputAdornment>
 								}
 								labelWidth={70}
@@ -228,7 +228,7 @@ function Statistics() {
 						day={day}
 						setDialogOpen={setDialogOpen}
 						setDialogData={setDialogData}
-						alertSetStates={{setAlert,setAlertColor,setRefresh,setSuccessOpen}}
+						alertSetStates={{setAlert, setAlertColor, setRefresh, setSuccessOpen}}
 					/>
 				</TabPanel>
 			))}

@@ -78,20 +78,8 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 	const [AllTimeZones, setAllTimeZones] = useState(new Date())
 	const [customTime, setCustomTime] = useState(false)
 	const [customTimeArr, setCustomTimeArr] = useState("Asia/Kolkata")
-	// const timeInverval = useCallback(() => {
-	// 	if (!customTime) {
-	// 		setAllTimeZones(new Date())
-	// 	}
-	// }, [customTime])
 
-	// console.log(customTime)
-	// useEffect(() => {
-	// 	let timeinterval = setInterval(timeInverval, 1000)
-
-	// 	return () => {
-	// 		clearInterval(timeinterval)
-	// 	}
-	// }, [])
+	const [modalTime, setModalTime] = useState()
 
 	useInterval(() => {
 		if (!customTime) {
@@ -99,65 +87,6 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 			setAllTimeZones(new Date())
 		}
 	}, 1000)
-
-	// const timezoneArr = [
-	// 	{
-	// 		id: 1,
-	// 		title: "IST",
-	// 		tz: "Asia/Kolkata",
-	// 	},
-
-	// 	{
-	// 		id: 2,
-	// 		title: "ACST",
-	// 		tz: "Australia/Broken_Hill",
-	// 	},
-	// 	{
-	// 		id: 3,
-	// 		title: "PST",
-	// 		tz: "America/Los_Angeles",
-	// 	},
-	// 	{
-	// 		id: 4,
-	// 		title: "AEST",
-	// 		tz: "Australia/Sydney",
-	// 	},
-	// 	{
-	// 		id: 5,
-	// 		title: "AWST",
-	// 		tz: "Australia/Perth",
-	// 	},
-	// 	{
-	// 		id: 6,
-	// 		title: "EST",
-	// 		tz: "America/New_York",
-	// 	},
-	// 	{
-	// 		id: 7,
-	// 		title: "CST",
-	// 		tz: "America/El_Salvador",
-	// 	},
-	// 	{
-	// 		id: 8,
-	// 		title: "ACDT",
-	// 		tz: "Australia/Broken_Hill",
-	// 	},
-	// 	{
-	// 		id: 9,
-	// 		title: "MST",
-	// 		tz: "America/Creston",
-	// 	},
-	// 	{
-	// 		id: 10,
-	// 		title: "GMT",
-	// 		tz: "Atlantic/Reykjavik",
-	// 	},
-	// 	{
-	// 		id: 11,
-	// 		title: "SGT",
-	// 		tz: "Asia/Singapore",
-	// 	},
-	// ]
 
 	const timezoneArr = [
 		{
@@ -194,10 +123,17 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 
 	const [open, setOpen] = React.useState(false)
 
+	const [tempTime, setTempTime] = useState()
 	const handleClickOpen = (data) => {
-		setCustomTimeArr(data.tz)
+		var newYork = moment.tz(AllTimeZones, data.tz)
+		var time = newYork.clone().tz(data.tz).format()
+
+		console.log(time)
+		setTempTime(time)
+		// setCustomTimeArr(data.tz)
 		setCustomTime(true)
 		setOpen(true)
+		console.log(tempTime)
 	}
 
 	const handleClose = () => {
@@ -231,7 +167,11 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 									onClick={() => handleClickOpen(time)}
 									style={{fontWeight: "bold"}}
 									size={width > 700 ? "large" : "small"}
-									label={moment.tz(AllTimeZones,customTimeArr).clone().tz(time.tz).format("h:mm A")}
+									label={moment
+										.tz(AllTimeZones, customTimeArr)
+										.clone()
+										.tz(time.tz)
+										.format("h:mm A")}
 								/>
 								{/* <p
 									className={classes.timeText}
@@ -245,15 +185,13 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 				))}
 
 				<Box flexGrow={1} />
-				{/* <IconButton aria-describedby={id} onClick={handleClick}>
-					<TimerOutlinedIcon style={{color: "white"}} />
-				</IconButton> */}
+
 				<div>
 					<Dialog open={open} onClose={handleClose}>
 						<MuiPickersUtilsProvider utils={DateFnsUtils}>
 							<TimePicker
-								value={AllTimeZones}
-								onChange={setAllTimeZones}
+								value={tempTime}
+								onChange={setTempTime}
 								variant="static"
 								todayLabel="now"
 								label="12 hours"
