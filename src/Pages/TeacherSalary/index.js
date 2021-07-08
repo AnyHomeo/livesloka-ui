@@ -35,8 +35,7 @@ import moment from "moment"
 import Select from "@material-ui/core/Select"
 import "./HistoryCells.css"
 import useDocumentTitle from "../../Components/useDocumentTitle"
-import {useQuery} from "react-query"
-import {EnhancedEncryptionOutlined} from "@material-ui/icons"
+
 const useRowStyles = makeStyles({
 	root: {
 		"& > *": {
@@ -154,8 +153,9 @@ const ExtraTeacherDetails = ({open, scheduleId}) => {
 		</Collapse>
 	)
 }
-function Row({setEditTotalSalary, EditTotalSalary, ...props}) {
-	const {row} = props
+
+function Row(props) {
+	const {row, setSalaryData, teacherId} = props
 	const [open, setOpen] = React.useState(false)
 	const classes = useRowStyles()
 	const [addAmount, setAddAmount] = useState("")
@@ -166,19 +166,15 @@ function Row({setEditTotalSalary, EditTotalSalary, ...props}) {
 	const [editInfoItem, setEditInfoItem] = useState()
 
 	const handleEditFields = (item) => {
-		console.log(item)
 		setEditComment(true)
 		setEditInfoItem(item)
 		setAddAmount(item.amount)
 		setAddCommentText(item.comment)
-		setEditTotalSalary(row.totalSalary)
 	}
 
 	const addComment = async (type) => {
 		setAddCommentLoading(true)
-
 		let formData = {}
-
 		if (type === "add") {
 			// row.totalSalary = parseInt(row.totalSalary) + parseInt(addAmount)
 			formData = {
@@ -294,10 +290,18 @@ function Row({setEditTotalSalary, EditTotalSalary, ...props}) {
 			</>
 		)
 	}
-
 	const cclasses = useStyles()
 
-	console.log(EditTotalSalary)
+	useEffect(() => {
+		setSalaryData((prev) => {
+			let prevData = [...prev]
+			return prevData.map((teacher) => ({
+				...teacher,
+				extras: teacher.id === teacherId ? extrasInfo : teacher.extras,
+			}))
+		})
+	}, [extrasInfo])
+
 	return (
 		<React.Fragment>
 			<TableRow className={classes.root}>
@@ -310,7 +314,7 @@ function Row({setEditTotalSalary, EditTotalSalary, ...props}) {
 					<p style={{fontWeight: "bold"}}>{row.name}</p>
 				</TableCell>
 				<TableCell>
-					<p style={{fontWeight: "bold"}}>{row.totalSalary}</p>
+					<p style={{fontWeight: "bold"}}>{row.totalSalary + extrasInfo.reduce((a, b) => (!a.amount ? a + b.amount : a.amount + b.amount), 0)}</p>
 				</TableCell>
 			</TableRow>
 			<TableRow>
@@ -459,48 +463,49 @@ function Row({setEditTotalSalary, EditTotalSalary, ...props}) {
 
 const TeacherSalary = () => {
 	useDocumentTitle("Teacher's Salary")
-	const [salaryData, setSalaryData] = useState()
-	const [getDate, setGetDate] = useState()
+	const [salaryData, setSalaryData] = useState([])
+	const [getDate, setGetDate] = useState(moment().format("YYYY-MM"))
 	const [loading, setLoading] = useState(false)
 	const [salDates, setSalDates] = useState([])
 	const [successOpen, setSuccessOpen] = React.useState(false)
-
 	const [totalSalaryVariable, setTotalSalaryVariable] = useState(0)
-	const [EditTotalSalary, setEditTotalSalary] = useState()
-	let totalSalaryVar = 0
 
-	const handleChange = (event) => {
-		setGetDate(event.target.value)
-		getSalaries(event.target.value)
-	}
+	useEffect(() => {
+		getSalaries(getDate)
+	}, [getDate])
+
+	useEffect(() => {
+		getSalDates()
+	}, [])
 
 	const getSalDates = async () => {
 		const data = await axios.get(`${process.env.REACT_APP_API_KEY}/salary/months`)
 		setSalDates(data && data.data.result)
 	}
 
+	useEffect(() => {
+		let totalSalary = 0
+		salaryData.forEach((salary) => {
+			totalSalary +=
+				salary.totalSalary +
+				salary.extras.reduce((a, b) => (!a.amount ? a + b.amount : a.amount + b.amount), 0)
+		})
+		setTotalSalaryVariable(totalSalary)
+	}, [salaryData])
+
 	const getSalaries = async (date) => {
+		let totalSalaryVar = 0
 		setLoading(true)
 		try {
 			const data = await axios.get(`${process.env.REACT_APP_API_KEY}/salary/all?month=${date}`)
 			setSalaryData(data && data.data.finalDataObjectArr)
-
-			data &&
-				data.data.finalDataObjectArr.map((data) => {
-					totalSalaryVar = totalSalaryVar + data.totalSalary
-					setTotalSalaryVariable(totalSalaryVar)
-				})
 		} catch (error) {
 			console.log(error.response)
 			setSuccessOpen(true)
-			setSalaryData()
+			setSalaryData([])
 		}
 		setLoading(false)
 	}
-
-	useEffect(() => {
-		getSalDates()
-	}, [])
 
 	const handleSuccessClose = (event, reason) => {
 		if (reason === "clickaway") {
@@ -536,7 +541,7 @@ const TeacherSalary = () => {
 							labelId="demo-simple-select-outlined-label"
 							id="demo-simple-select-outlined"
 							value={getDate}
-							onChange={handleChange}
+							onChange={(e) => setGetDate(e.target.value)}
 							label="Select Month"
 						>
 							{salDates &&
@@ -564,7 +569,7 @@ const TeacherSalary = () => {
 					}}
 				>
 					<h1 style={{fontSize: "20px"}}>
-						Total Salary : ₹{totalSalaryVariable.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}{" "}
+						Total Salary : ₹ {totalSalaryVariable.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}{" "}
 					</h1>
 				</Card>
 				{loading ? (
@@ -591,10 +596,10 @@ const TeacherSalary = () => {
 										salaryData.map((row) => (
 											<Row
 												key={row.id}
+												teacherId={row.id}
 												row={row}
 												date={getDate}
-												setEditTotalSalary={setEditTotalSalary}
-												EditTotalSalary={EditTotalSalary}
+												setSalaryData={setSalaryData}
 											/>
 										))}
 								</TableBody>
