@@ -170,6 +170,22 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 
 				<div>
 					<Dialog open={open} onClose={handleClose}>
+						<div style={{background: "#3f51b5"}}>
+							<p
+								style={{
+									textAlign: "center",
+									fontSize: 18,
+									color: "white",
+								}}
+							>
+								{timezoneArr.map((time) => {
+									if (time.tz === customTimeArr) {
+										return time.title
+									}
+								})}
+							</p>
+						</div>
+
 						<MuiPickersUtilsProvider utils={MomentUtils}>
 							<TimePicker
 								value={AllTimeZones}
@@ -181,7 +197,7 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 						</MuiPickersUtilsProvider>
 						<DialogActions>
 							<Button onClick={() => setCustomTime(false)} color="primary">
-								Reset
+								Current
 							</Button>
 							<Button onClick={handleClose} color="primary" autoFocus>
 								Ok

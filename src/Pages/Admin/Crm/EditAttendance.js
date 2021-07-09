@@ -186,10 +186,12 @@ const EditAttendance = ({match}) => {
 		setStudentNameLists(data.result.students)
 
 		const res = await getScheduleAndDateAttendance(match.params.scheduleId, match.params.date)
-		setStudentAttendance(res.data.result.customers ? res.data.result.customers : [])
-		setRequestedStudents(res.data.result.requestedStudents ? res.data.result.requestedStudents : [])
+		setStudentAttendance(res.data?.result?.customers ? res.data?.result?.customers : [])
+		setRequestedStudents(
+			res.data?.result?.requestedStudents ? res?.data?.result?.requestedStudents : []
+		)
 		setRequestedPaidStudents(
-			res.data.result.requestedPaidStudents ? res.data.result.requestedPaidStudents : []
+			res?.data?.result?.requestedPaidStudents ? res?.data?.result?.requestedPaidStudents : []
 		)
 	}
 
