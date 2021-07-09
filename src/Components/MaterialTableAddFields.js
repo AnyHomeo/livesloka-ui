@@ -96,6 +96,13 @@ const MaterialTableAddFields = ({name, status, lookup, categoryLookup}) => {
 		if (data.length) {
 			let lengths = data.map((item) => Object.keys(item).length)
 			let v = Object.keys(data[lengths.indexOf(Math.max(...lengths))]).map((key) => {
+				if (name === "Agent" && key === "needToFinalizeSalaries") {
+					return {
+						title: "Need to Finalize Salaries",
+						type: "boolean",
+						field: "needToFinalizeSalaries",
+					}
+				}
 				if (name === "Teacher" && key === "isDemoIncludedInSalaries") {
 					return {
 						title: "Include Demo Classes in Salaries",

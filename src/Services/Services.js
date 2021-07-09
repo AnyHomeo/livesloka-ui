@@ -198,3 +198,7 @@ export const getAdminAssignedClasses = () =>
 	axios.get(`${API.main}/allocate/${isAutheticated().agentId}`)
 export const getSchedulesByMonthAndScheduleId = (scheduleId, date) =>
 	axios.get(`${API.main}/schedule/salary/${scheduleId}/${date}`)
+export const sendOtpsToAdmins = (month, year) =>
+	axios.post(`${API.main}/agent/send-otps/salary-verification`, {month, year})
+export const finalizeSalaries = (month, year, otps) =>
+	axios.post(`${API.main}/finalize`, {month, year, otps})

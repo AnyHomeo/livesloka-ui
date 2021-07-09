@@ -16,9 +16,13 @@ import TextField from "@material-ui/core/TextField"
 import axios from "axios"
 import {Edit, Delete} from "react-feather"
 import Grid from "@material-ui/core/Grid"
-
-import {getAttendanceByScheduleId} from "../../Services/Services"
-
+import {useConfirm} from "material-ui-confirm"
+import {
+	finalizeSalaries,
+	getAttendanceByScheduleId,
+	getSchedulesByMonthAndScheduleId,
+	sendOtpsToAdmins,
+} from "../../Services/Services"
 import {
 	Button,
 	InputLabel,
@@ -35,8 +39,8 @@ import moment from "moment"
 import Select from "@material-ui/core/Select"
 import "./HistoryCells.css"
 import useDocumentTitle from "../../Components/useDocumentTitle"
-import {useQuery} from "react-query"
-import {EnhancedEncryptionOutlined} from "@material-ui/icons"
+import OtpInput from "react-otp-input"
+
 const useRowStyles = makeStyles({
 	root: {
 		"& > *": {
@@ -56,19 +60,21 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const ExtraTeacherDetails = ({open, scheduleId}) => {
+const ExtraTeacherDetails = ({open, scheduleId, date}) => {
 	const [scheduleData, setscheduleData] = useState()
 
 	useEffect(() => {
-		if (scheduleId && open === true && !scheduleData) {
-			getClassesBySchedule()
+		console.log(date)
+		if (open === true) {
+			getSchedulesByMonthAndScheduleId(scheduleId, date)
+				.then((data) => {
+					setscheduleData(data.data.result)
+				})
+				.catch((err) => {
+					console.log(err)
+				})
 		}
-	}, [open, scheduleId, scheduleData])
-
-	const getClassesBySchedule = async () => {
-		const data = await getAttendanceByScheduleId(scheduleId)
-		setscheduleData(data && data.data.result)
-	}
+	}, [open, scheduleId, date])
 
 	return (
 		<Collapse in={open} timeout="auto" unmountOnExit>
@@ -76,9 +82,9 @@ const ExtraTeacherDetails = ({open, scheduleId}) => {
 				<TableHead>
 					<TableRow>
 						<TableCell>Date</TableCell>
-						<TableCell align="center">Time</TableCell>
 						<TableCell align="center">Attedended Students</TableCell>
 						<TableCell align="center">Requested Students</TableCell>
+						<TableCell align="center">Requested Paid Students</TableCell>
 						<TableCell align="center">Absent Students</TableCell>
 					</TableRow>
 				</TableHead>
@@ -87,7 +93,7 @@ const ExtraTeacherDetails = ({open, scheduleId}) => {
 						scheduleData.map((data) => (
 							<TableRow>
 								<TableCell component="th" scope="row">
-									{data.date}
+									{moment(data.createdAt).format("MMMM Do, h:mm a")}
 								</TableCell>
 								<TableCell align="center">{data.time}</TableCell>
 								<TableCell align="center">
@@ -108,6 +114,23 @@ const ExtraTeacherDetails = ({open, scheduleId}) => {
 								</TableCell>
 								<TableCell align="center">
 									{data.requestedStudents.map((student) => (
+										<Chip
+											key={student._id}
+											style={{marginBottom: 5}}
+											label={
+												student.firstName
+													? student.firstName
+													: student.email
+													? student.email
+													: "No name"
+											}
+											size="medium"
+											color="primary"
+										/>
+									))}
+								</TableCell>
+								<TableCell align="center">
+									{data.requestedPaidStudents.map((student) => (
 										<Chip
 											key={student._id}
 											style={{marginBottom: 5}}
@@ -154,8 +177,9 @@ const ExtraTeacherDetails = ({open, scheduleId}) => {
 		</Collapse>
 	)
 }
-function Row({setEditTotalSalary, EditTotalSalary, ...props}) {
-	const {row} = props
+
+function Row(props) {
+	const {row, setSalaryData, teacherId, date, isFinalized} = props
 	const [open, setOpen] = React.useState(false)
 	const classes = useRowStyles()
 	const [addAmount, setAddAmount] = useState("")
@@ -166,19 +190,15 @@ function Row({setEditTotalSalary, EditTotalSalary, ...props}) {
 	const [editInfoItem, setEditInfoItem] = useState()
 
 	const handleEditFields = (item) => {
-		console.log(item)
 		setEditComment(true)
 		setEditInfoItem(item)
 		setAddAmount(item.amount)
 		setAddCommentText(item.comment)
-		setEditTotalSalary(row.totalSalary)
 	}
 
 	const addComment = async (type) => {
 		setAddCommentLoading(true)
-
 		let formData = {}
-
 		if (type === "add") {
 			// row.totalSalary = parseInt(row.totalSalary) + parseInt(addAmount)
 			formData = {
@@ -249,6 +269,7 @@ function Row({setEditTotalSalary, EditTotalSalary, ...props}) {
 		totalSalary,
 		className,
 		scheduleId,
+		date,
 	}) => {
 		const [newOpen, setnewOpen] = React.useState(false)
 
@@ -285,19 +306,27 @@ function Row({setEditTotalSalary, EditTotalSalary, ...props}) {
 						<p className="Tablecell">{totalSalary}</p>
 					</TableCell>
 				</TableRow>
-
+				{console.log(date)}
 				<TableRow>
 					<TableCell colSpan="6">
-						<ExtraTeacherDetails open={newOpen} scheduleId={scheduleId} />
+						<ExtraTeacherDetails date={date} open={newOpen} scheduleId={scheduleId} />
 					</TableCell>
 				</TableRow>
 			</>
 		)
 	}
-
 	const cclasses = useStyles()
 
-	console.log(EditTotalSalary)
+	useEffect(() => {
+		setSalaryData((prev) => {
+			let prevData = [...prev]
+			return prevData.map((teacher) => ({
+				...teacher,
+				extras: teacher.id === teacherId ? extrasInfo : teacher.extras,
+			}))
+		})
+	}, [extrasInfo])
+
 	return (
 		<React.Fragment>
 			<TableRow className={classes.root}>
@@ -310,57 +339,65 @@ function Row({setEditTotalSalary, EditTotalSalary, ...props}) {
 					<p style={{fontWeight: "bold"}}>{row.name}</p>
 				</TableCell>
 				<TableCell>
-					<p style={{fontWeight: "bold"}}>{row.totalSalary}</p>
+					<p style={{fontWeight: "bold"}}>
+						{row.totalSalary +
+							extrasInfo.reduce((a, b) => (!a.amount ? a + b.amount : a.amount + b.amount), 0)}
+					</p>
 				</TableCell>
 			</TableRow>
 			<TableRow>
 				<TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
 					<Collapse in={open} timeout="auto" unmountOnExit>
 						<Box margin={1}>
-							<div
-								style={{
-									marginBottom: "40px",
-									marginTop: "20px",
-									display: "flex",
-									flexDirection: "row",
-									justifyContent: "space-between",
-									alignItems: "center",
-								}}
-							>
-								<div>
-									<TextField
-										id="outlined-basic"
-										label="Amount"
-										variant="outlined"
-										onChange={(e) => setAddAmount(e.target.value)}
-										value={addAmount}
-									/>
-
-									<TextField
-										id="outlined-basic"
-										label="Comment"
-										variant="outlined"
-										onChange={(e) => setAddCommentText(e.target.value)}
-										value={addCommentText}
-										style={{marginLeft: 20}}
-									/>
-								</div>
-
-								<Button
-									color="primary"
-									variant="contained"
-									disabled={addCommentLoading}
-									onClick={() => {
-										if (editComment) {
-											addComment("update")
-										} else {
-											addComment("add")
-										}
+							{!isFinalized ? (
+								<div
+									style={{
+										marginBottom: "40px",
+										marginTop: "20px",
+										display: "flex",
+										flexDirection: "row",
+										justifyContent: "space-between",
+										alignItems: "center",
 									}}
 								>
-									{addCommentLoading ? <CircularProgress /> : editComment ? "Update" : "Add"}
-								</Button>
-							</div>
+									<div>
+										<TextField
+											id="outlined-basic"
+											label="Amount"
+											variant="outlined"
+											onChange={(e) => setAddAmount(e.target.value)}
+											value={addAmount}
+										/>
+
+										<TextField
+											id="outlined-basic"
+											label="Comment"
+											variant="outlined"
+											onChange={(e) => setAddCommentText(e.target.value)}
+											value={addCommentText}
+											style={{marginLeft: 20}}
+										/>
+									</div>
+
+									<Button
+										color="primary"
+										variant="contained"
+										disabled={addCommentLoading}
+										onClick={() => {
+											if (editComment) {
+												addComment("update")
+											} else {
+												addComment("add")
+											}
+										}}
+									>
+										{addCommentLoading ? <CircularProgress /> : editComment ? "Update" : "Add"}
+									</Button>
+								</div>
+							) : (
+								""
+							)}
+
 							<div>
 								<div className={cclasses.root}>
 									<Grid container spacing={3}>
@@ -387,21 +424,24 @@ function Row({setEditTotalSalary, EditTotalSalary, ...props}) {
 
 														<p style={{fontSize: 15}}>{item.comment}</p>
 													</div>
+													{!isFinalized ? (
+														<div
+															style={{
+																display: "flex",
+																width: 100,
+															}}
+														>
+															<IconButton onClick={() => handleEditFields(item)}>
+																<Edit />
+															</IconButton>
 
-													<div
-														style={{
-															display: "flex",
-															width: 100,
-														}}
-													>
-														<IconButton onClick={() => handleEditFields(item)}>
-															<Edit />
-														</IconButton>
-
-														<IconButton onClick={() => onDeleteComment(item)}>
-															<Delete />
-														</IconButton>
-													</div>
+															<IconButton onClick={() => onDeleteComment(item)}>
+																<Delete />
+															</IconButton>
+														</div>
+													) : (
+														""
+													)}
 												</Card>
 											</Grid>
 										))}
@@ -443,6 +483,7 @@ function Row({setEditTotalSalary, EditTotalSalary, ...props}) {
 													noOfStudents={row.details[historyRow].numberOfStudents}
 													commission={row.details[historyRow].commission}
 													totalSalary={row.details[historyRow].totalSalary}
+													date={date}
 												/>
 											</>
 										)
@@ -459,54 +500,106 @@ function Row({setEditTotalSalary, EditTotalSalary, ...props}) {
 
 const TeacherSalary = () => {
 	useDocumentTitle("Teacher's Salary")
-	const [salaryData, setSalaryData] = useState()
-	const [getDate, setGetDate] = useState()
+	const [salaryData, setSalaryData] = useState([])
+	const [getDate, setGetDate] = useState(moment().format("YYYY-MM"))
 	const [loading, setLoading] = useState(false)
 	const [salDates, setSalDates] = useState([])
 	const [successOpen, setSuccessOpen] = React.useState(false)
-
 	const [totalSalaryVariable, setTotalSalaryVariable] = useState(0)
-	const [EditTotalSalary, setEditTotalSalary] = useState()
-	let totalSalaryVar = 0
+	const [isOtpSreenMode, setIsOtpSreenMode] = useState(false)
+	const [otpAgents, setOtpAgents] = useState([])
+	const [severity, setSeverity] = useState("error")
+	const [message, setMessage] = useState("")
+	const [isFinalized, setIsFinalized] = useState(false)
+	const confirm = useConfirm()
 
-	const handleChange = (event) => {
-		setGetDate(event.target.value)
-		getSalaries(event.target.value)
-	}
+	useEffect(() => {
+		getSalaries(getDate)
+		setOtpAgents([])
+		setIsOtpSreenMode(false)
+	}, [getDate])
+
+	useEffect(() => {
+		getSalDates()
+	}, [])
 
 	const getSalDates = async () => {
 		const data = await axios.get(`${process.env.REACT_APP_API_KEY}/salary/months`)
 		setSalDates(data && data.data.result)
 	}
 
+	useEffect(() => {
+		let totalSalary = 0
+		salaryData.forEach((salary) => {
+			totalSalary +=
+				salary.totalSalary +
+				salary.extras.reduce((a, b) => (!a.amount ? a + b.amount : a.amount + b.amount), 0)
+		})
+		setTotalSalaryVariable(totalSalary)
+	}, [salaryData])
+
 	const getSalaries = async (date) => {
 		setLoading(true)
 		try {
 			const data = await axios.get(`${process.env.REACT_APP_API_KEY}/salary/all?month=${date}`)
 			setSalaryData(data && data.data.finalDataObjectArr)
-
-			data &&
-				data.data.finalDataObjectArr.map((data) => {
-					totalSalaryVar = totalSalaryVar + data.totalSalary
-					setTotalSalaryVariable(totalSalaryVar)
-				})
+			setIsFinalized(data.data.isFinalized)
 		} catch (error) {
 			console.log(error.response)
 			setSuccessOpen(true)
-			setSalaryData()
+			setSalaryData([])
 		}
 		setLoading(false)
 	}
-
-	useEffect(() => {
-		getSalDates()
-	}, [])
 
 	const handleSuccessClose = (event, reason) => {
 		if (reason === "clickaway") {
 			return
 		}
 		setSuccessOpen(false)
+	}
+
+	const handleFinalizeAmountButtonClick = () => {
+		confirm({title: "Do you want to Finalize the salary?", confirmationText: "Yes! Finalize"}).then(
+			() => {
+				setIsOtpSreenMode(true)
+				sendOtpsToAdmins(getDate.split("-")[1], getDate.split("-")[0])
+					.then((data) => {
+						setOtpAgents(data.data.result)
+						setSuccessOpen(true)
+						setSeverity("success")
+						setMessage(data?.data?.message || "OTPs Sent successfully!")
+					})
+					.catch((err) => {
+						console.log(err)
+						setSuccessOpen(true)
+						setSeverity("error")
+						setMessage(err?.response?.data?.error || "Problem in sending OTPs!")
+					})
+			}
+		)
+	}
+
+	const validateOtpsAndFinalizeTheSalaries = () => {
+		confirm({title: "Are you sure ?", confirmationText: "Yes"}).then(() => {
+			setLoading(true)
+			finalizeSalaries(getDate.split("-")[1], getDate.split("-")[0], otpAgents)
+				.then((data) => {
+					setSalaryData(data.data.result)
+					setIsFinalized(true)
+					setSuccessOpen(true)
+					setSeverity("success")
+					setMessage(data?.data?.message || "Salaries finalized successfully!")
+					setLoading(false)
+				})
+				.catch((err) => {
+					console.log(err)
+					setSuccessOpen(true)
+					setSeverity("error")
+					setMessage(err?.response?.data?.error || "Problem in Finalizing salaries!")
+					setLoading(false)
+				})
+		})
 	}
 
 	return (
@@ -517,8 +610,8 @@ const TeacherSalary = () => {
 				onClose={handleSuccessClose}
 				anchorOrigin={{vertical: "bottom", horizontal: "left"}}
 			>
-				<Alert onClose={handleSuccessClose} severity="error">
-					Error in retrieving salaries
+				<Alert onClose={handleSuccessClose} severity={severity}>
+					{message}
 				</Alert>
 			</Snackbar>
 			<div
@@ -527,6 +620,7 @@ const TeacherSalary = () => {
 					justifyContent: "center",
 					flexDirection: "column",
 					alignItems: "center",
+					paddingBottom: 30,
 				}}
 			>
 				<div style={{marginTop: "20px", width: 300}}>
@@ -536,7 +630,7 @@ const TeacherSalary = () => {
 							labelId="demo-simple-select-outlined-label"
 							id="demo-simple-select-outlined"
 							value={getDate}
-							onChange={handleChange}
+							onChange={(e) => setGetDate(e.target.value)}
 							label="Select Month"
 						>
 							{salDates &&
@@ -564,7 +658,7 @@ const TeacherSalary = () => {
 					}}
 				>
 					<h1 style={{fontSize: "20px"}}>
-						Total Salary : ₹{totalSalaryVariable.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}{" "}
+						Total Salary : ₹ {totalSalaryVariable.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}{" "}
 					</h1>
 				</Card>
 				{loading ? (
@@ -573,6 +667,7 @@ const TeacherSalary = () => {
 					</div>
 				) : (
 					<div style={{width: "80%", marginTop: "40px"}}>
+						<h1 style={{textAlign: "center"}} > {isFinalized ? "Finalized Salaries" : "Salaries"} </h1>
 						<TableContainer component={Paper}>
 							<Table aria-label="collapsible table">
 								<TableHead>
@@ -591,12 +686,76 @@ const TeacherSalary = () => {
 										salaryData.map((row) => (
 											<Row
 												key={row.id}
+												teacherId={row.id}
 												row={row}
 												date={getDate}
-												setEditTotalSalary={setEditTotalSalary}
-												EditTotalSalary={EditTotalSalary}
+												setSalaryData={setSalaryData}
+												isFinalized={isFinalized}
 											/>
 										))}
+									{!isFinalized ? (
+										<TableRow>
+											<TableCell colSpan={3}>
+												<div className="finalize-section">
+													Total Amount : ₹{" "}
+													{totalSalaryVariable.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+													{isOtpSreenMode ? (
+														<div className="otps-in-a-line">
+															{otpAgents.map((agent) => (
+																<div className="otps-agents-container">
+																	<div className="otps-agent">{agent.name} :</div>
+																	<OtpInput
+																		value={agent.otp}
+																		onChange={(otp) =>
+																			setOtpAgents((prev) => {
+																				let prevData = [...prev]
+																				return prevData.map((item) => ({
+																					...item,
+																					otp: item.agentId === agent.agentId ? otp : item.otp,
+																				}))
+																			})
+																		}
+																		isInputNum
+																		containerStyle={{
+																			width: "100%",
+																			display: "flex",
+																			alignItems: "center",
+																			justifyContent: "space-evenly",
+																		}}
+																		inputStyle={{
+																			width: "40px",
+																			height: "40px",
+																			fontSize: "2rem",
+																			marginRight: 10,
+																		}}
+																	/>
+																</div>
+															))}
+															<Button
+																variant="contained"
+																onClick={validateOtpsAndFinalizeTheSalaries}
+																style={{marginTop: 20}}
+																color="primary"
+															>
+																Validate and Finalize
+															</Button>
+														</div>
+													) : (
+														<Button
+															variant="contained"
+															style={{marginLeft: 30}}
+															color="primary"
+															onClick={handleFinalizeAmountButtonClick}
+														>
+															Finalize
+														</Button>
+													)}
+												</div>
+											</TableCell>
+										</TableRow>
+									) : (
+										""
+									)}
 								</TableBody>
 							</Table>
 						</TableContainer>
