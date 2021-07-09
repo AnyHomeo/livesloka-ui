@@ -90,6 +90,7 @@ function SingleRow({
 	const scheduleLeavesGen = (id) => {
 		console.table(
 			id,
+			time,
 			scheduleLeaves && scheduleLeaves[time],
 			scheduleLeaves && scheduleLeaves[time]?.includes(id)
 		)
