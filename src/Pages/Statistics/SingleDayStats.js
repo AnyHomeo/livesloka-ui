@@ -12,6 +12,7 @@ import io from "socket.io-client"
 import {Card} from "@material-ui/core"
 import {Clock} from "react-feather"
 import Axios from "axios"
+import moment from 'moment';
 const socket = io(process.env.REACT_APP_API_KEY)
 
 const getSlotFromTime = (date) => {
@@ -198,7 +199,7 @@ function SingleDayStats({day, setDialogOpen, setDialogData, refresh, alertSetSta
 		teacherLeaves &&
 			teacherLeaves.result.scheduleLeaves.forEach((id) => {
 				console.log(id)
-				let date = getSlotFromTime(id.date)
+				let date = getSlotFromTime(moment(id.date).add(2,"minutes"))
 
 				if (arrofObj[date.slot]) {
 					arrofObj[date.slot].push(id.teacherId)
@@ -206,7 +207,7 @@ function SingleDayStats({day, setDialogOpen, setDialogData, refresh, alertSetSta
 					arrofObj[date.slot] = [id.teacherId]
 				}
 			})
-
+			console.log(arrofObj)
 		setscheduleLeaves(arrofObj)
 	}
 

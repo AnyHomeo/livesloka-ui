@@ -270,6 +270,7 @@ function Row(props) {
 		className,
 		scheduleId,
 		date,
+		
 	}) => {
 		const [newOpen, setnewOpen] = React.useState(false)
 
