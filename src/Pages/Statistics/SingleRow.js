@@ -88,12 +88,6 @@ function SingleRow({
 	}
 
 	const scheduleLeavesGen = (id) => {
-		console.table(
-			id,
-			time,
-			scheduleLeaves && scheduleLeaves[time],
-			scheduleLeaves && scheduleLeaves[time]?.includes(id)
-		)
 		return scheduleLeaves && scheduleLeaves[time]?.includes(id)
 		// console.log(id)
 	}
@@ -115,18 +109,18 @@ function SingleRow({
 								singleData.students.length >= 3 ? "single-card single-card-2" : "single-card"
 							}
 							style={{
-								backgroundColor: scheduleLeavesGen(singleData.teacher._id)
+								backgroundColor: scheduleLeavesGen(singleData.teacher && singleData.teacher._id)
 									? "black"
 									: singleData.isTeacherJoined
 									? "#2ecc7075"
 									: singleData.demo
 									? "#f1c40fb6"
-									: teacherIds?.includes(singleData.teacher._id)
+									: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
 									? "rgb(56, 103, 214, 0.5)"
 									: "#ff757562",
 								border: singleData.isTeacherJoined
 									? "2px solid #56AE69"
-									: teacherIds?.includes(singleData.teacher._id)
+									: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
 									? "2px solid #3867d6"
 									: "2px solid #d63031",
 								overflow: "initial",
@@ -138,7 +132,7 @@ function SingleRow({
 								style={{
 									fontSize: 12,
 									width: "67%",
-									marginTop: teacherIds?.includes(singleData.teacher._id)
+									marginTop: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
 										? 10
 										: singleData.demo
 										? 10
@@ -289,7 +283,7 @@ function SingleRow({
 										}}
 									/>
 								</Tooltip>
-							) : teacherIds?.includes(singleData.teacher._id) ? (
+							) : teacherIds?.includes(singleData.teacher && singleData.teacher._id) ? (
 								<Tooltip
 									title="Demo"
 									style={{cursor: "pointer"}}
