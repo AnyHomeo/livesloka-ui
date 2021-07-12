@@ -41,6 +41,7 @@ import Careers from "../Pages/Admin/Crm/Careers"
 import MessagesTable from "../Pages/AdMessages/MessagesTable"
 import NotificationSettings from "../Pages/BroadcastMessages/NotificationSettings"
 import NotificationsTable from "../Pages/BroadcastMessages/NotificationsTable"
+import FinancialDashboard from "../Pages/Financialdashboard"
 
 function Routes() {
 	return (
@@ -53,6 +54,7 @@ function Routes() {
 					<Route path="/404" exact component={NotFoundView} />
 					<DashboardLayout>
 						<AdminRoute path="/dashboard" exact component={Dashboard} />
+						<AdminRoute path="/financial" exact component={FinancialDashboard} />
 						<AdminRoute path="/inclass" exact component={DemoAndInclassStudents} />
 						<AdminRoute path="/update/classes" exact component={UpdateNumberOfBoughtClasses} />
 						<AdminRoute path="/update/classes/:id" exact component={UpdateNumberOfBoughtClasses} />
