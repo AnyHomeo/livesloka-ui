@@ -110,7 +110,7 @@ function SingleRow({
 							}
 							style={{
 								backgroundColor: scheduleLeavesGen(singleData.teacher && singleData.teacher._id)
-									? "black"
+									? "rgb(48, 51, 107, 0.5)"
 									: singleData.isTeacherJoined
 									? "#2ecc7075"
 									: singleData.demo
@@ -118,7 +118,9 @@ function SingleRow({
 									: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
 									? "rgb(56, 103, 214, 0.5)"
 									: "#ff757562",
-								border: singleData.isTeacherJoined
+								border: scheduleLeavesGen(singleData.teacher && singleData.teacher._id)
+									? "2px solid #130f40"
+									: singleData.isTeacherJoined
 									? "2px solid #56AE69"
 									: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
 									? "2px solid #3867d6"
@@ -268,7 +270,11 @@ function SingleRow({
 									}}
 								>
 									<Chip
-										label="DEMO"
+										label={
+											teacherIds?.includes(singleData.teacher && singleData.teacher._id)
+												? "Demo & Leave"
+												: "Demo"
+										}
 										style={{
 											position: "absolute",
 											top: "-1%",
@@ -285,7 +291,7 @@ function SingleRow({
 								</Tooltip>
 							) : teacherIds?.includes(singleData.teacher && singleData.teacher._id) ? (
 								<Tooltip
-									title="Demo"
+									title="Entire day leave"
 									style={{cursor: "pointer"}}
 									onClick={() => {
 										setDialogOpen((prev) => !prev)
@@ -306,6 +312,32 @@ function SingleRow({
 											backgroundColor: "#3867d6",
 											color: "white",
 											border: "2px solid #3867d6",
+										}}
+									/>
+								</Tooltip>
+							) : scheduleLeavesGen(singleData.teacher && singleData.teacher._id) ? (
+								<Tooltip
+									title="Scheduled Leave"
+									style={{cursor: "pointer"}}
+									onClick={() => {
+										setDialogOpen((prev) => !prev)
+										setDialogData(singleData)
+									}}
+								>
+									<Chip
+										label="Scheduled leave"
+										style={{
+											position: "absolute",
+											top: "-1%",
+											transform: "translateX(-50%)",
+											left: "50%",
+											height: 40,
+											width: "100%",
+											borderRadius: 20,
+											height: 16,
+											backgroundColor: "#130f40",
+											color: "white",
+											border: "2px solid #130f40",
 										}}
 									/>
 								</Tooltip>
