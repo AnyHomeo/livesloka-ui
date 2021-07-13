@@ -1,10 +1,12 @@
-import {Card, makeStyles} from "@material-ui/core"
+import {Card, IconButton, makeStyles} from "@material-ui/core"
 import React from "react"
 import AccountBalanceOutlinedIcon from "@material-ui/icons/AccountBalanceOutlined"
 import MoneyOutlinedIcon from "@material-ui/icons/MoneyOutlined"
 import MoneyOffOutlinedIcon from "@material-ui/icons/MoneyOffOutlined"
 import AccountBalanceWalletOutlinedIcon from "@material-ui/icons/AccountBalanceWalletOutlined"
 import CountUp from "react-countup"
+import AddOutlinedIcon from "@material-ui/icons/AddOutlined"
+import {Link} from "react-router-dom"
 const PriceCard = ({data}) => {
 	const useStyles = makeStyles(() => ({
 		linearGrad: {
@@ -32,13 +34,28 @@ const PriceCard = ({data}) => {
 			height: 50,
 			width: 50,
 		},
+		topCont: {
+			display: "flex",
+			justifyContent: "space-between",
+			alignItems: "center",
+		},
 	}))
 
 	const classes = useStyles()
 	return (
 		<Card className={classes.linearGrad}>
-			<div>
-				<p className={classes.cardTitle}>{data.title}</p>
+			<div className={classes.topCont}>
+				<div>
+					<p className={classes.cardTitle}>{data.title}</p>
+				</div>
+
+				{data.title === "Expenses" ? (
+					<IconButton>
+						<Link to="/expenses">
+							<AddOutlinedIcon style={{color: "white"}} />
+						</Link>
+					</IconButton>
+				) : null}
 			</div>
 
 			<div className={classes.iconCont}>

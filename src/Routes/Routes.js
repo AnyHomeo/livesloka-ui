@@ -42,6 +42,7 @@ import MessagesTable from "../Pages/AdMessages/MessagesTable"
 import NotificationSettings from "../Pages/BroadcastMessages/NotificationSettings"
 import NotificationsTable from "../Pages/BroadcastMessages/NotificationsTable"
 import FinancialDashboard from "../Pages/Financialdashboard"
+import Expenseform from "../Pages/Financialdashboard/Expenseform"
 
 function Routes() {
 	return (
@@ -97,6 +98,7 @@ function Routes() {
 						<AdminRoute path="/teacherSalaries" exact component={TeacherSalaries} />
 						<AdminRoute path="/test" exact component={ZoomAccountDashboard} />
 						<AdminRoute path="/notifications" exact component={NotificationsTable} />
+						<AdminRoute path="/expenses" exact component={Expenseform} />
 					</DashboardLayout>
 					<Route path="*" component={NotFoundView} />
 				</Switch>
