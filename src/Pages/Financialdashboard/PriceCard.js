@@ -4,6 +4,7 @@ import AccountBalanceOutlinedIcon from "@material-ui/icons/AccountBalanceOutline
 import MoneyOutlinedIcon from "@material-ui/icons/MoneyOutlined"
 import MoneyOffOutlinedIcon from "@material-ui/icons/MoneyOffOutlined"
 import AccountBalanceWalletOutlinedIcon from "@material-ui/icons/AccountBalanceWalletOutlined"
+import CountUp from "react-countup"
 const PriceCard = ({data}) => {
 	const useStyles = makeStyles(() => ({
 		linearGrad: {
@@ -54,7 +55,11 @@ const PriceCard = ({data}) => {
 				</div>
 
 				<div>
-					<p className={classes.amount}>{data.amount}</p>
+					<p className={classes.amount}>
+						{!isNaN(data.amount) && <CountUp start={0} end={data.amount} separator="," />}
+
+						{/* {data.amount} */}
+					</p>
 				</div>
 			</div>
 		</Card>

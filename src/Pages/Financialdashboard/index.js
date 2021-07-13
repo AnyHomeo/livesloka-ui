@@ -16,7 +16,8 @@ import {Filter} from "react-feather"
 import Paypalchart from "./Paypalchart"
 import moment from "moment"
 import Autocomplete from "@material-ui/lab/Autocomplete"
-
+import Lottie from "react-lottie"
+import loadingAnimation from "../../Images/loading.json"
 const useStyles = makeStyles((theme) => ({
 	root: {
 		backgroundColor: theme.palette.background.dark,
@@ -43,9 +44,18 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
+const defaultOptions = {
+	loop: true,
+	autoplay: true,
+	animationData: loadingAnimation,
+	rendererSettings: {
+		preserveAspectRatio: "xMidYMid slice",
+	},
+}
+
 const FinancialDashboard = () => {
 	const [anchorEl, setAnchorEl] = useState(null)
-
+	const [loading, setLoading] = useState(false)
 	const [totalData, setTotalData] = useState()
 
 	const [PaypalChartData, setPaypalChartData] = useState()
@@ -79,6 +89,7 @@ const FinancialDashboard = () => {
 	}
 
 	const fetchData = async (date) => {
+		setLoading(true)
 		if (date === undefined) {
 			date = moment().format("YYYY-MM")
 		}
@@ -86,8 +97,9 @@ const FinancialDashboard = () => {
 			`${process.env.REACT_APP_API_KEY}/transactions/cards?month=${date}`
 		)
 
-		console.log(data)
 		setTotalData(data.data)
+
+		setLoading(false)
 	}
 
 	const handleMonthChange = (e, v) => {
@@ -104,11 +116,14 @@ const FinancialDashboard = () => {
 	}
 
 	const fetchChartData = async (date) => {
+		setLoading(true)
 		if (date === undefined) {
 			date = moment().format("YYYY-MM")
 		}
 		const data = await axios.get(`${process.env.REACT_APP_API_KEY}/transactions?month=${date}`)
 		setPaypalChartData(data?.data?.result)
+
+		setLoading(false)
 	}
 
 	let datasets = []
@@ -129,27 +144,31 @@ const FinancialDashboard = () => {
 		})
 
 	let netAmount = {
-		amount: totalData?.netAmount,
+		amount: parseInt(totalData?.netAmount),
 		title: "Net Amount",
 		gradient: "linear-gradient( 109.6deg,  rgba(62,161,219,1) 11.2%, rgba(93,52,236,1) 100.2% )",
 	}
 
 	let Salary = {
-		amount: totalData?.salaries,
+		amount: parseInt(totalData?.salaries),
 		title: "Salary",
 		gradient: "linear-gradient(62deg, #FBAB7E 0%, #F7CE68 100%)",
 	}
 
 	let Expenses = {
-		amount: totalData?.expenses,
+		amount: parseInt(totalData?.expenses),
 		title: "Expenses",
 		gradient: "linear-gradient( 135deg, #FEB692 10%, #EA5455 100%)",
 	}
 
 	let Profit = {
-		amount: totalData?.profit,
+		amount: parseInt(totalData?.profit),
 		title: "Profit",
 		gradient: "linear-gradient( 135deg, #81FBB8 10%, #28C76F 100%)",
+	}
+
+	if (loading) {
+		return <Lottie options={defaultOptions} height={400} width={400} />
 	}
 
 	return (
