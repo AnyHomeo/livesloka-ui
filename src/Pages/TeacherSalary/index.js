@@ -19,7 +19,6 @@ import Grid from "@material-ui/core/Grid"
 import {useConfirm} from "material-ui-confirm"
 import {
 	finalizeSalaries,
-	getAttendanceByScheduleId,
 	getSchedulesByMonthAndScheduleId,
 	sendOtpsToAdmins,
 } from "../../Services/Services"
@@ -60,21 +59,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const ExtraTeacherDetails = ({open, scheduleId, date}) => {
-	const [scheduleData, setscheduleData] = useState()
-
-	useEffect(() => {
-		console.log(date)
-		if (open === true) {
-			getSchedulesByMonthAndScheduleId(scheduleId, date)
-				.then((data) => {
-					setscheduleData(data.data.result)
-				})
-				.catch((err) => {
-					console.log(err)
-				})
-		}
-	}, [open, scheduleId, date])
+const ExtraTeacherDetails = ({dates, presentees, absentees, requestedPaidStudents, open}) => {
 
 	return (
 		<Collapse in={open} timeout="auto" unmountOnExit>
@@ -83,95 +68,50 @@ const ExtraTeacherDetails = ({open, scheduleId, date}) => {
 					<TableRow>
 						<TableCell>Date</TableCell>
 						<TableCell align="center">Attedended Students</TableCell>
-						<TableCell align="center">Requested Students</TableCell>
 						<TableCell align="center">Requested Paid Students</TableCell>
 						<TableCell align="center">Absent Students</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{scheduleData ? (
-						scheduleData.map((data) => (
-							<TableRow>
-								<TableCell component="th" scope="row">
-									{moment(data.createdAt).format("MMMM Do, h:mm a")}
-								</TableCell>
-								<TableCell align="center">{data.time}</TableCell>
-								<TableCell align="center">
-									{data.customers.map((student) => (
-										<Chip
-											key={student._id}
-											style={{marginBottom: 5}}
-											label={
-												student.firstName
-													? student.firstName
-													: student.email
-													? student.email
-													: "Noname"
-											}
-											size="medium"
-										/>
-									))}
-								</TableCell>
-								<TableCell align="center">
-									{data.requestedStudents.map((student) => (
-										<Chip
-											key={student._id}
-											style={{marginBottom: 5}}
-											label={
-												student.firstName
-													? student.firstName
-													: student.email
-													? student.email
-													: "No name"
-											}
-											size="medium"
-											color="primary"
-										/>
-									))}
-								</TableCell>
-								<TableCell align="center">
-									{data.requestedPaidStudents.map((student) => (
-										<Chip
-											key={student._id}
-											style={{marginBottom: 5}}
-											label={
-												student.firstName
-													? student.firstName
-													: student.email
-													? student.email
-													: "No name"
-											}
-											size="medium"
-											color="primary"
-										/>
-									))}
-								</TableCell>
-								<TableCell align="center">
-									{data.absentees.map((student) => (
-										<Chip
-											key={student._id}
-											style={{marginBottom: 5}}
-											label={
-												student.firstName
-													? student.firstName
-													: student.email
-													? student.email
-													: "No name"
-											}
-											size="medium"
-											color="secondary"
-										/>
-									))}
-								</TableCell>
-							</TableRow>
-						))
-					) : (
+					{dates.map((date, i) => (
 						<TableRow>
-							<TableCell colSpan={5}>
-								<LinearProgress />
+							<TableCell component="th" scope="row">
+								{moment(date).format("MMMM Do, YYYY")}
+							</TableCell>
+							<TableCell align="center">
+								{presentees.map((student) => (
+									<Chip
+										key={student}
+										style={{marginBottom: 5}}
+										label={student}
+										size="medium"
+									/>
+								))}
+							</TableCell>
+							<TableCell align="center">
+								{requestedPaidStudents.map((student) => (
+									<Chip
+										key={student}
+										style={{marginBottom: 5}}
+										label={student}
+										size="medium"
+										color="primary"
+									/>
+								))}
+							</TableCell>
+							<TableCell align="center">
+								{absentees.map((student) => (
+									<Chip
+										key={student}
+										style={{marginBottom: 5}}
+										label={student}
+										size="medium"
+										color="secondary"
+									/>
+								))}
 							</TableCell>
 						</TableRow>
-					)}
+					))}
 				</TableBody>
 			</Table>
 		</Collapse>
@@ -270,7 +210,7 @@ function Row(props) {
 		className,
 		scheduleId,
 		date,
-		
+		row,
 	}) => {
 		const [newOpen, setnewOpen] = React.useState(false)
 
@@ -310,7 +250,7 @@ function Row(props) {
 				{console.log(date)}
 				<TableRow>
 					<TableCell colSpan="6">
-						<ExtraTeacherDetails date={date} open={newOpen} scheduleId={scheduleId} />
+						<ExtraTeacherDetails open={newOpen} {...row} />
 					</TableCell>
 				</TableRow>
 			</>
@@ -473,17 +413,18 @@ function Row(props) {
 									</TableRow>
 								</TableHead>
 								<TableBody>
-									{Object.keys(row.details).map((historyRow) => {
+									{Object.keys(row.details).map((className) => {
 										return (
 											<>
 												<TableRowDetails
-													key={row.details[historyRow].scheduleId}
-													scheduleId={row.details[historyRow].scheduleId}
-													className={historyRow}
-													noOfDays={row.details[historyRow].noOfDays}
-													noOfStudents={row.details[historyRow].numberOfStudents}
-													commission={row.details[historyRow].commission}
-													totalSalary={row.details[historyRow].totalSalary}
+													key={row.details[className].scheduleId}
+													scheduleId={row.details[className].scheduleId}
+													className={className}
+													noOfDays={row.details[className].noOfDays}
+													noOfStudents={row.details[className].numberOfStudents}
+													commission={row.details[className].commission}
+													totalSalary={row.details[className].totalSalary}
+													row={row.details[className]}
 													date={date}
 												/>
 											</>
@@ -668,7 +609,10 @@ const TeacherSalary = () => {
 					</div>
 				) : (
 					<div style={{width: "80%", marginTop: "40px"}}>
-						<h1 style={{textAlign: "center"}} > {isFinalized ? "Finalized Salaries" : "Salaries"} </h1>
+						<h1 style={{textAlign: "center"}}>
+							{" "}
+							{isFinalized ? "Finalized Salaries" : "Salaries"}{" "}
+						</h1>
 						<TableContainer component={Paper}>
 							<Table aria-label="collapsible table">
 								<TableHead>
