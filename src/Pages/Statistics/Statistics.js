@@ -229,6 +229,7 @@ function Statistics() {
 						setDialogOpen={setDialogOpen}
 						setDialogData={setDialogData}
 						alertSetStates={{setAlert, setAlertColor, setRefresh, setSuccessOpen}}
+						value={value}
 					/>
 				</TabPanel>
 			))}
