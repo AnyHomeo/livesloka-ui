@@ -182,7 +182,7 @@ export const getEntireDayStatistics = (day) => axios.get(`${API.main}/customer/s
 export const getSummerCampStudents = () => axios.get(`${API.main}/summercamps/students`)
 export const getDemoAndInclassStudents = () => axios.get(`${API.main}/all/demo-inclass`)
 export const getCareersApplications = () => axios.get(`${API.main}/careers`)
-export const getTodayLeaves = () => axios.get(`${API.main}/cancelclass/123?noSchedule=true`)
+export const getTodayLeaves = (date) => axios.get(`${API.main}/cancelclass/123?noSchedule=true&date=${date}`)
 export const getCustomerDatFromFilterName = (name) =>
 	axios.get(`${API.main}/customer/filters?filter=${name}`)
 export const getAllTeacherLeaves = () => axios.get(`${API.main}/teacher-leaves`)

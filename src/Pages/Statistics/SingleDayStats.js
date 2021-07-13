@@ -12,7 +12,7 @@ import io from "socket.io-client"
 import {Card} from "@material-ui/core"
 import {Clock} from "react-feather"
 import Axios from "axios"
-import moment from 'moment';
+import moment from "moment"
 const socket = io(process.env.REACT_APP_API_KEY)
 
 const getSlotFromTime = (date) => {
@@ -56,7 +56,7 @@ const getSlotFromTime = (date) => {
 	}
 }
 
-function SingleDayStats({day, setDialogOpen, setDialogData, refresh, alertSetStates}) {
+function SingleDayStats({day, value, setDialogOpen, setDialogData, refresh, alertSetStates}) {
 	const [todayData, setTodayData] = useState([])
 	const [selectedSlot, setSelectedSlot] = useState("")
 	const [leaves, setLeaves] = useState([])
@@ -136,7 +136,7 @@ function SingleDayStats({day, setDialogOpen, setDialogData, refresh, alertSetSta
 			.catch((err) => {
 				console.log(err)
 			})
-		getTodayLeaves()
+		getTodayLeaves(moment().set("day", value).format("YYYY-MM-DD"))
 			.then((data) => {
 				setLeaves(data.data.result)
 			})
@@ -177,10 +177,18 @@ function SingleDayStats({day, setDialogOpen, setDialogData, refresh, alertSetSta
 		getTeacherLeaves()
 	}, [])
 
-	const [teacherLeaves, setTeacherLeaves] = useState()
+	const [teacherLeaves, setTeacherLeaves] = useState([])
 	const getTeacherLeaves = async () => {
-		const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/teacher-leaves/today`)
-		setTeacherLeaves(data?.data)
+		try {
+			const data = await Axios.get(
+				`${process.env.REACT_APP_API_KEY}/teacher-leaves/single-day/${moment()
+					.set("day", value)
+					.format()}`
+			)
+			setTeacherLeaves(data?.data?.result || {})
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
 	useEffect(() => {
@@ -193,13 +201,15 @@ function SingleDayStats({day, setDialogOpen, setDialogData, refresh, alertSetSta
 	const arrayOfTeacherIds = () => {
 		let arrofObj = {}
 		let ids = []
-		teacherLeaves && teacherLeaves.result.entireDayLeaves.map((id) => ids.push(id.teacherId))
+		teacherLeaves &&
+			teacherLeaves.entireDayLeaves &&
+			teacherLeaves.entireDayLeaves.map((id) => ids.push(id.teacherId))
 		setTeacherIds(ids)
 
 		teacherLeaves &&
-			teacherLeaves.result.scheduleLeaves.forEach((id) => {
-				console.log(id)
-				let date = getSlotFromTime(moment(id.date).add(2,"minutes"))
+			teacherLeaves.scheduleLeaves &&
+			teacherLeaves.scheduleLeaves.forEach((id) => {
+				let date = getSlotFromTime(moment(id.date).add(2, "minutes"))
 
 				if (arrofObj[date.slot]) {
 					arrofObj[date.slot].push(id.teacherId)
@@ -207,7 +217,7 @@ function SingleDayStats({day, setDialogOpen, setDialogData, refresh, alertSetSta
 					arrofObj[date.slot] = [id.teacherId]
 				}
 			})
-			console.log(arrofObj)
+		console.log(arrofObj)
 		setscheduleLeaves(arrofObj)
 	}
 

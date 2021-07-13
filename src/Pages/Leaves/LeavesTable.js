@@ -46,9 +46,9 @@ function LeavesTable() {
 					data.data.result.map((leave) => {
 						return {
 							_id: leave._id,
-							firstName: leave.studentId.firstName,
-							lastName: leave.studentId.lastName,
-							className: leave.scheduleId.className,
+							firstName: leave?.studentId?.firstName || "Deleted User",
+							lastName: leave?.studentId?.lastName || "Deleted User",
+							className: leave?.scheduleId?.className || "Deleted Class",
 							cancelledDate: leave.cancelledDate,
 						}
 					})
