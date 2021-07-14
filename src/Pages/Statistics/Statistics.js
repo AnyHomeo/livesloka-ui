@@ -49,10 +49,10 @@ function TabPanel(props) {
 
 function Statistics() {
 	useDocumentTitle("Statistics")
-
+	let initialValue =  days.indexOf(momentTZ(new Date()).tz("Asia/Kolkata").format("dddd").toUpperCase())
 	const [value, setValue] = useState(
-		days.indexOf(momentTZ(new Date()).tz("Asia/Kolkata").format("dddd").toUpperCase())
-	)
+		initialValue
+		)
 	const [dialogOpen, setDialogOpen] = useState(false)
 	const [dialogData, setDialogData] = useState({})
 	const [successOpen, setSuccessOpen] = React.useState(false)
@@ -230,6 +230,7 @@ function Statistics() {
 						setDialogData={setDialogData}
 						alertSetStates={{setAlert, setAlertColor, setRefresh, setSuccessOpen}}
 						value={value}
+						isToday={value === initialValue}
 					/>
 				</TabPanel>
 			))}
