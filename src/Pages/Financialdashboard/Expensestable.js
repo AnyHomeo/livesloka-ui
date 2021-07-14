@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from "react"
-import MaterialTable, {MTableBodyRow} from "material-table"
+import MaterialTable from "material-table"
 import MuiAlert from "@material-ui/lab/Alert"
 import {Snackbar} from "@material-ui/core"
 
@@ -12,7 +12,8 @@ function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />
 }
 
-const Expensestable = () => {
+const Expensestable = ({date}) => {
+	console.log(date)
 	const [column, setColumn] = useState([])
 	const [data, setData] = useState([])
 	const [loading, setLoading] = useState(true)
@@ -24,14 +25,10 @@ const Expensestable = () => {
 
 	useEffect(() => {
 		fetchData()
-		// getData(name).then((response) => {
-		// 	setData(response.data.result)
-		// 	setLoading(false)
-		// })
 	}, [])
 
 	const fetchData = async () => {
-		const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/expenses?month=2021-07`)
+		const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/expenses?month=${date}`)
 
 		if (data) {
 			setData(data?.data?.result)
@@ -91,11 +88,8 @@ const Expensestable = () => {
 				columns={column}
 				isLoading={loading || imageLoading}
 				options={{
-					paging: false,
-					maxBodyHeight: height - 230,
-					addRowPosition: "first",
-					actionsColumnIndex: -1,
-					exporting: true,
+					search: true,
+					pageSizeOptions: [5, 20, 30, 40, 50, data.length],
 				}}
 				data={data}
 				editable={{
