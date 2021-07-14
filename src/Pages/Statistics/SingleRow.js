@@ -1,4 +1,4 @@
-import {Avatar, Card, Chip, IconButton, Tooltip} from "@material-ui/core"
+import {Card, Chip, IconButton, Tooltip} from "@material-ui/core"
 import React, {useEffect, useRef, useState} from "react"
 import {UserCheck, UserMinus, Video, UserX} from "react-feather"
 import LoopIcon from "@material-ui/icons/Loop"
@@ -8,7 +8,6 @@ import DoneIcon from "@material-ui/icons/Done"
 import Checkbox from "@material-ui/core/Checkbox"
 import {isAutheticated} from "../../auth"
 import io from "socket.io-client"
-import {getSlotFromTime} from "../../Services/getSlotFromTime"
 const socket = io(process.env.REACT_APP_API_KEY)
 function SingleRow({
 	setDialogOpen,
@@ -25,6 +24,7 @@ function SingleRow({
 	otherSchedules,
 	allAgents,
 	teacherIds,
+	isToday,
 	scheduleLeaves,
 }) {
 	const divRef = useRef(null)
@@ -89,7 +89,6 @@ function SingleRow({
 
 	const scheduleLeavesGen = (id) => {
 		return scheduleLeaves && scheduleLeaves[time]?.includes(id)
-		// console.log(id)
 	}
 	return (
 		<div
@@ -109,22 +108,24 @@ function SingleRow({
 								singleData.students.length >= 3 ? "single-card single-card-2" : "single-card"
 							}
 							style={{
-								backgroundColor: scheduleLeavesGen(singleData.teacher && singleData.teacher._id)
-									? "rgb(48, 51, 107, 0.5)"
-									: singleData.isTeacherJoined
-									? "#2ecc7075"
-									: singleData.demo
-									? "#f1c40fb6"
-									: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
-									? "rgb(56, 103, 214, 0.5)"
-									: "#ff757562",
-								border: scheduleLeavesGen(singleData.teacher && singleData.teacher._id)
-									? "2px solid #130f40"
-									: singleData.isTeacherJoined
-									? "2px solid #56AE69"
-									: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
-									? "2px solid #3867d6"
-									: "2px solid #d63031",
+								backgroundColor:
+									isToday && scheduleLeavesGen(singleData.teacher && singleData.teacher._id)
+										? "rgb(48, 51, 107, 0.5)"
+										: singleData.isTeacherJoined
+										? "#2ecc7075"
+										: singleData.demo
+										? "#f1c40fb6"
+										: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
+										? "rgb(56, 103, 214, 0.5)"
+										: "#ff757562",
+								border:
+									isToday && scheduleLeavesGen(singleData.teacher && singleData.teacher._id)
+										? "2px solid #130f40"
+										: singleData.isTeacherJoined
+										? "2px solid #56AE69"
+										: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
+										? "2px solid #3867d6"
+										: "2px solid #d63031",
 								overflow: "initial",
 								cursor: "pointer",
 							}}
@@ -157,7 +158,7 @@ function SingleRow({
 							>
 								{singleData.students.map((student) => (
 									<>
-										{student.isStudentJoined ? (
+										{isToday && student.isStudentJoined ? (
 											<Tooltip title={student.firstName} key={student.firstName}>
 												<div
 													className="small-chip"
@@ -225,38 +226,42 @@ function SingleRow({
 										<Video style={{height: 18, width: 18, color: "#0984e3"}} />
 									</IconButton>
 								</Tooltip>
-								{Object.keys(otherSchedules)
-									.filter((agentName) => otherSchedules[agentName].includes(singleData._id))
-									.map((agentName) => (
-										<Tooltip title={"assigned to " + agentName}>
-											<IconButton size="small">
-												<div className="small-chip">
-													{agentName.split(" ").map((word) => word[0].toUpperCase())}
-												</div>
-											</IconButton>
-										</Tooltip>
-									))}
-								{!Object.keys(otherSchedules).some((agentName) =>
-									otherSchedules[agentName].includes(singleData._id)
-								) ? (
-									<Tooltip
-										title={
-											schedulesAssignedToMe && schedulesAssignedToMe.includes(singleData._id)
-												? "Assigned to you"
-												: "Assign this class"
-										}
-									>
-										<Checkbox
-											size="small"
-											checkedIcon={<DoneIcon />}
-											onChange={() => updateClassesAssignedToMe(singleData._id)}
-											checked={
-												schedulesAssignedToMe && schedulesAssignedToMe.includes(singleData._id)
-											}
-										/>
-									</Tooltip>
-								) : (
-									""
+								{isToday && (
+									<>
+										{Object.keys(otherSchedules)
+											.filter((agentName) => otherSchedules[agentName].includes(singleData._id))
+											.map((agentName) => (
+												<Tooltip title={"assigned to " + agentName}>
+													<IconButton size="small">
+														<div className="small-chip">
+															{agentName.split(" ").map((word) => word[0].toUpperCase())}
+														</div>
+													</IconButton>
+												</Tooltip>
+											))}
+										{!Object.keys(otherSchedules).some((agentName) =>
+											otherSchedules[agentName].includes(singleData._id)
+										) ? (
+											<Tooltip
+												title={
+													schedulesAssignedToMe && schedulesAssignedToMe.includes(singleData._id)
+														? "Assigned to you"
+														: "Assign this class"
+												}
+											>
+												<Checkbox
+													size="small"
+													checkedIcon={<DoneIcon />}
+													onChange={() => updateClassesAssignedToMe(singleData._id)}
+													checked={
+														schedulesAssignedToMe && schedulesAssignedToMe.includes(singleData._id)
+													}
+												/>
+											</Tooltip>
+										) : (
+											""
+										)}
+									</>
 								)}
 							</div>
 
