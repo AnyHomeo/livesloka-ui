@@ -7,18 +7,27 @@ import AccountBalanceWalletOutlinedIcon from "@material-ui/icons/AccountBalanceW
 import CountUp from "react-countup"
 import AddOutlinedIcon from "@material-ui/icons/AddOutlined"
 import {Link} from "react-router-dom"
-const PriceCard = ({data}) => {
+const PriceCard = ({
+	data,
+	setShowExpenses,
+	showExpenses,
+	setShowSalaries,
+	showSalaries,
+	size,
+	setShowTransactions,
+	showTransactions,
+}) => {
 	const useStyles = makeStyles(() => ({
 		linearGrad: {
 			backgroundImage: data.gradient,
-			height: 150,
+			height: size ? "100px" : 150,
 			width: "100%",
 			color: "white",
-			padding: 20,
+			padding: size ? 10 : 20,
 			borderRadius: 10,
 		},
 		cardTitle: {
-			fontSize: 24,
+			fontSize: size ? 15 : 24,
 		},
 		iconCont: {
 			display: "flex",
@@ -27,7 +36,7 @@ const PriceCard = ({data}) => {
 			marginTop: 15,
 		},
 		amount: {
-			fontSize: 40,
+			fontSize: size ? 20 : 40,
 			fontWeight: "bold",
 		},
 		icon: {
@@ -43,10 +52,30 @@ const PriceCard = ({data}) => {
 
 	const classes = useStyles()
 	return (
-		<Card className={classes.linearGrad}>
-			<div className={classes.topCont}>
+		<Card
+			className={classes.linearGrad}
+			style={{cursor: "pointer"}}
+			onClick={() => {
+				if (data.title === "Expenses") {
+					setShowExpenses(!showExpenses)
+				} else if (data.title === "Salary") {
+					setShowSalaries(!showSalaries)
+				} else if (data.title === "Net Amount") {
+					setShowTransactions(!showTransactions)
+				}
+			}}
+		>
+			<div
+				className={classes.topCont}
+				style={{marginTop: data.title === "Expenses" && size ? -10 : 0}}
+			>
 				<div>
-					<p className={classes.cardTitle}>{data.title}</p>
+					<p
+						className={classes.cardTitle}
+						style={{marginTop: data.title === "Expenses" && size ? -10 : 0}}
+					>
+						{data.title}
+					</p>
 				</div>
 
 				{data.title === "Expenses" ? (
@@ -58,18 +87,22 @@ const PriceCard = ({data}) => {
 				) : null}
 			</div>
 
-			<div className={classes.iconCont}>
-				<div>
-					{data.title === "Net Amount" ? (
-						<AccountBalanceOutlinedIcon className={classes.icon} />
-					) : data.title === "Salary" ? (
-						<MoneyOutlinedIcon className={classes.icon} />
-					) : data.title === "Expenses" ? (
-						<MoneyOffOutlinedIcon className={classes.icon} />
-					) : (
-						<AccountBalanceWalletOutlinedIcon className={classes.icon} />
-					)}
-				</div>
+			<div className={classes.iconCont} style={{marginTop: data.title === "Expenses" ? 0 : 15}}>
+				{!size ? (
+					<div>
+						{data.title === "Net Amount" ? (
+							<AccountBalanceOutlinedIcon className={classes.icon} />
+						) : data.title === "Salary" ? (
+							<MoneyOutlinedIcon className={classes.icon} />
+						) : data.title === "Expenses" ? (
+							<MoneyOffOutlinedIcon className={classes.icon} />
+						) : (
+							<AccountBalanceWalletOutlinedIcon className={classes.icon} />
+						)}
+					</div>
+				) : (
+					<div></div>
+				)}
 
 				<div>
 					<p className={classes.amount}>

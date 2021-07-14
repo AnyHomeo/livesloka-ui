@@ -1,14 +1,5 @@
 import React, {useState, useEffect} from "react"
-import {
-	Button,
-	Container,
-	Grid,
-	makeStyles,
-	Menu,
-	MenuItem,
-	Chip,
-	TextField,
-} from "@material-ui/core"
+import {Button, Container, Grid, makeStyles, Menu, MenuItem, TextField} from "@material-ui/core"
 import PriceCard from "./PriceCard"
 import axios from "axios"
 import Page from "../Page"
@@ -18,6 +9,11 @@ import moment from "moment"
 import Autocomplete from "@material-ui/lab/Autocomplete"
 import Lottie from "react-lottie"
 import loadingAnimation from "../../Images/loading.json"
+import useDocumentTitle from "../../Components/useDocumentTitle"
+import useWindowDimensions from "../../Components/useWindowDimensions"
+import Expensestable from "./Expensestable"
+import Teachersalariesfinancial from "./Teachersalariesfinancial"
+import TransactionsTable from "./TransactionsTable"
 const useStyles = makeStyles((theme) => ({
 	root: {
 		backgroundColor: theme.palette.background.dark,
@@ -54,12 +50,18 @@ const defaultOptions = {
 }
 
 const FinancialDashboard = () => {
+	useDocumentTitle("Financial Dashboard")
+
+	const {width} = useWindowDimensions()
 	const [anchorEl, setAnchorEl] = useState(null)
 	const [loading, setLoading] = useState(false)
 	const [totalData, setTotalData] = useState()
-
+	const [showExpenses, setShowExpenses] = useState(false)
+	const [showSalaries, setShowSalaries] = useState(false)
 	const [PaypalChartData, setPaypalChartData] = useState()
 	const [selectedMonth, setSelectedMonth] = useState()
+	const [selectedDate, setSelectedDate] = useState(moment().format("YYYY-MM"))
+	const [showTransactions, setShowTransactions] = useState(false)
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget)
 	}
@@ -84,7 +86,7 @@ const FinancialDashboard = () => {
 
 	const fetchDataByDate = (date) => {
 		fetchData(date)
-
+		setSelectedDate(date)
 		handleClose()
 	}
 
@@ -186,17 +188,32 @@ const FinancialDashboard = () => {
 					</div>
 				</div>
 				<Grid container spacing={3}>
-					<Grid item lg={3} sm={6} xl={3} xs={12}>
-						<PriceCard data={netAmount} />
+					<Grid item lg={3} sm={6} xl={3} xs={6}>
+						<PriceCard
+							data={netAmount}
+							setShowTransactions={setShowTransactions}
+							showTransactions={showTransactions}
+							size={width < 700 ? true : false}
+						/>
 					</Grid>
-					<Grid item lg={3} sm={6} xl={3} xs={12}>
-						<PriceCard data={Salary} />
+					<Grid item lg={3} sm={6} xl={3} xs={6}>
+						<PriceCard
+							data={Salary}
+							setShowSalaries={setShowSalaries}
+							showSalaries={showSalaries}
+							size={width < 700 ? true : false}
+						/>
 					</Grid>
-					<Grid item lg={3} sm={6} xl={3} xs={12}>
-						<PriceCard data={Expenses} />
+					<Grid item lg={3} sm={6} xl={3} xs={6}>
+						<PriceCard
+							data={Expenses}
+							setShowExpenses={setShowExpenses}
+							showExpenses={showExpenses}
+							size={width < 700 ? true : false}
+						/>
 					</Grid>
-					<Grid item lg={3} sm={6} xl={3} xs={12}>
-						<PriceCard data={Profit} />
+					<Grid item lg={3} sm={6} xl={3} xs={6}>
+						<PriceCard data={Profit} size={width < 700 ? true : false} />
 					</Grid>
 
 					<Grid item xs={12}>
@@ -225,6 +242,42 @@ const FinancialDashboard = () => {
 						</div>
 						<Paypalchart chartdata={datasets} />
 					</Grid>
+
+					{showTransactions && (
+						<Grid item xs={12} style={{marginTop: 80}}>
+							<div>
+								<p className={classes.dashboardText} style={{marginBottom: 30}}>
+									Net amount
+								</p>
+							</div>
+
+							<TransactionsTable date={selectedDate} />
+						</Grid>
+					)}
+
+					{showSalaries && (
+						<Grid item xs={12} style={{marginTop: 80}}>
+							<div>
+								<p className={classes.dashboardText} style={{marginBottom: 30}}>
+									Teacher Salaries
+								</p>
+							</div>
+
+							<Teachersalariesfinancial date={selectedDate} />
+						</Grid>
+					)}
+
+					{showExpenses && (
+						<Grid item xs={12} style={{marginTop: 80}}>
+							<div>
+								<p className={classes.dashboardText} style={{marginBottom: 30}}>
+									Expenses
+								</p>
+							</div>
+
+							<Expensestable date={selectedDate} />
+						</Grid>
+					)}
 				</Grid>
 			</Container>
 

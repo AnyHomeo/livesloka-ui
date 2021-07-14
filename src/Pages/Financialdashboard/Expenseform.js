@@ -7,7 +7,7 @@ import "date-fns"
 import DateFnsUtils from "@date-io/date-fns"
 import Snackbar from "@material-ui/core/Snackbar"
 import MuiAlert from "@material-ui/lab/Alert"
-
+import {useHistory} from "react-router-dom"
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />
 }
@@ -37,6 +37,7 @@ const useStyles = makeStyles(() => ({
 	},
 }))
 const Expenseform = () => {
+	const history = useHistory()
 	const classes = useStyles()
 	const [selectedDate, handleDateChange] = useState(new Date())
 	const [snackBarOpen, setSnackBarOpen] = useState(false)
@@ -69,7 +70,7 @@ const Expenseform = () => {
 		if (data.status === 200) {
 			setSnackBarOpen(true)
 			setAlertData(data?.data?.message)
-
+			history.push("/financial")
 			setName("")
 			setDescription("")
 			setAmount("")
