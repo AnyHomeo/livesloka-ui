@@ -7,7 +7,7 @@ import AccountBalanceWalletOutlinedIcon from "@material-ui/icons/AccountBalanceW
 import CountUp from "react-countup"
 import AddOutlinedIcon from "@material-ui/icons/AddOutlined"
 import {Link} from "react-router-dom"
-const PriceCard = ({data}) => {
+const PriceCard = ({data, setShowExpenses, showExpenses}) => {
 	const useStyles = makeStyles(() => ({
 		linearGrad: {
 			backgroundImage: data.gradient,
@@ -43,7 +43,15 @@ const PriceCard = ({data}) => {
 
 	const classes = useStyles()
 	return (
-		<Card className={classes.linearGrad}>
+		<Card
+			className={classes.linearGrad}
+			style={{cursor: data.title === "Expenses" ? "pointer" : ""}}
+			onClick={() => {
+				if (data.title === "Expenses") {
+					setShowExpenses(!showExpenses)
+				}
+			}}
+		>
 			<div className={classes.topCont}>
 				<div>
 					<p className={classes.cardTitle}>{data.title}</p>

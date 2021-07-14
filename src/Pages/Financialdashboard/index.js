@@ -1,14 +1,5 @@
 import React, {useState, useEffect} from "react"
-import {
-	Button,
-	Container,
-	Grid,
-	makeStyles,
-	Menu,
-	MenuItem,
-	Chip,
-	TextField,
-} from "@material-ui/core"
+import {Button, Container, Grid, makeStyles, Menu, MenuItem, TextField} from "@material-ui/core"
 import PriceCard from "./PriceCard"
 import axios from "axios"
 import Page from "../Page"
@@ -18,6 +9,8 @@ import moment from "moment"
 import Autocomplete from "@material-ui/lab/Autocomplete"
 import Lottie from "react-lottie"
 import loadingAnimation from "../../Images/loading.json"
+import useDocumentTitle from "../../Components/useDocumentTitle"
+import Expensestable from "./Expensestable"
 const useStyles = makeStyles((theme) => ({
 	root: {
 		backgroundColor: theme.palette.background.dark,
@@ -54,10 +47,11 @@ const defaultOptions = {
 }
 
 const FinancialDashboard = () => {
+	useDocumentTitle("Financial Dashboard")
 	const [anchorEl, setAnchorEl] = useState(null)
 	const [loading, setLoading] = useState(false)
 	const [totalData, setTotalData] = useState()
-
+	const [showExpenses, setShowExpenses] = useState(false)
 	const [PaypalChartData, setPaypalChartData] = useState()
 	const [selectedMonth, setSelectedMonth] = useState()
 	const handleClick = (event) => {
@@ -193,7 +187,11 @@ const FinancialDashboard = () => {
 						<PriceCard data={Salary} />
 					</Grid>
 					<Grid item lg={3} sm={6} xl={3} xs={12}>
-						<PriceCard data={Expenses} />
+						<PriceCard
+							data={Expenses}
+							setShowExpenses={setShowExpenses}
+							showExpenses={showExpenses}
+						/>
 					</Grid>
 					<Grid item lg={3} sm={6} xl={3} xs={12}>
 						<PriceCard data={Profit} />
@@ -225,6 +223,18 @@ const FinancialDashboard = () => {
 						</div>
 						<Paypalchart chartdata={datasets} />
 					</Grid>
+
+					{showExpenses && (
+						<Grid item xs={12} style={{marginTop: 80}}>
+							<div>
+								<p className={classes.dashboardText} style={{marginBottom: 30}}>
+									Expenses
+								</p>
+							</div>
+
+							<Expensestable />
+						</Grid>
+					)}
 				</Grid>
 			</Container>
 
