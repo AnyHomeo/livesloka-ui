@@ -43,6 +43,9 @@ import NotificationSettings from "../Pages/BroadcastMessages/NotificationSetting
 import NotificationsTable from "../Pages/BroadcastMessages/NotificationsTable"
 import FinancialDashboard from "../Pages/Financialdashboard"
 import Expenseform from "../Pages/Financialdashboard/Expenseform"
+import {SnackbarProvider, useSnackbar} from "notistack"
+import Slide from '@material-ui/core/Slide';
+
 
 function Routes() {
 	return (
@@ -53,6 +56,13 @@ function Routes() {
 					<Route path="/login" exact component={Login} />
 					<Route path="/password-reset" exact component={PasswordReset} />
 					<Route path="/404" exact component={NotFoundView} />
+					<SnackbarProvider maxSnack={3}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+    }}
+    TransitionComponent={Slide}
+      >
 					<DashboardLayout>
 						<AdminRoute path="/dashboard" exact component={Dashboard} />
 						<AdminRoute path="/financial" exact component={FinancialDashboard} />
@@ -100,6 +110,7 @@ function Routes() {
 						<AdminRoute path="/notifications" exact component={NotificationsTable} />
 						<AdminRoute path="/expenses" exact component={Expenseform} />
 					</DashboardLayout>
+					</SnackbarProvider>
 					<Route path="*" component={NotFoundView} />
 				</Switch>
 			</Router>
