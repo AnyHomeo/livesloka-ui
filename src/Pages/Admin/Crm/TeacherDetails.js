@@ -36,6 +36,7 @@ export default function TeacherDetails() {
   const [teachersdata, setTeachersdata] = useState();
   const [categoryData, setCategoryData] = useState();
   const [statusData, setStatusData] = useState();
+  const [subjectsLookup, setSubjectsLookup] = useState({})
   useEffect(() => {
     getData("Status").then((data) => {
       let dummyLookup = {};
@@ -53,7 +54,15 @@ export default function TeacherDetails() {
       setCategoryLookup(dummyLookup);
       setCategoryData(data);
     });
-    fetchTeachersData();
+    getData("Subject").then((data) => {
+      let dummyLookup = {};
+      data.data.result.forEach((data) => {
+        dummyLookup[data.id] = data.subjectName;
+      });
+      console.log(dummyLookup,data)
+      setSubjectsLookup(dummyLookup);
+      fetchTeachersData();
+    });
   }, []);
 
   const { width } = useWindowDimensions();
@@ -82,6 +91,7 @@ export default function TeacherDetails() {
           status={"TeacherStatus"}
           lookup={lookup}
           categoryLookup={categoryLookup}
+          subjectLookup={subjectsLookup}
         />
       ) : (
         <>

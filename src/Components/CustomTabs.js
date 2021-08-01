@@ -99,16 +99,6 @@ const CustomTabs = () => {
 			setLookup(dummyLookup)
 			setStatusMobile(data)
 		})
-		if (value === 8) {
-			getData("Category").then((data) => {
-				let dummyLookup = {}
-				data.data.result.forEach((data) => {
-					dummyLookup[data.id] = data.categoryName
-				})
-				setCategoryLookup(dummyLookup)
-				setcatogeryMob(data)
-			})
-		}
 	}, [value])
 	const {width} = useWindowDimensions()
 

@@ -53,7 +53,7 @@ function capitalize(word) {
 	return word.charAt(0).toUpperCase() + word.substring(1)
 }
 
-const MaterialTableAddFields = ({name, status, lookup, categoryLookup}) => {
+const MaterialTableAddFields = ({name, status, lookup, categoryLookup, subjectLookup}) => {
 	const [column, setColumn] = useState([])
 	const [data, setData] = useState([])
 	const [loading, setLoading] = useState(true)
@@ -117,7 +117,15 @@ const MaterialTableAddFields = ({name, status, lookup, categoryLookup}) => {
 						lookup: categoryLookup,
 					}
 				}
-				if (
+				if(name === "Teacher" && key === "subject"){
+					return {
+						title: "Subject",
+						field: key,
+						lookup: subjectLookup,
+						defaultGroupOrder:1
+					}
+				}
+				if ( 
 					key === "zoomJwt" ||
 					key === "zoomSecret" ||
 					key === "zoomApi" ||
@@ -175,7 +183,7 @@ const MaterialTableAddFields = ({name, status, lookup, categoryLookup}) => {
 					return {
 						title: humanReadable(key),
 						field: key,
-						type: "file",
+						type: "string",
 						cellStyle: {whiteSpace: "nowrap"},
 						headerStyle: {whiteSpace: "nowrap"},
 						render: (rowData) => {
@@ -219,7 +227,7 @@ const MaterialTableAddFields = ({name, status, lookup, categoryLookup}) => {
 			})
 			setColumn(v)
 		}
-	}, [lookup, categoryLookup, data])
+	}, [lookup, categoryLookup, data,subjectLookup])
 
 	const handleClose = (event, reason) => {
 		if (reason === "clickaway") {
@@ -245,6 +253,7 @@ const MaterialTableAddFields = ({name, status, lookup, categoryLookup}) => {
 					addRowPosition: "first",
 					actionsColumnIndex: -1,
 					exporting: true,
+					grouping: name === "Teacher",
 				}}
 				components={{
 					Row: (props) => (
