@@ -7,7 +7,6 @@ import Typography from "@material-ui/core/Typography"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import {
 	Card,
-	CircularProgress,
 	IconButton,
 	Snackbar,
 	TextField,
@@ -18,7 +17,7 @@ import {
 	Button,
 } from "@material-ui/core"
 import {Edit, Trash2, ArrowRightCircle, XCircle} from "react-feather"
-import {getData, updateLeave, editField} from "../../../../Services/Services"
+import {editField} from "../../../../Services/Services"
 import Alert from "@material-ui/lab/Alert"
 import {ChromePicker} from "react-color"
 
@@ -117,21 +116,12 @@ const AddFieldsMobile = ({data, categoryData, statusData, getbackdata, name}) =>
 
 	const [editOption, setEditOption] = useState(false)
 
-	const [selectedDate, setSelectedDate] = React.useState(data.cancelledDate)
 	const [snackBarOpen, setSnackBarOpen] = useState(false)
 	const [success, setSuccess] = useState(false)
 	const [response, setResponse] = useState("")
 
 	const [loading, setLoading] = useState(false)
-	const handleDateChange = (date) => {
-		setSelectedDate(date)
-	}
 
-	const onSubmitData = async () => {
-		setLoading(true)
-
-		setLoading(false)
-	}
 
 	function capitalize(word) {
 		return word.charAt(0).toUpperCase() + word.substring(1)

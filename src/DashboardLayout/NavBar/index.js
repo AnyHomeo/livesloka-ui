@@ -7,7 +7,6 @@ import {
 	Lock as LockIcon,
 	Settings as SettingsIcon,
 	User as UserIcon,
-	UserPlus as UserPlusIcon,
 	FileText,
 	Edit,
 	Trello,
@@ -24,12 +23,6 @@ import {
 import NavItem from "./NavItem"
 import useWindowDimensions from "../../Components/useWindowDimensions"
 import AccountBalanceOutlinedIcon from "@material-ui/icons/AccountBalanceOutlined"
-
-const user = {
-	avatar: "/static/images/avatars/avatar_6.png",
-	jobTitle: "Admin",
-	name: "Ram Kishore",
-}
 
 const useStyles = makeStyles(() => ({
 	mobileDrawer: {
@@ -255,13 +248,6 @@ const NavBar = ({onMobileClose, openMobile}) => {
 		},
 	]
 
-	const Accountant = [
-		{
-			href: "/payments",
-			icon: DollarSign,
-			title: "Payments",
-		},
-	]
 
 	const classes = useStyles()
 	const location = useLocation()

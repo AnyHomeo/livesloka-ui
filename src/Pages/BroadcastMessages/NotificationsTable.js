@@ -5,7 +5,6 @@ import {ReactSVG} from "react-svg"
 import {Chip} from "@material-ui/core"
 import "./notificationTable.css"
 import useWindowDimensions from "../../Components/useWindowDimensions"
-import NotificationsTableRowOptions from "./NotificationsTableRowOptions"
 import Button from "@material-ui/core/Button"
 import {Link} from "react-router-dom"
 
