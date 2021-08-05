@@ -111,6 +111,13 @@ const MaterialTableAddFields = ({name, status, lookup, categoryLookup, subjectLo
 						field: "isDemoIncludedInSalaries",
 					}
 				}
+				if(name === "Time Zone" && key === "timeZonePriority"){
+					return {
+						title: "Show in Auto Booking",
+						field: key,
+						type:"boolean"
+					}
+				}
 				if (name === "Subject" && key === "category") {
 					return {
 						title: "Category",
