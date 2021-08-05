@@ -137,7 +137,6 @@ const MaterialTableAddFields = ({name, status, lookup, categoryLookup, subjectLo
 						title: "Subject",
 						field: key,
 						lookup: subjectLookup,
-						defaultGroupOrder:1
 					}
 				}
 				if ( 
