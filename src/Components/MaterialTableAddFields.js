@@ -125,6 +125,13 @@ const MaterialTableAddFields = ({name, status, lookup, categoryLookup, subjectLo
 						lookup: categoryLookup,
 					}
 				}
+				if (name === "Teacher" && key === "category") {
+					return {
+						title: "Category",
+						field: key,
+						lookup: categoryLookup,
+					}
+				}
 				if(name === "Teacher" && key === "subject"){
 					return {
 						title: "Subject",
