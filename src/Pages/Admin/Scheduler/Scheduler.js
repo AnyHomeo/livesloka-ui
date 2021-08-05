@@ -23,6 +23,9 @@ import {
 	Switch,
 	TextField,
 	Snackbar,
+	Tooltip,
+	InputLabel,
+	FormControl,
 } from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
@@ -34,6 +37,10 @@ import MuiAlert from "@material-ui/lab/Alert"
 import {useConfirm} from "material-ui-confirm"
 import AdjustIcon from "@material-ui/icons/Adjust"
 import useDocumentTitle from "../../../Components/useDocumentTitle"
+import MaterialTable from "material-table"
+import WhatsAppIcon from "@material-ui/icons/WhatsApp"
+import OutlinedInput from "@material-ui/core/OutlinedInput"
+
 const times = [
 	"12:00 AM-12:30 AM",
 	"12:30 AM-01:00 AM",
@@ -268,10 +275,11 @@ function Scheduler() {
 				onClose={() => setScheduleId("")}
 				aria-labelledby="alert-dialog-slide-title"
 				aria-describedby="alert-dialog-slide-description"
+				fullWidth
+				maxWidth={"md"}
 			>
 				<DialogTitle id="alert-dialog-slide-title">Schedule Details</DialogTitle>
 				<DialogContent>
-					<h3>Students:</h3>
 					<span
 						style={{
 							display: "flex",
@@ -281,58 +289,122 @@ function Scheduler() {
 					>
 						{selectedSchedule ? (
 							<>
-								{selectedSchedule.students
-									? selectedSchedule.students.map((student) => (
-											<Chip color="primary" style={{margin: "0 5px"}} label={student.firstName} />
-									  ))
-									: ""}
-								<TextField
-									style={{margin: "20px 0"}}
-									fullWidth
-									readOnly
-									id="meeting-link"
-									label="Meeting Link"
-									variant="outlined"
-									value={selectedSchedule.meetingLink}
-									InputProps={{
-										endAdornment: (
-											<InputAdornment position="end">
-												<IconButton onClick={() => copyToClipboard(selectedSchedule.meetingLink)}>
-													<FileCopyOutlined />
-												</IconButton>
-											</InputAdornment>
-										),
+								<div
+									className="info-wrapper"
+									style={{
+										width: "100%",
+										alignItems: "center",
+										marginBottom: "5px",
+									}}
+								>
+									<FormControl variant="outlined">
+										<InputLabel htmlFor="Meeting-Link">Meeting Link</InputLabel>
+										<OutlinedInput
+											id="Meeting-Link"
+											label="Meeting Link"
+											value={selectedSchedule.meetingLink}
+											fullWidth
+											endAdornment={
+												<InputAdornment position="end">
+													<IconButton
+														onClick={() => copyToClipboard(selectedSchedule.meetingLink)}
+														edge="end"
+													>
+														<FileCopyOutlined />
+													</IconButton>
+												</InputAdornment>
+											}
+											labelWidth={70}
+										/>
+									</FormControl>
+									<FormControl variant="outlined">
+										<FormControlLabel
+											control={
+												<Switch
+													checked={selectedSchedule.isClassTemperarilyCancelled}
+													onChange={() => {
+														updateScheduleDangerously(selectedSchedule._id, {
+															isClassTemperarilyCancelled:
+																!selectedSchedule.isClassTemperarilyCancelled,
+														})
+															.then((response) => {
+																getAllSchedulesData()
+															})
+															.catch((error) => {
+																console.log(error)
+																setSuccess(false)
+																setResponse("Something went wrong")
+																setSnackBarOpen(true)
+															})
+													}}
+													name="cancelClass"
+												/>
+											}
+											label="Enable to Cancel the Class"
+										/>
+									</FormControl>
+								</div>
+								<MaterialTable
+									title="Student Details"
+									columns={[
+										{
+											field: "firstName",
+											title: "First Name",
+											tooltip: "Sort by First Name",
+										},
+										{
+											field: "lastName",
+											title: "Last Name",
+											tooltip: "Sort by Last Name",
+										},
+										{
+											field: "numberOfClassesBought",
+											title: "Classes Left",
+											tooltip: "Sort by Classes Left",
+										},
+										{
+											field: "email",
+											title: "Email",
+											tooltip: "Sort by Email",
+										},
+										{
+											field: "whatsAppnumber",
+											title: "WhatsaApp Number",
+											tooltip: "Sort by WhatsApp Number",
+											render: (rowData) => (
+												<div style={{display: "flex", alignItems: "center"}}>
+													<Tooltip title={`Message ${rowData.firstName} on Whatsapp`}>
+														<IconButton
+															onClick={() =>
+																window.open(
+																	`https://api.whatsapp.com/send?phone=${
+																		rowData.whatsAppnumber.indexOf("+") !== -1
+																			? rowData.whatsAppnumber.split("+")[1].split(" ").join("")
+																			: rowData.whatsAppnumber.split(" ").join("")
+																	}`
+																)
+															}
+														>
+															<WhatsAppIcon />
+														</IconButton>
+													</Tooltip>
+													{rowData.whatsAppnumber}
+												</div>
+											),
+										},
+									]}
+									data={selectedSchedule.students}
+									options={{
+										paging: false,
 									}}
 								/>
+
 								<div
 									style={{
 										width: "100%",
+										marginTop: "5px",
 									}}
 								>
-									<FormControlLabel
-										control={
-											<Switch
-												checked={selectedSchedule.isClassTemperarilyCancelled}
-												onChange={() => {
-													updateScheduleDangerously(selectedSchedule._id, {
-														isClassTemperarilyCancelled:
-															!selectedSchedule.isClassTemperarilyCancelled,
-													})
-														.then((response) => {
-															getAllSchedulesData()
-														})
-														.catch((error) => {
-															console.log(error)
-															setSuccess(false)
-															setResponse("Something went wrong")
-															setSnackBarOpen(true)
-														})
-												}}
-												name="cancelClass"
-											/>
-										}
-										label="Enable to Cancel the Class"
-									/>
 									<div
 										style={{
 											display: "flex",
