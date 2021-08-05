@@ -37,12 +37,12 @@ exports.services = {
     Category: "/admin/get/Category",
     "Add Category": "/admin/add/Category",
     "Update Category": "/admin/update/Category",
-    "Delete Category": "/admin/delete/category",
+    "Delete Category": "/admin/delete/Category",
 
     "Class Status": "/admin/get/ClassStatuses",
     "Add Class Status": "/admin/add/ClassStatuses",
     "Update Class Status": "/admin/update/ClassStatuses",
-    "Delete Class Status": "/admin/delete/classstatus",
+    "Delete Class Status": "/admin/delete/ClassStatuses",
 
     Currency: "/admin/get/Currency",
     "Add Currency": "/admin/add/Currency",
@@ -56,7 +56,7 @@ exports.services = {
 
     Status: "/admin/get/Status",
     "Add Status": "/admin/add/Status",
-    "Update Status": "/admin/update/status",
+    "Update Status": "/admin/update/Status",
 
     Teacher:
     "/teacher?params=id,TeacherDesc,TeacherName,TeacherStatus,_id,category,teacherMail,Salary_tillNow,Commission_Amount_One,Commission_Amount_Many,Bank_account,Phone_number,Bank_full_name,isDemoIncludedInSalaries,leaveDifferenceHours,teacherImageLink,demoPriority,subject",
