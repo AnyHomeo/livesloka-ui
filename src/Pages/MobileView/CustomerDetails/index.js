@@ -6,7 +6,6 @@ import {
   updateSettings,
 } from "../../../Services/Services";
 import {
-  Paper,
   Grid,
   Card,
   TextField,
@@ -20,12 +19,10 @@ import { PlusSquare, Monitor, BarChart2 } from "react-feather";
 import { useHistory } from "react-router-dom";
 import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 import "./style.css";
-import PhoneAndroidIcon from "@material-ui/icons/PhoneAndroid";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import FilterListOutlinedIcon from "@material-ui/icons/FilterListOutlined";
 import StatisticsCards from "./StatisticsCards";
 import { isAutheticated } from "../../../auth";
-import { Copy } from "react-feather";
 import useDocumentTitle from "../../../Components/useDocumentTitle";
 import AddToPhotosIcon from "@material-ui/icons/AddToPhotos";
 const useStyles = makeStyles((theme) => ({

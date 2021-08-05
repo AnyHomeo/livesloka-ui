@@ -6,9 +6,6 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import moment from "moment";
-import { Chip, IconButton } from "@material-ui/core";
-import { Edit } from "react-feather";
-import { Link } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",

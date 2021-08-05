@@ -1294,10 +1294,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 						addRowPosition: "first",
 						maxBodyHeight: height - 220,
 						exportButton: true,
-						rowStyle: (rowData) => ({
-							backgroundColor: "#FFF",
-							color: "#000",
-						}),
+						rowStyle: (rowData) => ({backgroundColor: rowData.autoDemo? "#3498db77":undefined}),
 					}}
 					actions={[
 						(rowData) => ({
