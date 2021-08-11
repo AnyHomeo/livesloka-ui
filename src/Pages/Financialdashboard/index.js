@@ -140,6 +140,7 @@ const FinancialDashboard = () => {
 				borderWidth: 3,
 				borderColor: colorsArr[i % colorsArr.length],
 				hoverBorderColor: colorsArr[i % colorsArr.length],
+				index: 1,
 			}
 
 			datasets.push(obj)
