@@ -87,6 +87,7 @@ const PaymentsPage = () => {
             {rowData.status === "SUCCESS" && rowData.type === "PAYPAL" ? (
               <a
                 target="_blank"
+                rel="noopener noreferrer"
                 href={`https://www.paypal.com/activity/payment/${rowData.orderRef}`}
               >
                 {rowData.orderRef}
@@ -125,9 +126,9 @@ const PaymentsPage = () => {
       field: "type",
       render: (row) =>
         row.type === "PAYPAL" ? (
-          <img src={paypal} style={{ height: "20px" }} />
+          <img src={paypal} alt="" style={{ height: "20px" }} />
         ) : (
-          <img src={razorpay} style={{ height: "20px" }} />
+          <img src={razorpay} alt="" style={{ height: "20px" }} />
         ),
     },
     {

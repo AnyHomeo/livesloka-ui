@@ -4,7 +4,6 @@ import clsx from "clsx"
 
 import {Box, Divider, useTheme, Card, CardContent, CardHeader, makeStyles} from "@material-ui/core"
 import axios from "axios"
-import moment from "moment"
 
 const useStyles = makeStyles(() => ({
 	root: {
@@ -14,13 +13,9 @@ const useStyles = makeStyles(() => ({
 
 const AmountChart = ({dailyDataline, dataa, className, ...rest}) => {
 	const classes = useStyles()
-
 	const theme = useTheme()
-	const [dailyChartdata, setDailyChartdata] = useState()
-
 	const [TotalSum, setTotalSum] = useState([])
 	const [totalDates, setTotalDates] = useState([])
-	const usdVal = localStorage.getItem("USD")
 	useEffect(() => {
 		getDailyChartData()
 	}, [])

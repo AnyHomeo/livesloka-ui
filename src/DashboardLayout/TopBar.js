@@ -148,7 +148,7 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 								<Chip
 									onClick={() => handleClickOpen(time)}
 									style={{fontWeight: "bold"}}
-									size={width > 700 ? "large" : "small"}
+									size={width > 700 ? "medium" : "small"}
 									label={moment
 										.tz(AllTimeZones, customTimeArr)
 										.clone()

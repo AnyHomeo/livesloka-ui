@@ -56,7 +56,7 @@ const getSlotFromTime = (date) => {
 	}
 }
 
-function SingleDayStats({day, value, setDialogOpen, setDialogData, refresh, alertSetStates}) {
+function SingleDayStats({day, value, setDialogOpen, setDialogData, refresh, alertSetStates, isToday}) {
 	const [todayData, setTodayData] = useState([])
 	const [selectedSlot, setSelectedSlot] = useState("")
 	const [leaves, setLeaves] = useState([])
@@ -251,6 +251,7 @@ function SingleDayStats({day, value, setDialogOpen, setDialogData, refresh, aler
 						otherSchedules={otherSchedules}
 						allAgents={allAgents}
 						teacherIds={teacherIds}
+						isToday={isToday}
 						scheduleLeaves={scheduleLeaves}
 					/>
 				))}

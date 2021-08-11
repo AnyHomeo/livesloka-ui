@@ -99,14 +99,14 @@ const CustomTabs = () => {
 			setLookup(dummyLookup)
 			setStatusMobile(data)
 		})
-		if (value === 8) {
+		if (value === 2) {
 			getData("Category").then((data) => {
-				let dummyLookup = {}
-				data.data.result.forEach((data) => {
-					dummyLookup[data.id] = data.categoryName
-				})
-				setCategoryLookup(dummyLookup)
-				setcatogeryMob(data)
+				setCategoryLookup(
+					data.data.result.reduce((obj, item, i) => {
+						obj[item.id] = item.categoryName
+						return obj
+					}, {})
+				)
 			})
 		}
 	}, [value])

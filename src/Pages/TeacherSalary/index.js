@@ -79,17 +79,19 @@ const ExtraTeacherDetails = ({dates, presentees, absentees, requestedPaidStudent
 								{moment(date).format("MMMM Do, YYYY")}
 							</TableCell>
 							<TableCell align="center">
-								{presentees.map((student) => (
+								{presentees[i].map((student) => (
+									<>
 									<Chip
 										key={student}
 										style={{marginBottom: 5}}
 										label={student}
 										size="medium"
 									/>
+									</>
 								))}
 							</TableCell>
 							<TableCell align="center">
-								{requestedPaidStudents.map((student) => (
+								{requestedPaidStudents[i].map((student) => (
 									<Chip
 										key={student}
 										style={{marginBottom: 5}}
@@ -100,7 +102,7 @@ const ExtraTeacherDetails = ({dates, presentees, absentees, requestedPaidStudent
 								))}
 							</TableCell>
 							<TableCell align="center">
-								{absentees.map((student) => (
+								{absentees[i].map((student) => (
 									<Chip
 										key={student}
 										style={{marginBottom: 5}}
@@ -250,6 +252,7 @@ function Row(props) {
 				{console.log(date)}
 				<TableRow>
 					<TableCell colSpan="6">
+						{console.log(row)}
 						<ExtraTeacherDetails open={newOpen} {...row} />
 					</TableCell>
 				</TableRow>

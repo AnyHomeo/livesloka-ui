@@ -946,7 +946,6 @@ const CrmDetails = ({isSummerCampStudents}) => {
 			const res = await axios.get(
 				`${process.env.REACT_APP_API_KEY}/customer/class/dashboard?date=${formattedDate}&slot=${slot}`
 			)
-
 			setStatisticsData(res && res.data)
 		} catch (error) {
 			console.log(error)
@@ -1062,7 +1061,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 						<Grid container style={{margin: "0 auto", width: "90%"}}>
 							<Grid item xs={12} md={6}>
 								<div>
-									<h1 className={classes.titleCard}>No Of Classes for In Classes Status</h1>
+									<h1 className={classes.titleCard}>Statistics on Classes Left</h1>
 								</div>
 								<Grid container style={{display: "flex", flexDirection: "row"}}>
 									<Grid item xs={6} sm={4}>
@@ -1100,10 +1099,10 @@ const CrmDetails = ({isSummerCampStudents}) => {
 
 							<Grid item xs={12} md={6}>
 								<div>
-									<h1 className={classes.titleCard}>No Of Classes for In Classes Status</h1>
+									<h1 className={classes.titleCard}>Statistics according to Class Status</h1>
 								</div>
 								<Grid container style={{display: "flex", flexDirection: "row"}}>
-									<Grid item xs={6} sm={4}>
+									<Grid item xs={6} sm={3}>
 										<Card
 											onClick={() => setFilterName("new")}
 											className={classes.card}
@@ -1113,7 +1112,17 @@ const CrmDetails = ({isSummerCampStudents}) => {
 											<h1 style={{color: "white"}}>{statisticsData.newCustomers}</h1>
 										</Card>
 									</Grid>
-									<Grid item xs={6} sm={4}>
+									<Grid item xs={6} sm={3}>
+										<Card
+											onClick={() => setFilterName("autoDemo")}
+											className={classes.card}
+											style={{backgroundColor: "#d35400"}}
+										>
+											<h2>Auto Demo</h2>
+											<h1 style={{color: "white"}}>{statisticsData.autoDemoCustomers}</h1>
+										</Card>
+									</Grid>
+									<Grid item xs={6} sm={3}>
 										<Card
 											onClick={() => setFilterName("demo")}
 											className={classes.card}
@@ -1123,7 +1132,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 											<h1 style={{color: "white"}}>{statisticsData.demoCustomers}</h1>
 										</Card>
 									</Grid>
-									<Grid item xs={6} sm={4}>
+									<Grid item xs={6} sm={3}>
 										<Card
 											onClick={() => setFilterName("inClass")}
 											className={classes.card}
@@ -1294,10 +1303,6 @@ const CrmDetails = ({isSummerCampStudents}) => {
 						addRowPosition: "first",
 						maxBodyHeight: height - 220,
 						exportButton: true,
-						rowStyle: (rowData) => ({
-							backgroundColor: "#FFF",
-							color: "#000",
-						}),
 					}}
 					actions={[
 						(rowData) => ({
