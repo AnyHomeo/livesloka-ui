@@ -44,6 +44,7 @@ import FinancialDashboard from "../Pages/Financialdashboard"
 import Expenseform from "../Pages/Financialdashboard/Expenseform"
 import {SnackbarProvider, useSnackbar} from "notistack"
 import Slide from "@material-ui/core/Slide"
+import {AddSubjects} from "../Pages/Subjects"
 
 function Routes() {
 	return (
@@ -112,6 +113,7 @@ function Routes() {
 							<AdminRoute path="/test" exact component={ZoomAccountDashboard} />
 							<AdminRoute path="/notifications" exact component={NotificationsTable} />
 							<AdminRoute path="/expenses" exact component={Expenseform} />
+							<AdminRoute path="/add-subjects" exact component={AddSubjects} />
 						</DashboardLayout>
 					</SnackbarProvider>
 					<Route path="*" component={NotFoundView} />
