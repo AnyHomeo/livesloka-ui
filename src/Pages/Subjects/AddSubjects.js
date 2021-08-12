@@ -44,35 +44,46 @@ const AddSubjects = () => {
 	const classes = useStyles()
 
 	const [paypalToken, setPaypalToken] = useState("")
-	const [subjects, setSubjects] = useState()
-
+	const [subjects, setSubjects] = useState([])
+	const [modalOpen, setModalOpen] = useState(false)
 	const [loading, setLoading] = useState(false)
+
 	useEffect(() => {
-		getToken()
-		getProducts()
-	}, [paypalToken])
-	const getToken = async () => {
+		getToken(true)
+	}, [])
+
+	const getToken = async (isProductsCallNeeded) => {
 		try {
 			const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/scripts/paypal/access-token`)
 			setPaypalToken(data?.data?.result)
-		} catch (error) {}
+			if (isProductsCallNeeded) {
+				getProducts(data?.data?.result)
+			}
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
-	const getProducts = async () => {
-		setLoading(true)
-		const config = {
-			headers: {Authorization: `Bearer ${paypalToken}`, "Content-Type": "application/json"},
-		}
-
+	const getProducts = async (token) => {
 		try {
+			setLoading(true)
+			let config = {
+				headers: {
+					Authorization: `Bearer ${token ? token : paypalToken}`,
+					"Content-Type": "application/json",
+				},
+			}
 			const data = await Axios.get(
 				`${process.env.REACT_APP_PAYPAL_URL}/v1/catalogs/products`,
 				config
 			)
-
+			console.log(data)
 			setSubjects(data?.data?.products)
-		} catch (error) {}
-		setLoading(false)
+			setLoading(false)
+		} catch (error) {
+			setLoading(false)
+			console.log(error)
+		}
 	}
 
 	const getback = (status) => {
@@ -80,8 +91,6 @@ const AddSubjects = () => {
 			getProducts()
 		}
 	}
-
-	const [modalOpen, setModalOpen] = useState(false)
 
 	if (loading) {
 		return <Lottie options={defaultOptions} height={400} width={400} />
@@ -105,9 +114,8 @@ const AddSubjects = () => {
 					</IconButton>
 				</div>
 
-				{subjects && subjects.map((subject, i) => <SubjectCards key={i} data={subject} />)}
+				{subjects && subjects.map((subject, i) => <SubjectCards key={subject.id} data={subject} />)}
 			</Container>
-
 			<SubjectModal
 				open={modalOpen}
 				setOpen={setModalOpen}
