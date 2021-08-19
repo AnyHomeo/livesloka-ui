@@ -45,6 +45,7 @@ import Expenseform from "../Pages/Financialdashboard/Expenseform"
 import {SnackbarProvider, useSnackbar} from "notistack"
 import Slide from "@material-ui/core/Slide"
 import {AddSubjects} from "../Pages/Subjects"
+import {SubscriptionScheduler} from "../Pages/SubscriptionScheduler"
 
 function Routes() {
 	return (
@@ -114,6 +115,7 @@ function Routes() {
 							<AdminRoute path="/notifications" exact component={NotificationsTable} />
 							<AdminRoute path="/expenses" exact component={Expenseform} />
 							<AdminRoute path="/add-subjects" exact component={AddSubjects} />
+							<AdminRoute path="/subscription-scheduler" exact component={SubscriptionScheduler} />
 						</DashboardLayout>
 					</SnackbarProvider>
 					<Route path="*" component={NotFoundView} />

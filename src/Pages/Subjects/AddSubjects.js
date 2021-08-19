@@ -7,7 +7,7 @@ import SubjectModal from "./SubjectModal"
 import Axios from "axios"
 import Lottie from "react-lottie"
 import loadingAnimation from "../../Images/loading.json"
-
+import AddPlans from "./AddPlans"
 const defaultOptions = {
 	loop: true,
 	autoplay: true,
@@ -42,52 +42,31 @@ const useStyles = makeStyles({
 })
 const AddSubjects = () => {
 	const classes = useStyles()
-
-	const [paypalToken, setPaypalToken] = useState("")
 	const [subjects, setSubjects] = useState([])
 	const [modalOpen, setModalOpen] = useState(false)
+	const [addPlanOpen, setAddPlanOpen] = useState(false)
 	const [loading, setLoading] = useState(false)
 
 	useEffect(() => {
-		getToken(true)
+		getProducts()
 	}, [])
 
-	const getToken = async (isProductsCallNeeded) => {
-		try {
-			const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/scripts/paypal/access-token`)
-			setPaypalToken(data?.data?.result)
-			if (isProductsCallNeeded) {
-				getProducts(data?.data?.result)
-			}
-		} catch (error) {
-			console.log(error)
-		}
-	}
+	const getProducts = async () => {
+		setLoading(true)
 
-	const getProducts = async (token) => {
 		try {
-			setLoading(true)
-			let config = {
-				headers: {
-					Authorization: `Bearer ${token ? token : paypalToken}`,
-					"Content-Type": "application/json",
-				},
-			}
-			const data = await Axios.get(
-				`${process.env.REACT_APP_PAYPAL_URL}/v1/catalogs/products`,
-				config
-			)
-			console.log(data)
-			setSubjects(data?.data?.products)
+			const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/subscriptions/get/products`)
+
+			setSubjects(data?.data.result?.products)
 			setLoading(false)
 		} catch (error) {
-			setLoading(false)
 			console.log(error)
+			setLoading(false)
 		}
 	}
 
 	const getback = (status) => {
-		if (status === 201) {
+		if (status === 200) {
 			getProducts()
 		}
 	}
@@ -101,27 +80,55 @@ const AddSubjects = () => {
 			<Container>
 				<div className={classes.container}>
 					<p style={{fontSize: 24}}>Add new subject</p>
-					<IconButton
-						style={{
-							backgroundColor: "#3867d6",
-							boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-							height: 55,
-							width: 55,
-						}}
-						onClick={() => setModalOpen(!modalOpen)}
-					>
-						<Plus style={{color: "white"}} />
-					</IconButton>
+
+					<div style={{display: "flex"}}>
+						<div
+							style={{
+								display: "flex",
+								flexDirection: "column",
+								alignItems: "center",
+								marginRight: 10,
+							}}
+						>
+							<IconButton
+								style={{
+									backgroundColor: "#3867d6",
+									boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+									height: 55,
+									width: 55,
+									marginBottom: 10,
+								}}
+								onClick={() => setModalOpen(!modalOpen)}
+							>
+								<Plus style={{color: "white"}} />
+							</IconButton>
+							<p>Add Subject</p>
+						</div>
+
+						<div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+							<IconButton
+								style={{
+									backgroundColor: "#3867d6",
+									boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+									height: 55,
+									width: 55,
+									marginLeft: 10,
+									marginBottom: 10,
+								}}
+								onClick={() => setAddPlanOpen(!addPlanOpen)}
+							>
+								<Plus style={{color: "white"}} />
+							</IconButton>
+							<p>Add Plan</p>
+						</div>
+					</div>
 				</div>
 
 				{subjects && subjects.map((subject, i) => <SubjectCards key={subject.id} data={subject} />)}
 			</Container>
-			<SubjectModal
-				open={modalOpen}
-				setOpen={setModalOpen}
-				paypalToken={paypalToken}
-				getback={getback}
-			/>
+			<SubjectModal open={modalOpen} setOpen={setModalOpen} getback={getback} />
+
+			<AddPlans open={addPlanOpen} setOpen={setAddPlanOpen} getback={getback} products={subjects} />
 		</div>
 	)
 }
