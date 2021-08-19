@@ -182,7 +182,8 @@ export const getEntireDayStatistics = (day) => axios.get(`${API.main}/customer/s
 export const getSummerCampStudents = () => axios.get(`${API.main}/summercamps/students`)
 export const getDemoAndInclassStudents = () => axios.get(`${API.main}/all/demo-inclass`)
 export const getCareersApplications = () => axios.get(`${API.main}/careers`)
-export const getTodayLeaves = (date) => axios.get(`${API.main}/cancelclass/123?noSchedule=true&date=${date}`)
+export const getTodayLeaves = (date) =>
+	axios.get(`${API.main}/cancelclass/123?noSchedule=true&date=${date}`)
 export const getCustomerDatFromFilterName = (name) =>
 	axios.get(`${API.main}/customer/filters?filter=${name}`)
 export const getAllTeacherLeaves = () => axios.get(`${API.main}/teacher-leaves`)
@@ -202,3 +203,6 @@ export const sendOtpsToAdmins = (month, year) =>
 	axios.post(`${API.main}/agent/send-otps/salary-verification`, {month, year})
 export const finalizeSalaries = (month, year, otps) =>
 	axios.post(`${API.main}/finalize`, {month, year, otps})
+export const getDemoCustomers = () =>
+	Axios.get(`${API.main}/options/demo/students?select=firstName,teacherId`)
+export const getTeacherSlotsForOptions = (id) => Axios.get(`${API.main}/options/teacher/slots/${id}`)

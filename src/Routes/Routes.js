@@ -28,7 +28,6 @@ import TeacherSalaries from "../Pages/Admin/Crm/TeacherSalaries"
 import CustomerDetails from "../Pages/MobileView/CustomerDetails"
 import CustomersDetailsMb from "../Pages/MobileView/CustomerDetails/CustomersDetailsMb"
 import AddNewCustomer from "../Pages/MobileView/CustomerDetails/AddNewCustomer"
-import Statistics from "../Pages/Statistics"
 import LeavesTabs from "./../Pages/Leaves/LeavesTabs"
 import PaymentsPage from "../Pages/reports/PaymentsPage"
 import UpdateNumberOfBoughtClasses from "./../Pages/Admin/Crm/UpdateNumberOfBoughtClasses"
@@ -37,7 +36,6 @@ import Stats from "../Pages/Statistics/Statistics"
 import SummerCampsCustomerTable from "../Pages/Admin/Crm/SummerCampsCustomerTable"
 import DemoAndInclassStudents from "../Components/DemoAndInclassStudents"
 import Careers from "../Pages/Admin/Crm/Careers"
-import MessagesTable from "../Pages/AdMessages/MessagesTable"
 import NotificationSettings from "../Pages/BroadcastMessages/NotificationSettings"
 import NotificationsTable from "../Pages/BroadcastMessages/NotificationsTable"
 import FinancialDashboard from "../Pages/Financialdashboard"
@@ -45,7 +43,7 @@ import Expenseform from "../Pages/Financialdashboard/Expenseform"
 import {SnackbarProvider, useSnackbar} from "notistack"
 import Slide from "@material-ui/core/Slide"
 import {AddSubjects} from "../Pages/Subjects"
-import {SubscriptionScheduler} from "../Pages/SubscriptionScheduler"
+import Options from "../Pages/SubscriptionScheduler/Options"
 
 function Routes() {
 	return (
@@ -115,7 +113,7 @@ function Routes() {
 							<AdminRoute path="/notifications" exact component={NotificationsTable} />
 							<AdminRoute path="/expenses" exact component={Expenseform} />
 							<AdminRoute path="/add-subjects" exact component={AddSubjects} />
-							<AdminRoute path="/subscription-scheduler" exact component={SubscriptionScheduler} />
+							<AdminRoute path="/options" exact component={Options} />
 						</DashboardLayout>
 					</SnackbarProvider>
 					<Route path="*" component={NotFoundView} />
