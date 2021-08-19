@@ -110,16 +110,17 @@ const SubscriptionScheduler = () => {
 		setLoading(true)
 		try {
 			const data = await Axios.get(
-				`${process.env.REACT_APP_API_KEY}/options/demo/students?select=firstName,email,subjectId`
+				`${process.env.REACT_APP_API_KEY}/options/demo/students?select=firstName,email,subjectId,teacherId`
 			)
 			setDemoCustomers(data?.data?.result)
+			console.log(data)
 		} catch (error) {}
 		setLoading(false)
 	}
 
 	const handleDemoCustomer = (event, values) => {
 		setCustomerId(values?._id)
-		getTeachertimeslots(values?.subjectId)
+		getTeachertimeslots(values?.teacherId)
 	}
 
 	const getTeachertimeslots = async (id) => {
@@ -128,7 +129,7 @@ const SubscriptionScheduler = () => {
 		try {
 			const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/options/teacher/slots/${id}`)
 			setTeachertimeslots(data?.data?.result)
-
+			console.log(data)
 			let stateData = []
 
 			data &&
@@ -224,9 +225,9 @@ const SubscriptionScheduler = () => {
 		setOpen(false)
 	}
 
-	if (loading) {
-		return <Lottie options={defaultOptions} height={400} width={400} />
-	}
+	// if (loading) {
+	// 	return <Lottie options={defaultOptions} height={400} width={400} />
+	// }
 
 	return (
 		<Container className={classes.container}>
@@ -235,7 +236,7 @@ const SubscriptionScheduler = () => {
 					{response}
 				</Alert>
 			</Snackbar>
-			<div style={{width: "50%"}}>
+			<div style={{width: "80%"}}>
 				<div className={classes.formcontainer}>
 					{demoCustomers && (
 						<Autocomplete
@@ -258,7 +259,7 @@ const SubscriptionScheduler = () => {
 				</div>
 
 				<div className={classes.root}>
-					<Tabs
+					{/* <Tabs
 						value={value}
 						onChange={handleChange}
 						indicatorColor="primary"
@@ -275,143 +276,65 @@ const SubscriptionScheduler = () => {
 									{...a11yProps(i)}
 								/>
 							))}
-					</Tabs>
+					</Tabs> */}
 
-					{teachertimeslots &&
-						teachertimeslots.map((item, i) => {
-							return (
-								<TabPanel key={item._id} value={value} index={i}>
-									<ToggleButtonGroup value={radioday} onChange={handleFormat}>
-										{days.map((day) => (
-											<ToggleButton key={day} value={day}>
-												<p style={{color: "black"}}>{day.slice(0, 3)}</p>
-											</ToggleButton>
-										))}
-									</ToggleButtonGroup>
-									<div>
-										<p style={{marginLeft: 10, marginBottom: 20, marginTop: 20}}>Available Slots</p>
+					{teachertimeslots && (
+						<>
+							<ToggleButtonGroup value={radioday} onChange={handleFormat}>
+								{days.map((day) => (
+									<ToggleButton key={day} value={day}>
+										<p style={{color: "black"}}>{day.slice(0, 3)}</p>
+									</ToggleButton>
+								))}
+							</ToggleButtonGroup>
 
-										<Grid container>
-											{radioday.map((day) => (
-												<Grid
-													lg={4}
-													sm={6}
-													xs={12}
-													item
-													style={{display: "flex", flexDirection: "column"}}
-												>
-													{day}
+							<div>
+								<p style={{marginLeft: 10, marginBottom: 20, marginTop: 20}}>Available Slots</p>
 
-													{item.availableSlots.map((slot) => (
-														<>
-															{slot.startsWith(day) ? (
-																<Chip
-																	size="small"
-																	onClick={() => handleSlotSelect(slot, item._id)}
-																	// label={slot}
-																	label={`${slot.split(" ")[0].split("-")[1]} ${
-																		slot.split(" ")[2]
-																	}`}
-																	variant="outlined"
-																	style={{
-																		margin: 5,
-																		backgroundColor: handleSlotColor(slot, item._id)
-																			? "#bdc3c7"
-																			: "#f5f6fa",
-																		width: 80,
-																	}}
-																/>
-															) : (
-																""
-															)}
-														</>
-													))}
-												</Grid>
+								<Grid container>
+									{radioday.map((day) => (
+										<Grid
+											lg={4}
+											sm={6}
+											xs={12}
+											item
+											style={{display: "flex", flexDirection: "column"}}
+										>
+											{day}
+
+											{teachertimeslots.availableSlots.map((slot) => (
+												<>
+													{slot.startsWith(day) ? (
+														<Chip
+															size="small"
+															// onClick={() => handleSlotSelect(slot, item._id)}
+															// label={slot}
+															label={`${slot.split(" ")[0].split("-")[1]} ${slot.split(" ")[2]}`}
+															variant="outlined"
+															style={{
+																margin: 5,
+																width: 100,
+															}}
+
+															// style={{
+															// 	margin: 5,
+															// 	backgroundColor: handleSlotColor(slot, item._id)
+															// 		? "#bdc3c7"
+															// 		: "#f5f6fa",
+															// 	width: 80,
+															// }}
+														/>
+													) : (
+														""
+													)}
+												</>
 											))}
 										</Grid>
-										{/* {item.availableSlots.map((slot) => {
-											let data = radioday.map((day) => {
-												if (slot.startsWith(day)) {
-													return (
-														<div style={{display: "flex"}}>
-															<Chip
-																size="small"
-																onClick={() => handleSlotSelect(slot, item._id)}
-																label={slot}
-																// label={`${slot.split(" ")[0].split("-")[1]} ${slot.split(" ")[2]}`}
-																variant="outlined"
-																style={{
-																	margin: 5,
-																	backgroundColor: handleSlotColor(slot, item._id)
-																		? "#bdc3c7"
-																		: "#f5f6fa",
-																}}
-															/>
-														</div>
-													)
-												}
-											})
-											// if (slot.includes(radioday)) {
-											// 	return (
-											// 		<Chip
-											// 			size="small"
-											// 			onClick={() => handleSlotSelect(slot, item._id)}
-											// 			label={slot}
-											// 			// label={`${slot.split(" ")[0].split("-")[1]} ${slot.split(" ")[2]}`}
-											// 			variant="outlined"
-											// 			style={{
-											// 				margin: 5,
-											// 				backgroundColor: handleSlotColor(slot, item._id)
-											// 					? "#bdc3c7"
-											// 					: "#f5f6fa",
-											// 			}}
-											// 		/>
-											// 	)
-											// }
-
-											// if (slot.includes(radioday)) {
-											// 	return (
-											// 		<Chip
-											// 			size="small"
-											// 			onClick={() => handleSlotSelect(slot, item._id)}
-											// 			label={slot}
-											// 			// label={`${slot.split(" ")[0].split("-")[1]} ${slot.split(" ")[2]}`}
-											// 			variant="outlined"
-											// 			style={{
-											// 				margin: 5,
-											// 				backgroundColor: handleSlotColor(slot, item._id)
-											// 					? "#bdc3c7"
-											// 					: "#f5f6fa",
-											// 			}}
-											// 		/>
-											// 	)
-											// }
-											return <>{data}</>
-										})} */}
-
-										{/* <p style={{marginLeft: 10, marginBottom: 20, marginTop: 20}}>Scheduled Slots</p>
-										{item.scheduledSlots.map((slot) => {
-											if (slot.startsWith(radioday)) {
-												return (
-													<Chip
-														size="small"
-														onClick={() => handleSlotSelect(slot, item._id)}
-														label={`${slot.split(" ")[0].split("-")[1]} ${slot.split(" ")[2]}`}
-														variant="outlined"
-														style={{
-															margin: 5,
-															backgroundColor: handleSlotColor(slot, item._id)
-																? "#bdc3c7"
-																: "#f5f6fa",
-														}}
-													/>
-												)
-											}
-										})} */}
-									</div>
-								</TabPanel>
-							)
-						})}
+									))}
+								</Grid>
+							</div>
+						</>
+					)}
 				</div>
 				{teachertimeslots && (
 					<Button
