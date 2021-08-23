@@ -19,6 +19,7 @@ import {
 	Sun,
 	Users,
 	MessageCircle,
+	AlignJustify,
 } from "react-feather"
 import NavItem from "./NavItem"
 import useWindowDimensions from "../../Components/useWindowDimensions"
@@ -151,6 +152,11 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			icon: AccountBalanceOutlinedIcon,
 			title: "Financial",
 		},
+		{
+			href: "/options",
+			icon: AlignJustify,
+			title: "Options",
+		},
 	]
 
 	const SalesTeam = [
@@ -247,7 +253,6 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			title: "Teacher Data",
 		},
 	]
-
 
 	const classes = useStyles()
 	const location = useLocation()

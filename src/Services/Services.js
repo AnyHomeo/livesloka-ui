@@ -205,4 +205,8 @@ export const finalizeSalaries = (month, year, otps) =>
 	axios.post(`${API.main}/finalize`, {month, year, otps})
 export const getDemoCustomers = () =>
 	Axios.get(`${API.main}/options/demo/students?select=firstName,teacherId`)
-export const getTeacherSlotsForOptions = (id) => Axios.get(`${API.main}/options/teacher/slots/${id}`)
+export const getTeacherSlotsForOptions = (id) =>
+	Axios.get(`${API.main}/options/teacher/slots/${id}`)
+
+export const postOptions = (formData) =>
+	Axios.post(`${process.env.REACT_APP_API_KEY}/options`, formData)

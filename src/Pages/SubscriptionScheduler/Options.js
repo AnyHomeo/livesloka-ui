@@ -1,11 +1,44 @@
 import React, {useEffect, useState} from "react"
-import {getDemoCustomers, getTeacherSlotsForOptions, getData} from "./../../Services/Services"
+import {
+	getDemoCustomers,
+	getTeacherSlotsForOptions,
+	getData,
+	postOptions,
+} from "./../../Services/Services"
 import {Autocomplete, Alert} from "@material-ui/lab"
-import {TextField, Card, Grid, capitalize, Snackbar, Chip, Button} from "@material-ui/core"
+import {
+	TextField,
+	Card,
+	Grid,
+	capitalize,
+	Snackbar,
+	Chip,
+	Button,
+	List,
+	ListItem,
+	ListItemText,
+	ListItemSecondaryAction,
+	Checkbox,
+	CircularProgress,
+	Container,
+} from "@material-ui/core"
 import {ToggleButton, ToggleButtonGroup} from "@material-ui/lab"
 import styles from "./style.module.scss"
 import times from "../../Services/times.json"
 import {X} from "react-feather"
+import Lottie from "react-lottie"
+
+import loadingAnimation from "../../Images/loading.json"
+import Optionstable from "./Optionstable"
+
+const defaultOptions = {
+	loop: true,
+	autoplay: true,
+	animationData: loadingAnimation,
+	rendererSettings: {
+		preserveAspectRatio: "xMidYMid slice",
+	},
+}
 
 let days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
 let snackbarInitialState = {
@@ -23,9 +56,13 @@ function Options() {
 	const [teacherData, setTeacherData] = useState({})
 	const [tempOption, setTempOption] = useState({})
 	const [options, setOptions] = useState([])
+	const [btnLoading, setBtnLoading] = useState(false)
+	const [loading, setLoading] = useState(false)
+	const [refresh, setRefresh] = useState(false)
 
 	useEffect(() => {
 		;(async () => {
+			setLoading(true)
 			try {
 				const data = await getDemoCustomers()
 				setCustomers(data?.data?.result || [])
@@ -39,6 +76,7 @@ function Options() {
 			} catch (error) {
 				console.log(error)
 			}
+			setLoading(false)
 		})()
 	}, [])
 
@@ -102,6 +140,49 @@ function Options() {
 
 	const handleSnackbarClose = () => setMessage(snackbarInitialState)
 
+	const [checked, setChecked] = React.useState([])
+
+	const handleToggle = (value) => () => {
+		const currentIndex = checked.indexOf(value)
+		const newChecked = [...checked]
+
+		if (currentIndex === -1) {
+			newChecked.push(value)
+		} else {
+			newChecked.splice(currentIndex, 1)
+		}
+
+		setChecked(newChecked)
+	}
+
+	const submitOptions = async () => {
+		setBtnLoading(true)
+		const formData = {
+			customer: selectedCustomer._id,
+			teacher: selectedTeacher.id,
+			options,
+			schedules: checked,
+		}
+
+		try {
+			const data = await postOptions(formData)
+			if (data.status === 200) {
+				setMessage({
+					isShown: true,
+					message: "Options added successfully",
+					type: "success",
+				})
+				setChecked([])
+				setOptions([])
+				setRefresh(true)
+			}
+		} catch (error) {}
+		setBtnLoading(false)
+	}
+
+	if (loading) {
+		return <Lottie options={defaultOptions} height={400} width={400} />
+	}
 	return (
 		<>
 			<Snackbar
@@ -223,6 +304,7 @@ function Options() {
 									)
 								})}
 							</Grid>
+
 							<Button
 								className={styles.addButton}
 								disabled={!Object.keys(tempOption).some((i) => !!tempOption[i])}
@@ -234,6 +316,33 @@ function Options() {
 								}}
 							>
 								Add Option
+							</Button>
+							<List style={{width: "70%"}}>
+								{teacherData &&
+									teacherData.schedules?.map((value) => {
+										return (
+											<ListItem key={value._id} button onClick={handleToggle(value._id)}>
+												<ListItemText id={value._id} primary={value.className} />
+												<ListItemSecondaryAction>
+													<Checkbox
+														edge="end"
+														onChange={handleToggle(value._id)}
+														checked={checked.indexOf(value._id) !== -1}
+													/>
+												</ListItemSecondaryAction>
+											</ListItem>
+										)
+									})}
+							</List>
+
+							<Button
+								className={styles.addButton}
+								disabled={btnLoading}
+								variant="contained"
+								color="primary"
+								onClick={submitOptions}
+							>
+								{btnLoading ? <CircularProgress style={{height: 25, width: 25}} /> : "Submit"}
 							</Button>
 						</Card>
 					</Grid>
@@ -264,6 +373,10 @@ function Options() {
 						</Card>
 					</Grid>
 				</Grid>
+			</div>
+
+			<div className={styles.maxWidth1200}>
+				<Optionstable refresh={refresh} />
 			</div>
 		</>
 	)
