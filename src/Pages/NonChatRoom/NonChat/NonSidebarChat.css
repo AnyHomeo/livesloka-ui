@@ -1,0 +1,47 @@
+.sidebarChat {
+	display: flex;
+	padding: 20px;
+	cursor: pointer;
+	border-bottom: 1px solid #f6f6f6;
+}
+
+.sidebarChat:hover {
+	background-color: #ebebeb;
+}
+
+.sidebarChat_info {
+	margin-left: 15px;
+	display: flex;
+	flex-basis: auto;
+	flex-direction: column;
+	flex-grow: 1;
+	justify-content: center;
+	min-width: 0;
+}
+
+.sidebarChat_info > h2 {
+	font-size: 16px;
+	margin: 0px;
+}
+
+.sidebarChat_info > p {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	/* // width: 160px; */
+	height: 22px;
+	/* // white-space: nowrap; */
+	margin: 0px;
+}
+
+.add-new-chat-title {
+	margin: 0px 0px 0px 10px;
+}
+
+a {
+	text-decoration: none;
+	color: black;
+}
+
+.sidebarChat_head {
+	flex: 0.25 1;
+}

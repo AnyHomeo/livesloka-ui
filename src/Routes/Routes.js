@@ -45,80 +45,80 @@ import Expenseform from "../Pages/Financialdashboard/Expenseform"
 import {SnackbarProvider, useSnackbar} from "notistack"
 import Slide from "@material-ui/core/Slide"
 import {AddSubjects} from "../Pages/Subjects"
+import ChatRoom from "../Pages/ChatRoom"
+import NonChatRoom from "../Pages/NonChatRoom"
 
 function Routes() {
 	return (
 		<>
-			<Router>
-				<Switch>
-					<Route path="/" exact component={Login} />
-					<Route path="/login" exact component={Login} />
-					<Route path="/password-reset" exact component={PasswordReset} />
-					<Route path="/404" exact component={NotFoundView} />
-					<SnackbarProvider
-						maxSnack={3}
-						anchorOrigin={{
-							vertical: "top",
-							horizontal: "right",
-						}}
-						TransitionComponent={Slide}
-					>
-						<DashboardLayout>
-							<AdminRoute path="/dashboard" exact component={Dashboard} />
-							<AdminRoute path="/financial" exact component={FinancialDashboard} />
-							<AdminRoute path="/inclass" exact component={DemoAndInclassStudents} />
-							<AdminRoute path="/update/classes" exact component={UpdateNumberOfBoughtClasses} />
-							<AdminRoute
-								path="/update/classes/:id"
-								exact
-								component={UpdateNumberOfBoughtClasses}
-							/>
-							<AdminRoute path="/zoom-dashboard" exact component={ZoomAccountDashboard} />
-							<AdminRoute path="/customer-data" exact component={CustomerData} />
-							<AdminRoute path="/customer-data-mobile" exact component={CustomerDetails} />
-							<AdminRoute path="/customer-data-info" exact component={CustomersDetailsMb} />
-							<AdminRoute path="/statistics" exact component={Stats} />
-							<AdminRoute path="/add-customer-mobile" exact component={AddNewCustomer} />
-							<AdminRoute path="/teacher-salary" exact component={TeacherSalary} />
-							<AdminRoute path="/add-fields" exact component={CustomTabs} />
-							<AdminRoute path="/attendance" exact component={Attedance} />
-							<AdminRoute path="/summercamps" exact component={SummerCampsCustomerTable} />
-							<AdminRoute
-								path="/edit/attendance/:scheduleId/:date"
-								exact
-								component={EditAttendance}
-							/>
-							<AdminRoute path="/teacherDetails" exact component={TeacherDetails} />
-							<AdminRoute path="/teacher" exact component={NewTeacherDetails} />
-							<AdminRoute path="/meeting-scheduler" exact component={MeetingScheduler} />
-							<AdminRoute
-								path="/availabe-scheduler/:slot/:teacher"
-								exact
-								component={AvailableMeetingSchedule}
-							/>
-							<AdminRoute path="/attendance/class" exact component={AttedanceByClass} />
-							<AdminRoute path="/invoice-generator" exact component={Generator} />
-							<AdminRoute path="/payments" exact component={PaymentsPage} />
-							<AdminRoute path="/careers" exact component={Careers} />
-							<AdminRoute path="/manual-invoice" exact component={Invoice} />
-							<AdminRoute path="/invoices" exact component={Invoices} />
-							<AdminRoute path="/scheduler" exact component={Scheduler} />
-							<AdminRoute path="/leaves" exact component={LeavesTabs} />
-							<AdminRoute path="/Messages" exact component={NotificationSettings} />
-							<AdminRoute path="/analytics" exact component={FinancialAnalytics} />
-							<AdminRoute path="/reset/password" exact component={UserPasswordReset} />
-							<AdminRoute path="/edit-schedule/:id" exact component={EditSchedule} />
-							<AdminRoute path="/zoom/dashboard" exact component={MeetingDashboard} />
-							<AdminRoute path="/teacherSalaries" exact component={TeacherSalaries} />
-							<AdminRoute path="/test" exact component={ZoomAccountDashboard} />
-							<AdminRoute path="/notifications" exact component={NotificationsTable} />
-							<AdminRoute path="/expenses" exact component={Expenseform} />
-							<AdminRoute path="/add-subjects" exact component={AddSubjects} />
-						</DashboardLayout>
-					</SnackbarProvider>
-					<Route path="*" component={NotFoundView} />
-				</Switch>
-			</Router>
+			<Switch>
+				<Route path="/" exact component={Login} />
+				<Route path="/login" exact component={Login} />
+				<Route path="/password-reset" exact component={PasswordReset} />
+				<Route path="/404" exact component={NotFoundView} />
+				<SnackbarProvider
+					maxSnack={3}
+					anchorOrigin={{
+						vertical: "top",
+						horizontal: "right",
+					}}
+					TransitionComponent={Slide}
+				>
+					<DashboardLayout>
+						<AdminRoute path="/dashboard" exact component={Dashboard} />
+						<AdminRoute path="/financial" exact component={FinancialDashboard} />
+						<AdminRoute path="/inclass" exact component={DemoAndInclassStudents} />
+						<AdminRoute path="/update/classes" exact component={UpdateNumberOfBoughtClasses} />
+						<AdminRoute path="/update/classes/:id" exact component={UpdateNumberOfBoughtClasses} />
+						<AdminRoute path="/zoom-dashboard" exact component={ZoomAccountDashboard} />
+						<AdminRoute path="/customer-data" exact component={CustomerData} />
+						<AdminRoute path="/customer-data-mobile" exact component={CustomerDetails} />
+						<AdminRoute path="/customer-data-info" exact component={CustomersDetailsMb} />
+						<AdminRoute path="/statistics" exact component={Stats} />
+						<AdminRoute path="/add-customer-mobile" exact component={AddNewCustomer} />
+						<AdminRoute path="/teacher-salary" exact component={TeacherSalary} />
+						<AdminRoute path="/add-fields" exact component={CustomTabs} />
+						<AdminRoute path="/attendance" exact component={Attedance} />
+						<AdminRoute path="/summercamps" exact component={SummerCampsCustomerTable} />
+						<AdminRoute
+							path="/edit/attendance/:scheduleId/:date"
+							exact
+							component={EditAttendance}
+						/>
+						<AdminRoute path="/teacherDetails" exact component={TeacherDetails} />
+						<AdminRoute path="/teacher" exact component={NewTeacherDetails} />
+						<AdminRoute path="/meeting-scheduler" exact component={MeetingScheduler} />
+						<AdminRoute
+							path="/availabe-scheduler/:slot/:teacher"
+							exact
+							component={AvailableMeetingSchedule}
+						/>
+						<AdminRoute path="/attendance/class" exact component={AttedanceByClass} />
+						<AdminRoute path="/invoice-generator" exact component={Generator} />
+						<AdminRoute path="/payments" exact component={PaymentsPage} />
+						<AdminRoute path="/careers" exact component={Careers} />
+						<AdminRoute path="/manual-invoice" exact component={Invoice} />
+						<AdminRoute path="/invoices" exact component={Invoices} />
+						<AdminRoute path="/scheduler" exact component={Scheduler} />
+						<AdminRoute path="/leaves" exact component={LeavesTabs} />
+						<AdminRoute path="/Messages" exact component={NotificationSettings} />
+						<AdminRoute path="/analytics" exact component={FinancialAnalytics} />
+						<AdminRoute path="/reset/password" exact component={UserPasswordReset} />
+						<AdminRoute path="/edit-schedule/:id" exact component={EditSchedule} />
+						<AdminRoute path="/zoom/dashboard" exact component={MeetingDashboard} />
+						<AdminRoute path="/teacherSalaries" exact component={TeacherSalaries} />
+						<AdminRoute path="/test" exact component={ZoomAccountDashboard} />
+						<AdminRoute path="/notifications" exact component={NotificationsTable} />
+						<AdminRoute path="/expenses" exact component={Expenseform} />
+						<AdminRoute path="/add-subjects" exact component={AddSubjects} />
+						<AdminRoute path="/room/:roomID" exact component={ChatRoom} />
+						<AdminRoute path="/room" exact component={ChatRoom} />
+						<AdminRoute path="/nonroom/:roomID" exact component={NonChatRoom} />
+						<AdminRoute path="/nonroom" exact component={NonChatRoom} />
+					</DashboardLayout>
+				</SnackbarProvider>
+				<Route path="*" component={NotFoundView} />
+			</Switch>
 		</>
 	)
 }

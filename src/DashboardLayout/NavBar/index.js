@@ -122,6 +122,16 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			title: "Financial Dashboard",
 		},
 		{
+			href: "/room",
+			icon: DollarSign,
+			title: "Rooms",
+		},
+		{
+			href: "/nonroom",
+			icon: DollarSign,
+			title: "Non Rooms",
+		},
+		{
 			href: "/payments",
 			icon: DollarSign,
 			title: "Payments",
@@ -173,6 +183,16 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			href: "/payments",
 			icon: DollarSign,
 			title: "Payments",
+		},
+		{
+			href: "/room",
+			icon: DollarSign,
+			title: "Rooms",
+		},
+		{
+			href: "/nonroom",
+			icon: DollarSign,
+			title: "Non Rooms",
 		},
 		{
 			href: "/statistics",
@@ -247,7 +267,6 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			title: "Teacher Data",
 		},
 	]
-
 
 	const classes = useStyles()
 	const location = useLocation()

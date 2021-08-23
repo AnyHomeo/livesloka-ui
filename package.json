@@ -50,6 +50,7 @@
     "react-scripts": "3.4.1",
     "react-spinners": "0.9.0",
     "react-svg": "^14.0.1",
+    "react-toastify": "^7.0.4",
     "socket.io-client": "3.0.3"
   },
   "scripts": {
