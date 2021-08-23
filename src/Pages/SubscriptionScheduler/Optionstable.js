@@ -16,8 +16,12 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown"
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp"
 import Axios from "axios"
 import moment from "moment"
-import {Chip, CircularProgress, List, ListItem, ListItemText} from "@material-ui/core"
-import {Edit, Trash} from "react-feather"
+import {capitalize, CircularProgress, Grid, Tooltip} from "@material-ui/core"
+import {Edit, Trash, User} from "react-feather"
+import {useConfirm} from "material-ui-confirm"
+import styles from "./style.module.scss"
+
+let days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
 
 const useRowStyles = makeStyles({
 	root: {
@@ -39,21 +43,32 @@ function createData(studentName, teacherName, createdAt, history, id) {
 
 function Row(props) {
 	const {row, getBackData} = props
+	const confirm = useConfirm()
+
 	const [open, setOpen] = React.useState(false)
 	const classes = useRowStyles()
 	const [loading, setLoading] = useState(false)
+
 	const onDeleteRow = async (id) => {
 		setLoading(true)
 		try {
-			const data = await Axios.delete(`${process.env.REACT_APP_API_KEY}/options/${id}`)
-
-			console.log(data)
-
-			if (data.status === 200) {
-				getBackData(true)
-			}
-		} catch (error) {}
-		setLoading(false)
+			confirm({
+				title: "Do you really want to delete?",
+				confirmationText: "Yes!, Delete",
+			})
+				.then(async () => {
+					const data = await Axios.delete(`${process.env.REACT_APP_API_KEY}/options/${id}`)
+					setLoading(false)
+					if (data.status === 200) {
+						getBackData(true)
+					}
+				})
+				.catch(() => {
+					setLoading(false)
+				})
+		} catch (error) {
+			console.log(error)
+		}
 	}
 	return (
 		<React.Fragment>
@@ -84,27 +99,55 @@ function Row(props) {
 							<Typography variant="h6" gutterBottom component="div">
 								Slots & Schedules
 							</Typography>
-
-							<List component="nav" aria-label="secondary mailbox folder">
+							<Grid container spacing={2}>
 								{row.history[0].map((item, i) => (
-									<ListItem key={i} button>
-										{Object.keys(item).map((key) => {
-											if (key === "_id") {
-												return null
-											}
-											return <Chip label={item[key]} />
-										})}
-									</ListItem>
+									<Grid item sm={12} md={4} lg={3}>
+										<div className={styles.option}>
+											{days.map((day, i) =>
+												item[day.toLowerCase()] ? (
+													<div>
+														{`${capitalize(day.toLowerCase())}:${
+															item[day.toLowerCase()].split("-")[1]
+														}`}
+													</div>
+												) : (
+													""
+												)
+											)}
+										</div>
+									</Grid>
 								))}
-							</List>
-
-							<List component="nav" aria-label="secondary mailbox folder">
-								{row.history[1].map((item, i) => (
-									<ListItem key={i} button>
-										<ListItemText primary={item.scheduleDescription} />
-									</ListItem>
-								))}
-							</List>
+								{row.history[1].map((item, i) => {
+									let slots = item.scheduleDescription
+										.split("(")
+										.slice(1)
+										.reduce((acc, singleSlot) => {
+											let singleSlotArr = singleSlot.split("-")
+											acc = {...acc, [singleSlotArr[0]]: singleSlotArr[1]}
+											return acc
+										}, {})
+									return (
+										<Grid item sm={12} md={4} lg={3}>
+											<div className={styles.option}>
+												{days.map((day, i) =>
+													slots[day] ? (
+														<div>
+															{capitalize(day.toLowerCase())}:{slots[day]}
+														</div>
+													) : (
+														""
+													)
+												)}
+												<div className={styles.scheduledClass}>
+													<Tooltip title={item.className}>
+														<User />
+													</Tooltip>
+												</div>
+											</div>
+										</Grid>
+									)
+								})}
+							</Grid>
 						</Box>
 					</Collapse>
 				</TableCell>

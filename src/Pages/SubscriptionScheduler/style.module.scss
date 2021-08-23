@@ -66,3 +66,17 @@
 		}
 	}
 }
+
+.option{
+	padding: 10px;
+	width: 100%;
+	height: 100%;
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+	position: relative;
+	background-color:#ecf0f1;
+	.scheduledClass{
+		position: absolute;
+		right: 5px;
+		top: 5px;
+	}
+}

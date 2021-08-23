@@ -20,14 +20,12 @@ import {
 	ListItemSecondaryAction,
 	Checkbox,
 	CircularProgress,
-	Container,
 } from "@material-ui/core"
 import {ToggleButton, ToggleButtonGroup} from "@material-ui/lab"
 import styles from "./style.module.scss"
 import times from "../../Services/times.json"
 import {X} from "react-feather"
 import Lottie from "react-lottie"
-
 import loadingAnimation from "../../Images/loading.json"
 import Optionstable from "./Optionstable"
 
@@ -47,6 +45,7 @@ let snackbarInitialState = {
 	type: "error",
 }
 function Options() {
+
 	const [customers, setCustomers] = useState([])
 	const [selectedCustomer, setSelectedCustomer] = useState({})
 	const [selectedDays, setSelectedDays] = useState([])
@@ -59,6 +58,7 @@ function Options() {
 	const [btnLoading, setBtnLoading] = useState(false)
 	const [loading, setLoading] = useState(false)
 	const [refresh, setRefresh] = useState(false)
+	const [checked, setChecked] = React.useState([])
 
 	useEffect(() => {
 		;(async () => {
@@ -140,12 +140,9 @@ function Options() {
 
 	const handleSnackbarClose = () => setMessage(snackbarInitialState)
 
-	const [checked, setChecked] = React.useState([])
-
 	const handleToggle = (value) => () => {
 		const currentIndex = checked.indexOf(value)
 		const newChecked = [...checked]
-
 		if (currentIndex === -1) {
 			newChecked.push(value)
 		} else {
@@ -174,6 +171,8 @@ function Options() {
 				})
 				setChecked([])
 				setOptions([])
+				setSelectedCustomer({})
+				setSelectedTeacher("")
 				setRefresh(true)
 			}
 		} catch (error) {}
@@ -183,6 +182,7 @@ function Options() {
 	if (loading) {
 		return <Lottie options={defaultOptions} height={400} width={400} />
 	}
+
 	return (
 		<>
 			<Snackbar
