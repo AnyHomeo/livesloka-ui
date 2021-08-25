@@ -13,7 +13,6 @@ function Alert(props) {
 }
 
 const Expensestable = ({date}) => {
-	console.log(date)
 	const [column, setColumn] = useState([])
 	const [data, setData] = useState([])
 	const [loading, setLoading] = useState(true)
@@ -95,7 +94,6 @@ const Expensestable = ({date}) => {
 				editable={{
 					onRowUpdate: (newData, oldData) => {
 						return editField(newData).then((fetchedData) => {
-							console.log(fetchedData)
 							if (fetchedData.data.status === "OK") {
 								const dataUpdate = [...data]
 								const index = oldData.tableData.id

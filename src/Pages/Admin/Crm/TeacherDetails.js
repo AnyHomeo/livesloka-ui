@@ -59,7 +59,6 @@ export default function TeacherDetails() {
       data.data.result.forEach((data) => {
         dummyLookup[data.id] = data.subjectName;
       });
-      console.log(dummyLookup,data)
       setSubjectsLookup(dummyLookup);
       fetchTeachersData();
     });

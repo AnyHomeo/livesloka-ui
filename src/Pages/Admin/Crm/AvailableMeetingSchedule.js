@@ -336,7 +336,6 @@ const AvailableMeetingSchedule = ({match}) => {
 
 		let selectedTeacher = teacherName && teacherName.filter((tea) => tea.id === teacher)
 
-		console.log(selectedTeacher)
 		let names =
 			studentNamesFullObject &&
 			studentNamesFullObject.map((item, i) => {

@@ -66,7 +66,6 @@ const Expenseform = () => {
 
 		const data = await axios.post(`${process.env.REACT_APP_API_KEY}/admin/add/expenses`, formData)
 
-		console.log(data)
 		if (data.status === 200) {
 			setSnackBarOpen(true)
 			setAlertData(data?.data?.message)

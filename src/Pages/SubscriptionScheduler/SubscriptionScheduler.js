@@ -113,7 +113,6 @@ const SubscriptionScheduler = () => {
 				`${process.env.REACT_APP_API_KEY}/options/demo/students?select=firstName,email,subjectId,teacherId`
 			)
 			setDemoCustomers(data?.data?.result)
-			console.log(data)
 		} catch (error) {}
 		setLoading(false)
 	}
@@ -129,7 +128,6 @@ const SubscriptionScheduler = () => {
 		try {
 			const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/options/teacher/slots/${id}`)
 			setTeachertimeslots(data?.data?.result)
-			console.log(data)
 			let stateData = []
 
 			data &&
@@ -205,7 +203,6 @@ const SubscriptionScheduler = () => {
 
 		try {
 			const data = await Axios.post(`${process.env.REACT_APP_API_KEY}/options`, formData)
-			console.log(data)
 
 			if (data.status === 200) {
 				// setTeachertimeslots()
@@ -213,9 +210,9 @@ const SubscriptionScheduler = () => {
 				setResponse("Inserted Successfully")
 				setSuccess(true)
 			}
-		} catch (error) {}
-
-		console.log(formData)
+		} catch (error) {
+			console.log(error)
+		}
 		setBtnloading(false)
 	}
 	const handleClose = (event, reason) => {

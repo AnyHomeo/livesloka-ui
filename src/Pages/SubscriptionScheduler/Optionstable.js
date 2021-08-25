@@ -185,12 +185,12 @@ export default function Optionstable({refresh}) {
 					)
 					tempArr.push(test)
 				})
-		} catch (error) {}
-		console.log(tempArr)
+		} catch (error) {
+			console.log(error)
+		}
 		setRows(tempArr)
 	}
 
-	console.log(rows)
 	return (
 		<TableContainer component={Paper}>
 			<Table aria-label="collapsible table">

@@ -249,10 +249,8 @@ function Row(props) {
 						<p className="Tablecell">{totalSalary}</p>
 					</TableCell>
 				</TableRow>
-				{console.log(date)}
 				<TableRow>
 					<TableCell colSpan="6">
-						{console.log(row)}
 						<ExtraTeacherDetails open={newOpen} {...row} />
 					</TableCell>
 				</TableRow>

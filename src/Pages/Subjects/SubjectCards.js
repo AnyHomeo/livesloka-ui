@@ -86,7 +86,6 @@ const SubjectCards = ({data}) => {
 			const res = await Axios.get(
 				`${process.env.REACT_APP_API_KEY}/subscriptions/get/plans/${data.id}`
 			)
-			console.log(res)
 			setPlans(res?.data.result?.plans)
 			setLoading(false)
 		} catch (error) {

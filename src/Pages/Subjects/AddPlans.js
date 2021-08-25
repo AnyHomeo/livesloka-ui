@@ -59,7 +59,6 @@ export default function AddPlans({open, setOpen, products, getback}) {
 				`${process.env.REACT_APP_API_KEY}/subscriptions/create/plan`,
 				formData
 			)
-			console.log(data)
 			if (data.status === 200) {
 				handleClose()
 				getback(200)
