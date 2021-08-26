@@ -8,7 +8,6 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import {
 	Card,
 	IconButton,
-	Snackbar,
 	TextField,
 	Switch,
 	FormControl,
@@ -18,7 +17,6 @@ import {
 } from "@material-ui/core"
 import {Edit, Trash2, ArrowRightCircle, XCircle} from "react-feather"
 import {editField} from "../../../../Services/Services"
-import Alert from "@material-ui/lab/Alert"
 import {ChromePicker} from "react-color"
 
 const useStyles = makeStyles((theme) => ({
@@ -31,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
 	heading: {
 		fontSize: theme.typography.pxToRem(15),
 		fontWeight: theme.typography.fontWeightRegular,
-		// marginRight: 20,
 	},
 	expanded: {},
 	content: {
@@ -107,21 +104,7 @@ const useStyles = makeStyles((theme) => ({
 const AddFieldsMobile = ({data, categoryData, statusData, getbackdata, name}) => {
 	const classes = useStyles()
 
-	const handleSnackBarClose = (event, reason) => {
-		if (reason === "clickaway") {
-			return
-		}
-		setSnackBarOpen(false)
-	}
-
 	const [editOption, setEditOption] = useState(false)
-
-	const [snackBarOpen, setSnackBarOpen] = useState(false)
-	const [success, setSuccess] = useState(false)
-	const [response, setResponse] = useState("")
-
-	const [loading, setLoading] = useState(false)
-
 
 	function capitalize(word) {
 		return word.charAt(0).toUpperCase() + word.substring(1)
@@ -129,7 +112,6 @@ const AddFieldsMobile = ({data, categoryData, statusData, getbackdata, name}) =>
 
 	function humanReadable(name) {
 		var words = name.match(/[A-Za-z][^_\-A-Z]*|[0-9]+/g) || []
-
 		return words.map(capitalize).join(" ")
 	}
 
@@ -148,7 +130,6 @@ const AddFieldsMobile = ({data, categoryData, statusData, getbackdata, name}) =>
 
 	const updateData = async () => {
 		const res = await editField(`Update ${name}`, textFieldData)
-
 		if (res.status === 200) {
 			getbackdata(200)
 			setEditOption(false)
@@ -617,113 +598,6 @@ const AddFieldsMobile = ({data, categoryData, statusData, getbackdata, name}) =>
 									</div>
 								)
 							})}
-
-							{/* <div>
-              <div className={classes.flexContainer}></div>
-
-              <div style={{ marginTop: 5 }}>
-                <p className={classes.subTitle}>
-                  Desc:{" "}
-                  <span className={classes.subInfo}>{data.TeacherDesc}</span>{" "}
-                </p>
-
-                <p className={classes.subTitle}>
-                  Status:{" "}
-                  {statusData &&
-                    statusData?.data?.result?.map((cat) => {
-                      if (cat.statusId === data.TeacherStatus) {
-                        return (
-                          <span className={classes.subInfo}>
-                            {cat.statusName}
-                          </span>
-                        );
-                      }
-                    })}
-                </p>
-
-                <p className={classes.subTitle}>
-                  Category:{" "}
-                  {categoryData &&
-                    categoryData?.data?.result?.map((cat) => {
-                      if (cat.id === data.category) {
-                        return (
-                          <span className={classes.subInfo}>
-                            {cat.categoryName}
-                          </span>
-                        );
-                      }
-                    })}
-                </p>
-
-                <p className={classes.subTitle}>
-                  Mail:{" "}
-                  <span className={classes.subInfo}>{data.teacherMail}</span>{" "}
-                </p>
-
-                <p className={classes.subTitle}>
-                  Salary Till Now:{" "}
-                  <span className={classes.subInfo}>{data.Salary_tillNow}</span>{" "}
-                </p>
-                <p className={classes.subTitle}>
-                  Commission Amount One:{" "}
-                  <span className={classes.subInfo}>
-                    {data.Commission_Amount_One}
-                  </span>{" "}
-                </p>
-
-                <p className={classes.subTitle}>
-                  Commission Amount Many:{" "}
-                  <span className={classes.subInfo}>
-                    {data.Commission_Amount_Many}
-                  </span>{" "}
-                </p>
-
-                <p className={classes.subTitle}>
-                  Bank:{" "}
-                  <span className={classes.subInfo}>{data.Bank_account}</span>{" "}
-                </p>
-
-                <p className={classes.subTitle}>
-                  Phone:{" "}
-                  <span className={classes.subInfo}>{data.Phone_number}</span>{" "}
-                </p>
-
-                <p className={classes.subTitle}>
-                  Bank Full Name:{" "}
-                  <span className={classes.subInfo}>{data.Bank_full_name}</span>{" "}
-                </p>
-
-                <p className={classes.subTitle}>
-                  Include Demo Class In Salaries:{" "}
-                  <span className={classes.subInfo}>
-                    {data.isDemoIncludedInSalaries}
-                  </span>{" "}
-                </p>
-
-                <p className={classes.subTitle}>
-                  Leave Difference Hours:{" "}
-                  <span className={classes.subInfo}>
-                    {data.leaveDifferenceHours}
-                  </span>{" "}
-                </p>
-
-                <p className={classes.subTitle}>Teacher Image: </p>
-                <img
-                  style={{
-                    height: 60,
-                    width: 60,
-                    objectFit: "contain",
-                    display: "block",
-                  }}
-                  src={data.teacherImageLink}
-                  alt=""
-                />
-                <IconButton onClick={() => setEditableDate(true)}>
-                  <Edit style={{ marginRight: 10, color: "#34495e" }} />
-                  <Trash2 style={{ color: "#e74c3c" }} />
-                </IconButton>
-              </div>
-            </div> */}
 							<div>
 								{editOption ? (
 									<>
@@ -748,12 +622,6 @@ const AddFieldsMobile = ({data, categoryData, statusData, getbackdata, name}) =>
 					</AccordionDetails>
 				</Accordion>
 			)}
-
-			<Snackbar open={snackBarOpen} autoHideDuration={6000} onClose={handleSnackBarClose}>
-				<Alert onClose={handleSnackBarClose} severity={success ? "success" : "warning"}>
-					{response}
-				</Alert>
-			</Snackbar>
 		</div>
 	)
 }

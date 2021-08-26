@@ -14,7 +14,6 @@ import {
 	Select,
 	InputLabel,
 	MenuItem,
-	Tooltip,
 	IconButton,
 } from "@material-ui/core/"
 import SaveIcon from "@material-ui/icons/Save"
@@ -30,15 +29,12 @@ import {getData} from "../../../Services/Services"
 import "date-fns"
 import DateFnsUtils from "@date-io/date-fns"
 import {MuiPickersUtilsProvider, KeyboardDatePicker} from "@material-ui/pickers"
-import {ToggleButton, ToggleButtonGroup} from "@material-ui/lab"
-import {EditorState, convertToRaw, ContentState} from "draft-js"
+import {EditorState, convertToRaw} from "draft-js"
 import draftToHtml from "draftjs-to-html"
-import htmlToDraft from "html-to-draftjs"
 import {firebase} from "../../../Firebase"
 import useDocumentTitle from "../../../Components/useDocumentTitle"
 
 let days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
-const isImageUrl = require("is-image-url")
 
 const useStyles = makeStyles((theme) => ({
 	saveButton: {
@@ -77,12 +73,6 @@ const AvailableMeetingSchedule = ({match}) => {
 	const [studentName, setStudentName] = useState([])
 	const [availableTimeSlots, setAvailableTimeSlots] = useState([])
 	const [timeSlotState, setTimeSlotState] = useState([])
-	const [zoomLink, setZoomLink] = useState("")
-	const [zoomAccounts, setZoomAccounts] = useState([])
-	const [teacherNameFullObject, setTeacherNameFullObject] = useState({
-		id: "",
-		TeacherName: "",
-	})
 	const [studentNamesFullObject, setStudentNamesFullObject] = useState([])
 	const [alert, setAlert] = useState("")
 	const [alertColor, setAlertColor] = useState("")
@@ -123,7 +113,6 @@ const AvailableMeetingSchedule = ({match}) => {
 	useEffect(() => {
 		getTeachers()
 		getStudents()
-		getZoomAccounts()
 		getSubjectNames()
 	}, [])
 
@@ -148,16 +137,6 @@ const AvailableMeetingSchedule = ({match}) => {
 			`${process.env.REACT_APP_API_KEY}/customers/all?params=firstName,lastName,subjectId`
 		)
 		setStudentName(studentNames.data.result)
-	}
-
-	const getZoomAccounts = async () => {
-		getData("Zoom Account")
-			.then((data) => {
-				setZoomAccounts(data.data.result)
-			})
-			.catch((err) => {
-				console.log(err)
-			})
 	}
 
 	const getSubjectNames = async () => {
@@ -233,14 +212,12 @@ const AvailableMeetingSchedule = ({match}) => {
 						setDemo(false)
 						setOneToOne("")
 						setPersonName("")
-						setZoomLink("")
 						setPersonName("")
 						setSubjectNameId("")
 						setSuccessOpen(true)
 						setAlert(res.data.message)
 						setAlertColor("success")
 						setLoading(false)
-						setTeacherNameFullObject({})
 						setStudentNamesFullObject([])
 						setRadioday("")
 						setClassName("")
@@ -300,14 +277,12 @@ const AvailableMeetingSchedule = ({match}) => {
 						setDemo(false)
 						setOneToOne("")
 						setPersonName("")
-						setZoomLink("")
 						setPersonName("")
 						setSubjectNameId("")
 						setSuccessOpen(true)
 						setAlert(res.data.message)
 						setAlertColor("success")
 						setLoading(false)
-						setTeacherNameFullObject({})
 						setStudentNamesFullObject([])
 						setRadioday("")
 						setClassName("")
@@ -361,7 +336,6 @@ const AvailableMeetingSchedule = ({match}) => {
 
 		let selectedTeacher = teacherName && teacherName.filter((tea) => tea.id === teacher)
 
-		console.log(selectedTeacher)
 		let names =
 			studentNamesFullObject &&
 			studentNamesFullObject.map((item, i) => {

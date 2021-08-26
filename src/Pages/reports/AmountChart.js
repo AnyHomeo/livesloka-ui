@@ -51,8 +51,6 @@ const AmountChart = ({dailyDataline, dataa, className, ...rest}) => {
 		labels: totalDates && totalDates,
 	}
 
-	console.log(data)
-
 	const options = {
 		animation: false,
 		cutoutPercentage: 80,

@@ -217,7 +217,6 @@ function SingleDayStats({day, value, setDialogOpen, setDialogData, refresh, aler
 					arrofObj[date.slot] = [id.teacherId]
 				}
 			})
-		console.log(arrofObj)
 		setscheduleLeaves(arrofObj)
 	}
 

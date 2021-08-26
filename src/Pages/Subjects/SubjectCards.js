@@ -1,9 +1,10 @@
 import {Chip, Fab, makeStyles, Typography} from "@material-ui/core"
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import {Calendar, Trash2, Copy, Edit} from "react-feather"
 import {Avatar, IconButton, Grid} from "@material-ui/core"
 import moment from "moment"
 import Collapse from "@material-ui/core/Collapse"
+import Axios from "axios"
 
 const useStyles = makeStyles({
 	container: {
@@ -39,10 +40,10 @@ const useStyles = makeStyles({
 		boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
 		minHeight: 200,
 		display: "flex",
-		justifyContent:'space-around',
+		justifyContent: "space-around",
 		flexDirection: "column",
 		overflow: "hidden",
-		padding: 10
+		padding: 10,
 	},
 	addNewPlan: {
 		borderRadius: 10,
@@ -53,24 +54,45 @@ const useStyles = makeStyles({
 		minHeight: 200,
 		fontSize: "1rem",
 	},
-	planActions:{
+	planActions: {
 		display: "flex",
 		alignItems: "center",
 		justifyContent: "flex-end",
-		gap:10
+		gap: 10,
 	},
-	planTitle:{
+	planTitle: {
 		textAlign: "center",
-		padding:"10px 0"
+		padding: "10px 0",
 	},
-	status:{
+	status: {
 		transform: "translateX(-20px)",
-		width:"fit-content"
-	}
+		width: "fit-content",
+	},
 })
 const SubjectCards = ({data}) => {
 	const classes = useStyles()
 	const [isPlansOpen, setIsPlansOpen] = useState(false)
+	const [plans, setPlans] = useState()
+	const [loading, setLoading] = useState(false)
+
+	useEffect(() => {
+		getProducts()
+	}, [])
+
+	const getProducts = async () => {
+		setLoading(true)
+
+		try {
+			const res = await Axios.get(
+				`${process.env.REACT_APP_API_KEY}/subscriptions/get/plans/${data.id}`
+			)
+			setPlans(res?.data.result?.plans)
+			setLoading(false)
+		} catch (error) {
+			console.log(error)
+			setLoading(false)
+		}
+	}
 
 	return (
 		<>
@@ -100,62 +122,40 @@ const SubjectCards = ({data}) => {
 						</div>
 						<Collapse in={isPlansOpen}>
 							<div className={classes.plansWrapper}>
-								<Typography variant="h3" className={classes.planTitle} > {data.name} Plans </Typography>
+								<Typography variant="h3" className={classes.planTitle}>
+									{" "}
+									{data.name} Plans{" "}
+								</Typography>
 								<Grid container spacing={2}>
 									<Grid item xs={12} sm={4} md={3}>
 										<div className={classes.addNewPlan}>Add New Plan</div>
 									</Grid>
-									<Grid item xs={12} sm={4} md={3}>
-										<div className={classes.planCard}>
-											<Chip size="small" color="primary" className={classes.status} label=",  ACTIVE" />
-											<Typography variant="h3" style={{textAlign: "center"}} >One Month Plan</Typography>
-											<Typography variant="caption">
-												this is a description for 1 month plan
-											</Typography>
-											<div className={classes.planActions}>
-												<Fab size="small" >
-													<Edit />
-												</Fab>
-												<Fab size="small" >
-													<Trash2 />
-												</Fab>
-											</div>
-										</div>
-									</Grid>
-									<Grid item xs={12} sm={4} md={3}>
-										<div className={classes.planCard}>
-											<Chip size="small" color="secondary" className={classes.status} label=",  INACTIVE" />
-											<Typography variant="h3" style={{textAlign: "center"}} >Six Month Plan</Typography>
-											<Typography variant="caption">
-												this is a description for 6 month plan
-											</Typography>
-											<div className={classes.planActions}>
-												<Fab size="small" >
-													<Edit />
-												</Fab>
-												<Fab size="small" >
-													<Trash2 />
-												</Fab>
-											</div>
-										</div>
-									</Grid>
-									<Grid item xs={12} sm={4} md={3}>
-										<div className={classes.planCard}>
-											<Chip size="small" color="primary" className={classes.status} label=",  ACTIVE" />
-											<Typography variant="h3" style={{textAlign: "center"}} >One Year Plan</Typography>
-											<Typography variant="caption">
-												this is a description for 1 year plan
-											</Typography>
-											<div className={classes.planActions}>
-												<Fab size="small" >
-													<Edit />
-												</Fab>
-												<Fab size="small" >
-													<Trash2 />
-												</Fab>
-											</div>
-										</div>
-									</Grid>
+
+									{plans &&
+										plans.map((item) => (
+											<Grid item xs={12} sm={4} md={3}>
+												<div className={classes.planCard}>
+													<Chip
+														size="small"
+														color="primary"
+														className={classes.status}
+														label={`,    ${item.status}`}
+													/>
+													<Typography variant="h3" style={{textAlign: "center"}}>
+														{item.name}
+													</Typography>
+													<Typography variant="caption">{item.description}</Typography>
+													<div className={classes.planActions}>
+														<Fab size="small">
+															<Edit />
+														</Fab>
+														<Fab size="small">
+															<Trash2 />
+														</Fab>
+													</div>
+												</div>
+											</Grid>
+										))}
 								</Grid>
 							</div>
 						</Collapse>

@@ -1397,16 +1397,17 @@ const CrmDetails = ({isSummerCampStudents}) => {
 							},
 						},
 					]}
-					components={{
-						Row: (props) => (
-							<MTableBodyRow
-								{...props}
-								onDoubleClick={(e) => {
-									props.actions[isSummerCampStudents ? 7 : 8]().onClick(e, props.data)
-								}}
-							/>
-						),
-					}}
+					// components={{
+					// 	Row: (props) => (
+					// 		<MTableBodyRow
+					// 			{...props}
+					// 			onDoubleClick={(e) => {
+					// 				console.log(props.actions)
+					// 				props.actions[isSummerCampStudents ? 7 : 8]().onClick(e, props.data)
+					// 			}}
+					// 		/>
+					// 	),
+					// }}
 					editable={{
 						onRowAdd: isSummerCampStudents
 							? undefined
