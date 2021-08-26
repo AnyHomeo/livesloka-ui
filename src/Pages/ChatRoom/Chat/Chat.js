@@ -1,15 +1,18 @@
 import React, {useState, useEffect, useRef} from "react"
-import {Avatar, IconButton} from "@material-ui/core"
+import {Avatar, IconButton, TextField} from "@material-ui/core"
 import {AttachFile, MoreVert, SearchOutlined} from "@material-ui/icons"
 import SendIcon from "@material-ui/icons/Send"
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon"
 import "./Chat.css"
-import {useParams} from "react-router-dom"
+import {useHistory, useParams} from "react-router-dom"
 import axios from "axios"
 
 import {io} from "socket.io-client"
 import {isAutheticated} from "../../../auth"
 import {fi} from "date-fns/locale"
+import PersonAddIcon from "@material-ui/icons/PersonAdd"
+import {Autocomplete} from "@material-ui/lab"
+import PersonAddDisabledIcon from "@material-ui/icons/PersonAddDisabled"
 let socket
 
 function Chat() {
@@ -19,9 +22,11 @@ function Chat() {
 	const getRole = isAutheticated().roleId
 	const userID = isAutheticated().userId
 
+	const [agents, setAgents] = useState([])
+	const [showAssign, setshowAssign] = useState(false)
 	const [messages, setMessages] = useState([])
 	const lastElement = useRef(null)
-
+	const history = useHistory()
 	useEffect(() => {
 		socket = io.connect(process.env.REACT_APP_API_KEY)
 
@@ -48,7 +53,7 @@ function Chat() {
 	// }
 	useEffect(() => {
 		if (roomID) {
-			axios.get(`http://localhost:5000/rooms/${roomID}`).then(({data}) => {
+			axios.get(`${process.env.REACT_APP_API_KEY}/rooms/${roomID}`).then(({data}) => {
 				const name = data.userID
 				const allMsgs = data.messages
 
@@ -59,6 +64,14 @@ function Chat() {
 					setMessages(allMsgs)
 				}
 			})
+			if (getRole === 4) {
+				axios.get(`${process.env.REACT_APP_API_KEY}/agents`).then(({data}) => {
+					if (data) {
+						const filterdData = data.filter((el) => el.userId !== userID)
+						setAgents(filterdData)
+					}
+				})
+			}
 		}
 	}, [roomID])
 	// useEffect(() => {
@@ -132,24 +145,68 @@ function Chat() {
 		setMessage("")
 	}
 
+	const handelAssignAgent = async (e, value) => {
+		try {
+			const {data} = await axios.post(`${process.env.REACT_APP_API_KEY}/agents`, {
+				roomID,
+				agentID: value.userId,
+			})
+			if (data) {
+				history.push("/room")
+				socket.emit(
+					"agent-to-agent-assign",
+					{agentID: value.userId, roomID, assigneID: userID, user: data},
+					(error) => {
+						if (error) alert(error)
+					}
+				)
+			}
+		} catch (error) {}
+	}
+
 	return (
 		<div className="chat">
 			<div className="chat_header">
 				<Avatar src={`https://avatars.dicebear.com/api/human/${roomID}.svg`} />
 				<div className="chat_headerInfo">
-					<h3 className="chat-room-name">{roomName}</h3>
+					<h3 className="chat-room-name">{roomName.split("@")[0]}</h3>
 				</div>
-				<div className="chat_headerRight">
-					<IconButton>
-						<SearchOutlined />
-					</IconButton>
-					<IconButton>
-						<AttachFile />
-					</IconButton>
-					<IconButton>
+				{getRole === 4 && (
+					<div className="chat_headerRight">
+						{showAssign && (
+							<Autocomplete
+								id="combo-box-demo"
+								options={agents}
+								getOptionLabel={(option) => option.userId}
+								style={{width: 300}}
+								onChange={handelAssignAgent}
+								renderInput={(params) => (
+									<TextField {...params} label="Select Agent" variant="outlined" />
+								)}
+							/>
+						)}
+						{!showAssign ? (
+							<IconButton
+								onClick={() => {
+									setshowAssign(true)
+								}}
+							>
+								<PersonAddIcon />
+							</IconButton>
+						) : (
+							<IconButton
+								onClick={() => {
+									setshowAssign(false)
+								}}
+							>
+								<PersonAddDisabledIcon />
+							</IconButton>
+						)}
+						{/* <IconButton>
 						<MoreVert />
-					</IconButton>
-				</div>
+					</IconButton> */}
+					</div>
+				)}
 			</div>
 			<div className="chat_body">
 				{messages.map((message, idx) => (
@@ -158,9 +215,9 @@ function Chat() {
 							<p className={`chat_message ${message.role === 4 ? "chat_receiver" : "user"}`}>
 								{(message.role === 1 || message.role === 3) &&
 									(message.role === 1 ? (
-										<span className="chat_name">{message.name} U</span>
+										<span className="chat_name">{message.name.split("@")[0]} </span>
 									) : (
-										<span className="chat_name">{message.name} S</span>
+										<span className="chat_name">{message.name.split("@")[0]} </span>
 									))}
 								{message.message}
 								<span className="chat_timestemp">
@@ -171,9 +228,9 @@ function Chat() {
 							<p className={`chat_message ${message.role === 3 ? "chat_receiver" : "user"}`}>
 								{(message.role === 1 || message.role === 4) &&
 									(message.role === 1 ? (
-										<span className="chat_name">{message.name} U</span>
+										<span className="chat_name">{message.name.split("@")[0]}</span>
 									) : (
-										<span className="chat_name">{message.name} A</span>
+										<span className="chat_name">{message.name.split("@")[0]}</span>
 									))}
 								{message.message}
 								<span className="chat_timestemp">

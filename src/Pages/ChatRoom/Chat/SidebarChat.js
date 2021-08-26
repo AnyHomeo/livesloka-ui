@@ -23,7 +23,7 @@ function SidebarChat({id, name}) {
 	useEffect(() => {
 		socket.on("messageToRoomFromBot", ({role, message}) => {
 			console.log("got messag from bot in side chat", message)
-			axios.get(`http://localhost:5000/rooms/${id}`).then(({data}) => {
+			axios.get(`${process.env.REACT_APP_API_KEY}/rooms/${id}`).then(({data}) => {
 				const allMsgs = data.messages
 				console.log(parms)
 				if (allMsgs && id !== parms["roomID"]) {
@@ -58,7 +58,7 @@ function SidebarChat({id, name}) {
 				/>
 				<div className="sidebarChat_info">
 					{/* <h2>{name.includes("@") ? name.split("@")[0] : name}</h2> */}
-					<p>{name}</p>
+					<p>{name.split("@")[0]}</p>
 				</div>
 			</div>
 		</div>

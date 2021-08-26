@@ -29,9 +29,10 @@ const App = () => {
 				if (!users.find((el) => el === userID)) {
 					// users.push(userID)
 					console.log("/room/" + roomID)
-					console.log(location.pathname)
 
 					if (location.pathname === `/room/${roomID}`) {
+						console.log(location.pathname)
+
 						return
 					}
 					const message = (
@@ -53,6 +54,33 @@ const App = () => {
 		}
 		return removeListners
 	}, [location])
+
+	useEffect(() => {
+		socket = io.connect(process.env.REACT_APP_API_KEY)
+		if (isAutheticated().roleId === 4) {
+			socket.on("agent-to-agent-assign", ({agentID, roomID, assigneID, user}) => {
+				if (agentID === isAutheticated().userId) {
+					const message = (
+						<div>
+							<div onClick={() => handelToast(roomID)}>
+								{assigneID} assigned you {user}
+							</div>
+						</div>
+					)
+					toast.success(message, {
+						position: "top-center",
+						autoClose: false,
+						hideProgressBar: true,
+						closeOnClick: true,
+						pauseOnHover: false,
+						draggable: true,
+						progress: undefined,
+					})
+				}
+			})
+		}
+		return removeListners
+	}, [])
 	const removeListners = () => {
 		socket.removeAllListeners()
 	}

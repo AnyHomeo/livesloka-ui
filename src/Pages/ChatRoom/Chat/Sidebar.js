@@ -19,7 +19,7 @@ function Sidebar(props) {
 	useEffect(() => {
 		socket = io.connect(process.env.REACT_APP_API_KEY)
 
-		axios.get("http://localhost:5000/rooms").then(({data}) => {
+		axios.get(`${process.env.REACT_APP_API_KEY}/rooms`).then(({data}) => {
 			if (data) {
 				if (getRole === 3) {
 					setRooms(data)
@@ -38,7 +38,7 @@ function Sidebar(props) {
 
 	useEffect(() => {
 		socket.on("userWating", ({userID, roomID}) => {
-			axios.get("http://localhost:5000/rooms").then(({data}) => {
+			axios.get(`${process.env.REACT_APP_API_KEY}/rooms`).then(({data}) => {
 				// if (data && data.length !== rooms.length) {
 				console.log("new Room added")
 

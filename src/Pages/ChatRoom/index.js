@@ -9,7 +9,6 @@ import {useHistory} from "react-router-dom"
 const ChatRoom = () => {
 	const {roomID} = useParams()
 	const history = useHistory()
-	console.log(roomID)
 
 	const useStyles = makeStyles({
 		root: {
