@@ -87,7 +87,6 @@ function Chat() {
 	}, [messages])
 	useEffect(() => {
 		if (roomID) {
-			console.log("listers added")
 			socket.on("messageToRoomFromBot", ({role, message, name}) => {
 				console.log("got messag from bot", message)
 
@@ -115,6 +114,9 @@ function Chat() {
 					return oldState
 				})
 			})
+		}
+		return () => {
+			removeListners()
 		}
 	}, [roomID])
 

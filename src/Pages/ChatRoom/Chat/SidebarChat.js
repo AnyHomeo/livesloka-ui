@@ -23,19 +23,26 @@ function SidebarChat({id, name}) {
 	useEffect(() => {
 		socket.on("messageToRoomFromBot", ({role, message}) => {
 			console.log("got messag from bot in side chat", message)
-			axios.get(`${process.env.REACT_APP_API_KEY}/rooms/${id}`).then(({data}) => {
-				const allMsgs = data.messages
-				console.log(parms)
-				if (allMsgs && id !== parms["roomID"]) {
-					if (allMsgs.length !== count) setCount(allMsgs.length)
-					setIsNew(true)
-				}
-			})
+			console.log(parms)
+			console.log(parms.roomID === id)
+			// axios.get(`${process.env.REACT_APP_API_KEY}/rooms/${id}`).then(({data}) => {
+			// 	const allMsgs = data.messages
+			// 	if (allMsgs && id !== parms["roomID"]) {
+			// 		if (allMsgs.length > count) {
+			// 			setCount(allMsgs.length)
+			// 		}
+			// 	}
+			// })
+			setIsNew(true)
 		})
 
-		return removeListners
+		return () => {
+			removeListners()
+		}
 	}, [parms])
 	const removeListners = () => {
+		console.log("sidebar clean")
+		setIsNew(false)
 		socket.removeAllListeners()
 	}
 	return (
@@ -47,7 +54,10 @@ function SidebarChat({id, name}) {
 				setIsNew(false)
 			}}
 		>
-			<div className="sidebarChat" style={{backgroundColor: `${isNew ? "#C2F784" : ""}`}}>
+			<div
+				className="sidebarChat"
+				style={{backgroundColor: `${isNew && id !== parms["roomID"] ? "#C2F784" : ""}`}}
+			>
 				<Avatar
 					src={`https://avatars.dicebear.com/api/human/${id}.svg`}
 					style={{
