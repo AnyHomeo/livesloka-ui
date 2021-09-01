@@ -7,7 +7,7 @@ import {io} from "socket.io-client"
 
 let socket
 
-function SidebarChat({id, name}) {
+function SidebarChat({id, name, room}) {
 	const history = useHistory()
 	const parms = useParams()
 
@@ -67,8 +67,11 @@ function SidebarChat({id, name}) {
 					}}
 				/>
 				<div className="sidebarChat_info">
-					{/* <h2>{name.includes("@") ? name.split("@")[0] : name}</h2> */}
-					<p>{name.split("@")[0]}</p>
+					{room.agentID ? (
+						<p>{name.split("@")[0]}</p>
+					) : (
+						<p style={{color: "green"}}>{name.split("@")[0]}</p>
+					)}
 				</div>
 			</div>
 		</div>

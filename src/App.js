@@ -13,7 +13,7 @@ import {ToastContainer, toast} from "react-toastify"
 
 import "react-toastify/dist/ReactToastify.css"
 import {Link, useHistory, useLocation} from "react-router-dom"
-let socket = io.connect(process.env.REACT_APP_API_KEY)
+let socket
 
 const queryClient = new QueryClient()
 const App = () => {
@@ -23,7 +23,7 @@ const App = () => {
 	const history = useHistory()
 	const location = useLocation()
 	useEffect(() => {
-		// socket = io.connect(process.env.REACT_APP_API_KEY)
+		socket = io.connect(process.env.REACT_APP_API_KEY)
 		if (isAutheticated().roleId === 4) {
 			socket.on("userWating", ({userID, roomID}) => {
 				if (!users.find((el) => el === userID)) {
@@ -56,10 +56,9 @@ const App = () => {
 	}, [location])
 
 	useEffect(() => {
-		// socket = io.connect(process.env.REACT_APP_API_KEY)
-
 		if (isAutheticated().roleId === 4) {
 			socket.on("agent-to-agent-assign", ({agentID, roomID, assigneID, user}) => {
+				console.log("agent-t0 assign", agentID, roomID, agentID === isAutheticated().userId)
 				if (agentID === isAutheticated().userId) {
 					const message = (
 						<div>
@@ -81,7 +80,7 @@ const App = () => {
 			})
 		}
 		return removeListners
-	}, [])
+	}, [location])
 	const removeListners = () => {
 		socket.removeAllListeners()
 	}

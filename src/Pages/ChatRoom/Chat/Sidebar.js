@@ -58,6 +58,41 @@ function Sidebar(props) {
 		})
 		return removeListners
 	}, [])
+
+	useEffect(() => {
+		socket.on("agent-disconnected", () => {
+			axios.get(`${process.env.REACT_APP_API_KEY}/rooms`).then(({data}) => {
+				console.log("agent disconnected axios")
+				if (getRole === 3) {
+					setRooms(data)
+				} else {
+					const filterdRooms = data.filter((el) => {
+						if (!el.agentID || el.agentID === getUserID) {
+							return el
+						}
+					})
+					setRooms(filterdRooms)
+				}
+			})
+		})
+		socket.on("agent-joined-room", () => {
+			axios.get(`${process.env.REACT_APP_API_KEY}/rooms`).then(({data}) => {
+				console.log("agent joined axios")
+
+				if (getRole === 3) {
+					setRooms(data)
+				} else {
+					const filterdRooms = data.filter((el) => {
+						if (!el.agentID || el.agentID === getUserID) {
+							return el
+						}
+					})
+					setRooms(filterdRooms)
+				}
+			})
+		})
+		return removeListners
+	}, [])
 	const removeListners = () => {
 		console.log("clean up done in sidebar")
 		socket.removeAllListeners()
@@ -88,7 +123,7 @@ function Sidebar(props) {
 			</div>
 			<div className="sidebar_chats">
 				{rooms.map((room) => (
-					<SidebarChat key={room.roomID} id={room.roomID} name={room.userID} />
+					<SidebarChat key={room.roomID} id={room.roomID} name={room.userID} room={room} />
 				))}
 			</div>
 		</div>
