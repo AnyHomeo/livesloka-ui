@@ -45,7 +45,8 @@ const AddSubjects = () => {
 	const [subjects, setSubjects] = useState([])
 	const [modalOpen, setModalOpen] = useState(false)
 	const [addPlanOpen, setAddPlanOpen] = useState(false)
-	const [loading, setLoading] = useState(false)
+	const [loading, setLoading] = useState(false);
+	const [refresh, setRefresh] = useState(false);
 
 	useEffect(() => {
 		getProducts()
@@ -79,7 +80,7 @@ const AddSubjects = () => {
 		<div>
 			<Container>
 				<div className={classes.container}>
-					<p style={{fontSize: 24}}>Add new subject</p>
+					<p style={{fontSize: 24}}>Livesloka Products</p>
 
 					<div style={{display: "flex"}}>
 						<div
@@ -124,10 +125,9 @@ const AddSubjects = () => {
 					</div>
 				</div>
 
-				{subjects && subjects.map((subject, i) => <SubjectCards key={subject.id} data={subject} />)}
+				{subjects && subjects.map((subject, i) => <SubjectCards key={subject.id} data={subject} refresh={refresh} />)}
 			</Container>
-			<SubjectModal open={modalOpen} setOpen={setModalOpen} getback={getback} />
-
+			<SubjectModal open={modalOpen} setOpen={setModalOpen} getback={getback} setRefresh={setRefresh} />
 			<AddPlans open={addPlanOpen} setOpen={setAddPlanOpen} getback={getback} products={subjects} />
 		</div>
 	)
