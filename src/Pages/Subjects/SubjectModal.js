@@ -17,23 +17,17 @@ import {
 } from "@material-ui/core"
 import Axios from "axios"
 
-export default function SubjectModal({open, setOpen, paypalToken, getback}) {
+export default function SubjectModal({open, setOpen, getback,setRefresh}) {
 	const handleClose = () => {
 		setOpen(false)
 	}
 
 	const [name, setName] = useState("")
-
 	const [description, setDescription] = useState("")
-
 	const [image_url, setImage_url] = useState("")
-
 	const [loading, setLoading] = useState(false)
-
 	const [age, setAge] = React.useState("")
-
 	const [subjectIds, setSubjectIds] = useState()
-
 	const handleChange = (event) => {
 		setAge(event.target.value)
 	}
@@ -41,13 +35,12 @@ export default function SubjectModal({open, setOpen, paypalToken, getback}) {
 	useEffect(() => {
 		getSubjectId()
 	}, [])
+
 	const createProduct = async () => {
 		setLoading(true)
-
 		let storageRef = firebase.storage().ref(`${image_url[0].type}/${image_url[0].name}`)
 		await storageRef.put(image_url[0])
 		let url = await storageRef.getDownloadURL()
-
 		const formData = {
 			name,
 			description,
@@ -60,12 +53,13 @@ export default function SubjectModal({open, setOpen, paypalToken, getback}) {
 				`${process.env.REACT_APP_API_KEY}/subscriptions/create/product`,
 				formData
 			)
-
 			if (data.status === 200) {
 				handleClose()
-				getback(201)
+				setRefresh(prev => !prev);
 			}
-		} catch (error) {}
+		} catch (error) {
+			console.log(error)
+		}
 
 		setLoading(false)
 	}

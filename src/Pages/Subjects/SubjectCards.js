@@ -69,15 +69,18 @@ const useStyles = makeStyles({
 		width: "fit-content",
 	},
 })
-const SubjectCards = ({data}) => {
+const SubjectCards = ({data,refresh}) => {
 	const classes = useStyles()
 	const [isPlansOpen, setIsPlansOpen] = useState(false)
 	const [plans, setPlans] = useState()
-	const [loading, setLoading] = useState(false)
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
-		getProducts()
-	}, [])
+		if(isPlansOpen) {
+			getProducts()
+		}
+		console.log(isPlansOpen)
+	}, [isPlansOpen,refresh])
 
 	const getProducts = async () => {
 		setLoading(true)
@@ -127,13 +130,13 @@ const SubjectCards = ({data}) => {
 									{data.name} Plans{" "}
 								</Typography>
 								<Grid container spacing={2}>
-									<Grid item xs={12} sm={4} md={3}>
+									{/* <Grid item xs={12} sm={4} md={3}>
 										<div className={classes.addNewPlan}>Add New Plan</div>
-									</Grid>
+									</Grid> */}
 
 									{plans &&
-										plans.map((item) => (
-											<Grid item xs={12} sm={4} md={3}>
+										plans.map((item,i) => (
+											<Grid key={i} item xs={12} sm={4} md={3}>
 												<div className={classes.planCard}>
 													<Chip
 														size="small"
