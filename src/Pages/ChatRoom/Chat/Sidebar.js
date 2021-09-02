@@ -12,6 +12,7 @@ import {io} from "socket.io-client"
 
 let socket
 function Sidebar(props) {
+	const [allRooms, setAllRooms] = useState([])
 	const [rooms, setRooms] = useState([])
 	const getRole = isAutheticated().roleId
 	const getUserID = isAutheticated().userId
@@ -23,6 +24,7 @@ function Sidebar(props) {
 			if (data) {
 				if (getRole === 3) {
 					setRooms(data)
+					setAllRooms(data)
 				} else {
 					const filterdRooms = data.filter((el) => {
 						if (!el.agentID || el.agentID === getUserID) {
@@ -30,6 +32,7 @@ function Sidebar(props) {
 						}
 					})
 					setRooms(filterdRooms)
+					setAllRooms(filterdRooms)
 				}
 			}
 		})
@@ -98,6 +101,11 @@ function Sidebar(props) {
 		socket.removeAllListeners()
 	}
 
+	const handelChange = (e) => {
+		const value = e.target.value.toLowerCase().trim()
+		const copyRooms = [...allRooms].filter((room) => room.userID.toLowerCase().includes(value))
+		setRooms(copyRooms)
+	}
 	return (
 		<div className="sidebar">
 			<div className="sidebar_header">
@@ -118,7 +126,13 @@ function Sidebar(props) {
 				<div className="sidebar_searchContainer">
 					<SearchOutlined />
 
-					<input type="text" id="chat_search" placeholder="Search or start new chat" />
+					<input
+						type="search"
+						id="chat_search"
+						onChange={handelChange}
+						placeholder="Search or start new chat"
+						// value={search}
+					/>
 				</div>
 			</div>
 			<div className="sidebar_chats">

@@ -1,4 +1,4 @@
-.sidebarChat {
+/* .sidebarChat {
 	display: flex;
 	padding: 20px;
 	cursor: pointer;
@@ -27,9 +27,7 @@
 .sidebarChat_info > p {
 	text-overflow: ellipsis;
 	overflow: hidden;
-	/* // width: 160px; */
 	height: 22px;
-	/* // white-space: nowrap; */
 	margin: 0px;
 }
 
@@ -44,4 +42,4 @@ a {
 
 .sidebarChat_head {
 	flex: 0.25 1;
-}
+} */

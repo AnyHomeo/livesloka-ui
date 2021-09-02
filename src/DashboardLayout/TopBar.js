@@ -23,6 +23,12 @@ import {logout} from "../Services/Services"
 import moment from "moment-timezone"
 import useWindowDimensions from "../Components/useWindowDimensions"
 import useInterval from "../Components/useInterval"
+import {Link} from "react-router-dom"
+import ChatIcon from "@material-ui/icons/Chat"
+import {io} from "socket.io-client"
+import {isAutheticated} from "../auth"
+
+let socket
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -69,6 +75,8 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 	const [AllTimeZones, setAllTimeZones] = useState(new Date())
 	const [customTime, setCustomTime] = useState(false)
 	const [customTimeArr, setCustomTimeArr] = useState("Asia/Kolkata")
+
+	const [newUser, setNewUser] = useState(false)
 	moment.tz.setDefault(customTimeArr)
 	useInterval(() => {
 		if (!customTime) {
@@ -121,6 +129,30 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 	const handleClose = () => {
 		setOpen(false)
 		setCustomTimeArr("Asia/Kolkata")
+	}
+	const users = []
+
+	useEffect(() => {
+		socket = io.connect(process.env.REACT_APP_API_KEY)
+		if (isAutheticated().roleId === 3) {
+			socket.on("userWating", ({userID, roomID}) => {
+				if (!users.find((el) => el === userID)) {
+					users.push(userID)
+
+					setNewUser(true)
+
+					// if (location.pathname === `/room/${roomID}`) {
+					// 	console.log(location.pathname)
+
+					// 	return
+					// }
+				}
+			})
+		}
+		// return removeListners
+	}, [])
+	const removeListners = () => {
+		socket.removeAllListeners()
 	}
 
 	return (
@@ -205,6 +237,19 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 						</DialogActions>
 					</Dialog>
 				</div>
+				{isAutheticated().roleId === 3 && (
+					<Link
+						to="/room"
+						style={{color: `${newUser ? "green" : "white"}`}}
+						onClick={() => {
+							setNewUser(false)
+						}}
+					>
+						<IconButton color="inherit">
+							<ChatIcon />
+						</IconButton>
+					</Link>
+				)}
 
 				<a
 					href="/login"

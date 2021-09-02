@@ -56,7 +56,7 @@ function SidebarChat({id, name, room}) {
 		>
 			<div
 				className="sidebarChat"
-				style={{backgroundColor: `${isNew && id !== parms["roomID"] ? "#C2F784" : ""}`}}
+				style={{backgroundColor: `${room.agentID ? "rgb(200 250 161)" : ""}`}}
 			>
 				<Avatar
 					src={`https://avatars.dicebear.com/api/human/${id}.svg`}
@@ -67,10 +67,10 @@ function SidebarChat({id, name, room}) {
 					}}
 				/>
 				<div className="sidebarChat_info">
-					{room.agentID ? (
-						<p>{name.split("@")[0]}</p>
+					{isNew && id !== parms["roomID"] ? (
+						<p style={{fontWeight: 700}}>{name.split("@")[0]} 💬</p>
 					) : (
-						<p style={{color: "green"}}>{name.split("@")[0]}</p>
+						<p>{name.split("@")[0]}</p>
 					)}
 				</div>
 			</div>

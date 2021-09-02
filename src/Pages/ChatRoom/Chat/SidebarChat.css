@@ -25,11 +25,10 @@
 }
 
 .sidebarChat_info > p {
+	font-family: "Roboto", sans-serif;
 	text-overflow: ellipsis;
 	overflow: hidden;
-	/* // width: 160px; */
 	height: 22px;
-	/* // white-space: nowrap; */
 	margin: 0px;
 }
 
