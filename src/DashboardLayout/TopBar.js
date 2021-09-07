@@ -135,9 +135,9 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 	useEffect(() => {
 		socket = io.connect(process.env.REACT_APP_API_KEY)
 		if (isAutheticated().roleId === 3) {
-			socket.on("userWating", ({userID, roomID}) => {
+			socket.on("userWating", ({userID, roomID, type}) => {
 				if (!users.find((el) => el === userID)) {
-					users.push(userID)
+					// users.push(userID)
 
 					setNewUser(true)
 

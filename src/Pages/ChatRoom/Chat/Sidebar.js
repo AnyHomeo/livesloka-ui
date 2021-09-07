@@ -78,7 +78,14 @@ function Sidebar(props) {
 				}
 			})
 		})
-		socket.on("agent-joined-room", () => {
+		socket.on("agent-joined-room", (isAgent) => {
+			// if (isAgent === getUserID) {
+			// 	console.log(isAgent)
+
+			// }
+			// else{
+			// 	// 89 herer
+			// }
 			axios.get(`${process.env.REACT_APP_API_KEY}/rooms`).then(({data}) => {
 				console.log("agent joined axios")
 

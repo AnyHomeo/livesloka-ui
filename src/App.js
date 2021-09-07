@@ -25,7 +25,7 @@ const App = () => {
 	useEffect(() => {
 		socket = io.connect(process.env.REACT_APP_API_KEY)
 		if (isAutheticated().roleId === 4) {
-			socket.on("userWating", ({userID, roomID}) => {
+			socket.on("userWating", ({userID, roomID, typeMessage}) => {
 				if (!users.find((el) => el === userID)) {
 					// users.push(userID)
 					console.log("/room/" + roomID)
@@ -37,7 +37,9 @@ const App = () => {
 					}
 					const message = (
 						<div>
-							<div onClick={() => handelToast(roomID)}>Chat with {userID}</div>
+							<div onClick={() => handelToast(roomID)}>
+								User {userID} : {typeMessage}
+							</div>
 						</div>
 					)
 					toast.success(message, {
