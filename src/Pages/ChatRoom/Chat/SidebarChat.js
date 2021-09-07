@@ -19,6 +19,25 @@ function SidebarChat({id, name, room}) {
 		socket.emit("JOIN_ROOM", {roomID: id, isAdmin: true}, (error) => {
 			if (error) alert(error)
 		})
+
+		axios.get(`${process.env.REACT_APP_API_KEY}/lastmessage/${id}`).then(({data}) => {
+			if (data.messageSeen === false) {
+				setIsNew(true)
+			}
+		})
+
+		socket.on("agent-joined-room", (isAgent) => {
+			axios.get(`${process.env.REACT_APP_API_KEY}/lastmessage/${id}`).then(({data}) => {
+				if (data.messageSeen === false) {
+					setIsNew(true)
+				} else {
+					setIsNew(false)
+				}
+			})
+		})
+		socket.on("agent-read-message", () => {
+			setIsNew(false)
+		})
 	}, [])
 	useEffect(() => {
 		socket.on("messageToRoomFromBot", ({role, message}) => {
@@ -45,15 +64,17 @@ function SidebarChat({id, name, room}) {
 		setIsNew(false)
 		socket.removeAllListeners()
 	}
+	const handelClick = () => {
+		axios.post(`${process.env.REACT_APP_API_KEY}/lastmessage/${id}`).then(({data}) => {
+			console.log(data)
+		})
+
+		setIsNew(false)
+
+		history.push(`/room/${id}`)
+	}
 	return (
-		<div
-			className="sidebarChat_head"
-			key={id}
-			onClick={() => {
-				history.push(`/room/${id}`)
-				setIsNew(false)
-			}}
-		>
+		<div className="sidebarChat_head" key={id} onClick={handelClick}>
 			<div
 				className="sidebarChat"
 				style={{backgroundColor: `${room.agentID ? "rgb(200 250 161)" : ""}`}}

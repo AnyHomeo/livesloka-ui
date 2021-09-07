@@ -13,6 +13,7 @@ import {
 	Dialog,
 	DialogActions,
 	Button,
+	Badge,
 } from "@material-ui/core"
 import MenuIcon from "@material-ui/icons/Menu"
 import InputIcon from "@material-ui/icons/Input"
@@ -29,6 +30,7 @@ import {io} from "socket.io-client"
 import {isAutheticated} from "../auth"
 
 let socket
+let users = []
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -120,6 +122,7 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 
 	const [open, setOpen] = React.useState(false)
 
+	const [chatCount, setChatCount] = useState(0)
 	const handleClickOpen = (data) => {
 		setCustomTimeArr(data.tz)
 		setCustomTime(true)
@@ -130,16 +133,17 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 		setOpen(false)
 		setCustomTimeArr("Asia/Kolkata")
 	}
-	const users = []
 
 	useEffect(() => {
 		socket = io.connect(process.env.REACT_APP_API_KEY)
 		if (isAutheticated().roleId === 3) {
 			socket.on("userWating", ({userID, roomID, type}) => {
+				console.log(users)
 				if (!users.find((el) => el === userID)) {
-					// users.push(userID)
+					users.push(userID)
 
 					setNewUser(true)
+					setChatCount(users.length)
 
 					// if (location.pathname === `/room/${roomID}`) {
 					// 	console.log(location.pathname)
@@ -240,14 +244,16 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 				{isAutheticated().roleId === 3 && (
 					<Link
 						to="/room"
-						style={{color: `${newUser ? "green" : "white"}`}}
+						style={{color: `${newUser ? "red" : "white"}`}}
 						onClick={() => {
 							setNewUser(false)
+							users = []
+							setChatCount(0)
 						}}
 					>
-						<IconButton color="inherit">
+						<Badge badgeContent={chatCount} color="error">
 							<ChatIcon />
-						</IconButton>
+						</Badge>
 					</Link>
 				)}
 
