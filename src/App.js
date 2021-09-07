@@ -24,7 +24,7 @@ const App = () => {
 	const location = useLocation()
 	useEffect(() => {
 		socket = io.connect(process.env.REACT_APP_API_KEY)
-		if (isAutheticated().roleId === 4) {
+		if (isAutheticated().roleId !== 3) {
 			socket.on("userWating", ({userID, roomID, typeMessage}) => {
 				if (!users.find((el) => el === userID)) {
 					// users.push(userID)
@@ -58,7 +58,7 @@ const App = () => {
 	}, [location])
 
 	useEffect(() => {
-		if (isAutheticated().roleId === 4) {
+		if (isAutheticated().roleId !== 3) {
 			socket.on("agent-to-agent-assign", ({agentID, roomID, assigneID, user}) => {
 				console.log("agent-t0 assign", agentID, roomID, agentID === isAutheticated().userId)
 				if (agentID === isAutheticated().userId) {

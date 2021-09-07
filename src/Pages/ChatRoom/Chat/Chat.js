@@ -33,7 +33,7 @@ function Chat() {
 		if (roomID) {
 			socket.emit(
 				"JOIN_ROOM",
-				{roomID, isAdmin: true, isAgent: getRole === 4 ? userID : null},
+				{roomID, isAdmin: true, isAgent: getRole !== 3 ? userID : null},
 				(error) => {
 					if (error) alert(error)
 				}
@@ -64,7 +64,7 @@ function Chat() {
 					setMessages(allMsgs)
 				}
 			})
-			if (getRole === 4) {
+			if (getRole !== 3) {
 				axios.get(`${process.env.REACT_APP_API_KEY}/agents`).then(({data}) => {
 					if (data) {
 						const filterdData = data.filter((el) => el.userId !== userID)
@@ -173,7 +173,7 @@ function Chat() {
 				<div className="chat_headerInfo">
 					<h3 className="chat-room-name">{roomName.split("@")[0]}</h3>
 				</div>
-				{getRole === 4 && (
+				{getRole !== 3 && (
 					<div className="chat_headerRight">
 						{showAssign && (
 							<Autocomplete
@@ -213,7 +213,7 @@ function Chat() {
 			<div className="chat_body">
 				{messages.map((message, idx) => (
 					<div className="chat__message-body" key={idx}>
-						{getRole === 4 ? (
+						{getRole !== 3 ? (
 							<p className={`chat_message ${message.role === 4 ? "chat_receiver" : "user"}`}>
 								{(message.role === 1 || message.role === 3) &&
 									(message.role === 1 ? (
@@ -241,7 +241,7 @@ function Chat() {
 							</p>
 						)}
 
-						{(message.role === 4 && getRole === 4) || (message.role === 3 && getRole === 3) ? (
+						{(message.role === 4 && getRole !== 3) || (message.role === 3 && getRole === 3) ? (
 							<span className="message__arrow--admin">
 								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 13" width="8" height="13">
 									<path

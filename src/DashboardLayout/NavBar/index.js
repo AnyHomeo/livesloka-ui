@@ -124,12 +124,12 @@ const NavBar = ({onMobileClose, openMobile}) => {
 		},
 		{
 			href: "/room",
-			icon: DollarSign,
+			icon: MessageCircle,
 			title: "Rooms",
 		},
 		{
 			href: "/nonroom",
-			icon: DollarSign,
+			icon: MessageCircle,
 			title: "Non Rooms",
 		},
 		{
@@ -237,6 +237,16 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			href: "/scheduler",
 			icon: UserIcon,
 			title: "Timetable",
+		},
+		{
+			href: "/room",
+			icon: MessageCircle,
+			title: "Rooms",
+		},
+		{
+			href: "/nonroom",
+			icon: MessageCircle,
+			title: "Non Rooms",
 		},
 
 		{
