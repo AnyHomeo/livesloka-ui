@@ -1,10 +1,10 @@
-import React, {useState} from "react"
+import React, { useEffect, useState } from "react"
 import Tabs from "@material-ui/core/Tabs"
 import Tab from "@material-ui/core/Tab"
 import SingleDayStats from "./SingleDayStats"
 import WhatsAppIcon from "@material-ui/icons/WhatsApp"
 import "./stats.css"
-import {Box, FormControl, IconButton, InputAdornment, InputLabel, Tooltip} from "@material-ui/core"
+import { Box, Button, FormControl, Icon, IconButton, InputAdornment, InputLabel, Tooltip } from "@material-ui/core"
 import Dialog from "@material-ui/core/Dialog"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
@@ -17,6 +17,8 @@ import momentTZ from "moment-timezone"
 import useDocumentTitle from "../../Components/useDocumentTitle"
 import Snackbar from "@material-ui/core/Snackbar"
 import Alert from "@material-ui/lab/Alert"
+import { getTimeZones } from "../../Services/Services"
+
 
 let days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
 
@@ -32,7 +34,7 @@ const copyToClipboard = (text) => {
 }
 
 function TabPanel(props) {
-	const {children, value, index, ...other} = props
+	const { children, value, index, ...other } = props
 
 	return (
 		<div
@@ -47,18 +49,42 @@ function TabPanel(props) {
 	)
 }
 
+function pageRefresh() {
+	window.location.reload();
+}
+
 function Statistics() {
 	useDocumentTitle("Statistics")
-	let initialValue =  days.indexOf(momentTZ(new Date()).tz("Asia/Kolkata").format("dddd").toUpperCase())
+	let initialValue = days.indexOf(momentTZ(new Date()).tz("Asia/Kolkata").format("dddd").toUpperCase())
 	const [value, setValue] = useState(
 		initialValue
-		)
+	)
 	const [dialogOpen, setDialogOpen] = useState(false)
 	const [dialogData, setDialogData] = useState({})
 	const [successOpen, setSuccessOpen] = React.useState(false)
 	const [alert, setAlert] = useState("")
 	const [alertColor, setAlertColor] = useState("")
 	const [refresh, setRefresh] = useState(false)
+	const [timeZoneLookup, setTimeZoneLookup] = useState({})
+
+	useEffect(() => {
+		getTimeZones().then((result) => {
+			return (result.data.result)
+		}).then((data) => {
+			console.log("getTimeZones data")
+			console.log(data)
+
+			var dynamicLookup = {};
+			if (data) {
+				data.map((timeZoneObj) => {
+					dynamicLookup[timeZoneObj.id] = timeZoneObj.timeZoneName
+				})
+			}
+			console.log("getTimeZones dynamicLookup")
+			console.log(dynamicLookup)
+			setTimeZoneLookup(dynamicLookup);
+		})
+	}, [])
 
 	const handleSuccessClose = (event, reason) => {
 		if (reason === "clickaway") {
@@ -71,13 +97,14 @@ function Statistics() {
 		setValue(newValue)
 	}
 
+
 	return (
 		<div>
 			<Snackbar
 				open={successOpen}
 				autoHideDuration={6000}
 				onClose={handleSuccessClose}
-				anchorOrigin={{vertical: "bottom", horizontal: "center"}}
+				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
 			>
 				<Alert variant="filled" onClose={handleSuccessClose} severity={alertColor}>
 					{alert}
@@ -125,9 +152,8 @@ function Statistics() {
 										<IconButton
 											onClick={() =>
 												window.open(
-													`https://api.whatsapp.com/send?phone=${
-														dialogData.teacher &&
-														dialogData.teacher.Phone_number.split("+")[1].split(" ").join("")
+													`https://api.whatsapp.com/send?phone=${dialogData.teacher &&
+													dialogData.teacher.Phone_number.split("+")[1].split(" ").join("")
 													}`
 												)
 											}
@@ -150,25 +176,30 @@ function Statistics() {
 								type: "boolean",
 								render: (rowData) =>
 									rowData.isStudentJoined ? (
-										<CheckCircleIcon style={{color: "green"}} />
+										<CheckCircleIcon style={{ color: "green" }} />
 									) : (
-										<CancelIcon style={{color: "red"}} />
+										<CancelIcon style={{ color: "red" }} />
 									),
 							},
 							{
 								field: "firstName",
-								title: "First Name",
+								title: "Student",
 								tooltip: "Sort by First Name",
 							},
 							{
 								field: "lastName",
-								title: "Last Name",
+								title: "Parent",
 								tooltip: "Sort by Last Name",
 							},
 							{
 								field: "numberOfClassesBought",
 								title: "Classes Left",
 								tooltip: "Sort by Classes Left",
+							},
+							{
+								title: "Time Zone",
+								field: "timeZoneId",
+								lookup: timeZoneLookup
 							},
 							{
 								field: "email",
@@ -180,15 +211,14 @@ function Statistics() {
 								title: "WhatsaApp Number",
 								tooltip: "Sort by WhatsApp Number",
 								render: (rowData) => (
-									<div style={{display: "flex", alignItems: "center"}}>
+									<div style={{ display: "flex", alignItems: "center" }}>
 										<Tooltip title={`Message ${rowData.firstName} on Whatsapp`}>
 											<IconButton
 												onClick={() =>
 													window.open(
-														`https://api.whatsapp.com/send?phone=${
-															rowData.whatsAppnumber.indexOf("+") !== -1
-																? rowData.whatsAppnumber.split("+")[1].split(" ").join("")
-																: rowData.whatsAppnumber.split(" ").join("")
+														`https://api.whatsapp.com/send?phone=${rowData.whatsAppnumber.indexOf("+") !== -1
+															? rowData.whatsAppnumber.split("+")[1].split(" ").join("")
+															: rowData.whatsAppnumber.split(" ").join("")
 														}`
 													)
 												}
@@ -221,6 +251,24 @@ function Statistics() {
 					<Tab key={day} label={day} />
 				))}
 			</Tabs>
+
+			<Button
+				variant="contained"
+				color="primary"
+				size="small"
+				onClick={pageRefresh}
+				endIcon={<Icon>refresh</Icon>}
+				style={{
+					marginLeft: 24,
+					marginRight: 24,
+					marginTop: 10,
+					color: 'white',
+					float: 'right'
+				}}
+			>
+				Refresh
+			</Button>
+
 			{days.map((day, i) => (
 				<TabPanel key={day} value={value} index={i}>
 					<SingleDayStats
@@ -228,7 +276,7 @@ function Statistics() {
 						day={day}
 						setDialogOpen={setDialogOpen}
 						setDialogData={setDialogData}
-						alertSetStates={{setAlert, setAlertColor, setRefresh, setSuccessOpen}}
+						alertSetStates={{ setAlert, setAlertColor, setRefresh, setSuccessOpen }}
 						value={value}
 						isToday={value === initialValue}
 					/>

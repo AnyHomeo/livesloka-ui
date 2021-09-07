@@ -1,10 +1,10 @@
 import axios from "axios"
-import {isAutheticated} from "../auth"
-import {services} from "./config"
+import { isAutheticated } from "../auth"
+import { services } from "./config"
 import Axios from "axios"
 const API = services["prod"]
 
-export const login = (userId, password) => Axios.post(`${API.main}${API.login}`, {userId, password})
+export const login = (userId, password) => Axios.post(`${API.main}${API.login}`, { userId, password })
 
 export const logout = (next) => {
 	localStorage.removeItem("roleID")
@@ -40,7 +40,7 @@ export const getAllStudents = () => {
 export const postMeeting = (teacher, student, startDate, endDate, startTime, endTime, day) => {
 	return axios.post(
 		`${API}/create/meeting`,
-		{teacher, student, startDate, endDate, startTime, endTime, day},
+		{ teacher, student, startDate, endDate, startTime, endTime, day },
 		{
 			headers: {
 				"Content-Type": "application/json",
@@ -52,7 +52,7 @@ export const postMeeting = (teacher, student, startDate, endDate, startTime, end
 export const postStudent = (student, password, email) => {
 	return axios.post(
 		`${API}/create/student/${isAutheticated().data.userid}`,
-		{student, password, email},
+		{ student, password, email },
 		{
 			headers: {
 				"Content-Type": "application/json",
@@ -65,7 +65,7 @@ export const postStudent = (student, password, email) => {
 export const postTeacher = (teacher, password, email) => {
 	return axios.post(
 		`${API}/create/teacher/${isAutheticated().data.userid}`,
-		{teacher, password, email},
+		{ teacher, password, email },
 		{
 			headers: {
 				"Content-Type": "application/json",
@@ -78,7 +78,7 @@ export const postTeacher = (teacher, password, email) => {
 export const updatePassword = (password, newPassword, confirmPassword, userId) => {
 	return axios.post(
 		`${API.main}${API.changePassword}`,
-		{userId, password, newPassword, confirmPassword},
+		{ userId, password, newPassword, confirmPassword },
 		{
 			headers: {
 				"Content-Type": "application/json",
@@ -90,7 +90,7 @@ export const updatePassword = (password, newPassword, confirmPassword, userId) =
 export const getMeeting = (token, time) => {
 	return axios.post(
 		`${API.main}/meeting`,
-		{token, time},
+		{ token, time },
 		{
 			headers: {
 				"Content-Type": "application/json",
@@ -156,9 +156,9 @@ export const updateSettings = (id, data) => axios.post(`${API.main}/settings/${i
 export const getOccupancy = () => axios.get(`${API.main}/teacher/occupancy`)
 export const getAllSlots = (id) => axios.get(`${API.main}/teacher/all/slots/${id}`)
 export const addAvailableTimeSlot = (id, slot) =>
-	axios.post(`${API.main}/teacher/add/available/${id}`, {slot})
+	axios.post(`${API.main}/teacher/add/available/${id}`, { slot })
 export const deleteAvailableTimeSlot = (id, slot) =>
-	axios.post(`${API.main}/teacher/delete/slot/${id}`, {slot})
+	axios.post(`${API.main}/teacher/delete/slot/${id}`, { slot })
 export const getFinancialStatistics = () => axios.get(`${API.main}/teacher/finance`)
 export const getClasses = () => axios.get(`${API.main}/schedule/data/all?params=className`)
 export const getAttendanceByScheduleId = (id) => axios.get(`${API.main}/attendance/all/${id}`)
@@ -194,15 +194,15 @@ export const getAdminsFromQuery = (queryBy, ids) =>
 export const getAllNotifications = () => axios.get(`${API.main}/messages`)
 export const updateZoomLinkToNewOne = (id) => axios.put(`${API.main}/schedule/zoom/${id}`)
 export const updateSchedulesOfAdminToday = (scheduleIds) =>
-	axios.post(`${API.main}/allocate`, {scheduleIds, agentId: isAutheticated().agentId})
+	axios.post(`${API.main}/allocate`, { scheduleIds, agentId: isAutheticated().agentId })
 export const getAdminAssignedClasses = () =>
 	axios.get(`${API.main}/allocate/${isAutheticated().agentId}`)
 export const getSchedulesByMonthAndScheduleId = (scheduleId, date) =>
 	axios.get(`${API.main}/schedule/salary/${scheduleId}/${date}`)
 export const sendOtpsToAdmins = (month, year) =>
-	axios.post(`${API.main}/agent/send-otps/salary-verification`, {month, year})
+	axios.post(`${API.main}/agent/send-otps/salary-verification`, { month, year })
 export const finalizeSalaries = (month, year, otps) =>
-	axios.post(`${API.main}/finalize`, {month, year, otps})
+	axios.post(`${API.main}/finalize`, { month, year, otps })
 export const getDemoCustomers = () =>
 	Axios.get(`${API.main}/options/demo/students?select=firstName,teacherId`)
 export const getTeacherSlotsForOptions = (id) =>
@@ -210,3 +210,6 @@ export const getTeacherSlotsForOptions = (id) =>
 
 export const postOptions = (formData) =>
 	Axios.post(`${process.env.REACT_APP_API_KEY}/options`, formData)
+
+export const getTimeZones = () =>
+	Axios.get(`${API.main}/admin/get/timeZone`)
