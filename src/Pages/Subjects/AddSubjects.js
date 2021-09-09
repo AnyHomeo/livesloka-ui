@@ -8,6 +8,9 @@ import Axios from "axios"
 import Lottie from "react-lottie"
 import loadingAnimation from "../../Images/loading.json"
 import AddPlans from "./AddPlans"
+import {Alert} from "@material-ui/lab"
+import {Snackbar} from "@material-ui/core"
+
 const defaultOptions = {
 	loop: true,
 	autoplay: true,
@@ -40,25 +43,29 @@ const useStyles = makeStyles({
 		flex: 0.333,
 	},
 })
+let snackbarInitialState = {
+	isShown: false,
+	message: "",
+	type: "error",
+}
 const AddSubjects = () => {
 	const classes = useStyles()
 	const [subjects, setSubjects] = useState([])
 	const [modalOpen, setModalOpen] = useState(false)
 	const [addPlanOpen, setAddPlanOpen] = useState(false)
-	const [loading, setLoading] = useState(false);
-	const [refresh, setRefresh] = useState(false);
+	const [loading, setLoading] = useState(false)
+	const [refresh, setRefresh] = useState(false)
+	const [message, setMessage] = useState(snackbarInitialState)
 
 	useEffect(() => {
 		getProducts()
-	}, [])
+	}, [refresh])
 
 	const getProducts = async () => {
 		setLoading(true)
-
 		try {
 			const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/subscriptions/get/products`)
-
-			setSubjects(data?.data.result?.products)
+			setSubjects(data?.data.result?.products || [])
 			setLoading(false)
 		} catch (error) {
 			console.log(error)
@@ -76,8 +83,20 @@ const AddSubjects = () => {
 		return <Lottie options={defaultOptions} height={400} width={400} />
 	}
 
+	const handleSnackbarClose = () => setMessage(snackbarInitialState)
+
 	return (
 		<div>
+			<Snackbar
+				open={message.isShown}
+				autoHideDuration={6000}
+				anchorOrigin={{vertical: "top", horizontal: "right"}}
+				onClose={() => handleSnackbarClose()}
+			>
+				<Alert onClose={() => handleSnackbarClose()} variant="filled" severity={message.type}>
+					{message.message}
+				</Alert>
+			</Snackbar>
 			<Container>
 				<div className={classes.container}>
 					<p style={{fontSize: 24}}>Livesloka Products</p>
@@ -124,11 +143,25 @@ const AddSubjects = () => {
 						</div>
 					</div>
 				</div>
-
-				{subjects && subjects.map((subject, i) => <SubjectCards key={subject.id} data={subject} refresh={refresh} />)}
+				{subjects &&
+					subjects.map((subject, i) => (
+						<SubjectCards key={subject.id} data={subject} refresh={refresh} />
+					))}
 			</Container>
-			<SubjectModal open={modalOpen} setOpen={setModalOpen} getback={getback} setRefresh={setRefresh} />
-			<AddPlans open={addPlanOpen} setOpen={setAddPlanOpen} getback={getback} products={subjects} />
+			<SubjectModal
+				open={modalOpen}
+				setOpen={setModalOpen}
+				getback={getback}
+				setRefresh={setRefresh}
+				setMessage={setMessage}
+			/>
+			<AddPlans
+				open={addPlanOpen}
+				setOpen={setAddPlanOpen}
+				getback={getback}
+				products={subjects}
+				setMessage={setMessage}
+			/>
 		</div>
 	)
 }

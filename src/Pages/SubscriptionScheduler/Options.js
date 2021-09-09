@@ -206,7 +206,7 @@ function Options() {
 										freeSolo
 										disableClearable
 										options={customers}
-										getOptionLabel={(option) => option.firstName || " "}
+										getOptionLabel={(option) => option.firstName || ""}
 										onChange={(e, v) => {
 											setSelectedCustomer(v)
 											let teacher = teachers.filter((teacher) => teacher.id === v.teacherId)[0]
@@ -238,7 +238,7 @@ function Options() {
 										freeSolo
 										disableClearable
 										options={teachers}
-										getOptionLabel={(option) => option.name || " "}
+										getOptionLabel={(option) => option.name || ""}
 										onChange={(e, v) => {
 											setSelectedTeacher(v)
 										}}

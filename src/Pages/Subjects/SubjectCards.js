@@ -69,27 +69,26 @@ const useStyles = makeStyles({
 		width: "fit-content",
 	},
 })
-const SubjectCards = ({data,refresh}) => {
+const SubjectCards = ({data, refresh}) => {
 	const classes = useStyles()
 	const [isPlansOpen, setIsPlansOpen] = useState(false)
 	const [plans, setPlans] = useState()
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(false)
 
 	useEffect(() => {
-		if(isPlansOpen) {
+		if (isPlansOpen) {
 			getProducts()
 		}
 		console.log(isPlansOpen)
-	}, [isPlansOpen,refresh])
+	}, [isPlansOpen, refresh])
 
 	const getProducts = async () => {
 		setLoading(true)
-
 		try {
 			const res = await Axios.get(
 				`${process.env.REACT_APP_API_KEY}/subscriptions/get/plans/${data.id}`
 			)
-			setPlans(res?.data.result?.plans)
+			setPlans(res?.data?.result?.plans || [])
 			setLoading(false)
 		} catch (error) {
 			console.log(error)
@@ -135,7 +134,7 @@ const SubjectCards = ({data,refresh}) => {
 									</Grid> */}
 
 									{plans &&
-										plans.map((item,i) => (
+										plans.map((item, i) => (
 											<Grid key={i} item xs={12} sm={4} md={3}>
 												<div className={classes.planCard}>
 													<Chip
