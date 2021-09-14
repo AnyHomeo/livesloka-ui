@@ -175,7 +175,22 @@ function Options() {
 				setSelectedTeacher("")
 				setRefresh(true)
 			}
-		} catch (error) {}
+		} catch (error) {
+			console.log(error)
+			if(error?.response?.data?.error){
+				setMessage({
+					isShown: true,
+					message: error?.response?.data?.error,
+					type: "warning",
+				})
+			} else {
+				setMessage({
+					isShown: true,
+					message: "Soemthing went wrong",
+					type: "warning",
+				})
+			}
+		}
 		setBtnLoading(false)
 	}
 

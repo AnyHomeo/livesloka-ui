@@ -82,7 +82,7 @@ export default function SubjectModal({open, setOpen, setRefresh, setMessage}) {
 		try {
 			const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/admin/get/Subject`)
 			let subjectsResponse = data?.data?.result || []
-			subjectsResponse = subjectsResponse.filter((subject) => subject.productId)
+			subjectsResponse = subjectsResponse.filter((subject) => !subject.productId)
 			setSubjectIds(subjectsResponse)
 		} catch (error) {
 			console.log(error)
