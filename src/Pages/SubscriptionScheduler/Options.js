@@ -45,7 +45,6 @@ let snackbarInitialState = {
 	type: "error",
 }
 function Options() {
-
 	const [customers, setCustomers] = useState([])
 	const [selectedCustomer, setSelectedCustomer] = useState({})
 	const [selectedDays, setSelectedDays] = useState([])
@@ -60,6 +59,7 @@ function Options() {
 	const [refresh, setRefresh] = useState(false)
 	const [checked, setChecked] = React.useState([])
 
+	console.log(checked)
 	useEffect(() => {
 		;(async () => {
 			setLoading(true)
@@ -349,20 +349,10 @@ function Options() {
 										)
 									})}
 							</List>
-
-							<Button
-								className={styles.addButton}
-								disabled={btnLoading}
-								variant="contained"
-								color="primary"
-								onClick={submitOptions}
-							>
-								{btnLoading ? <CircularProgress style={{height: 25, width: 25}} /> : "Submit"}
-							</Button>
 						</Card>
 					</Grid>
 					<Grid item xs={12} sm={6} md={4} lg={3}>
-						<Card className={styles.selectedOptions}>
+						<Card className={styles.selectedOptions} style={{position: "relative"}}>
 							<h5 className={styles.selectedSlotsTitle}>Selected Options</h5>
 							{options.map((option, i) => (
 								<div className={styles.selectedOptionsSingleCard}>
@@ -385,6 +375,44 @@ function Options() {
 									))}
 								</div>
 							))}
+
+							{teacherData &&
+								teacherData.schedules?.map((value) => {
+									console.log(value)
+									return checked.map((item) => {
+										if (item === value._id) {
+											return (
+												<div className={styles.selectedOptionsSingleCard}>
+													<div className={styles.xWrapper}>
+														<X style={{textAlign: "right"}} onClick={handleToggle(value._id)} />
+													</div>
+													<div>
+														<b>{value.className}</b>
+													</div>
+												</div>
+											)
+										}
+									})
+								})}
+
+							<div
+								style={{
+									display: "flex",
+									justifyContent: "center",
+									alignItems: "center",
+									marginTop: 80,
+								}}
+							>
+								<Button
+									style={{position: "absolute", bottom: "20px"}}
+									disabled={btnLoading}
+									variant="contained"
+									color="primary"
+									onClick={submitOptions}
+								>
+									{btnLoading ? <CircularProgress style={{height: 25, width: 25}} /> : "Submit"}
+								</Button>
+							</div>
 						</Card>
 					</Grid>
 				</Grid>
