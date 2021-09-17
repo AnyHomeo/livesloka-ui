@@ -16,8 +16,9 @@ import {
 	IconButton,
 } from "@material-ui/core"
 import Axios from "axios"
+import {createPaypalAndStripeProducts} from "./../../Services/Services"
 
-export default function SubjectModal({open, setOpen, getback,setRefresh}) {
+export default function SubjectModal({open, setOpen, setRefresh, setMessage}) {
 	const handleClose = () => {
 		setOpen(false)
 	}
@@ -26,10 +27,10 @@ export default function SubjectModal({open, setOpen, getback,setRefresh}) {
 	const [description, setDescription] = useState("")
 	const [image_url, setImage_url] = useState("")
 	const [loading, setLoading] = useState(false)
-	const [age, setAge] = React.useState("")
+	const [subject, setSubject] = React.useState("")
 	const [subjectIds, setSubjectIds] = useState()
 	const handleChange = (event) => {
-		setAge(event.target.value)
+		setSubject(event.target.value)
 	}
 
 	useEffect(() => {
@@ -38,27 +39,40 @@ export default function SubjectModal({open, setOpen, getback,setRefresh}) {
 
 	const createProduct = async () => {
 		setLoading(true)
-		let storageRef = firebase.storage().ref(`${image_url[0].type}/${image_url[0].name}`)
-		await storageRef.put(image_url[0])
-		let url = await storageRef.getDownloadURL()
-		const formData = {
-			name,
-			description,
-			image: url,
-			subject: age,
+		if (!name) {
+			setMessage({
+				isShown: true,
+				message: "Name is required",
+				type: "warning",
+			})
+			setLoading(false)
+			return
 		}
-
-		try {
-			const data = await Axios.post(
-				`${process.env.REACT_APP_API_KEY}/subscriptions/create/product`,
-				formData
-			)
-			if (data.status === 200) {
-				handleClose()
-				setRefresh(prev => !prev);
+		if (image_url[0]) {
+			let storageRef = firebase.storage().ref(`${image_url[0].type}/${image_url[0].name}`)
+			await storageRef.put(image_url[0])
+			let url = await storageRef.getDownloadURL()
+			const formData = {
+				name,
+				description,
+				image: url,
+				subject,
 			}
-		} catch (error) {
-			console.log(error)
+			try {
+				const data = await createPaypalAndStripeProducts(formData)
+				if (data.status === 200) {
+					handleClose()
+					setRefresh((prev) => !prev)
+				}
+			} catch (error) {
+				console.log(error)
+			}
+		} else {
+			setMessage({
+				isShown: true,
+				message: "Select Image",
+				type: "warning",
+			})
 		}
 
 		setLoading(false)
@@ -67,8 +81,12 @@ export default function SubjectModal({open, setOpen, getback,setRefresh}) {
 	const getSubjectId = async () => {
 		try {
 			const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/admin/get/Subject`)
-			setSubjectIds(data?.data?.result)
-		} catch (error) {}
+			let subjectsResponse = data?.data?.result || []
+			subjectsResponse = subjectsResponse.filter((subject) => !subject.productId)
+			setSubjectIds(subjectsResponse)
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
 	return (
@@ -87,7 +105,7 @@ export default function SubjectModal({open, setOpen, getback,setRefresh}) {
 							<Select
 								labelId="demo-simple-select-outlined-label"
 								id="demo-simple-select-outlined"
-								value={age}
+								value={subject}
 								onChange={handleChange}
 								label="Subject"
 							>

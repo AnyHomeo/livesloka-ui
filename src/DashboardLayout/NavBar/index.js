@@ -167,6 +167,11 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			icon: AlignJustify,
 			title: "Options",
 		},
+		{
+			href:"/add-subjects",
+			icon: DollarSign,
+			title:"Paypal & Stripe"
+		}
 	]
 
 	const SalesTeam = [

@@ -45,7 +45,6 @@ let snackbarInitialState = {
 	type: "error",
 }
 function Options() {
-
 	const [customers, setCustomers] = useState([])
 	const [selectedCustomer, setSelectedCustomer] = useState({})
 	const [selectedDays, setSelectedDays] = useState([])
@@ -60,6 +59,7 @@ function Options() {
 	const [refresh, setRefresh] = useState(false)
 	const [checked, setChecked] = React.useState([])
 
+	console.log(checked)
 	useEffect(() => {
 		;(async () => {
 			setLoading(true)
@@ -166,7 +166,7 @@ function Options() {
 			if (data.status === 200) {
 				setMessage({
 					isShown: true,
-					message: "Options added successfully",
+					message: data.data.message || "Options added successfully",
 					type: "success",
 				})
 				setChecked([])
@@ -175,7 +175,22 @@ function Options() {
 				setSelectedTeacher("")
 				setRefresh(true)
 			}
-		} catch (error) {}
+		} catch (error) {
+			console.log(error)
+			if(error?.response?.data?.error){
+				setMessage({
+					isShown: true,
+					message: error?.response?.data?.error || "Something went wrong!",
+					type: "warning",
+				})
+			} else {
+				setMessage({
+					isShown: true,
+					message: "Soemthing went wrong",
+					type: "warning",
+				})
+			}
+		}
 		setBtnLoading(false)
 	}
 
@@ -206,7 +221,7 @@ function Options() {
 										freeSolo
 										disableClearable
 										options={customers}
-										getOptionLabel={(option) => option.firstName || " "}
+										getOptionLabel={(option) => option.firstName || ""}
 										onChange={(e, v) => {
 											setSelectedCustomer(v)
 											let teacher = teachers.filter((teacher) => teacher.id === v.teacherId)[0]
@@ -238,7 +253,7 @@ function Options() {
 										freeSolo
 										disableClearable
 										options={teachers}
-										getOptionLabel={(option) => option.name || " "}
+										getOptionLabel={(option) => option.name || ""}
 										onChange={(e, v) => {
 											setSelectedTeacher(v)
 										}}
@@ -334,20 +349,10 @@ function Options() {
 										)
 									})}
 							</List>
-
-							<Button
-								className={styles.addButton}
-								disabled={btnLoading}
-								variant="contained"
-								color="primary"
-								onClick={submitOptions}
-							>
-								{btnLoading ? <CircularProgress style={{height: 25, width: 25}} /> : "Submit"}
-							</Button>
 						</Card>
 					</Grid>
 					<Grid item xs={12} sm={6} md={4} lg={3}>
-						<Card className={styles.selectedOptions}>
+						<Card className={styles.selectedOptions} style={{position: "relative"}}>
 							<h5 className={styles.selectedSlotsTitle}>Selected Options</h5>
 							{options.map((option, i) => (
 								<div className={styles.selectedOptionsSingleCard}>
@@ -370,6 +375,44 @@ function Options() {
 									))}
 								</div>
 							))}
+
+							{teacherData &&
+								teacherData.schedules?.map((value) => {
+									console.log(value)
+									return checked.map((item) => {
+										if (item === value._id) {
+											return (
+												<div className={styles.selectedOptionsSingleCard}>
+													<div className={styles.xWrapper}>
+														<X style={{textAlign: "right"}} onClick={handleToggle(value._id)} />
+													</div>
+													<div>
+														<b>{value.className}</b>
+													</div>
+												</div>
+											)
+										}
+									})
+								})}
+
+							<div
+								style={{
+									display: "flex",
+									justifyContent: "center",
+									alignItems: "center",
+									marginTop: 80,
+								}}
+							>
+								<Button
+									style={{position: "absolute", bottom: "20px"}}
+									disabled={btnLoading}
+									variant="contained"
+									color="primary"
+									onClick={submitOptions}
+								>
+									{btnLoading ? <CircularProgress style={{height: 25, width: 25}} /> : "Submit"}
+								</Button>
+							</div>
 						</Card>
 					</Grid>
 				</Grid>
