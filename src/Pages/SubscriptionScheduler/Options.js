@@ -166,7 +166,7 @@ function Options() {
 			if (data.status === 200) {
 				setMessage({
 					isShown: true,
-					message: "Options added successfully",
+					message: data.data.message || "Options added successfully",
 					type: "success",
 				})
 				setChecked([])
@@ -180,7 +180,7 @@ function Options() {
 			if(error?.response?.data?.error){
 				setMessage({
 					isShown: true,
-					message: error?.response?.data?.error,
+					message: error?.response?.data?.error || "Something went wrong!",
 					type: "warning",
 				})
 			} else {

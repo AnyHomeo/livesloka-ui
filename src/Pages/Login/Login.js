@@ -212,13 +212,13 @@ const Login = () => {
         <div className={classes.ImageGroup}>
           <img
             className={classes.image1}
-            src={require("../../Images/childrens.png")}
+            src={require("../../Images/childrens.png").default}
             alt=""
           />
           <img
             className={classes.image1}
-            src={require("../../Images/QR_Code.png")}
-            alt=""
+            src={require("../../Images/QR_Code.png").default}
+            alt="qr code"
           />
           <Button
             className={classes.image1}
@@ -234,8 +234,8 @@ const Login = () => {
         <div className={classes.paper}>
           <img
             className={classes.Logo}
-            // src={require("../../Images/Logo.png")}
-            src="https://firebasestorage.googleapis.com/v0/b/livesloka-93a02.appspot.com/o/LiveSlokaLogoFiles%2FOriginal%20on%20Transparent.png?alt=media&token=fc19ecef-e7d5-45aa-b7b8-ac49689eb008"
+            src={require("../../Images/Logo2.png").default}
+            // src="https://firebasestorage.googleapis.com/v0/b/livesloka-93a02.appspot.com/o/LiveSlokaLogoFiles%2FOriginal%20on%20Transparent.png?alt=media&token=fc19ecef-e7d5-45aa-b7b8-ac49689eb008"
             alt=""
           />
           <Typography component="h1" variant="h5">

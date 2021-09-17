@@ -174,12 +174,12 @@ export default function Optionstable({refresh}) {
 			const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/options`)
 
 			data &&
-				data.data.result.map((item) => {
+				data.data.result.forEach((item) => {
 					let history = [item.options, item.schedules]
 					let test = createData(
-						item.customer.firstName,
-						item.teacherData.TeacherName,
-						item.createdAt,
+						item?.customer?.firstName || "Deleted User",
+						item?.teacherData?.TeacherName || "Deleted Teacher",
+						item?.createdAt,
 						history,
 						item._id
 					)

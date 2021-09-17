@@ -1430,8 +1430,8 @@ const CrmDetails = ({isSummerCampStudents}) => {
 										.catch((err) => {
 											console.error(err, err.response)
 											setSuccess(false)
-											if (err.response && err.response.error) {
-												setResponse(err.response.error)
+											if (err.response && err.response?.data?.error) {
+												setResponse(err.response.data.error)
 											} else {
 												setResponse("Something went wrong,Please try again!")
 											}
