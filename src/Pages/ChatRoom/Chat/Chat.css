@@ -109,7 +109,7 @@
 }
 .message__arrow--user {
 	position: absolute;
-	top: -4.5px;
+	top: -5.5px;
 	z-index: 100;
 	left: -7.5px;
 	display: block;
@@ -118,7 +118,7 @@
 }
 .message__arrow--admin {
 	position: absolute;
-	top: -4.5px;
+	top: -5.5px;
 	right: -7.5px;
 	z-index: 100;
 	display: block;

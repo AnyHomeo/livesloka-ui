@@ -13,6 +13,7 @@ function SidebarChat({id, name, room}) {
 
 	const [count, setCount] = useState(0)
 	const [isNew, setIsNew] = useState(false)
+	const [user, setUser] = useState(null)
 
 	useEffect(() => {
 		socket = io.connect(process.env.REACT_APP_API_KEY)
@@ -37,6 +38,16 @@ function SidebarChat({id, name, room}) {
 		})
 		socket.on("agent-read-message", () => {
 			setIsNew(false)
+		})
+	}, [])
+
+	useEffect(() => {
+		axios.get(`${process.env.REACT_APP_API_KEY}/ByUserID/${name}`).then((data) => {
+			// console.log(data)
+			if (data.status === 200) {
+				console.log(data.data.result)
+				setUser(data.data.result)
+			}
 		})
 	}, [])
 	useEffect(() => {
@@ -80,19 +91,39 @@ function SidebarChat({id, name, room}) {
 				style={{backgroundColor: `${room.agentID ? "rgb(200 250 161)" : ""}`}}
 			>
 				<Avatar
-					src={`https://avatars.dicebear.com/api/human/${id}.svg`}
+					src={`https://avatars.dicebear.com/api/avataaars/${id}.svg`}
 					style={{
 						boxShadow: `${
-							id === parms["roomID"] ? "0px 0 0 7px #f6f6f6, 0px 0 0 10px #00ffad" : ""
+							id === parms["roomID"] ? "0px 0 0 7.5px #f6f6f6, 0px 0 0 10px #00ffad" : ""
 						}`,
 					}}
 				/>
 				<div className="sidebarChat_info">
 					{isNew && id !== parms["roomID"] ? (
+						<p style={{fontWeight: 700}}>{room.username} 💬</p>
+					) : (
+						<p>{room.username}</p>
+					)}
+					<p style={{fontSize: 12}}>
+						{user?.timeZone}{" "}
+						<span
+							style={{
+								fontWeight: "bold",
+							}}
+						>
+							{room.agentID ? room.agentID : ""}
+						</span>
+					</p>
+
+					{/* {isNew && id !== parms["roomID"] ? (
 						<p style={{fontWeight: 700}}>{name.split("@")[0]} 💬</p>
 					) : (
 						<p>{name.split("@")[0]}</p>
 					)}
+
+					<p style={{fontSize: 12}}>
+						{user?.timeZone} {room.agentID ? room.agentID : ""}
+					</p> */}
 				</div>
 			</div>
 		</div>

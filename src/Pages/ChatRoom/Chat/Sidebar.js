@@ -110,7 +110,7 @@ function Sidebar(props) {
 
 	const handelChange = (e) => {
 		const value = e.target.value.toLowerCase().trim()
-		const copyRooms = [...allRooms].filter((room) => room.userID.toLowerCase().includes(value))
+		const copyRooms = [...allRooms].filter((room) => room.username.toLowerCase().includes(value))
 		setRooms(copyRooms)
 	}
 	return (

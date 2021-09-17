@@ -19,8 +19,16 @@ function Chat() {
 	const {roomID} = useParams()
 	const [roomName, setRoomName] = useState("")
 	const [message, setMessage] = useState("")
+	const [timeout, setSTimeout] = useState(undefined)
+	const [user, setUser] = useState(null)
+
 	const getRole = isAutheticated().roleId
 	const userID = isAutheticated().userId
+
+	const [isTyping, setIsTyping] = useState({
+		typing: false,
+		message: "",
+	})
 
 	const [agents, setAgents] = useState([])
 	const [showAssign, setshowAssign] = useState(false)
@@ -46,6 +54,11 @@ function Chat() {
 
 	const removeListners = () => {
 		console.log("clean up done")
+
+		setIsTyping({
+			typing: false,
+			message: "",
+		})
 		socket.removeAllListeners()
 	}
 	// const scrollToBottom = () => {
@@ -59,6 +72,11 @@ function Chat() {
 
 				if (name) {
 					setRoomName(name)
+					axios.get(`${process.env.REACT_APP_API_KEY}/getAdminById/${name}`).then((data) => {
+						if (data.status === 200) {
+							setUser(data.data)
+						}
+					})
 				}
 				if (allMsgs) {
 					setMessages(allMsgs)
@@ -84,11 +102,16 @@ function Chat() {
 
 	useEffect(() => {
 		lastElement.current.scrollIntoView({behavior: "smooth"})
-	}, [messages])
+	}, [messages, isTyping])
 	useEffect(() => {
 		if (roomID) {
 			socket.on("messageToRoomFromBot", ({role, message, name}) => {
 				console.log("got messag from bot", message)
+
+				setIsTyping({
+					typing: false,
+					message: "",
+				})
 
 				setMessages((prevState) => {
 					const oldState = [...prevState]
@@ -99,6 +122,13 @@ function Chat() {
 						createdAt: new Date(),
 					})
 					return oldState
+				})
+			})
+
+			socket.on("user-typing", ({name, message, typing}) => {
+				setIsTyping({
+					typing,
+					message,
 				})
 			})
 			socket.on("messageToRoomFromAdmin", ({role, message, name}) => {
@@ -166,12 +196,36 @@ function Chat() {
 		} catch (error) {}
 	}
 
+	const typingTimeout = () => {
+		console.log("stoped Typing")
+		socket.emit("agent-typing", {roomID, name: userID, typing: false}, (error) => {
+			if (error) {
+				alert(JSON.stringify(error))
+			}
+		})
+	}
+
+	const handelChange = (e) => {
+		let ftime = undefined
+		socket.emit("agent-typing", {roomID, name: userID, typing: true}, (error) => {
+			if (error) {
+				alert(JSON.stringify(error))
+			}
+		})
+		clearTimeout(timeout)
+		ftime = setTimeout(typingTimeout, 2000)
+		setSTimeout(ftime)
+
+		setMessage(e.target.value)
+	}
+
 	return (
 		<div className="chat">
 			<div className="chat_header">
-				<Avatar src={`https://avatars.dicebear.com/api/human/${roomID}.svg`} />
+				<Avatar src={`https://avatars.dicebear.com/api/avataaars/${roomID}.svg`} />
 				<div className="chat_headerInfo">
-					<h3 className="chat-room-name">{roomName.split("@")[0]}</h3>
+					<h3 className="chat-room-name">{user?.username}</h3>
+					<p style={{color: "#16e35e"}}>{isTyping.typing ? "typing ..." : ""}</p>
 				</div>
 				{getRole !== 3 && (
 					<div className="chat_headerRight">
@@ -271,6 +325,19 @@ function Chat() {
 						)}
 					</div>
 				))}
+
+				{isTyping.message && (
+					<p
+						className={`chat_message user`}
+						style={{
+							background: "#ffa8a8",
+							marginBottom: 30,
+						}}
+					>
+						<span className="chat_name">{roomName}</span>
+						{isTyping.message}
+					</p>
+				)}
 				<div ref={lastElement}></div>
 			</div>
 			<div className="chat_footer">
@@ -278,7 +345,7 @@ function Chat() {
 				<form onSubmit={sendMessage}>
 					<input
 						value={message}
-						onChange={(e) => setMessage(e.target.value)}
+						onChange={handelChange}
 						type="text"
 						style={{
 							outline: "none",
