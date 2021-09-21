@@ -46,6 +46,8 @@ import {AddSubjects} from "../Pages/Subjects"
 import ChatRoom from "../Pages/ChatRoom"
 import NonChatRoom from "../Pages/NonChatRoom"
 import Options from "../Pages/SubscriptionScheduler/Options"
+import {SubscriptionTransactions} from "../Pages/SubscriptionTransactions"
+import {Folders, Videomanager} from "../Pages/Videomanager"
 
 function Routes() {
 	return (
@@ -115,6 +117,9 @@ function Routes() {
 						<AdminRoute path="/room" exact component={ChatRoom} />
 						<AdminRoute path="/nonroom/:roomID" exact component={NonChatRoom} />
 						<AdminRoute path="/nonroom" exact component={NonChatRoom} />
+						<AdminRoute path="/subscription-data" exact component={SubscriptionTransactions} />
+						<AdminRoute path="/video-folders" exact component={Folders} />
+						<AdminRoute path="/video-folders/:id" exact component={Videomanager} />
 					</DashboardLayout>
 				</SnackbarProvider>
 				<Route path="*" component={NotFoundView} />
