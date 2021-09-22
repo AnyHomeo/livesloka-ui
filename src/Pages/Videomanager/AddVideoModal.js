@@ -1,5 +1,6 @@
 import {
 	Button,
+	CircularProgress,
 	Dialog,
 	DialogContent,
 	DialogTitle,
@@ -18,7 +19,7 @@ const AddVideoModal = ({open, setOpen, getBackData, category}) => {
 	const [isPublic, setIsPublic] = useState(false)
 	const [studentId, setStudentId] = useState()
 	const [studentsData, setStudentsData] = useState([])
-
+	const [loading, setLoading] = useState(false)
 	useEffect(() => {
 		getStudents()
 	}, [])
@@ -29,6 +30,7 @@ const AddVideoModal = ({open, setOpen, getBackData, category}) => {
 	}
 
 	const submitFolder = async () => {
+		setLoading(true)
 		let assignedTo = []
 
 		studentId &&
@@ -51,6 +53,7 @@ const AddVideoModal = ({open, setOpen, getBackData, category}) => {
 				setOpen(false)
 			}
 		} catch (error) {}
+		setLoading(false)
 	}
 
 	const handleChange = (event) => {
@@ -102,7 +105,7 @@ const AddVideoModal = ({open, setOpen, getBackData, category}) => {
 				)}
 
 				<Button variant="contained" style={{marginTop: 10}} onClick={submitFolder}>
-					Add
+					{loading ? <CircularProgress style={{height: 35, width: 35}} /> : "Add"}
 				</Button>
 			</DialogContent>
 		</Dialog>

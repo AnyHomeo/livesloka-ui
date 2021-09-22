@@ -67,7 +67,12 @@ const Videomanager = () => {
 						: undefined
 				}
 			>
-				<MenuItem onClick={() => setOpenAddVideo(!openAddVideo)} style={{width: 200}}>
+				<MenuItem
+					onClick={() => {
+						setOpenAddVideo(!openAddVideo)
+					}}
+					style={{width: 200}}
+				>
 					<FolderPlus style={{marginRight: 20}} /> <p style={{marginLeft: 20}}> New Video</p>
 				</MenuItem>
 			</Menu>

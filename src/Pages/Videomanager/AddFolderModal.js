@@ -1,10 +1,12 @@
-import {Button, Dialog, DialogContent, DialogTitle} from "@material-ui/core"
+import {Button, CircularProgress, Dialog, DialogContent, DialogTitle} from "@material-ui/core"
 import React, {useState} from "react"
 import TextField from "@material-ui/core/TextField"
 import Axios from "axios"
 const AddFolderModal = ({open, setOpen, getBackData}) => {
 	const [name, setName] = useState("")
+	const [loading, setLoading] = useState(false)
 	const submitFolder = async () => {
+		setLoading(true)
 		try {
 			const data = await Axios.post(`${process.env.REACT_APP_API_KEY}/admin/add/VideoCategories`, {
 				name,
@@ -15,6 +17,7 @@ const AddFolderModal = ({open, setOpen, getBackData}) => {
 				setOpen(false)
 			}
 		} catch (error) {}
+		setLoading(false)
 	}
 	return (
 		<Dialog open={open} onClose={() => setOpen(false)}>
@@ -26,7 +29,7 @@ const AddFolderModal = ({open, setOpen, getBackData}) => {
 					variant="outlined"
 				/>
 				<Button variant="contained" style={{marginTop: 10}} onClick={submitFolder}>
-					Add
+					{loading ? <CircularProgress style={{height: 35, width: 35}} /> : "Add"}
 				</Button>
 			</DialogContent>
 		</Dialog>

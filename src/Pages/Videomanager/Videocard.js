@@ -18,15 +18,13 @@ const useStyles = makeStyles(() => ({
 }))
 
 const Videocard = ({item}) => {
-	console.log(item)
 	var url = item.url
-	var regExp = /http:\/\/(www\.)?vimeo.com\/(\d+)($|\/)/
+	var regExp = /(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(?:(?:[a-z0-9]*\/)*\/?)?([0-9]+)/
 	var match = url.match(regExp)
 	const classes = useStyles()
-
 	return (
 		<div className={classes.folderCard}>
-			{match && <Vimeo width="250px" height="150px" video={match[2]} />}
+			{match && <Vimeo width="250px" height="150px" video={match[1]} />}
 
 			<div style={{display: "flex", padding: 5}}>
 				<Film style={{color: "#636e72"}} />
