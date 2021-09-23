@@ -1,20 +1,17 @@
-import {Container, Grid, Menu, MenuItem} from "@material-ui/core"
+import {Container, Grid, IconButton, Menu, MenuItem} from "@material-ui/core"
 import Axios from "axios"
 import React, {useState, useEffect} from "react"
-import {FolderPlus} from "react-feather"
+import {Plus} from "react-feather"
 import {useParams} from "react-router-dom"
+import AddCertificateModal from "./AddCertificateModal"
 import AddVideoModal from "./AddVideoModal"
 import Videocard from "./Videocard"
-const initialState = {
-	mouseX: null,
-	mouseY: null,
-}
 
 const Videomanager = () => {
 	const params = useParams()
 
-	const [containerRightClick, setContainerRightClick] = useState(initialState)
 	const [openAddVideo, setOpenAddVideo] = useState(false)
+	const [openAddCertificate, setOpenAddCertificate] = useState(false)
 	const [videoData, setVideoData] = useState()
 	useEffect(() => {
 		getVideosById()
@@ -22,20 +19,7 @@ const Videomanager = () => {
 	const getVideosById = async () => {
 		const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/videos/category/${params.id}`)
 
-		console.log(data)
 		setVideoData(data?.data?.result)
-	}
-
-	const handleContainerClick = (event) => {
-		event.preventDefault()
-		setContainerRightClick({
-			mouseX: event.clientX - 2,
-			mouseY: event.clientY - 4,
-		})
-	}
-
-	const handleContainerClose = () => {
-		setContainerRightClick(initialState)
 	}
 
 	const getBackData = (flag) => {
@@ -45,8 +29,62 @@ const Videomanager = () => {
 	}
 
 	return (
-		<div style={{height: "100vh", width: "100%"}} onContextMenu={handleContainerClick}>
+		<div style={{height: "100vh", width: "100%"}}>
 			<Container>
+				<div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+					<div></div>
+
+					<div style={{display: "flex"}}>
+						<div
+							style={{
+								display: "flex",
+								flexDirection: "column",
+								alignItems: "center",
+								marginTop: 10,
+							}}
+						>
+							<IconButton
+								style={{
+									backgroundColor: "#3867d6",
+									boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+									height: 55,
+									width: 55,
+									marginLeft: 10,
+									marginBottom: 10,
+								}}
+								onClick={() => setOpenAddVideo(!openAddVideo)}
+							>
+								<Plus style={{color: "white"}} />
+							</IconButton>
+							<p>Add Video</p>
+						</div>
+
+						<div
+							style={{
+								display: "flex",
+								flexDirection: "column",
+								alignItems: "center",
+								marginTop: 10,
+							}}
+						>
+							<IconButton
+								style={{
+									backgroundColor: "#3867d6",
+									boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+									height: 55,
+									width: 55,
+									marginLeft: 10,
+									marginBottom: 10,
+								}}
+								onClick={() => setOpenAddCertificate(!openAddCertificate)}
+							>
+								<Plus style={{color: "white"}} />
+							</IconButton>
+							<p style={{marginLeft: 20}}>Add Certificate</p>
+						</div>
+					</div>
+				</div>
+
 				<Grid container direction="row" justifyContent="center" alignItems="center">
 					{videoData &&
 						videoData.map((item) => (
@@ -56,30 +94,17 @@ const Videomanager = () => {
 						))}
 				</Grid>
 			</Container>
-			<Menu
-				keepMounted
-				open={containerRightClick.mouseY !== null}
-				onClose={handleContainerClose}
-				anchorReference="anchorPosition"
-				anchorPosition={
-					containerRightClick.mouseY !== null && containerRightClick.mouseX !== null
-						? {top: containerRightClick.mouseY, left: containerRightClick.mouseX}
-						: undefined
-				}
-			>
-				<MenuItem
-					onClick={() => {
-						setOpenAddVideo(!openAddVideo)
-					}}
-					style={{width: 200}}
-				>
-					<FolderPlus style={{marginRight: 20}} /> <p style={{marginLeft: 20}}> New Video</p>
-				</MenuItem>
-			</Menu>
 
 			<AddVideoModal
 				open={openAddVideo}
 				setOpen={setOpenAddVideo}
+				category={params.id}
+				getBackData={getBackData}
+			/>
+
+			<AddCertificateModal
+				open={openAddCertificate}
+				setOpen={setOpenAddCertificate}
 				category={params.id}
 				getBackData={getBackData}
 			/>
