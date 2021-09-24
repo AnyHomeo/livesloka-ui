@@ -387,7 +387,7 @@ function Options() {
 														<X style={{textAlign: "right"}} onClick={handleToggle(value._id)} />
 													</div>
 													<div>
-														<b>{value.className}</b>
+														<b>{value.scheduleDescription}</b>
 													</div>
 												</div>
 											)

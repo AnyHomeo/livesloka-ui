@@ -48,33 +48,20 @@ export default function SubjectModal({open, setOpen, setRefresh, setMessage}) {
 			setLoading(false)
 			return
 		}
-		if (image_url[0]) {
-			let storageRef = firebase.storage().ref(`${image_url[0].type}/${image_url[0].name}`)
-			await storageRef.put(image_url[0])
-			let url = await storageRef.getDownloadURL()
-			const formData = {
-				name,
-				description,
-				image: url,
-				subject,
-			}
-			try {
-				const data = await createPaypalAndStripeProducts(formData)
-				if (data.status === 200) {
-					handleClose()
-					setRefresh((prev) => !prev)
-				}
-			} catch (error) {
-				console.log(error)
-			}
-		} else {
-			setMessage({
-				isShown: true,
-				message: "Select Image",
-				type: "warning",
-			})
+		const formData = {
+			name,
+			description,
+			subject,
 		}
-
+		try {
+			const data = await createPaypalAndStripeProducts(formData)
+			if (data.status === 200) {
+				handleClose()
+				setRefresh((prev) => !prev)
+			}
+		} catch (error) {
+			console.log(error)
+		}
 		setLoading(false)
 	}
 
@@ -99,7 +86,7 @@ export default function SubjectModal({open, setOpen, setRefresh, setMessage}) {
 			>
 				<DialogTitle id="alert-dialog-title">{"Add new subject"}</DialogTitle>
 				<DialogContent>
-					<div style={{display: "flex", flexDirection: "column", width: 500}}>
+					<div style={{display: "flex", flexDirection: "column", width: 300}}>
 						<FormControl style={{margin: 5}} variant="outlined">
 							<InputLabel id="demo-simple-select-outlined-label">Subject</InputLabel>
 							<Select
@@ -129,70 +116,8 @@ export default function SubjectModal({open, setOpen, setRefresh, setMessage}) {
 							style={{margin: 5}}
 							label="Subject description"
 							variant="outlined"
+							multiline
 						/>
-
-						<FormControl
-							variant="outlined"
-							style={{
-								width: "100%",
-							}}
-						>
-							<div
-								style={{
-									height: "150px",
-									backgroundColor: "#F5F5F5",
-									display: "flex",
-									justifyContent: "center",
-									alignItems: "center",
-									flexDirection: "column",
-									margin: 5,
-								}}
-							>
-								{image_url && image_url.length > 0 === true ? (
-									<img
-										src={URL.createObjectURL(image_url[0])}
-										alt=""
-										style={{
-											height: "100%",
-											width: "100%",
-											objectFit: "cover",
-										}}
-									/>
-								) : (
-									<>
-										<IconButton variant="contained" component="label">
-											<i
-												style={{
-													color: "#C4C4C4",
-													fontSize: 30,
-													marginBottom: 5,
-												}}
-												class="fa fa-camera"
-											></i>
-											<input
-												multiple
-												accept="image/x-png,image/jpeg"
-												onChange={(e) => setImage_url(e.target.files)}
-												type="file"
-												hidden
-											/>
-										</IconButton>
-										<p style={{color: "#C4C4C4", fontWeight: "bold"}}>Choose an Image</p>
-									</>
-								)}
-							</div>
-							<p
-								style={{
-									color: "red",
-									marginBottom: 20,
-									cursor: "pointer",
-									marginTop: 20,
-								}}
-								onClick={() => setImage_url()}
-							>
-								<i className="fas fa-times-circle"></i> Delete Image
-							</p>
-						</FormControl>
 					</div>
 				</DialogContent>
 				<DialogActions>

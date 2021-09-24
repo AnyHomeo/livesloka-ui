@@ -113,14 +113,14 @@ const SubjectCards = ({data, refresh}) => {
 								<Calendar />{" "}
 								<p style={{marginLeft: 10}}>{moment(data.create_time).format("MMMM Do YYYY")}</p>
 							</div>
-							<div>
+							{/* <div>
 								<IconButton>
 									<Edit />
 								</IconButton>
 								<IconButton>
 									<Trash2 />
 								</IconButton>
-							</div>
+							</div> */}
 						</div>
 						<Collapse in={isPlansOpen}>
 							<div className={classes.plansWrapper}>
@@ -129,10 +129,6 @@ const SubjectCards = ({data, refresh}) => {
 									{data.name} Plans{" "}
 								</Typography>
 								<Grid container spacing={2}>
-									{/* <Grid item xs={12} sm={4} md={3}>
-										<div className={classes.addNewPlan}>Add New Plan</div>
-									</Grid> */}
-
 									{plans &&
 										plans.map((item, i) => (
 											<Grid key={i} item xs={12} sm={4} md={3}>
@@ -147,14 +143,14 @@ const SubjectCards = ({data, refresh}) => {
 														{item.name}
 													</Typography>
 													<Typography variant="caption">{item.description}</Typography>
-													<div className={classes.planActions}>
+													{/* <div className={classes.planActions}>
 														<Fab size="small">
 															<Edit />
 														</Fab>
 														<Fab size="small">
 															<Trash2 />
 														</Fab>
-													</div>
+													</div> */}
 												</div>
 											</Grid>
 										))}
