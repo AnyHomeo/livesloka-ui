@@ -13,7 +13,14 @@ import Axios from "axios"
 import Autocomplete from "@material-ui/lab/Autocomplete"
 import {useSnackbar} from "notistack"
 
-const AddVideoModal = ({open, setOpen, getBackData, category}) => {
+const AddVideoModal = ({
+	open,
+	setOpen,
+	getBackData,
+	category,
+	updateVideoData,
+	updateVidoeFlag,
+}) => {
 	const {enqueueSnackbar} = useSnackbar()
 
 	const [name, setName] = useState("")
@@ -26,6 +33,23 @@ const AddVideoModal = ({open, setOpen, getBackData, category}) => {
 	useEffect(() => {
 		getStudents()
 	}, [])
+
+	useEffect(() => {
+		if (updateVidoeFlag) {
+			// console.log(updateVideoData)
+			setName(updateVideoData.name)
+			setDescription(updateVideoData.description)
+			setUrl(updateVideoData.url)
+			setIsPublic(updateVideoData.isPublic)
+			setStudentId(updateVideoData.assignedTo)
+		} else {
+			setName("")
+			setDescription("")
+			setUrl("")
+			setIsPublic(true)
+			setStudentId([])
+		}
+	}, [updateVidoeFlag])
 
 	const getStudents = async () => {
 		const studentNames = await Axios.get(`${process.env.REACT_APP_API_KEY}/all/admins`)
@@ -62,6 +86,37 @@ const AddVideoModal = ({open, setOpen, getBackData, category}) => {
 		setLoading(false)
 	}
 
+	const updateVideo = async () => {
+		setLoading(true)
+		let assignedTo = []
+
+		studentId &&
+			studentId.map((data) => {
+				assignedTo.push(data._id)
+			})
+
+		try {
+			const data = await Axios.post(`${process.env.REACT_APP_API_KEY}/admin/update/Videos`, {
+				name,
+				url,
+				description,
+				isPublic,
+				category,
+				assignedTo,
+				id: updateVideoData.id,
+			})
+
+			if (data.status === 200) {
+				getBackData(true)
+				setOpen(false)
+				enqueueSnackbar(`Updated Successfully Successfully`, {variant: "success"})
+			}
+		} catch (error) {
+			enqueueSnackbar("Something went wrong, Please try again", {variant: "error"})
+		}
+		setLoading(false)
+	}
+
 	const handleChange = (event) => {
 		setIsPublic(event.target.checked)
 	}
@@ -74,18 +129,21 @@ const AddVideoModal = ({open, setOpen, getBackData, category}) => {
 					label="Video Name"
 					variant="outlined"
 					style={{marginTop: 10}}
+					value={name}
 				/>
 				<TextField
 					onChange={(e) => setUrl(e.target.value)}
 					label="Video Link"
 					variant="outlined"
 					style={{marginTop: 10}}
+					value={url}
 				/>
 				<TextField
 					onChange={(e) => setDescription(e.target.value)}
 					label="Description"
 					variant="outlined"
 					style={{marginTop: 10}}
+					value={description}
 				/>
 				<FormControlLabel
 					label="Public"
@@ -95,6 +153,7 @@ const AddVideoModal = ({open, setOpen, getBackData, category}) => {
 
 				{isPublic ? null : (
 					<Autocomplete
+						value={studentId}
 						multiple
 						freeSolo
 						getOptionLabel={(option) => option.username + `(${option.userId})`}
@@ -110,8 +169,19 @@ const AddVideoModal = ({open, setOpen, getBackData, category}) => {
 					/>
 				)}
 
-				<Button variant="contained" color="primary" style={{marginTop: 10}} onClick={submitFolder}>
-					{loading ? <CircularProgress style={{height: 35, width: 35, color: "white"}} /> : "Add"}
+				<Button
+					variant="contained"
+					color="primary"
+					style={{marginTop: 10}}
+					onClick={updateVidoeFlag ? updateVideo : submitFolder}
+				>
+					{loading ? (
+						<CircularProgress style={{height: 35, width: 35, color: "white"}} />
+					) : updateVidoeFlag ? (
+						"Update"
+					) : (
+						"Add"
+					)}
 				</Button>
 			</DialogContent>
 		</Dialog>

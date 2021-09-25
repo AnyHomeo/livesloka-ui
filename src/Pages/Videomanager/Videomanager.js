@@ -1,13 +1,33 @@
-import {Container, Grid, IconButton, Menu, MenuItem} from "@material-ui/core"
+import {Container, Grid, IconButton, makeStyles, Menu, MenuItem} from "@material-ui/core"
 import Axios from "axios"
 import React, {useState, useEffect} from "react"
-import {Plus} from "react-feather"
+import {Folder, Plus} from "react-feather"
 import {useParams} from "react-router-dom"
 import AddCertificateModal from "./AddCertificateModal"
 import AddVideoModal from "./AddVideoModal"
 import Videocard from "./Videocard"
+import {Link} from "react-router-dom"
+const useStyles = makeStyles(() => ({
+	folderCard: {
+		height: 50,
+		width: 150,
+		border: "0.5px solid #34495e",
+		borderRadius: 5,
+		display: "flex",
+		alignItems: "center",
+		padding: 5,
+		cursor: "pointer",
+		margin: 10,
+		justifyContent: "space-between",
+	},
+	menuIcons: {
+		color: "#34495e",
+		marginRight: 20,
+	},
+}))
 
 const Videomanager = () => {
+	const classes = useStyles()
 	const params = useParams()
 
 	const [openAddVideo, setOpenAddVideo] = useState(false)
@@ -31,7 +51,7 @@ const Videomanager = () => {
 	return (
 		<div style={{height: "100vh", width: "100%"}}>
 			<Container>
-				<div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+				{/* <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
 					<div></div>
 
 					<div style={{display: "flex"}}>
@@ -83,15 +103,35 @@ const Videomanager = () => {
 							<p style={{marginLeft: 20}}>Add Certificate</p>
 						</div>
 					</div>
-				</div>
+				</div> */}
 
 				<Grid container direction="row" justifyContent="center" alignItems="center">
-					{videoData &&
+					{/* {videoData &&
 						videoData.map((item) => (
 							<Grid item sm={3} key={item._id}>
 								<Videocard item={item} />
 							</Grid>
-						))}
+						))} */}
+
+					<div className={classes.folderCard}>
+						<Link to={`/video-folders/video/${params.id}`}>
+							<div style={{display: "flex"}}>
+								<Folder style={{color: "#636e72"}} />
+
+								<p style={{marginLeft: 10, color: "#636e72"}}>Videos</p>
+							</div>
+						</Link>
+					</div>
+
+					<div className={classes.folderCard}>
+						<Link to={`/video-folders/certificates/${params.id}`}>
+							<div style={{display: "flex"}}>
+								<Folder style={{color: "#636e72"}} />
+
+								<p style={{marginLeft: 10, color: "#636e72"}}>Certificates</p>
+							</div>
+						</Link>
+					</div>
 				</Grid>
 			</Container>
 

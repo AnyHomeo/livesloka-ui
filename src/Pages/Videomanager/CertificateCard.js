@@ -1,10 +1,10 @@
+import React from "react"
 import {IconButton, makeStyles} from "@material-ui/core"
 import {Edit, Play, Trash} from "react-feather"
-import React, {useState} from "react"
-import Vimeo from "@u-wave/react-vimeo"
+import {useParams} from "react-router-dom"
+import Axios from "axios"
 import {useConfirm} from "material-ui-confirm"
 
-import Axios from "axios"
 const useStyles = makeStyles(() => ({
 	folderCard: {
 		height: 250,
@@ -21,20 +21,22 @@ const useStyles = makeStyles(() => ({
 	},
 }))
 
-const Videocard = ({item, getBackData, open, setOpen, setUpdateVidoeFlag, setUpdateVideoData}) => {
-	const confirm = useConfirm()
-
+const CertificateCard = ({
+	item,
+	getBackData,
+	setUpdateCertificateData,
+	setUpdateCertificateFlag,
+	setOpen,
+	open,
+}) => {
 	const classes = useStyles()
-	if (item.url === "") {
-		return null
-	}
+	const confirm = useConfirm()
+	let pdf = item?.image
+	let pdfregExp = /%2..*%2F(.*?)\?alt/
+	let pdfmatch = pdf.match(pdfregExp)
 
-	let url = item.url
-	let regExp = /(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(?:(?:[a-z0-9]*\/)*\/?)?([0-9]+)/
-	let match = url.match(regExp)
-
-	const deleteVideo = async () => {
-		confirm({title: "Do you want to Delete the video?", confirmationText: "Delete"}).then(
+	const deleteCertificate = async () => {
+		confirm({title: "Do you want to Delete the certificate?", confirmationText: "Delete"}).then(
 			async () => {
 				try {
 					const data = await Axios.post(
@@ -44,23 +46,36 @@ const Videocard = ({item, getBackData, open, setOpen, setUpdateVidoeFlag, setUpd
 					if (data.status === 200) {
 						getBackData(true)
 					}
-				} catch (error) {}
+				} catch (error) {
+					console.log(error)
+				}
 			}
 		)
 	}
 
-	const updateVideo = () => {
+	const updateCertificate = () => {
 		setOpen(!open)
-		setUpdateVidoeFlag(true)
-		setUpdateVideoData(item)
+		setUpdateCertificateFlag(true)
+		setUpdateCertificateData(item)
 	}
+
 	return (
 		<div className={classes.folderCard}>
-			{match && <Vimeo width="250px" height="150px" video={match[1]} />}
+			{pdfmatch[1].split(".")[1] === "jpg" || pdfmatch[1].split(".")[1] === "jpeg" ? (
+				<img
+					src={item.image}
+					style={{width: "100%", height: 200, objectFit: "contain"}}
+					alt=""
+					srcset=""
+				/>
+			) : (
+				<object width="100%" height="400" data={item.image} type="application/pdf"></object>
+			)}
 
 			<div
 				style={{
 					display: "flex",
+					justifyContent: "center",
 					alignItems: "center",
 					width: "100%",
 					padding: 10,
@@ -68,16 +83,16 @@ const Videocard = ({item, getBackData, open, setOpen, setUpdateVidoeFlag, setUpd
 				}}
 			>
 				<div>
-					<div>
+					<div style={{display: "flex"}}>
 						<p style={{marginLeft: 10, fontWeight: "bold"}}>{item.name}</p>
 					</div>
 				</div>
 				<div>
 					<div>
-						<IconButton onClick={deleteVideo}>
+						<IconButton onClick={deleteCertificate}>
 							<Trash />
 						</IconButton>
-						<IconButton onClick={updateVideo}>
+						<IconButton onClick={updateCertificate}>
 							<Edit />
 						</IconButton>
 					</div>
@@ -87,4 +102,4 @@ const Videocard = ({item, getBackData, open, setOpen, setUpdateVidoeFlag, setUpd
 	)
 }
 
-export default Videocard
+export default CertificateCard

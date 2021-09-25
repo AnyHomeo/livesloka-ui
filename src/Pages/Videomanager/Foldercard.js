@@ -3,6 +3,8 @@ import {Folder, Edit, Trash} from "react-feather"
 import React from "react"
 import MoreVertIcon from "@material-ui/icons/MoreVert"
 import {Link} from "react-router-dom"
+import Axios from "axios"
+import {useConfirm} from "material-ui-confirm"
 const useStyles = makeStyles(() => ({
 	folderCard: {
 		height: 50,
@@ -22,16 +24,36 @@ const useStyles = makeStyles(() => ({
 	},
 }))
 
-const Foldercard = ({item}) => {
+const Foldercard = ({item, getBackData, open, setOpen, setUpdateFlag, setUpdateId}) => {
 	const classes = useStyles()
+	const confirm = useConfirm()
 
 	const [anchorEl, setAnchorEl] = React.useState(null)
-	const open = Boolean(anchorEl)
+	const menuOPen = Boolean(anchorEl)
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget)
 	}
 	const handleClose = () => {
 		setAnchorEl(null)
+	}
+
+	const handleDelete = async () => {
+		handleClose()
+
+		confirm({title: "Do you want to Delete the Category?", confirmationText: "Delete"}).then(
+			async () => {
+				try {
+					const data = await Axios.post(
+						`${process.env.REACT_APP_API_KEY}/admin/delete/VideoCategories/${item.id}`
+					)
+					if (data.status === 200) {
+						getBackData(true)
+					}
+				} catch (error) {
+					console.log(error)
+				}
+			}
+		)
 	}
 
 	return (
@@ -54,17 +76,24 @@ const Foldercard = ({item}) => {
 			<Menu
 				id="basic-menu"
 				anchorEl={anchorEl}
-				open={open}
+				open={menuOPen}
 				onClose={handleClose}
 				MenuListProps={{
 					"aria-labelledby": "basic-button",
 				}}
 			>
-				<MenuItem onClick={handleClose}>
+				<MenuItem
+					onClick={() => {
+						setOpen(!open)
+						setUpdateFlag(true)
+						setUpdateId(item)
+						handleClose()
+					}}
+				>
 					{" "}
 					<Edit className={classes.menuIcons} /> Edit
 				</MenuItem>
-				<MenuItem style={{marginTop: 10}} onClick={handleClose}>
+				<MenuItem style={{marginTop: 10}} onClick={handleDelete}>
 					{" "}
 					<Trash className={classes.menuIcons} /> Delete
 				</MenuItem>

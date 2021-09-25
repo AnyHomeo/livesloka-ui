@@ -1,10 +1,9 @@
 import {Container, Grid, makeStyles, MenuItem, Menu, IconButton} from "@material-ui/core"
 import React, {useState, useEffect} from "react"
 import Foldercard from "./Foldercard"
-import {FolderPlus, Plus} from "react-feather"
+import {Plus} from "react-feather"
 import AddFolderModal from "./AddFolderModal"
 import Axios from "axios"
-import {Link} from "react-router-dom"
 const useStyles = makeStyles(() => ({
 	root: {
 		cursor: "context-menu",
@@ -12,10 +11,6 @@ const useStyles = makeStyles(() => ({
 		width: "100%",
 	},
 }))
-const initialState = {
-	mouseX: null,
-	mouseY: null,
-}
 
 const Folders = () => {
 	useEffect(() => {
@@ -23,37 +18,12 @@ const Folders = () => {
 	}, [])
 	const classes = useStyles()
 	const [openAddFolder, setOpenAddFolder] = useState(false)
-	const [containerRightClick, setContainerRightClick] = useState(initialState)
 	const [folderData, setFolderData] = useState()
-	const [folderRightClick, setfolderRightClick] = useState(initialState)
-	const handleContainerClick = (event) => {
-		event.preventDefault()
-		setContainerRightClick({
-			mouseX: event.clientX - 2,
-			mouseY: event.clientY - 4,
-		})
-	}
-	const handleFolderClick = (event) => {
-		event.preventDefault()
-		setfolderRightClick({
-			mouseX: event.clientX - 2,
-			mouseY: event.clientY - 4,
-		})
-	}
-
-	const handleContainerClose = () => {
-		setContainerRightClick(initialState)
-	}
-
-	const handleFolderClose = () => {
-		setfolderRightClick(initialState)
-	}
-
+	const [updateFlag, setUpdateFlag] = useState(false)
+	const [updateId, setUpdateId] = useState("")
 	const getFolderNames = async () => {
 		try {
 			const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/admin/get/VideoCategories`)
-
-			console.log(data)
 			setFolderData(data?.data?.result)
 		} catch (error) {}
 	}
@@ -64,7 +34,7 @@ const Folders = () => {
 		}
 	}
 	return (
-		<div className={classes.root} onContextMenu={handleContainerClick}>
+		<div className={classes.root}>
 			<Container>
 				<div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
 					<div></div>
@@ -87,7 +57,11 @@ const Folders = () => {
 									marginLeft: 10,
 									marginBottom: 10,
 								}}
-								onClick={() => setOpenAddFolder(!openAddFolder)}
+								onClick={() => {
+									setUpdateId()
+									setUpdateFlag(false)
+									setOpenAddFolder(!openAddFolder)
+								}}
 							>
 								<Plus style={{color: "white"}} />
 							</IconButton>
@@ -98,14 +72,28 @@ const Folders = () => {
 				<Grid container direction="row" justifyContent="center" alignItems="center">
 					{folderData &&
 						folderData.map((item) => (
-							<Grid onContextMenu={handleContainerClick} item sm={3} key={item._id}>
-								<Foldercard item={item} />
+							<Grid item sm={3} key={item._id}>
+								<Foldercard
+									item={item}
+									getBackData={getBackData}
+									open={openAddFolder}
+									setOpen={setOpenAddFolder}
+									setUpdateFlag={setUpdateFlag}
+									updateFlag={updateFlag}
+									setUpdateId={setUpdateId}
+								/>
 							</Grid>
 						))}
 				</Grid>
 			</Container>
 
-			<AddFolderModal open={openAddFolder} setOpen={setOpenAddFolder} getBackData={getBackData} />
+			<AddFolderModal
+				open={openAddFolder}
+				setOpen={setOpenAddFolder}
+				getBackData={getBackData}
+				updateFlag={updateFlag}
+				updateId={updateId}
+			/>
 		</div>
 	)
 }

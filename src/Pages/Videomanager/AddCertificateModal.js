@@ -16,7 +16,15 @@ import Autocomplete from "@material-ui/lab/Autocomplete"
 import {firebase} from "../../Firebase"
 import {useSnackbar} from "notistack"
 import PdfLogo from "../../Images/pdflogo.png"
-const AddCertificateModal = ({open, setOpen, getBackData, category}) => {
+import {DescriptionSharp} from "@material-ui/icons"
+const AddCertificateModal = ({
+	open,
+	setOpen,
+	getBackData,
+	category,
+	updateCertificateData,
+	updateCertificateFlag,
+}) => {
 	const {enqueueSnackbar} = useSnackbar()
 
 	const [name, setName] = useState("")
@@ -30,6 +38,21 @@ const AddCertificateModal = ({open, setOpen, getBackData, category}) => {
 		getStudents()
 	}, [])
 
+	useEffect(() => {
+		if (updateCertificateFlag) {
+			setName(updateCertificateData.name)
+			setDescription(updateCertificateData.description)
+			setIsPublic(updateCertificateData.isPublic)
+			setStudentId(updateCertificateData.assignedTo)
+			setCertificate(updateCertificateData.image)
+		} else {
+			setName("")
+			setDescription("")
+			setIsPublic(true)
+			setStudentId([])
+			setCertificate("")
+		}
+	}, [updateCertificateFlag])
 	const getStudents = async () => {
 		const studentNames = await Axios.get(`${process.env.REACT_APP_API_KEY}/all/admins`)
 		setStudentsData(studentNames.data.result)
@@ -77,15 +100,48 @@ const AddCertificateModal = ({open, setOpen, getBackData, category}) => {
 		setIsPublic(event.target.checked)
 	}
 
+	const updateCertificate = async () => {
+		setLoading(true)
+		let assignedTo = []
+
+		studentId &&
+			studentId.map((data) => {
+				assignedTo.push(data._id)
+			})
+
+		try {
+			const data = await Axios.post(`${process.env.REACT_APP_API_KEY}/admin/update/Videos`, {
+				name,
+				url: "",
+				description,
+				isPublic,
+				category,
+				assignedTo,
+				id: updateCertificateData.id,
+				image: Certificate,
+			})
+
+			if (data.status === 200) {
+				getBackData(true)
+				setOpen(false)
+				enqueueSnackbar(`Updated Successfully Successfully`, {variant: "success"})
+			}
+		} catch (error) {
+			enqueueSnackbar("Something went wrong, Please try again", {variant: "error"})
+		}
+		setLoading(false)
+	}
+
 	return (
 		<Dialog open={open} onClose={() => setOpen(false)}>
-			<DialogTitle>{"Add New Video"}</DialogTitle>
+			<DialogTitle>{updateCertificateFlag ? "Update Certificate" : "Add Certiticate"}</DialogTitle>
 			<DialogContent style={{display: "flex", flexDirection: "column", width: 400}}>
 				<TextField
 					onChange={(e) => setName(e.target.value)}
 					label="Certificate Name"
 					variant="outlined"
 					style={{marginTop: 10}}
+					value={name}
 				/>
 
 				<TextField
@@ -93,6 +149,7 @@ const AddCertificateModal = ({open, setOpen, getBackData, category}) => {
 					label="Description"
 					variant="outlined"
 					style={{marginTop: 10}}
+					value={description}
 				/>
 				<FormControlLabel
 					label="Public"
@@ -102,6 +159,7 @@ const AddCertificateModal = ({open, setOpen, getBackData, category}) => {
 
 				{isPublic ? null : (
 					<Autocomplete
+						value={studentId}
 						multiple
 						freeSolo
 						getOptionLabel={(option) => option.username + `(${option.userId})`}
@@ -135,7 +193,17 @@ const AddCertificateModal = ({open, setOpen, getBackData, category}) => {
 					>
 						{
 							// eslint-disable-next-line
-							Certificate && Certificate.length > 0 === true ? (
+							updateCertificateFlag ? (
+								<img
+									src={Certificate}
+									alt=""
+									style={{
+										height: "100%",
+										width: "100%",
+										objectFit: "cover",
+									}}
+								/>
+							) : Certificate && Certificate.length > 0 === true ? (
 								<img
 									src={
 										Certificate[0].type === "application/pdf"
@@ -180,8 +248,19 @@ const AddCertificateModal = ({open, setOpen, getBackData, category}) => {
 					</p>
 				</FormControl>
 
-				<Button color="primary" variant="contained" style={{marginTop: 10}} onClick={submitFolder}>
-					{loading ? <CircularProgress style={{height: 35, width: 35, color: "white"}} /> : "Add"}
+				<Button
+					color="primary"
+					variant="contained"
+					style={{marginTop: 10}}
+					onClick={updateCertificate ? updateCertificate : submitFolder}
+				>
+					{loading ? (
+						<CircularProgress style={{height: 35, width: 35, color: "white"}} />
+					) : updateCertificateFlag ? (
+						"Update"
+					) : (
+						"Add"
+					)}
 				</Button>
 			</DialogContent>
 		</Dialog>
