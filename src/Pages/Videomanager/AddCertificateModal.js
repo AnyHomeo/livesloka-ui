@@ -16,7 +16,6 @@ import Autocomplete from "@material-ui/lab/Autocomplete"
 import {firebase} from "../../Firebase"
 import {useSnackbar} from "notistack"
 import PdfLogo from "../../Images/pdflogo.png"
-import {DescriptionSharp} from "@material-ui/icons"
 const AddCertificateModal = ({
 	open,
 	setOpen,
