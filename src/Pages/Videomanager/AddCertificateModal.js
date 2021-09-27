@@ -32,7 +32,9 @@ const AddCertificateModal = ({
 	const [studentId, setStudentId] = useState()
 	const [studentsData, setStudentsData] = useState([])
 	const [loading, setLoading] = useState(false)
-	const [Certificate, setCertificate] = useState("")
+	const [Certificate, setCertificate] = useState()
+	const [certificateUrl, setCertificateUrl] = useState("")
+
 	useEffect(() => {
 		getStudents()
 	}, [])
@@ -43,13 +45,13 @@ const AddCertificateModal = ({
 			setDescription(updateCertificateData.description)
 			setIsPublic(updateCertificateData.isPublic)
 			setStudentId(updateCertificateData.assignedTo)
-			setCertificate(updateCertificateData.image)
+			setCertificateUrl(updateCertificateData.image)
 		} else {
 			setName("")
 			setDescription("")
 			setIsPublic(true)
 			setStudentId([])
-			setCertificate("")
+			setCertificate([])
 		}
 	}, [updateCertificateFlag])
 	const getStudents = async () => {
@@ -194,7 +196,7 @@ const AddCertificateModal = ({
 							// eslint-disable-next-line
 							updateCertificateFlag ? (
 								<img
-									src={Certificate}
+									src={certificateUrl}
 									alt=""
 									style={{
 										height: "100%",
@@ -251,7 +253,7 @@ const AddCertificateModal = ({
 					color="primary"
 					variant="contained"
 					style={{marginTop: 10}}
-					onClick={updateCertificate ? updateCertificate : submitFolder}
+					onClick={updateCertificateFlag ? updateCertificate : submitFolder}
 				>
 					{loading ? (
 						<CircularProgress style={{height: 35, width: 35, color: "white"}} />
