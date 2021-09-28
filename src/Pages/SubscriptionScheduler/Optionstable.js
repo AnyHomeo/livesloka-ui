@@ -84,9 +84,9 @@ function Row(props) {
 				<TableCell align="right">{row.teacherName}</TableCell>
 				<TableCell align="right">{moment(row.createdAt).format("MMMM Do YYYY")}</TableCell>
 				<TableCell align="right">
-					<IconButton>
+					{/* <IconButton>
 						<Edit />
-					</IconButton>
+					</IconButton> */}
 					<IconButton onClick={() => onDeleteRow(row.id)} disabled={loading}>
 						{loading ? <CircularProgress style={{height: 30, width: 30}} /> : <Trash />}
 					</IconButton>

@@ -115,7 +115,7 @@ export default function AddPlans({open, setOpen, products, getback}) {
 						<TextField
 							onChange={(e) => setMonths(e.target.value)}
 							style={{margin: 5}}
-							label="Time period"
+							label="Months"
 							variant="outlined"
 						/>
 						<TextField
@@ -135,9 +135,3 @@ export default function AddPlans({open, setOpen, products, getback}) {
 		</div>
 	)
 }
-
-const top100Films = [
-	{title: "The Shawshank Redemption", year: 1994},
-	{title: "The Godfather", year: 1972},
-	{title: "The Godfather: Part II", year: 1974},
-]

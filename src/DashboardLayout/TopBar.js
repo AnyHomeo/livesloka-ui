@@ -28,6 +28,11 @@ import {Link} from "react-router-dom"
 import ChatIcon from "@material-ui/icons/Chat"
 import {io} from "socket.io-client"
 import {isAutheticated} from "../auth"
+import axios from "axios"
+
+import noti from "./notification.mp3"
+
+var audio = new Audio(noti)
 
 let socket
 let users = []
@@ -136,11 +141,23 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 
 	useEffect(() => {
 		socket = io.connect(process.env.REACT_APP_API_KEY)
+
+		axios.get(`${process.env.REACT_APP_API_KEY}/rooms`).then(({data}) => {
+			console.log(data)
+
+			users.push(...data.filter((user) => !user.messageSeen))
+			if (users.length > 0) {
+				setNewUser(true)
+				setChatCount(users.length)
+				audio.play()
+			}
+		})
 		if (isAutheticated().roleId === 3) {
 			socket.on("userWating", ({userID, roomID, type}) => {
 				console.log(users)
 				if (!users.find((el) => el === userID)) {
 					users.push(userID)
+					audio.play()
 
 					setNewUser(true)
 					setChatCount(users.length)
