@@ -142,7 +142,13 @@ function Sidebar(props) {
 					/>
 				</div>
 			</div>
-			<div className="sidebar_chats">
+			<div
+				className="sidebar_chats"
+				style={{
+					height: "75vh",
+					overflowY: "auto",
+				}}
+			>
 				{rooms.map((room) => (
 					<SidebarChat key={room.roomID} id={room.roomID} name={room.userID} room={room} />
 				))}
