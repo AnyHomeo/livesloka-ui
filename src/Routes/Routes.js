@@ -118,7 +118,7 @@ function Routes() {
 						<AdminRoute path="/room" exact component={ChatRoom} />
 						<AdminRoute path="/nonroom/:roomID" exact component={NonChatRoom} />
 						<AdminRoute path="/nonroom" exact component={NonChatRoom} />
-						<AdminRoute path="/subscription-data" exact component={SubscriptionTransactions} />
+						<AdminRoute path="/subscription-data/:id" exact component={SubscriptionTransactions} />
 						<AdminRoute path="/video-folders" exact component={Folders} />
 						<AdminRoute path="/video-folders/:id" exact component={Videomanager} />
 						<AdminRoute path="/video-folders/:type/:id" exact component={CategorizeVideo} />
