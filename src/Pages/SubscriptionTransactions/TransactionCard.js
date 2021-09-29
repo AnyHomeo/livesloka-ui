@@ -104,7 +104,6 @@ const TransactionCard = ({data, refresh}) => {
 		if (isPlansOpen) {
 			getProducts()
 		}
-		console.log(isPlansOpen)
 	}, [isPlansOpen, refresh])
 
 	const getProducts = async () => {
@@ -113,18 +112,16 @@ const TransactionCard = ({data, refresh}) => {
 			const res = await Axios.get(
 				`${process.env.REACT_APP_API_KEY}/subscriptions/transactions/${data.stripeCustomer}`
 			)
-
 			let plansArr = []
 			setLoading(false)
 			res?.data?.result.map((item) => {
-				console.log(item)
 				let obj = {
 					subscriptionId: "60ac8211e751a919d00ea02e",
 					name: item.paymentData.data.object.customer_name,
 					amount: item.paymentData.data.object.amount_paid,
 					email: item.paymentData.data.object.customer_email,
 					planName: 63,
-					createdAt: item.paymentData.created,
+					createdAt: item.createdAt,
 					paymentType: "Stripe",
 				}
 				plansArr.push(obj)
@@ -145,12 +142,12 @@ const TransactionCard = ({data, refresh}) => {
 						<div className={classes.infoContainer}>
 							<div className={classes.info}>
 								<div>
-									<p style={{marginLeft: 10}}>{data.type}</p>
+									<p style={{marginLeft: 10}}>{data?.customerId?.firstName}</p>
 								</div>
 							</div>
 							<div style={{display: "flex", flex: 0.333}}>
 								<Calendar />{" "}
-								<p style={{marginLeft: 10}}>{moment(data.create_time).format("MMMM Do YYYY")}</p>
+								<p style={{marginLeft: 10}}>{moment(data.createdAt).format("MMMM Do YYYY")}</p>
 							</div>
 							<div>
 								<IconButton onClick={() => setIsPlansOpen((prev) => !prev)}>

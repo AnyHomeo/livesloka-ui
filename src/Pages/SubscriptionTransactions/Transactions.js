@@ -1,10 +1,13 @@
-import {Container} from "@material-ui/core"
+import {Container, IconButton, InputBase, Paper} from "@material-ui/core"
 import React, {useState, useEffect} from "react"
 import {makeStyles} from "@material-ui/core/styles"
 import Axios from "axios"
 import Lottie from "react-lottie"
 import loadingAnimation from "../../Images/loading.json"
 import TransactionCard from "./TransactionCard"
+import {useParams} from "react-router"
+import SearchIcon from "@material-ui/icons/Search"
+
 const defaultOptions = {
 	loop: true,
 	autoplay: true,
@@ -67,6 +70,8 @@ const Transactions = () => {
 	const [refresh, setRefresh] = useState(false)
 	const [searchKeyword, setSearchKeyword] = useState("")
 	const [filteredData, setFilteredData] = useState([])
+
+	const params = useParams()
 	useEffect(() => {
 		getProducts()
 	}, [refresh])
@@ -74,9 +79,9 @@ const Transactions = () => {
 	const getProducts = async () => {
 		setLoading(true)
 		try {
-			const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/subscriptions/`)
-
-			console.log(data)
+			const data = await Axios.get(
+				`${process.env.REACT_APP_API_KEY}/subscriptions/customer/${params?.id}`
+			)
 			setSubscription(data?.data.result || [])
 			setLoading(false)
 		} catch (error) {
@@ -85,21 +90,17 @@ const Transactions = () => {
 		}
 	}
 
-	// useEffect(() => {
-	// 	filterData()
-	// }, [searchKeyword])
+	useEffect(() => {
+		filterData()
+	}, [searchKeyword])
 
-	// const filterData = () => {
-	//     console.log(subscription)
-	// 	let regex = new RegExp(`^${searchKeyword}`, `i`)
-	// 	const sortedArr =
-	//     subscription &&
-	// 		subscription.filter(
-	// 			(x) => regex.test(x.name.toLowerCase()) || regex.test(x.description.toLowerCase())
-	// 		)
+	const filterData = () => {
+		let regex = new RegExp(`^${searchKeyword}`, `i`)
+		const sortedArr =
+			subscription && subscription.filter((x) => regex.test(x?.customerId?.firstName.toLowerCase()))
 
-	// 	setFilteredData(sortedArr)
-	// }
+		setFilteredData(sortedArr)
+	}
 
 	if (loading) {
 		return <Lottie options={defaultOptions} height={400} width={400} />
@@ -118,7 +119,7 @@ const Transactions = () => {
 						}}
 					>
 						<p style={{fontSize: 24}}>Livesloka Subscription</p>
-						{/* <div>
+						<div>
 							<Paper className={classes.inputField}>
 								<InputBase
 									onChange={(e) => setSearchKeyword(e.target.value)}
@@ -129,14 +130,25 @@ const Transactions = () => {
 									<SearchIcon />
 								</IconButton>
 							</Paper>
-						</div> */}
+						</div>
 					</div>
 				</div>
 
-				{subscription &&
-					subscription.map((subs, i) => (
-						<TransactionCard key={subs.id} data={subs} refresh={refresh} />
-					))}
+				{searchKeyword ? (
+					<>
+						{filteredData &&
+							filteredData.map((subject, i) => (
+								<TransactionCard key={subject.id} data={subject} refresh={refresh} />
+							))}
+					</>
+				) : (
+					<>
+						{subscription &&
+							subscription.map((subs, i) => (
+								<TransactionCard key={subs.id} data={subs} refresh={refresh} />
+							))}
+					</>
+				)}
 			</Container>
 		</div>
 	)

@@ -21,6 +21,7 @@ import {
 	MessageCircle,
 	AlignJustify,
 	Film,
+	Activity,
 } from "react-feather"
 import NavItem from "./NavItem"
 import useWindowDimensions from "../../Components/useWindowDimensions"
@@ -178,6 +179,11 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			icon: Film,
 			title: "Video Manager",
 		},
+		// {
+		// 	href: "/subscription-data",
+		// 	icon: Activity,
+		// 	title: "Subscription Transactions",
+		// },
 	]
 
 	const SalesTeam = [
