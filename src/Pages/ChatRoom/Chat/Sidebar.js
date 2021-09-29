@@ -119,12 +119,6 @@ function Sidebar(props) {
 				{/* <Avatar src={user?.photoURL} /> */}
 				<div className="sidebar_headerRight">
 					<IconButton>
-						<DonutLargeIcon />
-					</IconButton>
-					<IconButton>
-						<ChatIcon />
-					</IconButton>
-					<IconButton>
 						<MoreVertIcon />
 					</IconButton>
 				</div>
@@ -145,7 +139,7 @@ function Sidebar(props) {
 			<div
 				className="sidebar_chats"
 				style={{
-					height: "75vh",
+					height: "71vh",
 					overflowY: "auto",
 				}}
 			>
