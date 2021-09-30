@@ -34,6 +34,7 @@ function Chat() {
 	const [showAssign, setshowAssign] = useState(false)
 	const [messages, setMessages] = useState([])
 	const lastElement = useRef(null)
+	const chatInput = useRef(null)
 	const history = useHistory()
 	useEffect(() => {
 		socket = io.connect(process.env.REACT_APP_API_KEY)
@@ -152,6 +153,10 @@ function Chat() {
 
 	const sendMessage = (e) => {
 		e.preventDefault()
+
+		if (!message) {
+			return
+		}
 		const role = getRole === 3 ? 3 : 4
 		socket.emit(
 			"messageFromAdmin",
@@ -175,6 +180,9 @@ function Chat() {
 		})
 
 		setMessage("")
+
+		console.log("cc", chatInput)
+		chatInput.current.blur()
 	}
 
 	const handelAssignAgent = async (e, value) => {
@@ -347,13 +355,16 @@ function Chat() {
 						value={message}
 						onChange={handelChange}
 						type="text"
+						ref={chatInput}
 						style={{
 							outline: "none",
 						}}
 						placeholder="Type a message"
 					/>
 				</form>{" "}
-				<SendIcon />
+				<IconButton onClick={sendMessage}>
+					<SendIcon />
+				</IconButton>
 			</div>
 		</div>
 	)
