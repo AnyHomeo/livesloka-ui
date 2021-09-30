@@ -1,4 +1,4 @@
-import {Container, IconButton, InputBase, Paper} from "@material-ui/core"
+import {Container, IconButton, InputBase, Paper, Button} from "@material-ui/core"
 import React, {useState, useEffect} from "react"
 import {makeStyles} from "@material-ui/core/styles"
 import Axios from "axios"
@@ -56,6 +56,23 @@ const useStyles = makeStyles((theme) => ({
 		alignItems: "center",
 		flex: 0.333,
 	},
+	Button: {
+		height: 50,
+		width: 150,
+		border: "1px solid #0984e3",
+		margin: 5,
+	},
+	activeButton: {
+		height: 50,
+		width: 150,
+		margin: 5,
+		backgroundColor: "#0984e3",
+		color: "white",
+
+		"&:hover": {
+			backgroundColor: "#0984e3",
+		},
+	},
 }))
 
 let snackbarInitialState = {
@@ -70,18 +87,19 @@ const Transactions = () => {
 	const [refresh, setRefresh] = useState(false)
 	const [searchKeyword, setSearchKeyword] = useState("")
 	const [filteredData, setFilteredData] = useState([])
-
+	const [isActive, setIsActive] = useState(1)
 	const params = useParams()
 	useEffect(() => {
 		getProducts()
-	}, [refresh])
+	}, [refresh, isActive])
 
 	const getProducts = async () => {
 		setLoading(true)
 		try {
 			const data = await Axios.get(
-				`${process.env.REACT_APP_API_KEY}/subscriptions/customer/${params?.id}`
+				`${process.env.REACT_APP_API_KEY}/subscriptions/customer/${params?.id}?isActive=${isActive}`
 			)
+			console.log(data)
 			setSubscription(data?.data.result || [])
 			setLoading(false)
 		} catch (error) {
@@ -105,7 +123,7 @@ const Transactions = () => {
 	if (loading) {
 		return <Lottie options={defaultOptions} height={400} width={400} />
 	}
-
+	console.log(isActive)
 	return (
 		<div>
 			<Container>
@@ -131,6 +149,27 @@ const Transactions = () => {
 								</IconButton>
 							</Paper>
 						</div>
+					</div>
+				</div>
+
+				<div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+					<div>
+						<Button
+							className={isActive === 1 ? classes.activeButton : classes.Button}
+							onClick={() => {
+								setIsActive(1)
+							}}
+						>
+							Active
+						</Button>
+						<Button
+							className={isActive === 0 ? classes.activeButton : classes.Button}
+							onClick={() => {
+								setIsActive(0)
+							}}
+						>
+							Cancelled
+						</Button>
 					</div>
 				</div>
 
