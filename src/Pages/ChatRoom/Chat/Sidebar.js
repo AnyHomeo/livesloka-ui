@@ -139,9 +139,6 @@ function Sidebar() {
 							history.push("/group")
 						}}
 					/>
-					{/* <IconButton>
-						<MoreVertIcon />
-					</IconButton> */}
 				</div>
 			</div>
 			<div className="sidebar_search">
@@ -157,7 +154,13 @@ function Sidebar() {
 					/>
 				</div>
 			</div>
-			<div className="sidebar_chats">
+			<div
+				className="sidebar_chats"
+				style={{
+					height: "71vh",
+					overflowY: "auto",
+				}}
+			>
 				{rooms.map((room) => (
 					<SidebarChat key={room.roomID} id={room.roomID} name={room.userID} room={room} />
 				))}

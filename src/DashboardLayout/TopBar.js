@@ -28,6 +28,12 @@ import {Link} from "react-router-dom"
 import ChatIcon from "@material-ui/icons/Chat"
 import {io} from "socket.io-client"
 import {isAutheticated} from "../auth"
+import axios from "axios"
+import HistoryIcon from "@material-ui/icons/History"
+
+import noti from "./notification.mp3"
+
+var audio = new Audio(noti)
 
 let socket
 let users = []
@@ -79,6 +85,8 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 	const [customTimeArr, setCustomTimeArr] = useState("Asia/Kolkata")
 
 	const [newUser, setNewUser] = useState(false)
+
+	const [last24Hrs, setLast24Hrs] = useState(0)
 	moment.tz.setDefault(customTimeArr)
 	useInterval(() => {
 		if (!customTime) {
@@ -136,11 +144,31 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 
 	useEffect(() => {
 		socket = io.connect(process.env.REACT_APP_API_KEY)
+
+		axios.get(`${process.env.REACT_APP_API_KEY}/rooms`).then(({data}) => {
+			console.log(data)
+			const last24 = data.filter((message) => {
+				let date1 = new Date(message.updatedAt)
+				let timeStamp = Math.round(new Date().getTime() / 1000)
+				let timeStampYesterday = timeStamp - 24 * 3600
+				let is24 = date1 >= new Date(timeStampYesterday * 1000).getTime()
+				return is24
+			})
+			setLast24Hrs(last24.length)
+
+			users.push(...data.filter((user) => !user.messageSeen))
+			if (users.length > 0) {
+				setNewUser(true)
+				setChatCount(users.length)
+				audio.play()
+			}
+		})
 		if (isAutheticated().roleId === 3) {
 			socket.on("userWating", ({userID, roomID, type}) => {
 				console.log(users)
 				if (!users.find((el) => el === userID)) {
 					users.push(userID)
+					audio.play()
 
 					setNewUser(true)
 					setChatCount(users.length)
@@ -202,8 +230,6 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 					</div>
 				))}
 
-				<Box flexGrow={1} />
-
 				<div>
 					<Dialog open={open} onClose={handleClose}>
 						<div style={{background: "#3f51b5"}}>
@@ -241,31 +267,53 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 						</DialogActions>
 					</Dialog>
 				</div>
-				{isAutheticated().roleId === 3 && (
-					<Link
-						to="/room"
-						style={{color: `${newUser ? "red" : "white"}`}}
-						onClick={() => {
-							setNewUser(false)
-							users = []
-							setChatCount(0)
-						}}
-					>
-						<Badge badgeContent={chatCount} color="error">
-							<ChatIcon />
-						</Badge>
-					</Link>
-				)}
 
-				<a
-					href="/login"
-					onClick={() => logout(() => console.log("logout successful"))}
-					style={{color: "white"}}
+				<div
+					style={{
+						display: "flex",
+						justifyContent: "space-evenly",
+						alignItems: "center",
+						width: "100%",
+					}}
 				>
-					<IconButton color="inherit">
-						<InputIcon />
-					</IconButton>
-				</a>
+					{isAutheticated().roleId === 3 && (
+						<>
+							<Link
+								to="/room"
+								style={{color: `${newUser ? "red" : "white"}`}}
+								onClick={() => {
+									setNewUser(false)
+									users = []
+									setChatCount(0)
+								}}
+							>
+								<Badge badgeContent={chatCount} color="error">
+									<ChatIcon />
+								</Badge>
+							</Link>
+							<Link
+								to="/room"
+								style={{
+									color: "#fff",
+								}}
+							>
+								<Badge badgeContent={last24Hrs} color="primary">
+									<HistoryIcon />
+								</Badge>
+							</Link>
+						</>
+					)}
+
+					<a
+						href="/login"
+						onClick={() => logout(() => console.log("logout successful"))}
+						style={{color: "white"}}
+					>
+						<IconButton color="inherit">
+							<InputIcon />
+						</IconButton>
+					</a>
+				</div>
 			</Toolbar>
 		</AppBar>
 	)

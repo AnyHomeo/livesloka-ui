@@ -44,7 +44,6 @@ function SidebarChat({id, name, room}) {
 		axios.get(`${process.env.REACT_APP_API_KEY}/ByUserID/${name}`).then((data) => {
 			// console.log(data)
 			if (data.status === 200) {
-				console.log(data.data.result)
 				setUser(data.data.result)
 			}
 		})
