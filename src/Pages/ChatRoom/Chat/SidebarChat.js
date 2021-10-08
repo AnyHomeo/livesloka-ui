@@ -11,7 +11,6 @@ function SidebarChat({id, name, room}) {
 	const history = useHistory()
 	const parms = useParams()
 
-	const [count, setCount] = useState(0)
 	const [isNew, setIsNew] = useState(false)
 	const [user, setUser] = useState(null)
 
@@ -55,14 +54,6 @@ function SidebarChat({id, name, room}) {
 			console.log("got messag from bot in side chat", message)
 			console.log(parms)
 			console.log(parms.roomID === id)
-			// axios.get(`${process.env.REACT_APP_API_KEY}/rooms/${id}`).then(({data}) => {
-			// 	const allMsgs = data.messages
-			// 	if (allMsgs && id !== parms["roomID"]) {
-			// 		if (allMsgs.length > count) {
-			// 			setCount(allMsgs.length)
-			// 		}
-			// 	}
-			// })
 			setIsNew(true)
 		})
 
@@ -91,13 +82,14 @@ function SidebarChat({id, name, room}) {
 				style={{backgroundColor: `${room.agentID ? "rgb(200 250 161)" : ""}`}}
 			>
 				<Avatar
-					src={`https://avatars.dicebear.com/api/avataaars/${id}.svg`}
 					style={{
 						boxShadow: `${
 							id === parms["roomID"] ? "0px 0 0 7.5px #f6f6f6, 0px 0 0 10px #00ffad" : ""
 						}`,
 					}}
-				/>
+				>
+					{room.username.substr(0, 1)}
+				</Avatar>
 				<div className="sidebarChat_info">
 					{isNew && id !== parms["roomID"] ? (
 						<p style={{fontWeight: 700}}>{room.username} 💬</p>
@@ -130,4 +122,4 @@ function SidebarChat({id, name, room}) {
 	)
 }
 
-export default SidebarChat
+export default React.memo(SidebarChat)

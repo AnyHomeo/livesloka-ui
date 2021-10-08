@@ -46,6 +46,7 @@ import {AddSubjects} from "../Pages/Subjects"
 import ChatRoom from "../Pages/ChatRoom"
 import NonChatRoom from "../Pages/NonChatRoom"
 import Options from "../Pages/SubscriptionScheduler/Options"
+import Groups from "../Pages/Groups"
 
 function Routes() {
 	return (
@@ -115,6 +116,8 @@ function Routes() {
 						<AdminRoute path="/room" exact component={ChatRoom} />
 						<AdminRoute path="/nonroom/:roomID" exact component={NonChatRoom} />
 						<AdminRoute path="/nonroom" exact component={NonChatRoom} />
+						<AdminRoute path="/group/:groupID" exact component={Groups} />
+						<AdminRoute path="/group" exact component={Groups} />
 					</DashboardLayout>
 				</SnackbarProvider>
 				<Route path="*" component={NotFoundView} />

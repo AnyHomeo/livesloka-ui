@@ -224,7 +224,9 @@ function Chat() {
 			<div className="chat_header">
 				<Avatar src={`https://avatars.dicebear.com/api/avataaars/${roomID}.svg`} />
 				<div className="chat_headerInfo">
-					<h3 className="chat-room-name">{user?.username}</h3>
+					<h3 className="chat-room-name">
+						{user?.username ? user?.username : roomName.split("@")[0]}
+					</h3>
 					<p style={{color: "#16e35e"}}>{isTyping.typing ? "typing ..." : ""}</p>
 				</div>
 				{getRole !== 3 && (

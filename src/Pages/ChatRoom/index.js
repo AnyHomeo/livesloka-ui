@@ -24,6 +24,8 @@ const ChatRoom = () => {
 				history.push("/nonroom")
 			} else if (newValue === 0) {
 				history.push("/room")
+			} else if (newValue === 2) {
+				history.push("/group")
 			}
 		}
 		// setValue(newValue)
@@ -36,7 +38,12 @@ const ChatRoom = () => {
 				{!!roomID ? (
 					<Chat />
 				) : (
-					<Paper className={classes.root}>
+					<Paper
+						className={classes.root}
+						style={{
+							flex: "0.75 1",
+						}}
+					>
 						<Tabs
 							value={value}
 							onChange={handleChange}
@@ -46,6 +53,7 @@ const ChatRoom = () => {
 						>
 							<Tab label="Room" />
 							<Tab label="Non Room" />
+							<Tab label="Groups" />
 						</Tabs>
 					</Paper>
 				)}

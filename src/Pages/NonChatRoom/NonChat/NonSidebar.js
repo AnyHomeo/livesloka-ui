@@ -1,15 +1,17 @@
 import React, {useState, useEffect} from "react"
 import "./NonSidebar.css"
-import {Avatar, IconButton} from "@material-ui/core"
+import {Avatar, Chip, IconButton} from "@material-ui/core"
 import DonutLargeIcon from "@material-ui/icons/DonutLarge"
 import ChatIcon from "@material-ui/icons/Chat"
 import MoreVertIcon from "@material-ui/icons/MoreVert"
 import {SearchOutlined} from "@material-ui/icons"
 import NonSidebarChat from "./NonSidebarChat"
 import axios from "axios"
+import {useHistory} from "react-router"
 let user
 function NonSidebar(props) {
 	const [rooms, setRooms] = useState([])
+	const history = useHistory()
 
 	// useEffect(() => {
 	// 	axios.get("http://localhost:5000/nonrooms").then((data) => {
@@ -21,17 +23,32 @@ function NonSidebar(props) {
 	return (
 		<div className="sidebar">
 			<div className="sidebar_header">
-				<Avatar src={user?.photoURL} />
 				<div className="sidebar_headerRight">
-					<IconButton>
-						<DonutLargeIcon />
-					</IconButton>
-					<IconButton>
-						<ChatIcon />
-					</IconButton>
-					<IconButton>
+					<Chip
+						avatar={<Avatar>R</Avatar>}
+						label="Room"
+						onClick={() => {
+							history.push("/room")
+						}}
+					/>
+					<Chip
+						avatar={<Avatar>N</Avatar>}
+						color="primary"
+						label="NonRoom"
+						onClick={() => {
+							history.push("/nonroom")
+						}}
+					/>
+					<Chip
+						avatar={<Avatar>G</Avatar>}
+						label="Group"
+						onClick={() => {
+							history.push("/group")
+						}}
+					/>
+					{/* <IconButton>
 						<MoreVertIcon />
-					</IconButton>
+					</IconButton> */}
 				</div>
 			</div>
 			<div className="sidebar_search">
