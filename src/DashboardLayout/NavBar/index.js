@@ -168,7 +168,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			title: "Options",
 		},
 		{
-			href:"/add-subjects",
+			href:"/products",
 			icon: DollarSign,
 			title:"Paypal & Stripe"
 		}

@@ -40,12 +40,13 @@ import NotificationSettings from "../Pages/BroadcastMessages/NotificationSetting
 import NotificationsTable from "../Pages/BroadcastMessages/NotificationsTable"
 import FinancialDashboard from "../Pages/Financialdashboard"
 import Expenseform from "../Pages/Financialdashboard/Expenseform"
-import {SnackbarProvider, useSnackbar} from "notistack"
+import {SnackbarProvider} from "notistack"
 import Slide from "@material-ui/core/Slide"
 import {AddSubjects} from "../Pages/Subjects"
 import ChatRoom from "../Pages/ChatRoom"
 import NonChatRoom from "../Pages/NonChatRoom"
 import Options from "../Pages/SubscriptionScheduler/Options"
+import ProductAndPlans from "../Pages/ProductsAndPlans"
 
 function Routes() {
 	return (
@@ -115,6 +116,7 @@ function Routes() {
 						<AdminRoute path="/room" exact component={ChatRoom} />
 						<AdminRoute path="/nonroom/:roomID" exact component={NonChatRoom} />
 						<AdminRoute path="/nonroom" exact component={NonChatRoom} />
+						<AdminRoute path="/products" exact component={ProductAndPlans} />
 					</DashboardLayout>
 				</SnackbarProvider>
 				<Route path="*" component={NotFoundView} />
