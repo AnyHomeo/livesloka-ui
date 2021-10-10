@@ -20,6 +20,7 @@ import {
 	Users,
 	MessageCircle,
 	AlignJustify,
+	Film,
 } from "react-feather"
 import NavItem from "./NavItem"
 import useWindowDimensions from "../../Components/useWindowDimensions"
@@ -170,8 +171,13 @@ const NavBar = ({onMobileClose, openMobile}) => {
 		{
 			href:"/products",
 			icon: DollarSign,
-			title:"Paypal & Stripe"
-		}
+			title: "Paypal & Stripe",
+		},
+		{
+			href: "/video-folders",
+			icon: Film,
+			title: "Video Manager",
+		},
 	]
 
 	const SalesTeam = [
