@@ -1,5 +1,5 @@
 import React from "react"
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom"
+import { Switch, Route} from "react-router-dom"
 import Login from "../Pages/Login/Login"
 import PasswordReset from "../Pages/Login/PasswordReset"
 import AdminRoute from "../auth/AdminRoutes"
@@ -40,13 +40,14 @@ import NotificationSettings from "../Pages/BroadcastMessages/NotificationSetting
 import NotificationsTable from "../Pages/BroadcastMessages/NotificationsTable"
 import FinancialDashboard from "../Pages/Financialdashboard"
 import Expenseform from "../Pages/Financialdashboard/Expenseform"
-import {SnackbarProvider, useSnackbar} from "notistack"
+import {SnackbarProvider} from "notistack"
 import Slide from "@material-ui/core/Slide"
 import {AddSubjects} from "../Pages/Subjects"
 import ChatRoom from "../Pages/ChatRoom"
 import NonChatRoom from "../Pages/NonChatRoom"
 import Options from "../Pages/SubscriptionScheduler/Options"
 import Groups from "../Pages/Groups"
+import ProductAndPlans from "../Pages/ProductsAndPlans"
 import {SubscriptionTransactions} from "../Pages/SubscriptionTransactions"
 import {Folders, Videomanager} from "../Pages/Videomanager"
 import CategorizeVideo from "../Pages/Videomanager/CategorizeVideo"
@@ -121,6 +122,7 @@ function Routes() {
 						<AdminRoute path="/nonroom" exact component={NonChatRoom} />
 						<AdminRoute path="/group/:groupID" exact component={Groups} />
 						<AdminRoute path="/group" exact component={Groups} />
+						<AdminRoute path="/products" exact component={ProductAndPlans} />
 						<AdminRoute path="/subscription-data" exact component={SubscriptionTransactions} />
 						<AdminRoute path="/video-folders" exact component={Folders} />
 						<AdminRoute path="/video-folders/:id" exact component={Videomanager} />

@@ -215,3 +215,10 @@ export const getTimeZones = () => Axios.get(`${API.main}/admin/get/timeZone`)
 
 export const createPaypalAndStripeProducts = (data) =>
 	Axios.post(`${process.env.REACT_APP_API_KEY}/subscriptions/create/product`, data)
+
+export const getAllSubscriptionProducts = () => Axios.get(`${API.main}/products`)
+export const addSubscriptionProduct = (data) => Axios.post(`${API.main}/products`,data)
+export const deleteSubscriptionProduct = (id) => Axios.delete(`${API.main}/products/${id}`)
+export const createPlans = (data) => Axios.post(`${API.main}/plans`,data)
+export const getAllPlansOfTheProduct = (productId) => Axios.get(`${API.main}/plans?productId=${productId}`)
+export const deleteSubscriptionPlan = (planId) => Axios.delete(`${API.main}/plans/${planId}`)
