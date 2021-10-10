@@ -1,21 +1,20 @@
 import React, {useState, useEffect} from "react"
 import "./Sidebar.css"
-import {Avatar, IconButton} from "@material-ui/core"
-import DonutLargeIcon from "@material-ui/icons/DonutLarge"
-import ChatIcon from "@material-ui/icons/Chat"
-import MoreVertIcon from "@material-ui/icons/MoreVert"
+import {Avatar, Chip, IconButton} from "@material-ui/core"
 import {SearchOutlined} from "@material-ui/icons"
 import SidebarChat from "./SidebarChat"
 import axios from "axios"
 import {isAutheticated} from "../../../auth"
 import {io} from "socket.io-client"
+import {useHistory} from "react-router"
 
 let socket
-function Sidebar(props) {
+function Sidebar() {
 	const [allRooms, setAllRooms] = useState([])
 	const [rooms, setRooms] = useState([])
 	const getRole = isAutheticated().roleId
 	const getUserID = isAutheticated().userId
+	const history = useHistory()
 
 	useEffect(() => {
 		socket = io.connect(process.env.REACT_APP_API_KEY)
@@ -118,9 +117,28 @@ function Sidebar(props) {
 			<div className="sidebar_header">
 				{/* <Avatar src={user?.photoURL} /> */}
 				<div className="sidebar_headerRight">
-					<IconButton>
-						<MoreVertIcon />
-					</IconButton>
+					<Chip
+						avatar={<Avatar>R</Avatar>}
+						label="Room"
+						color="primary"
+						onClick={() => {
+							history.push("/room")
+						}}
+					/>
+					<Chip
+						avatar={<Avatar>N</Avatar>}
+						label="NonRoom"
+						onClick={() => {
+							history.push("/nonroom")
+						}}
+					/>
+					<Chip
+						avatar={<Avatar>G</Avatar>}
+						label="Group"
+						onClick={() => {
+							history.push("/group")
+						}}
+					/>
 				</div>
 			</div>
 			<div className="sidebar_search">

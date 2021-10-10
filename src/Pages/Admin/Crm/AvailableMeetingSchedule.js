@@ -162,7 +162,7 @@ const AvailableMeetingSchedule = ({match}) => {
 			if (isZoomMeeting) {
 				getZoomLink = await Axios.post(
 					`${process.env.REACT_APP_API_KEY}/link/getzoomlink`,
-					timeSlotState
+					timeSlotState.map(slot => slot.split("!@#$%^&*($%^")[0])
 				)
 				newZoomLink = getZoomLink.data.result.link
 				newZoomJwt = getZoomLink.data.result.id
