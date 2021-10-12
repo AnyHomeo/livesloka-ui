@@ -1394,6 +1394,9 @@ const CrmDetails = ({isSummerCampStudents}) => {
 									teacherId: undefined,
 									className: undefined,
 									proposedAmount: undefined,
+									paidTill:undefined,
+									scheduleDescription: undefined,
+									meetingLink: undefined,
 								})
 								materialTable.dataManager.changeRowEditing()
 								materialTable.setState({
