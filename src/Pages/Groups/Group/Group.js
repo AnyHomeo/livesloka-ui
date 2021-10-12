@@ -255,12 +255,9 @@ function Group() {
 					<div className="chat__message-body" key={idx}>
 						{getRole !== 3 ? (
 							<p className={`chat_message ${message.role === 4 ? "chat_receiver" : "user"}`}>
-								{(message.role === 1 || message.role === 3) &&
-									(message.role === 1 ? (
-										<span className="chat_name">{message.username} </span>
-									) : (
-										<span className="chat_name">{message.username} </span>
-									))}
+								{(message.role === 1 || message.role === 2 || message.role === 3) && (
+									<span className="chat_name">{message.username} </span>
+								)}
 								{message.message}
 								<span className="chat_timestemp">
 									{new Date(message.createdAt).toLocaleString()}
@@ -268,12 +265,9 @@ function Group() {
 							</p>
 						) : (
 							<p className={`chat_message ${message.role === 3 ? "chat_receiver" : "user"}`}>
-								{(message.role === 1 || message.role === 4) &&
-									(message.role === 1 ? (
-										<span className="chat_name">{message.username}</span>
-									) : (
-										<span className="chat_name">{message.username}</span>
-									))}
+								{(message.role === 1 || message.role === 2 || message.role === 4) && (
+									<span className="chat_name">{message.username}</span>
+								)}
 								{message.message}
 								<span className="chat_timestemp">
 									{new Date(message.createdAt).toLocaleString()}
