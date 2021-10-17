@@ -34,13 +34,12 @@ const AddCertificateModal = ({
 	const [loading, setLoading] = useState(false)
 	const [Certificate, setCertificate] = useState()
 	const [certificateUrl, setCertificateUrl] = useState("")
-
 	useEffect(() => {
 		getStudents()
 	}, [])
 
 	useEffect(() => {
-		if (updateCertificateFlag) {
+		if (updateCertificateData) {
 			setName(updateCertificateData.name)
 			setDescription(updateCertificateData.description)
 			setIsPublic(updateCertificateData.isPublic)
@@ -53,7 +52,7 @@ const AddCertificateModal = ({
 			setStudentId([])
 			setCertificate([])
 		}
-	}, [updateCertificateFlag])
+	}, [updateCertificateData])
 	const getStudents = async () => {
 		const studentNames = await Axios.get(`${process.env.REACT_APP_API_KEY}/all/admins`)
 		setStudentsData(studentNames.data.result)
@@ -89,6 +88,12 @@ const AddCertificateModal = ({
 				enqueueSnackbar(`Added Successfully`, {variant: "success"})
 				getBackData(true)
 				setOpen(false)
+
+				setName("")
+				setDescription("")
+				setIsPublic(true)
+				setStudentId([])
+				setCertificate([])
 			}
 		} catch (error) {
 			console.log(error.response)
@@ -123,6 +128,11 @@ const AddCertificateModal = ({
 			})
 
 			if (data.status === 200) {
+				setName("")
+				setDescription("")
+				setIsPublic(true)
+				setStudentId([])
+				setCertificate([])
 				getBackData(true)
 				setOpen(false)
 				enqueueSnackbar(`Updated Successfully Successfully`, {variant: "success"})
