@@ -34,7 +34,6 @@ const MoreModal = ({
 	setInitialFormData,
 }) => {
 	const confirm = useConfirm()
-	console.log(data)
 	const classes = useStyles()
 	const [response, setResponse] = useState("")
 	const [success, setSuccess] = useState(false)

@@ -375,7 +375,8 @@ const CrmDetails = ({isSummerCampStudents}) => {
 				},
 				lastName: {selected: settings.includes("lastName"), name: "Gaurdian"},
 				classId: {selected: settings.includes("classId"), name: "Class Name"},
-				email: {selected: settings.includes("email"), name: "Email"},
+				email: {selected: settings.includes("email"), name: "Login Id"},
+				emailId: {selected: settings.includes("emailId"), name: "Email"},
 				gender: {selected: settings.includes("gender"), name: "Gender"},
 				whatsAppnumber: {
 					selected: settings.includes("whatsAppnumber"),
@@ -651,6 +652,14 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					),
 				},
 				{
+					title: "Email",
+					field: "emailId",
+					hidden: !columnFilters["emailId"].selected,
+					width: "1%",
+					cellStyle: {whiteSpace: "nowrap"},
+					headerStyle: {whiteSpace: "nowrap"},
+				},
+				{
 					title: "Default classes",
 					field: "noOfClasses",
 					type: "numeric",
@@ -713,7 +722,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					hidden: !columnFilters["subjectId"].selected,
 				},
 				{
-					title: "Email",
+					title: "Login Id",
 					field: "email",
 					width: "1%",
 					cellStyle: {whiteSpace: "nowrap"},
