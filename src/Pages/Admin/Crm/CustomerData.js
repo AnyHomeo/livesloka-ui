@@ -1,5 +1,5 @@
-import React, {useEffect, useState, useRef} from "react"
-import MaterialTable, {MTableBodyRow} from "material-table"
+import React, {useEffect, useState, useRef, useCallback} from "react"
+import MaterialTable from "material-table"
 import {makeStyles} from "@material-ui/core/styles"
 import SmsOutlinedIcon from "@material-ui/icons/SmsOutlined"
 import useWindowDimensions from "../../../Components/useWindowDimensions"
@@ -35,6 +35,8 @@ import {
 	Switch,
 	Card,
 	Grid,
+	DialogContent,
+	DialogTitle,
 } from "@material-ui/core"
 import EqualizerIcon from "@material-ui/icons/Equalizer"
 import CloseIcon from "@material-ui/icons/Close"
@@ -49,11 +51,12 @@ import {isAutheticated} from "../../../auth"
 import {getSettings, updateSettings} from "../../../Services/Services"
 import axios from "axios"
 import StudentHistoryTable from "./StudentsHistoryTable"
-import {useHistory, Redirect} from "react-router-dom"
-import {Smartphone} from "react-feather"
+import {useHistory} from "react-router-dom"
+import {Smartphone, X} from "react-feather"
 import useDocumentTitle from "../../../Components/useDocumentTitle"
 import MoreModal from "./MoreModal"
 import AnalogClockTime from "../../../Components/AnalogClockTime"
+import RewardsTable from "./RewardsTable"
 
 const copyToClipboard = (text) => {
 	var textField = document.createElement("textarea")
@@ -249,7 +252,6 @@ const ColumnFilterDrawer = ({
 
 const CrmDetails = ({isSummerCampStudents}) => {
 	useDocumentTitle("Customer Data")
-
 	const history = useHistory()
 	const {height, width} = useWindowDimensions()
 	const classes = useStyles()
@@ -294,7 +296,29 @@ const CrmDetails = ({isSummerCampStudents}) => {
 		subjects: [],
 		paidClasses: [],
 	})
+	const [moreOptionOpen, setMoreOptionOpen] = useState(false)
+	const [moreOptionSelectedData, setMoreOptionSelectedData] = useState()
+	const [analogClockOpen, setAnalogClockOpen] = useState(false)
+	const [rewardsModalOpen, setRewardsModalOpen] = useState(undefined)
+
 	const Alert = (props) => <MuiAlert elevation={6} variant="filled" {...props} />
+	const fetchData = useCallback(async () => {
+		try {
+			setLoading(true)
+			let id = isAutheticated()._id
+			let data
+			if (isSummerCampStudents) {
+				data = await getSummerCampStudents()
+			} else {
+				data = await getByUserSettings(id)
+			}
+			let details = data.data.result
+			setData(details)
+			setLoading(false)
+		} catch (error) {
+			console.error(error)
+		}
+	}, [isSummerCampStudents])
 
 	//basic data loading
 	useEffect(() => {
@@ -329,6 +353,10 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					selected: settings.includes("timeZoneId"),
 					name: "Time Zone",
 				},
+				rewards: {
+					selected: settings.includes("rewards"),
+					name: "Rewards",
+				},
 				categoryId: {
 					selected: settings.includes("categoryId"),
 					name: "Category",
@@ -357,9 +385,9 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					selected: settings.includes("noOfClasses"),
 					name: "Number of Classes",
 				},
-				paymentDate: {
-					selected: settings.includes("paymentDate"),
-					name: "Payment Date",
+				paidTill: {
+					selected: settings.includes("paidTill"),
+					name: "Subscribed Till",
 				},
 				oneToOne: {selected: settings.includes("oneToOne"), name: "Group"},
 				requestedSubjects: {
@@ -419,7 +447,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 			})
 		})
 		fetchData()
-	}, [refresh])
+	}, [refresh, fetchData])
 
 	const toggleJoinButton = async (rowData) => {
 		try {
@@ -608,6 +636,21 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					},
 				},
 				{
+					title: "Rewards",
+					field: "login.rewards",
+					type: "numeric",
+					width: "1%",
+					hidden: !columnFilters["rewards"].selected,
+					cellStyle: {whiteSpace: "nowrap"},
+					headerStyle: {whiteSpace: "nowrap"},
+					editable: "never",
+					render: (rowData) => (
+							<Button style={{color: "black"}} onClick={() => setRewardsModalOpen(rowData._id)}>
+								{rowData.login ? rowData.login.rewards : undefined}
+							</Button>
+					),
+				},
+				{
 					title: "Default classes",
 					field: "noOfClasses",
 					type: "numeric",
@@ -631,17 +674,16 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					),
 				},
 				{
-					title: "Payment Date",
-					field: "paymentDate",
+					title: "Subscribed Till",
+					field: "paidTill",
 					width: "1%",
-					lookup: Array.from({length: 31}, (_, i) => i).reduce((prev, cur) => ({
-						...prev,
-						[cur]: cur,
-					})),
+					type: "date",
 					cellStyle: {whiteSpace: "nowrap"},
 					headerStyle: {whiteSpace: "nowrap"},
-					hidden: !columnFilters["paymentDate"].selected,
-					render: (rowData) => (rowData.paymentDate ? `${rowData.paymentDate} of every month` : ""),
+					hidden: !columnFilters["paidTill"].selected,
+					editable: "never",
+					render: (rowData) =>
+						rowData.paidTill ? moment(rowData.paidTill).format("MMM DD, yyyy") : "",
 				},
 				{
 					title: "Gender",
@@ -904,25 +946,8 @@ const CrmDetails = ({isSummerCampStudents}) => {
 		agentDropdown,
 		categoryDropdown,
 		subjectDropdown,
+		isSummerCampStudents,
 	])
-
-	const fetchData = async () => {
-		try {
-			setLoading(true)
-			let id = isAutheticated()._id
-			let data
-			if (isSummerCampStudents) {
-				data = await getSummerCampStudents()
-			} else {
-				data = await getByUserSettings(id)
-			}
-			let details = data.data.result
-			setData(details)
-			setLoading(false)
-		} catch (error) {
-			console.error(error)
-		}
-	}
 
 	const handleSnackBarClose = (event, reason) => {
 		if (reason === "clickaway") {
@@ -1023,11 +1048,6 @@ const CrmDetails = ({isSummerCampStudents}) => {
 				})
 		}
 	}, [filterName])
-
-	const [moreOptionOpen, setMoreOptionOpen] = useState(false)
-	const [moreOptionSelectedData, setMoreOptionSelectedData] = useState()
-
-	const [analogClockOpen, setAnalogClockOpen] = useState(false)
 
 	return (
 		<>
@@ -1374,6 +1394,9 @@ const CrmDetails = ({isSummerCampStudents}) => {
 									teacherId: undefined,
 									className: undefined,
 									proposedAmount: undefined,
+									paidTill:undefined,
+									scheduleDescription: undefined,
+									meetingLink: undefined,
 								})
 								materialTable.dataManager.changeRowEditing()
 								materialTable.setState({
@@ -1397,17 +1420,6 @@ const CrmDetails = ({isSummerCampStudents}) => {
 							},
 						},
 					]}
-					// components={{
-					// 	Row: (props) => (
-					// 		<MTableBodyRow
-					// 			{...props}
-					// 			onDoubleClick={(e) => {
-					// 				console.log(props.actions)
-					// 				props.actions[isSummerCampStudents ? 7 : 8]().onClick(e, props.data)
-					// 			}}
-					// 		/>
-					// 	),
-					// }}
 					editable={{
 						onRowAdd: isSummerCampStudents
 							? undefined
@@ -1547,18 +1559,6 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					aria-labelledby="form-dialog-title"
 					TransitionComponent={Transition}
 				>
-					{/* <AppBar className={classes.appBar}>
-						<Toolbar>
-							<IconButton
-								edge="start"
-								color="inherit"
-								onClick={() => setHistoryOpen(false)}
-								aria-label="close"
-							>
-								<CloseIcon />
-							</IconButton>
-						</Toolbar>
-					</AppBar> */}
 					<StudentHistoryTable
 						data={historyStudentData}
 						id={historySelectedId}
@@ -1566,6 +1566,27 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					/>
 				</Dialog>
 			)}
+
+			<Dialog
+				open={!!rewardsModalOpen}
+				onClose={() => setRewardsModalOpen(undefined)}
+				aria-labelledby="rewards-modal"
+				TransitionComponent={Transition}
+			>
+				<DialogTitle>
+					<div style={{display: "flex",alignItems: "center",justifyContent: "space-between"}} >
+						<div>
+							Rewards
+						</div>
+					<IconButton onClick={() => setRewardsModalOpen(undefined)}>
+						<X />
+					</IconButton>
+					</div>
+				</DialogTitle>
+				<DialogContent>
+					<RewardsTable customerId={rewardsModalOpen}  />
+				</DialogContent>
+			</Dialog>
 		</>
 	)
 }

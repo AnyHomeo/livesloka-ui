@@ -1,15 +1,14 @@
-import React from "react"
-import NonSidebar from "./NonChat/NonSidebar"
-import NonChat from "./NonChat/NonChat"
+import React, {useEffect} from "react"
+import Group from "./Group/Group"
+import GroupSidebar from "./Group/GroupSidebar"
 import "./index.css"
 import {useParams} from "react-router"
 import {makeStyles, Paper, Tab, Tabs} from "@material-ui/core"
 import {useHistory} from "react-router-dom"
 
-const ChatRoom = () => {
-	const {roomID} = useParams()
+const Groups = () => {
+	const {groupID} = useParams()
 	const history = useHistory()
-	console.log(roomID)
 
 	const useStyles = makeStyles({
 		root: {
@@ -17,10 +16,9 @@ const ChatRoom = () => {
 		},
 	})
 	const classes = useStyles()
-	const [value, setValue] = React.useState(1)
+	const [value, setValue] = React.useState(2)
 
 	const handleChange = (event, newValue) => {
-		console.log(newValue)
 		if (value !== newValue) {
 			if (newValue === 1) {
 				history.push("/nonroom")
@@ -30,13 +28,15 @@ const ChatRoom = () => {
 				history.push("/group")
 			}
 		}
+		// setValue(newValue)
 	}
+
 	return (
 		<div className="app">
 			<div className="app_body">
-				<NonSidebar></NonSidebar>
-				{!!roomID ? (
-					<NonChat />
+				<GroupSidebar></GroupSidebar>
+				{!!groupID ? (
+					<Group />
 				) : (
 					<Paper
 						className={classes.root}
@@ -62,4 +62,4 @@ const ChatRoom = () => {
 	)
 }
 
-export default ChatRoom
+export default Groups
