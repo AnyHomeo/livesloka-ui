@@ -44,7 +44,7 @@ export default function AddPlans({products, openAddPlanModal, setOpenAddPlanModa
 		setLoading(true)
 		createPlans({
 			...formData,
-			products: products.map((product) => product._id),
+			products: formData.products.map((product) => product._id),
 		})
 			.then((data) => {
 				enqueueSnackbar(`${formData.name} Created successfully!`, {
