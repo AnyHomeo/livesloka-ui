@@ -9,6 +9,7 @@ import Videocard from "./Videocard"
 import {Link} from "react-router-dom"
 import VideoPage from "./VideoPage"
 import CertificatePage from "./CetrificatePage"
+import BulkUploadCertificate from "./BulkUploadCertificate"
 const useStyles = makeStyles(() => ({
 	folderCard: {
 		height: 50,
@@ -41,13 +42,12 @@ const CategorizeVideo = () => {
 	const [updateVidoeFlag, setUpdateVidoeFlag] = useState(false)
 	const [updateCertificateFlag, setUpdateCertificateFlag] = useState(false)
 	const [updateCertificateData, setUpdateCertificateData] = useState()
-
+	const [bulkUploadCertificate, setBulkUploadCertificate] = useState(false)
 	useEffect(() => {
 		getVideosById()
 	}, [])
 	const getVideosById = async () => {
 		const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/videos/category/${params.id}`)
-
 		setVideoData(data?.data?.result)
 		let video = []
 		let certificate = []
@@ -102,33 +102,61 @@ const CategorizeVideo = () => {
 								<p>Add Video</p>
 							</div>
 						) : (
-							<div
-								style={{
-									display: "flex",
-									flexDirection: "column",
-									alignItems: "center",
-									marginTop: 10,
-								}}
-							>
-								<IconButton
+							<>
+								<div
 									style={{
-										backgroundColor: "#3867d6",
-										boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-										height: 55,
-										width: 55,
-										marginLeft: 10,
-										marginBottom: 10,
-									}}
-									onClick={() => {
-										setUpdateCertificateFlag(false)
-										setUpdateCertificateData()
-										setOpenAddCertificate(!openAddCertificate)
+										display: "flex",
+										flexDirection: "column",
+										alignItems: "center",
+										marginTop: 10,
+										marginRight: 10,
 									}}
 								>
-									<Plus style={{color: "white"}} />
-								</IconButton>
-								<p>Add Certificate</p>
-							</div>
+									<IconButton
+										style={{
+											backgroundColor: "#3867d6",
+											boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+											height: 55,
+											width: 55,
+											marginLeft: 10,
+											marginBottom: 10,
+										}}
+										onClick={() => {
+											setBulkUploadCertificate(!bulkUploadCertificate)
+										}}
+									>
+										<Plus style={{color: "white"}} />
+									</IconButton>
+									<p>Buld upload</p>
+								</div>
+								<div
+									style={{
+										display: "flex",
+										flexDirection: "column",
+										alignItems: "center",
+										marginTop: 10,
+									}}
+								>
+									<IconButton
+										style={{
+											backgroundColor: "#3867d6",
+											boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+											height: 55,
+											width: 55,
+											marginLeft: 10,
+											marginBottom: 10,
+										}}
+										onClick={() => {
+											setUpdateCertificateFlag(false)
+											setUpdateCertificateData()
+											setOpenAddCertificate(!openAddCertificate)
+										}}
+									>
+										<Plus style={{color: "white"}} />
+									</IconButton>
+									<p>Add Certificate</p>
+								</div>
+							</>
 						)}
 					</div>
 				</div>
@@ -172,6 +200,13 @@ const CategorizeVideo = () => {
 				getBackData={getBackData}
 				updateCertificateData={updateCertificateData}
 				updateCertificateFlag={updateCertificateFlag}
+			/>
+
+			<BulkUploadCertificate
+				open={bulkUploadCertificate}
+				setOpen={setBulkUploadCertificate}
+				category={params.id}
+				getBackData={getBackData}
 			/>
 		</div>
 	)

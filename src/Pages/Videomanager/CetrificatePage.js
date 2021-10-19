@@ -12,7 +12,7 @@ const CertificatePage = ({
 	let array = []
 	data &&
 		data.map((item) => {
-			if (item.url === "") {
+			if (item.image) {
 				array.push(item)
 			}
 		})

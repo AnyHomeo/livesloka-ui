@@ -145,9 +145,35 @@ const TransactionCard = ({data, refresh}) => {
 									<p style={{marginLeft: 10}}>{data?.customerId?.firstName}</p>
 								</div>
 							</div>
-							<div style={{display: "flex", flex: 0.333}}>
-								<Calendar />{" "}
-								<p style={{marginLeft: 10}}>{moment(data.createdAt).format("MMMM Do YYYY")}</p>
+							<div
+								style={{
+									display: "flex",
+									flex: 0.333,
+									flexDirection: "column",
+									alignItems: "center",
+								}}
+							>
+								<p>Paid Date</p>
+								<div style={{display: "flex"}}>
+									<Calendar />{" "}
+									<p style={{marginLeft: 10}}>
+										{moment(data.customerId.paidTill).format("MMMM Do YYYY")}
+									</p>
+								</div>
+							</div>
+							<div
+								style={{
+									display: "flex",
+									flex: 0.333,
+									flexDirection: "column",
+									alignItems: "center",
+								}}
+							>
+								<p>Due Date</p>
+								<div style={{display: "flex"}}>
+									<Calendar />{" "}
+									<p style={{marginLeft: 10}}>{moment(data.createdAt).format("MMMM Do YYYY")}</p>
+								</div>
 							</div>
 							<div>
 								<IconButton onClick={() => setIsPlansOpen((prev) => !prev)}>

@@ -37,7 +37,6 @@ const AddCertificateModal = ({
 	useEffect(() => {
 		getStudents()
 	}, [])
-
 	useEffect(() => {
 		if (updateCertificateData) {
 			setName(updateCertificateData.name)
@@ -50,11 +49,12 @@ const AddCertificateModal = ({
 			setDescription("")
 			setIsPublic(true)
 			setStudentId([])
-			setCertificate([])
+			setCertificate()
 		}
 	}, [updateCertificateData])
 	const getStudents = async () => {
 		const studentNames = await Axios.get(`${process.env.REACT_APP_API_KEY}/all/admins`)
+
 		setStudentsData(studentNames.data.result)
 	}
 
@@ -93,7 +93,7 @@ const AddCertificateModal = ({
 				setDescription("")
 				setIsPublic(true)
 				setStudentId([])
-				setCertificate([])
+				setCertificate()
 			}
 		} catch (error) {
 			console.log(error.response)
@@ -124,7 +124,7 @@ const AddCertificateModal = ({
 				category,
 				assignedTo,
 				id: updateCertificateData.id,
-				image: Certificate,
+				// image: Certificate,
 			})
 
 			if (data.status === 200) {
@@ -142,7 +142,6 @@ const AddCertificateModal = ({
 		}
 		setLoading(false)
 	}
-
 	return (
 		<Dialog open={open} onClose={() => setOpen(false)}>
 			<DialogTitle>{updateCertificateFlag ? "Update Certificate" : "Add Certiticate"}</DialogTitle>
@@ -173,7 +172,8 @@ const AddCertificateModal = ({
 						value={studentId}
 						multiple
 						freeSolo
-						getOptionLabel={(option) => option.username + `(${option.userId})`}
+						getOptionLabel={(option) => option.username}
+						// getOptionLabel={(option) => option.username + `(${option.userId})`}
 						options={studentsData}
 						onChange={(event, value) => {
 							if (value) {
