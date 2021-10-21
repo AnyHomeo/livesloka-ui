@@ -107,6 +107,9 @@ const BulkUploadCertificate = ({open, setOpen, category, getBackData}) => {
 					setLoading(false)
 					setOpen(false)
 					getBackData(true)
+
+					setFiles([])
+					setCertificateTitle("")
 				}
 			} catch (error) {
 				console.log(error)

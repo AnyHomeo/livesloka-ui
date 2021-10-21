@@ -63,7 +63,9 @@ const CertificateCard = ({
 			{pdfmatch[1].split(".")[1] === "jpg" ||
 			pdfmatch[1].split(".")[1] === "jpeg" ||
 			pdfmatch[1].split(".")[2] === "jpeg" ||
-			pdfmatch[1].split(".")[2] === "jpg" ? (
+			pdfmatch[1].split(".")[2] === "jpg" ||
+			pdfmatch[1].split(".")[3] === "jpeg" ||
+			pdfmatch[1].split(".")[3] === "jpg" ? (
 				<img
 					src={item.image}
 					style={{width: "100%", height: 150, objectFit: "contain"}}

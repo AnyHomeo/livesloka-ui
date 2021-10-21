@@ -172,7 +172,7 @@ const AddCertificateModal = ({
 						value={studentId}
 						multiple
 						freeSolo
-						getOptionLabel={(option) => option.username}
+						getOptionLabel={(option) => `${option?.username} ${option.userId}`}
 						// getOptionLabel={(option) => option.username + `(${option.userId})`}
 						options={studentsData}
 						onChange={(event, value) => {
