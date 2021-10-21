@@ -7,12 +7,10 @@ import {
 	Avatar,
 	Box,
 	Chip,
-	Divider,
 	Grid,
 	IconButton,
 	List,
 	ListItem,
-	ListItemAvatar,
 	ListItemText,
 	makeStyles,
 	Menu,
@@ -37,15 +35,12 @@ import Stepper from "@material-ui/core/Stepper"
 import Step from "@material-ui/core/Step"
 import StepLabel from "@material-ui/core/StepLabel"
 import Typography from "@material-ui/core/Typography"
-import {v4 as uuidv4} from "uuid"
 import {toast} from "react-toastify"
 import Table from "@material-ui/core/Table"
 import TableBody from "@material-ui/core/TableBody"
 import TableCell from "@material-ui/core/TableCell"
-import TableContainer from "@material-ui/core/TableContainer"
 import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
-import Paper from "@material-ui/core/Paper"
 
 let socket
 function Sidebar() {
@@ -101,6 +96,7 @@ function Sidebar() {
 	}
 
 	const dataFromChild = (data, type) => {
+		console.log(data)
 		if (type === "agent") {
 			setAgent(data)
 		} else if (type === "customer") {
@@ -114,6 +110,7 @@ function Sidebar() {
 		socket = io.connect(process.env.REACT_APP_API_KEY)
 
 		axios.get(`${process.env.REACT_APP_API_KEY}/allusers`).then(({data}) => {
+			const {customers, rest} = data
 			// const customers = data.reduce(
 			// 	(a, o) => (
 			// 		o.roleId === 1 && (o.username ? a.push(o.username) : a.push(o.userId.split("@")[0])[0]), a
@@ -124,24 +121,33 @@ function Sidebar() {
 			// 	(a, o) => (o.roleId === 1 && a.push(`${o.username}@${o.userId.split("@")[0]}`), a),
 			// 	[]
 			// )
-			const teachers = data.reduce(
-				(a, o) => (o.roleId === 2 && a.push(`${o.username}|${o.userId}`), a),
-				[]
-			)
-			const agents = data.reduce(
-				(a, o) => ((o.roleId === 4 || o.roleId === 5) && a.push(`${o.username}|${o.userId}`), a),
-				[]
-			)
+			// const teachers = rest.reduce(
+			// 	(a, o) => (o.roleId === 2 && a.push(`${o.username}|${o.userId}`), a),
+			// 	[]
+			// )
+			// const agents = rest.reduce(
+			// 	(a, o) => ((o.roleId === 4 || o.roleId === 5) && a.push(`${o.username}|${o.userId}`), a),
+			// 	[]
+			// )
+
+			// const customersD = customers.reduce((a, o) => (a.push(`${o.firstName}|${o.email}`), a), [])
+			const teachers = rest.filter((el) => el.roleId === 2)
+			// const teachers = rest.reduce(
+			// 	(a, o) => (o.roleId === 2 && a.push(`${o.username}|${o.userId}`), a),
+			// 	[]
+			// )
+			const agents = rest.filter((el) => el.roleId === 4 || el.roleId === 5)
+			const customersD = customers.map((el) => {
+				return {
+					...el,
+					username: el.firstName,
+				}
+			})
 
 			setTeachers(teachers)
 			setAgents(agents)
-
-			axios.get(`${process.env.REACT_APP_API_KEY}/findInClassCustomers`).then(({data}) => {
-				const customers = data.reduce((a, o) => (a.push(`${o.firstName}|${o.email}`), a), [])
-
-				setCustomers(customers)
-				setLoading(false)
-			})
+			setCustomers(customersD)
+			setLoading(false)
 		})
 
 		return removeListners
@@ -188,11 +194,12 @@ function Sidebar() {
 	const createGroup = () => {
 		axios
 			.post(`${process.env.REACT_APP_API_KEY}/create-group`, {
-				customer,
-				agent,
-				teacher,
+				customer: customer.map((el) => ({id: el._id, email: el.email})),
+				agent: agent.map((el) => el._id),
+				teacher: teacher.map((el) => el._id),
 				groupName: group,
-				groupID: uuidv4(),
+				// groupID: uuidv4(),
+				isClass: true,
 			})
 			.then(({data}) => {
 				toast.success(`${group} created Sucessfully 🎉`, {
@@ -215,11 +222,12 @@ function Sidebar() {
 	const updateGroup = () => {
 		axios
 			.post(`${process.env.REACT_APP_API_KEY}/update-group`, {
-				customer,
-				agent,
-				teacher,
+				customer: customer.map((el) => ({id: el._id, email: el.email})),
+				agent: agent.map((el) => el._id),
+				teacher: teacher.map((el) => el._id),
 				groupName: group,
 				groupID: editGroupID,
+				isClass: true,
 			})
 			.then(({data}) => {
 				console.log(data)
@@ -274,7 +282,7 @@ function Sidebar() {
 				setAgent(agents)
 				setTeacher(teachers)
 				SetGroup(groupName)
-				setActiveStep(3)
+				setActiveStep(4)
 			}
 		})
 	}
@@ -393,8 +401,8 @@ function Sidebar() {
 									{!loading && (
 										<div>
 											<Stepper activeStep={activeStep} alternativeLabel>
-												{steps.map((label) => (
-													<Step key={label}>
+												{steps.map((label, idx) => (
+													<Step key={idx}>
 														<StepLabel>{label}</StepLabel>
 													</Step>
 												))}
@@ -430,6 +438,62 @@ function Sidebar() {
 																dataToParent={dataFromChild}
 																type="customer"
 															/>
+														)}
+
+														{activeStep === 3 && (
+															<div
+																style={{
+																	display: "flex",
+																	justifyContent: "space-around",
+																}}
+															>
+																<div>
+																	<h3>Teachers</h3>
+																	<List
+																		style={{
+																			maxHeight: "35vh",
+																			overflow: "auto",
+																		}}
+																	>
+																		{teacher.map((el, idx) => (
+																			<ListItem key={idx}>
+																				<ListItemText primary={el.username} />
+																			</ListItem>
+																		))}
+																	</List>
+																</div>
+																<div>
+																	<h3>Customers</h3>
+																	<List
+																		style={{
+																			maxHeight: "35vh",
+																			overflow: "auto",
+																		}}
+																	>
+																		{customer.map((el, idx) => (
+																			<ListItem key={idx}>
+																				<ListItemText primary={el.username} />
+																			</ListItem>
+																		))}
+																	</List>
+																</div>
+																<div>
+																	<h3>Agents</h3>
+
+																	<List
+																		style={{
+																			maxHeight: "35vh",
+																			overflow: "auto",
+																		}}
+																	>
+																		{agent.map((el, idx) => (
+																			<ListItem key={idx}>
+																				<ListItemText primary={el.username} />
+																			</ListItem>
+																		))}
+																	</List>
+																</div>
+															</div>
 														)}
 
 														<div
@@ -523,7 +587,7 @@ function Sidebar() {
 																		<TableRow>
 																			<TableCell>
 																				{group.agents
-																					.map((el) => el.split("|")[0])
+																					.map((el) => el.username)
 																					.join(", ")
 																					.toString()}
 																			</TableCell>
@@ -553,7 +617,7 @@ function Sidebar() {
 																		<TableRow>
 																			<TableCell>
 																				{group.teachers
-																					.map((el) => el.split("|")[0])
+																					.map((el) => el.username)
 																					.join(", ")
 																					.toString()}
 																			</TableCell>
@@ -584,7 +648,7 @@ function Sidebar() {
 																		<TableRow>
 																			<TableCell>
 																				{group.customers
-																					.map((el) => el.split("|")[0])
+																					.map((el) => el.firstName)
 																					.join(", ")
 																					.toString()}
 																			</TableCell>
@@ -592,58 +656,6 @@ function Sidebar() {
 																	</TableBody>
 																</Table>
 															)}
-
-															{/* <Table className={classes.table} size="small">
-																<TableHead>
-																	<TableRow>
-																		<TableCell>Type</TableCell>
-																		<TableCell>Names</TableCell>
-																	</TableRow>
-																</TableHead>
-																<TableBody>
-																	<TableRow>
-																		{group.customers.length > 0 && (
-																			<>
-																				<TableCell>Customers</TableCell>
-
-																				<TableCell>
-																					{group.customers
-																						.map((el) => el.split("@")[0])
-																						.join(", ")
-																						.toString()}
-																				</TableCell>
-																			</>
-																		)}
-																	</TableRow>
-																	<TableRow>
-																		{group.agents.length > 0 && (
-																			<>
-																				<TableCell>Agents</TableCell>
-																				<TableCell>
-																					{group.agents
-																						.map((el) => el.split("@")[0])
-																						.join(", ")
-																						.toString()}
-																				</TableCell>
-																			</>
-																		)}
-																	</TableRow>
-																	<TableRow>
-																		{group.teachers.length > 0 && (
-																			<>
-																				<TableCell>Teachers</TableCell>
-
-																				<TableCell>
-																					{group.teachers
-																						.map((el) => el.split("@")[0])
-																						.join(", ")
-																						.toString()}
-																				</TableCell>
-																			</>
-																		)}
-																	</TableRow>
-																</TableBody>
-															</Table> */}
 														</AccordionDetails>
 													</Accordion>
 													<IconButton onClick={() => editGroup(group.groupID)}>
@@ -676,8 +688,8 @@ function Sidebar() {
 									{!loading && (
 										<div>
 											<Stepper activeStep={activeStep} alternativeLabel>
-												{steps.map((label) => (
-													<Step key={label}>
+												{steps.map((label, idx) => (
+													<Step key={idx}>
 														<StepLabel>{label}</StepLabel>
 													</Step>
 												))}
@@ -685,8 +697,63 @@ function Sidebar() {
 											<div>
 												{activeStep === steps.length ? (
 													<div>
+														<div
+															style={{
+																display: "flex",
+																justifyContent: "space-around",
+															}}
+														>
+															<div>
+																<h3>Teachers</h3>
+																<List
+																	style={{
+																		maxHeight: "35vh",
+																		overflow: "auto",
+																	}}
+																>
+																	{teacher.map((el, idx) => (
+																		<ListItem key={idx}>
+																			<ListItemText primary={el.username} />
+																		</ListItem>
+																	))}
+																</List>
+															</div>
+															<div>
+																<h3>Customers</h3>
+																<List
+																	style={{
+																		maxHeight: "35vh",
+																		overflow: "auto",
+																	}}
+																>
+																	{customer.map((el, idx) => (
+																		<ListItem key={idx}>
+																			<ListItemText primary={el.username} />
+																		</ListItem>
+																	))}
+																</List>
+															</div>
+															<div>
+																<h3>Agents</h3>
+
+																<List
+																	style={{
+																		maxHeight: "35vh",
+																		overflow: "auto",
+																	}}
+																>
+																	{agent.map((el, idx) => (
+																		<ListItem key={idx}>
+																			<ListItemText primary={el.username} />
+																		</ListItem>
+																	))}
+																</List>
+															</div>
+														</div>
 														<Typography>All Steps Done</Typography>
-														<Button onClick={handleReset}>Edit</Button>
+														<Button color="primary" onClick={handleReset}>
+															Edit
+														</Button>
 													</div>
 												) : (
 													<div>
@@ -713,6 +780,62 @@ function Sidebar() {
 																dataToParent={dataFromChild}
 																type="customer"
 															/>
+														)}
+
+														{activeStep === 3 && (
+															<div
+																style={{
+																	display: "flex",
+																	justifyContent: "space-around",
+																}}
+															>
+																<div>
+																	<h3>Teachers</h3>
+																	<List
+																		style={{
+																			maxHeight: "35vh",
+																			overflow: "auto",
+																		}}
+																	>
+																		{teacher.map((el, idx) => (
+																			<ListItem key={idx}>
+																				<ListItemText primary={el.username} />
+																			</ListItem>
+																		))}
+																	</List>
+																</div>
+																<div>
+																	<h3>Customers</h3>
+																	<List
+																		style={{
+																			maxHeight: "35vh",
+																			overflow: "auto",
+																		}}
+																	>
+																		{customer.map((el, idx) => (
+																			<ListItem key={idx}>
+																				<ListItemText primary={el.username} />
+																			</ListItem>
+																		))}
+																	</List>
+																</div>
+																<div>
+																	<h3>Agents</h3>
+
+																	<List
+																		style={{
+																			maxHeight: "35vh",
+																			overflow: "auto",
+																		}}
+																	>
+																		{agent.map((el, idx) => (
+																			<ListItem key={idx}>
+																				<ListItemText primary={el.username} />
+																			</ListItem>
+																		))}
+																	</List>
+																</div>
+															</div>
 														)}
 
 														<div
@@ -781,5 +904,5 @@ function Sidebar() {
 export default Sidebar
 
 function getSteps() {
-	return ["Add Teachers", "Add Agents", "Add Customers"]
+	return ["Add Teachers", "Add Agents", "Add Customers", "Review"]
 }

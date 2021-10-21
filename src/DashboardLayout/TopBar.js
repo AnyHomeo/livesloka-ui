@@ -145,21 +145,13 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 	useEffect(() => {
 		socket = io.connect(process.env.REACT_APP_API_KEY)
 
-		axios.get(`${process.env.REACT_APP_API_KEY}/rooms`).then(({data}) => {
-			console.log(data)
-			const last24 = data.filter((message) => {
-				let date1 = new Date(message.updatedAt)
-				let timeStamp = Math.round(new Date().getTime() / 1000)
-				let timeStampYesterday = timeStamp - 24 * 3600
-				let is24 = date1 >= new Date(timeStampYesterday * 1000).getTime()
-				return is24
-			})
-			setLast24Hrs(last24.length)
+		axios.get(`${process.env.REACT_APP_API_KEY}/last24chats`).then(({data}) => {
+			const {hourCount, unseenCount} = data
+			setLast24Hrs(hourCount)
 
-			users.push(...data.filter((user) => !user.messageSeen))
-			if (users.length > 0) {
+			if (unseenCount > 0) {
 				setNewUser(true)
-				setChatCount(users.length)
+				setChatCount(unseenCount)
 				audio.play()
 			}
 		})
@@ -172,12 +164,6 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 
 					setNewUser(true)
 					setChatCount(users.length)
-
-					// if (location.pathname === `/room/${roomID}`) {
-					// 	console.log(location.pathname)
-
-					// 	return
-					// }
 				}
 			})
 		}
