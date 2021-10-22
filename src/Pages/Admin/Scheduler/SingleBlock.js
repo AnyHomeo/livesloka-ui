@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react"
-import {useHistory} from "react-router-dom"
 import Checkbox from "@material-ui/core/Checkbox"
+import {IconButton, makeStyles, Tooltip} from "@material-ui/core"
+import {Send, UserCheck} from "react-feather"
 
 function SingleBlock({
 	day,
@@ -17,13 +18,10 @@ function SingleBlock({
 	teacherID,
 	selectedSlots,
 	setSelectedSlots,
+	createGroup
 }) {
 	const [schedule, setSchedule] = useState({})
-	let history = useHistory()
-	const [checked, setChecked] = React.useState(false)
-	const handleChange = (event) => {
-		setChecked(event.target.checked)
-	}
+	const classes = useStyles()
 
 	useEffect(() => {
 		if (categorizedData[category][teacher].scheduledSlots[`${day.toUpperCase()}-${time}`]) {
@@ -91,7 +89,15 @@ function SingleBlock({
 					className="blockName"
 				>
 					{Object.keys(schedule).length ? (
-						schedule.className
+						<>
+							{schedule.className}
+							<Tooltip onClick={(e) => {
+								e.stopPropagation()
+								createGroup(schedule)
+								}} className={classes.topLeft} title={schedule.group ? "Group Already Created" : "Create Group"}>
+								<IconButton size="small" >{schedule.group ? <UserCheck size={20} /> : <Send size={20} />}</IconButton>
+							</Tooltip>
+						</>
 					) : categorizedData[category][teacher].availableSlots.includes(
 							`${day.toUpperCase()}-${time}`
 					  ) ? (
@@ -124,5 +130,13 @@ function SingleBlock({
 		</>
 	)
 }
+
+const useStyles = makeStyles(() => ({
+	topLeft: {
+		position: "absolute",
+		top: 5,
+		left: 5,
+	},
+}))
 
 export default SingleBlock
