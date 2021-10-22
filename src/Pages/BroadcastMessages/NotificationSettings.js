@@ -1,5 +1,15 @@
 import React, {useEffect, useState} from "react"
-import {Grid, Card, CardContent, IconButton, Button} from "@material-ui/core"
+import {
+	Grid,
+	Card,
+	CardContent,
+	IconButton,
+	Button,
+	FormGroup,
+	FormControlLabel,
+	Switch,
+	CircularProgress,
+} from "@material-ui/core"
 import {BlockPicker} from "react-color"
 import SingleNotification from "./SingleNotification"
 import {ReactSVG} from "react-svg"
@@ -17,8 +27,47 @@ import {DateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers"
 import {isAutheticated} from "../../auth"
 import {TextField} from "@material-ui/core"
 import Autocomplete from "@material-ui/lab/Autocomplete"
+import {useDropzone} from "react-dropzone"
+import {firebase} from "../../Firebase"
+const thumbsContainer = {
+	display: "flex",
+	flexDirection: "row",
+	flexWrap: "wrap",
+	marginTop: 16,
+}
+
+const thumb = {
+	display: "inline-flex",
+	borderRadius: 2,
+	marginBottom: 8,
+	marginRight: 8,
+	width: 100,
+	height: 100,
+	padding: 4,
+	boxSizing: "border-box",
+}
+
+const thumbInner = {
+	display: "flex",
+	minWidth: 0,
+	overflow: "hidden",
+}
+
+const img = {
+	display: "block",
+	width: "auto",
+	height: "100%",
+}
 
 function NotificationSettings() {
+	const [notificationImage, setnotificationImage] = useState()
+	const {getRootProps, getInputProps} = useDropzone({
+		accept: "image/*",
+		onDrop: (acceptedFiles) => {
+			setnotificationImage(acceptedFiles)
+		},
+	})
+
 	let initialNotificationDataState = {
 		title: "Title",
 		text: "this is a notification",
@@ -45,10 +94,12 @@ function NotificationSettings() {
 	const [selectedAgents, setSelectedAgents] = useState([])
 	const [expiryDate, setExpiryDate] = useState(new Date())
 	const [broadCastTo, setBroadCastTo] = useState("customers")
-	const [broadCastedToTeachers, setbroadCastedToTeachers] = useState([]);
-
-	const submitForm = () => {
-		if (!allAdminIds.length && !isForAll && broadCastTo==='customers') {
+	const [broadCastedToTeachers, setbroadCastedToTeachers] = useState([])
+	const [loading, setLoading] = useState(false)
+	const [useImage, setUseImage] = useState(false)
+	const submitForm = async () => {
+		setLoading(true)
+		if (!allAdminIds.length && !isForAll && broadCastTo === "customers") {
 			setSnackbar({
 				message: "Please Select Customers to Broadcast!",
 				open: true,
@@ -56,7 +107,7 @@ function NotificationSettings() {
 			})
 			return
 		}
-		if (!broadCastedToTeachers.length && broadCastTo==='teachers') {
+		if (!broadCastedToTeachers.length && broadCastTo === "teachers") {
 			setSnackbar({
 				message: "Please Select Teachers to Broadcast!",
 				open: true,
@@ -72,27 +123,57 @@ function NotificationSettings() {
 			})
 			return
 		}
-		let formData = {
-			background:
-				typeof notificationData.color === "object"
-					? notificationData.color.hex
-					: notificationData.color,
-			icon: notificationData.icon,
-			adminIds: isForAll ? [] : allAdminIds.map((customer) => customer._id),
-			message: notificationData.text,
-			title: notificationData.title,
-			isForAll,
-			broadCastedToTeachers:broadCastedToTeachers.map(i => i.id),
-			broadCastTo,
-			queryType: queryFrom,
-			broadcastedBy: isAutheticated().agentId,
-			scheduleIds: selectedClassNames.map((schedule) => schedule._id),
-			teacherIds: selectedTeachers.map((teacher) => teacher.id),
-			agentIds: selectedAgents.map((agent) => agent.id),
-			expiryDate,
+
+		let formData = {}
+
+		if (useImage) {
+			let image = ""
+			let storageRef = firebase
+				.storage()
+				.ref(`notificationImages/${notificationImage[0].type}/${notificationImage[0].name}`)
+			await storageRef.put(notificationImage[0])
+			image = await storageRef.getDownloadURL()
+
+			formData = {
+				adminIds: isForAll ? [] : allAdminIds.map((customer) => customer._id),
+				image,
+				isForAll,
+				broadCastedToTeachers: broadCastedToTeachers.map((i) => i.id),
+				broadCastTo,
+				queryType: queryFrom,
+				broadcastedBy: isAutheticated().agentId,
+				scheduleIds: selectedClassNames.map((schedule) => schedule._id),
+				teacherIds: selectedTeachers.map((teacher) => teacher.id),
+				agentIds: selectedAgents.map((agent) => agent.id),
+				expiryDate,
+				isImage: true,
+			}
+		} else {
+			formData = {
+				isImage: false,
+				background:
+					typeof notificationData.color === "object"
+						? notificationData.color.hex
+						: notificationData.color,
+				icon: notificationData.icon,
+				adminIds: isForAll ? [] : allAdminIds.map((customer) => customer._id),
+				message: notificationData.text,
+				title: notificationData.title,
+				isForAll,
+				broadCastedToTeachers: broadCastedToTeachers.map((i) => i.id),
+				broadCastTo,
+				queryType: queryFrom,
+				broadcastedBy: isAutheticated().agentId,
+				scheduleIds: selectedClassNames.map((schedule) => schedule._id),
+				teacherIds: selectedTeachers.map((teacher) => teacher.id),
+				agentIds: selectedAgents.map((agent) => agent.id),
+				expiryDate,
+			}
 		}
+
 		addInField("Add AdMessage", formData)
 			.then((data) => {
+				setnotificationImage([])
 				setRefresh((prev) => !prev)
 				setSnackbar({
 					message: "Notification Broadcasted Successfully!",
@@ -109,6 +190,8 @@ function NotificationSettings() {
 				})
 				console.log(err)
 			})
+
+		setLoading(false)
 	}
 
 	useEffect(() => {
@@ -162,6 +245,19 @@ function NotificationSettings() {
 				})
 		}
 	}, [])
+
+	const thumbs =
+		notificationImage &&
+		notificationImage.map((file) => (
+			<div key={file.name}>
+				<div>
+					<img
+						src={URL.createObjectURL(file)}
+						style={{width: 500, height: 140, objectFit: "cover"}}
+					/>
+				</div>
+			</div>
+		))
 
 	return (
 		<div className={"fluid-container"}>
@@ -308,8 +404,12 @@ function NotificationSettings() {
 									margin: 20,
 								}}
 							>
-								<Button variant="contained" onClick={submitForm} color="primary">
-									Broadcast
+								<Button disabled={loading} variant="contained" onClick={submitForm} color="primary">
+									{loading ? (
+										<CircularProgress style={{height: 30, width: 30, color: "white"}} />
+									) : (
+										"Boradcast"
+									)}
 								</Button>
 							</div>
 						</CardContent>
@@ -326,62 +426,105 @@ function NotificationSettings() {
 							>
 								Live Preview
 							</h2>
-							<div style={{position: "relative"}}>
-								<div className="pickers-row-icons">
-									<div
-										className="icons-picker"
+							<FormGroup>
+								<FormControlLabel
+									control={
+										<Switch
+											checked={useImage}
+											onChange={(e) => setUseImage(e.target.checked)}
+											color="primary"
+											defaultChecked
+										/>
+									}
+									label="Image"
+								/>
+							</FormGroup>
+
+							{useImage ? (
+								<>
+									<section
 										style={{
-											backgroundColor:
-												typeof notificationData.color === "object"
-													? notificationData.color.hex
-													: notificationData.color,
+											display: "flex",
+											justifyContent: "center",
+											alignItems: "center",
+											flexDirection: "column",
 										}}
 									>
 										<div
 											style={{
-												borderTopColor:
+												width: 500,
+												height: 150,
+												display: "flex",
+												justifyContent: "center",
+												alignItems: "center",
+												border: "1px dotted black",
+											}}
+											{...getRootProps({className: "dropzone"})}
+										>
+											<input {...getInputProps()} />
+											<p>Drag 'n' drop some files here, or click to select files</p>
+										</div>
+										<aside style={thumbsContainer}>{thumbs}</aside>
+									</section>
+								</>
+							) : (
+								<div style={{position: "relative"}}>
+									<div className="pickers-row-icons">
+										<div
+											className="icons-picker"
+											style={{
+												backgroundColor:
 													typeof notificationData.color === "object"
 														? notificationData.color.hex
 														: notificationData.color,
 											}}
-											className="icon-picker-triangle"
+										>
+											<div
+												style={{
+													borderTopColor:
+														typeof notificationData.color === "object"
+															? notificationData.color.hex
+															: notificationData.color,
+												}}
+												className="icon-picker-triangle"
+											/>
+											{["alert-circle", "alert-triangle", "check-circle", "info"].map((icon) => (
+												<IconButton
+													size={"small"}
+													onClick={() =>
+														setNotificationData((prev) => ({
+															...prev,
+															icon,
+														}))
+													}
+												>
+													<ReactSVG src={require(`./icons/${icon}.svg`)} />
+												</IconButton>
+											))}
+										</div>
+									</div>
+									<SingleNotification
+										{...notificationData}
+										setNotificationData={setNotificationData}
+									/>
+									<div className="pickers-row-color">
+										<BlockPicker
+											color={notificationData.color}
+											key={notificationData.color}
+											onChangeComplete={(c) => setNotificationData((prev) => ({...prev, color: c}))}
+											colors={[
+												"#fc5c65",
+												"#fed330",
+												"#4b6584",
+												"#3B3B98",
+												"#2C3A47",
+												"#2ecc71",
+												"#b33939",
+											]}
 										/>
-										{["alert-circle", "alert-triangle", "check-circle", "info"].map((icon) => (
-											<IconButton
-												size={"small"}
-												onClick={() =>
-													setNotificationData((prev) => ({
-														...prev,
-														icon,
-													}))
-												}
-											>
-												<ReactSVG src={require(`./icons/${icon}.svg`)} />
-											</IconButton>
-										))}
 									</div>
 								</div>
-								<SingleNotification
-									{...notificationData}
-									setNotificationData={setNotificationData}
-								/>
-								<div className="pickers-row-color">
-									<BlockPicker
-										color={notificationData.color}
-										key={notificationData.color}
-										onChangeComplete={(c) => setNotificationData((prev) => ({...prev, color: c}))}
-										colors={[
-											"#fc5c65",
-											"#fed330",
-											"#4b6584",
-											"#3B3B98",
-											"#2C3A47",
-											"#2ecc71",
-											"#b33939",
-										]}
-									/>
-								</div>
-							</div>
+							)}
 						</CardContent>
 					</Card>
 				</Grid>
