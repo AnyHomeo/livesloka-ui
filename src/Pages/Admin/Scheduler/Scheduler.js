@@ -7,6 +7,7 @@ import {
 	deleteAvailableTimeSlot,
 	getOccupancy,
 	updateScheduleDangerously,
+	createAChatGroupFromScheduleId
 } from "../../../Services/Services"
 import {
 	Button,
@@ -247,6 +248,34 @@ function Scheduler() {
 				.catch((err) => {
 					console.log(err)
 				})
+		}
+	}
+
+	const createGroup = (schedule) =>{
+		console.log(schedule)
+		if(!schedule.group) {
+			confirm({
+				title:"Create Group",
+				description:"Do you really want to create group?"
+			}).then(() => {
+				createAChatGroupFromScheduleId(schedule._id)
+				.then((data) => {
+					let groupId = data.data.result
+					setAllSchedules(prev => {
+						let prevData = [...prev]
+						return prevData.map(prevSchedule => {
+							if(prevSchedule._id === schedule._id){
+								return {
+									...prevSchedule,
+									group:groupId
+								}
+							} else {
+								return prevSchedule
+							}
+						})
+					})
+				})
+			})
 		}
 	}
 
@@ -595,6 +624,7 @@ function Scheduler() {
 														setScheduleId={setScheduleId}
 														addOrRemoveAvailableSlot={addOrRemoveAvailableSlot}
 														teacherID={teacherId}
+														createGroup={createGroup}
 													/>
 												)
 											})}
