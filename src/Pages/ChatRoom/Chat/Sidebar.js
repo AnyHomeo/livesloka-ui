@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react"
 import "./Sidebar.css"
 import {Avatar, Chip, IconButton} from "@material-ui/core"
-import {SearchOutlined} from "@material-ui/icons"
+import {AddCircle, SearchOutlined} from "@material-ui/icons"
 import SidebarChat from "./SidebarChat"
 import axios from "axios"
 import {isAutheticated} from "../../../auth"
@@ -12,93 +12,62 @@ let socket
 function Sidebar() {
 	const [allRooms, setAllRooms] = useState([])
 	const [rooms, setRooms] = useState([])
+
+	const [isAll, setIsAll] = useState(false)
 	const getRole = isAutheticated().roleId
 	const getUserID = isAutheticated().userId
 	const history = useHistory()
 
-	useEffect(() => {
-		socket = io.connect(process.env.REACT_APP_API_KEY)
-
+	const fetchRooms = () => {
+		axios.get(`${process.env.REACT_APP_API_KEY}/last2drooms`).then(({data}) => {
+			if (data) {
+				if (getRole === 3) {
+					setRooms(data)
+					setAllRooms(data)
+				} else {
+					const filterdRooms = data.filter((el) => !el.agentID || el.agentID === getUserID)
+					setRooms(filterdRooms)
+					setAllRooms(filterdRooms)
+				}
+			}
+		})
+	}
+	const fetchAllRooms = () => {
 		axios.get(`${process.env.REACT_APP_API_KEY}/rooms`).then(({data}) => {
 			if (data) {
 				if (getRole === 3) {
 					setRooms(data)
 					setAllRooms(data)
 				} else {
-					const filterdRooms = data.filter((el) => {
-						if (!el.agentID || el.agentID === getUserID) {
-							return el
-						}
-					})
+					const filterdRooms = data.filter((el) => !el.agentID || el.agentID === getUserID)
 					setRooms(filterdRooms)
 					setAllRooms(filterdRooms)
 				}
 			}
+			setIsAll(true)
 		})
+	}
+
+	useEffect(() => {
+		socket = io.connect(process.env.REACT_APP_API_KEY)
+		fetchRooms()
+
 		return removeListners
 	}, [])
 
 	useEffect(() => {
 		socket.on("userWating", ({userID, roomID}) => {
-			axios.get(`${process.env.REACT_APP_API_KEY}/rooms`).then(({data}) => {
-				// if (data && data.length !== rooms.length) {
-				console.log("new Room added")
-
-				// 	setRooms(data)
-				// }
-				if (getRole === 3) {
-					setRooms(data)
-				} else {
-					const filterdRooms = data.filter((el) => {
-						if (!el.agentID || el.agentID === getUserID) {
-							return el
-						}
-					})
-					setRooms(filterdRooms)
-				}
-			})
+			fetchRooms()
 		})
 		return removeListners
 	}, [])
 
 	useEffect(() => {
 		socket.on("agent-disconnected", () => {
-			axios.get(`${process.env.REACT_APP_API_KEY}/rooms`).then(({data}) => {
-				console.log("agent disconnected axios")
-				if (getRole === 3) {
-					setRooms(data)
-				} else {
-					const filterdRooms = data.filter((el) => {
-						if (!el.agentID || el.agentID === getUserID) {
-							return el
-						}
-					})
-					setRooms(filterdRooms)
-				}
-			})
+			fetchRooms()
 		})
 		socket.on("agent-joined-room", (isAgent) => {
-			// if (isAgent === getUserID) {
-			// 	console.log(isAgent)
-
-			// }
-			// else{
-			// 	// 89 herer
-			// }
-			axios.get(`${process.env.REACT_APP_API_KEY}/rooms`).then(({data}) => {
-				console.log("agent joined axios")
-
-				if (getRole === 3) {
-					setRooms(data)
-				} else {
-					const filterdRooms = data.filter((el) => {
-						if (!el.agentID || el.agentID === getUserID) {
-							return el
-						}
-					})
-					setRooms(filterdRooms)
-				}
-			})
+			fetchRooms()
 		})
 		return removeListners
 	}, [])
@@ -163,6 +132,20 @@ function Sidebar() {
 				{rooms.map((room) => (
 					<SidebarChat key={room.roomID} id={room.roomID} name={room.userID} room={room} />
 				))}
+				<div
+					style={{
+						textAlign: "center",
+					}}
+				>
+					{isAll ? null : (
+						<>
+							<IconButton aria-label="delete" onClick={fetchAllRooms}>
+								<AddCircle fontSize="large" />
+							</IconButton>
+							<p>Get All Chats</p>
+						</>
+					)}
+				</div>
 			</div>
 		</div>
 	)

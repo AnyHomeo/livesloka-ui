@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useRef} from "react"
-import {Avatar, Button, FormControlLabel, IconButton, Switch, TextField} from "@material-ui/core"
-import {AttachFile, MoreVert, SearchOutlined} from "@material-ui/icons"
+import {Avatar, Button, FormControlLabel, Switch} from "@material-ui/core"
 import SendIcon from "@material-ui/icons/Send"
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon"
 import "./Group.css"
@@ -9,7 +8,6 @@ import axios from "axios"
 
 import {io} from "socket.io-client"
 import {isAutheticated} from "../../../auth"
-import {fi} from "date-fns/locale"
 
 import {useConfirm} from "material-ui-confirm"
 let socket
@@ -33,8 +31,6 @@ function Group() {
 		message: "",
 	})
 
-	const [agents, setAgents] = useState([])
-	const [showAssign, setshowAssign] = useState(false)
 	const [messages, setMessages] = useState([])
 	const lastElement = useRef(null)
 	const history = useHistory()
