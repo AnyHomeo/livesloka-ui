@@ -646,9 +646,9 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					headerStyle: {whiteSpace: "nowrap"},
 					editable: "never",
 					render: (rowData) => (
-							<Button style={{color: "black"}} onClick={() => setRewardsModalOpen(rowData._id)}>
-								{rowData.login ? rowData.login.rewards : undefined}
-							</Button>
+						<Button style={{color: "black"}} onClick={() => setRewardsModalOpen(rowData._id)}>
+							{rowData.login ? rowData.login.rewards : undefined}
+						</Button>
 					),
 				},
 				{
@@ -764,7 +764,16 @@ const CrmDetails = ({isSummerCampStudents}) => {
 										textDecoration: "none",
 									}}
 									target="__blank"
-									href={`https://api.whatsapp.com/send?phone=${rowData.whatsAppnumber
+									href={`https://api.whatsapp.com/send?phone=${
+										rowData.countryCode
+											? rowData.countryCode
+													.replace("+", "")
+													.replace(" ", "")
+													.replace("(", "")
+													.replace(")", "")
+													.trim()
+											: ""
+									}${rowData.whatsAppnumber
 										.replace("+", "")
 										.replace(" ", "")
 										.replace("(", "")
@@ -778,7 +787,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 										/>
 									</Tooltip>
 								</a>
-								{rowData.whatsAppnumber}
+								{rowData.countryCode}{rowData.whatsAppnumber}
 							</div>
 						) : (
 							""
@@ -1403,7 +1412,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 									teacherId: undefined,
 									className: undefined,
 									proposedAmount: undefined,
-									paidTill:undefined,
+									paidTill: undefined,
 									scheduleDescription: undefined,
 									meetingLink: undefined,
 								})
@@ -1583,17 +1592,15 @@ const CrmDetails = ({isSummerCampStudents}) => {
 				TransitionComponent={Transition}
 			>
 				<DialogTitle>
-					<div style={{display: "flex",alignItems: "center",justifyContent: "space-between"}} >
-						<div>
-							Rewards
-						</div>
-					<IconButton onClick={() => setRewardsModalOpen(undefined)}>
-						<X />
-					</IconButton>
+					<div style={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
+						<div>Rewards</div>
+						<IconButton onClick={() => setRewardsModalOpen(undefined)}>
+							<X />
+						</IconButton>
 					</div>
 				</DialogTitle>
 				<DialogContent>
-					<RewardsTable customerId={rewardsModalOpen}  />
+					<RewardsTable customerId={rewardsModalOpen} />
 				</DialogContent>
 			</Dialog>
 		</>

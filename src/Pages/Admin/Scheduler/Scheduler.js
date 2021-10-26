@@ -406,10 +406,19 @@ function Scheduler() {
 															onClick={() =>
 																window.open(
 																	`https://api.whatsapp.com/send?phone=${
-																		rowData.whatsAppnumber.indexOf("+") !== -1
-																			? rowData.whatsAppnumber.split("+")[1].split(" ").join("")
-																			: rowData.whatsAppnumber.split(" ").join("")
-																	}`
+																		rowData.countryCode
+																			? rowData.countryCode
+																					.replace("+", "")
+																					.replace(" ", "")
+																					.replace("(", "")
+																					.replace(")", "")
+																					.trim()
+																			: ""
+																	}${rowData.whatsAppnumber
+																		.replace("+", "")
+																		.replace(" ", "")
+																		.replace("(", "")
+																		.replace(")", "")}`
 																)
 															}
 														>
