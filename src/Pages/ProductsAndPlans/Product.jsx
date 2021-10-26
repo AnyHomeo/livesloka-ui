@@ -134,6 +134,22 @@ function Product({product, setProductsRefresh, plansRefresh}) {
 										className={classes.status}
 										label={`,    ${item.active ? "Active" : "Inactive"}`}
 									/>
+									<Chip
+										size="small"
+										color={!item.isSubscription ? "primary" : "secondary"}
+										className={classes.subscription}
+										label={`,    ${item.isSubscription ? "Subscription" : "One time Payment"}`}
+									/>
+									{item.currency ? (
+										<Chip
+											size="small"
+											color={"primary"}
+											className={classes.currency}
+											label={`,    ${item.currency.currencyName || "USD"}`}
+										/>
+									) : (
+										""
+									)}
 									<Typography variant="h3" style={{textAlign: "center"}}>
 										{item.name}
 									</Typography>
@@ -183,6 +199,7 @@ const useStyles = makeStyles({
 		flexDirection: "column",
 		overflow: "hidden",
 		padding: 10,
+		position: "relative",
 	},
 	addNewPlan: {
 		borderRadius: 10,
@@ -206,6 +223,16 @@ const useStyles = makeStyles({
 	status: {
 		transform: "translateX(-20px)",
 		width: "fit-content",
+	},
+	currency: {
+		transform: "translateX(-20px)",
+		position: "absolute",
+		bottom: 10,
+	},
+	subscription: {
+		transform: "translateX(-20px)",
+		position: "absolute",
+		bottom: 40,
 	},
 	flexEnd: {
 		display: "flex",

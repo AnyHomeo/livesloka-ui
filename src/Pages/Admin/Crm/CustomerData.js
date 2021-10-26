@@ -473,6 +473,29 @@ const CrmDetails = ({isSummerCampStudents}) => {
 		}
 	}
 
+	const toggleSubscription = async (rowData) => {
+		try {
+			await editCustomer({
+				isSubscription: !rowData.isSubscription,
+				_id: rowData._id,
+			})
+			setData((prev) => {
+				let index = rowData.tableData.id
+				let prevData = [...prev]
+				prevData[index] = {
+					...rowData,
+					isSubscription: !rowData.isSubscription,
+				}
+				return prevData
+			})
+		} catch (error) {
+			console.log(error)
+			setSuccess(false)
+			setResponse("Error in toggling Subscription Button")
+			setSnackBarOpen(true)
+		}
+	}
+
 	//load all dropdowns
 	useEffect(() => {
 		setClassDropdown(fetchDropDown(0))
@@ -513,6 +536,23 @@ const CrmDetails = ({isSummerCampStudents}) => {
 							onChange={() => toggleJoinButton(rowData)}
 							checked={rowData.isJoinButtonEnabledByAdmin}
 							name="isJoinButtonEnabledByAdmin"
+							inputProps={{"aria-label": "secondary checkbox"}}
+						/>
+					),
+				},
+				{
+					title: "Subscription",
+					width: "1%",
+					align: "center",
+					editable: "never",
+					cellStyle: {whiteSpace: "nowrap"},
+					headerStyle: {whiteSpace: "nowrap"},
+					field: "isSubscription",
+					render: (rowData) => (
+						<Switch
+							onChange={() => toggleSubscription(rowData)}
+							checked={!!rowData.isSubscription}
+							name="isSubscription"
 							inputProps={{"aria-label": "secondary checkbox"}}
 						/>
 					),
