@@ -57,6 +57,7 @@ import useDocumentTitle from "../../../Components/useDocumentTitle"
 import MoreModal from "./MoreModal"
 import AnalogClockTime from "../../../Components/AnalogClockTime"
 import RewardsTable from "./RewardsTable"
+import {Copy} from 'react-feather';
 
 const copyToClipboard = (text) => {
 	var textField = document.createElement("textarea")
@@ -1435,7 +1436,12 @@ const CrmDetails = ({isSummerCampStudents}) => {
 							isFreeAction: true,
 							onClick: () => history.push("/customer-data-mobile"),
 						},
-
+						{
+							icon: () => <Copy />,
+							tooltip: "Copy Booking Icon",
+							isFreeAction: false,
+							onClick: (e,row) => copyToClipboard(`${process.env.REACT_APP_USER_APP_URL || 'https://livesloka.com'}/booking/${row._id}`),
+						},
 						{
 							icon: "library_add",
 							tooltip: "Duplicate User",

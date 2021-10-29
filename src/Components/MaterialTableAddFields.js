@@ -97,6 +97,13 @@ const MaterialTableAddFields = ({name, status, lookup, categoryLookup, subjectLo
 		if (data.length) {
 			let lengths = data.map((item) => Object.keys(item).length)
 			let v = Object.keys(data[lengths.indexOf(Math.max(...lengths))]).map((key) => {
+				if(key === "isNotAvailableInBooking"){
+					return {
+						title:"Disable in Booking",
+						type:"boolean",
+						field:"isNotAvailableInBooking"
+					}
+				}
 				if(name === "Time Zone" && key === "currency"){
 					return {
 						title:"Currency",
@@ -316,8 +323,11 @@ const MaterialTableAddFields = ({name, status, lookup, categoryLookup, subjectLo
 							})
 					},
 					onRowUpdate: (newData, oldData) => {
-						newData.isDemoIncludedInSalaries = !!newData.isDemoIncludedInSalaries
-
+						if(name === "Teacher"){
+							newData.isDemoIncludedInSalaries = !!newData.isDemoIncludedInSalaries
+							newData.isNotAvailableInBooking = !!newData.isNotAvailableInBooking	
+						}
+						
 						return editField(`Update ${name}`, newData).then((fetchedData) => {
 							if (fetchedData.data.status === "OK") {
 								const dataUpdate = [...data]
