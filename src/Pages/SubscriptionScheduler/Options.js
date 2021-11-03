@@ -378,7 +378,6 @@ function Options() {
 
 							{teacherData &&
 								teacherData.schedules?.map((value) => {
-									console.log(value)
 									return checked.map((item) => {
 										if (item === value._id) {
 											return (

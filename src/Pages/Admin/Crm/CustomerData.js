@@ -375,6 +375,8 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					name: "Subject name",
 				},
 				lastName: {selected: settings.includes("lastName"), name: "Gaurdian"},
+				countryCode: {selected: settings.includes("countryCode"), name: "countryCode"},
+				discount: {selected: settings.includes("discount"), name: "Discount"},
 				classId: {selected: settings.includes("classId"), name: "Class Name"},
 				email: {selected: settings.includes("email"), name: "Login Id"},
 				emailId: {selected: settings.includes("emailId"), name: "Email"},
@@ -586,7 +588,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					render: (rowData) => moment(rowData.createdAt).format("MMMM Do YYYY"),
 				},
 				{
-					title: "Agent Id",
+					title: "Agent",
 					field: "agentId",
 					width: "1%",
 					lookup: agentDropdown,
@@ -763,7 +765,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					hidden: !columnFilters["subjectId"].selected,
 				},
 				{
-					title: "Login Id",
+					title: "Login",
 					field: "email",
 					width: "1%",
 					cellStyle: {whiteSpace: "nowrap"},
@@ -788,6 +790,14 @@ const CrmDetails = ({isSummerCampStudents}) => {
 							)}
 						</>
 					),
+				},
+				{
+					title: "Country Code",
+					field: "countryCode",
+					width: "1%",
+					cellStyle: {whiteSpace: "nowrap"},
+					headerStyle: {whiteSpace: "nowrap"},
+					hidden: !columnFilters["countryCode"].selected,
 				},
 				{
 					title: "Whatsapp",
@@ -872,7 +882,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					hidden: !columnFilters["countryId"].selected,
 				},
 				{
-					title: "No of Students",
+					title: "Students",
 					field: "numberOfStudents",
 					type: "numeric",
 					width: "1%",
@@ -900,6 +910,29 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					type: "numeric",
 					width: "1%",
 					hidden: !columnFilters["proposedAmount"].selected,
+					cellStyle: {whiteSpace: "nowrap"},
+					headerStyle: {whiteSpace: "nowrap"},
+					editComponent: (props) => (
+						<TextField
+							type="number"
+							inputProps={{min: "0", step: "1"}}
+							value={props.value}
+							onChange={(e) => {
+								if (e.target.value < 0) {
+									return props.onChange(0)
+								} else {
+									return props.onChange(e.target.value)
+								}
+							}}
+						/>
+					),
+				},
+				{
+					title: "Discount",
+					field: "discount",
+					type: "numeric",
+					width: "1%",
+					hidden: !columnFilters["discount"].selected,
 					cellStyle: {whiteSpace: "nowrap"},
 					headerStyle: {whiteSpace: "nowrap"},
 					editComponent: (props) => (
@@ -985,7 +1018,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					),
 				},
 				{
-					title: "Phone No",
+					title: "Phone",
 					field: "phone",
 					width: "1%",
 					hidden: !columnFilters["phone"].selected,

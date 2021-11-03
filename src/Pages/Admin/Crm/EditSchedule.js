@@ -32,7 +32,6 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import { Redirect, useParams, useLocation } from "react-router-dom";
-import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
@@ -40,7 +39,6 @@ import htmlToDraft from "html-to-draftjs";
 import { firebase } from "../../../Firebase";
 import useDocumentTitle from "../../../Components/useDocumentTitle";
 
-const isImageUrl = require("is-image-url");
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
