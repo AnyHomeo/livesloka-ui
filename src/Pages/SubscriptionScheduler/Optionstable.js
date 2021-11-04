@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react"
-import PropTypes from "prop-types"
 import {makeStyles} from "@material-ui/core/styles"
 import Box from "@material-ui/core/Box"
 import Collapse from "@material-ui/core/Collapse"
@@ -17,7 +16,7 @@ import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp"
 import Axios from "axios"
 import moment from "moment"
 import {capitalize, CircularProgress, Grid, Tooltip} from "@material-ui/core"
-import {Edit, Trash, User} from "react-feather"
+import {Copy, Trash, User} from "react-feather"
 import {useConfirm} from "material-ui-confirm"
 import styles from "./style.module.scss"
 
@@ -30,6 +29,15 @@ const useRowStyles = makeStyles({
 		},
 	},
 })
+
+const copyToClipboard = (text) => {
+	var textField = document.createElement("textarea")
+	textField.innerText = text
+	document.body.appendChild(textField)
+	textField.select()
+	document.execCommand("copy")
+	textField.remove()
+}
 
 function createData(studentName, teacherName, createdAt, history, id) {
 	return {
@@ -84,9 +92,9 @@ function Row(props) {
 				<TableCell align="right">{row.teacherName}</TableCell>
 				<TableCell align="right">{moment(row.createdAt).format("MMMM Do YYYY")}</TableCell>
 				<TableCell align="right">
-					{/* <IconButton>
-						<Edit />
-					</IconButton> */}
+					<IconButton onClick={() => copyToClipboard(`https://mylivesloka.com/options/${row.id}`)} >
+						<Copy />
+					</IconButton>
 					<IconButton onClick={() => onDeleteRow(row.id)} disabled={loading}>
 						{loading ? <CircularProgress style={{height: 30, width: 30}} /> : <Trash />}
 					</IconButton>

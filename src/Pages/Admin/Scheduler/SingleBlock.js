@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react"
 import Checkbox from "@material-ui/core/Checkbox"
 import {IconButton, makeStyles, Tooltip} from "@material-ui/core"
-import {Send, UserCheck} from "react-feather"
+import {ArrowDown, ArrowUp, Send, UserCheck} from "react-feather"
+import { getNewSlots } from './helpers';
 
 function SingleBlock({
 	day,
@@ -18,7 +19,7 @@ function SingleBlock({
 	teacherID,
 	selectedSlots,
 	setSelectedSlots,
-	createGroup
+	createGroup,
 }) {
 	const [schedule, setSchedule] = useState({})
 	const classes = useStyles()
@@ -37,18 +38,19 @@ function SingleBlock({
 		}
 	}, [allSchedules, categorizedData, teacher, category, day, time])
 
+	const moveSchedule = (direction) => (e) => {
+		e.stopPropagation()
+		let teacherData = categorizedData[category][teacher]
+		let slots = getNewSlots(schedule.slots, direction)
+		console.log(slots,direction,schedule,teacherData)
+	}
+
 	return (
 		<>
 			<div
 				key={j}
-				className={`day-time-intersection-box `}
+				className={`day-time-intersection-box`}
 				style={{
-					fontSize: "14px",
-					fontWeight: "bold",
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-					textAlign: "center",
 					cursor:
 						categorizedData[category][teacher].scheduledSlots[`${day.toUpperCase()}-${time}`] ||
 						availableSlotsEditingMode
@@ -91,12 +93,35 @@ function SingleBlock({
 					{Object.keys(schedule).length ? (
 						<>
 							{schedule.className}
-							<Tooltip onClick={(e) => {
-								e.stopPropagation()
-								createGroup(schedule)
-								}} className={classes.topLeft} title={schedule.group ? "Group Already Created" : "Create Group"}>
-								<IconButton size="small" >{schedule.group ? <UserCheck size={20} /> : <Send size={20} />}</IconButton>
+							<Tooltip
+								onClick={(e) => {
+									e.stopPropagation()
+									createGroup(schedule)
+								}}
+								className={classes.topLeft}
+								title={schedule.group ? "Group Already Created" : "Create Group"}
+							>
+								<IconButton size="small">
+									{schedule.group ? <UserCheck size={20} /> : <Send size={20} />}
+								</IconButton>
 							</Tooltip>
+							<div className={classes.topRight} >
+							<Tooltip
+								title={"Move up by 1 Hour"}
+							>
+								<IconButton size="small" onClick={moveSchedule('up')} >
+									<ArrowUp size={20} />
+								</IconButton>
+							</Tooltip>
+							<Tooltip
+								title={"Move down by 1 Hour"}
+							>
+								<IconButton size="small" onClick={moveSchedule('down')} >
+									<ArrowDown size={20} />
+								</IconButton>
+							</Tooltip>
+							</div>
+							
 						</>
 					) : categorizedData[category][teacher].availableSlots.includes(
 							`${day.toUpperCase()}-${time}`
@@ -136,6 +161,11 @@ const useStyles = makeStyles(() => ({
 		position: "absolute",
 		top: 5,
 		left: 5,
+	},
+	topRight: {
+		position: "absolute",
+		top: 5,
+		right: 5,
 	},
 }))
 

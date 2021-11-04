@@ -57,6 +57,7 @@ import useDocumentTitle from "../../../Components/useDocumentTitle"
 import MoreModal from "./MoreModal"
 import AnalogClockTime from "../../../Components/AnalogClockTime"
 import RewardsTable from "./RewardsTable"
+import {Copy} from 'react-feather';
 
 const copyToClipboard = (text) => {
 	var textField = document.createElement("textarea")
@@ -374,6 +375,8 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					name: "Subject name",
 				},
 				lastName: {selected: settings.includes("lastName"), name: "Gaurdian"},
+				countryCode: {selected: settings.includes("countryCode"), name: "countryCode"},
+				discount: {selected: settings.includes("discount"), name: "Discount"},
 				classId: {selected: settings.includes("classId"), name: "Class Name"},
 				email: {selected: settings.includes("email"), name: "Login Id"},
 				emailId: {selected: settings.includes("emailId"), name: "Email"},
@@ -473,6 +476,29 @@ const CrmDetails = ({isSummerCampStudents}) => {
 		}
 	}
 
+	const toggleSubscription = async (rowData) => {
+		try {
+			await editCustomer({
+				isSubscription: !rowData.isSubscription,
+				_id: rowData._id,
+			})
+			setData((prev) => {
+				let index = rowData.tableData.id
+				let prevData = [...prev]
+				prevData[index] = {
+					...rowData,
+					isSubscription: !rowData.isSubscription,
+				}
+				return prevData
+			})
+		} catch (error) {
+			console.log(error)
+			setSuccess(false)
+			setResponse("Error in toggling Subscription Button")
+			setSnackBarOpen(true)
+		}
+	}
+
 	//load all dropdowns
 	useEffect(() => {
 		setClassDropdown(fetchDropDown(0))
@@ -518,6 +544,23 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					),
 				},
 				{
+					title: "Subscription",
+					width: "1%",
+					align: "center",
+					editable: "never",
+					cellStyle: {whiteSpace: "nowrap"},
+					headerStyle: {whiteSpace: "nowrap"},
+					field: "isSubscription",
+					render: (rowData) => (
+						<Switch
+							onChange={() => toggleSubscription(rowData)}
+							checked={!!rowData.isSubscription}
+							name="isSubscription"
+							inputProps={{"aria-label": "secondary checkbox"}}
+						/>
+					),
+				},
+				{
 					title: "Customer Status",
 					field: "classStatusId",
 					width: "1%",
@@ -545,7 +588,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					render: (rowData) => moment(rowData.createdAt).format("MMMM Do YYYY"),
 				},
 				{
-					title: "Agent Id",
+					title: "Agent",
 					field: "agentId",
 					width: "1%",
 					lookup: agentDropdown,
@@ -722,7 +765,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					hidden: !columnFilters["subjectId"].selected,
 				},
 				{
-					title: "Login Id",
+					title: "Login",
 					field: "email",
 					width: "1%",
 					cellStyle: {whiteSpace: "nowrap"},
@@ -747,6 +790,14 @@ const CrmDetails = ({isSummerCampStudents}) => {
 							)}
 						</>
 					),
+				},
+				{
+					title: "Country Code",
+					field: "countryCode",
+					width: "1%",
+					cellStyle: {whiteSpace: "nowrap"},
+					headerStyle: {whiteSpace: "nowrap"},
+					hidden: !columnFilters["countryCode"].selected,
 				},
 				{
 					title: "Whatsapp",
@@ -831,7 +882,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					hidden: !columnFilters["countryId"].selected,
 				},
 				{
-					title: "No of Students",
+					title: "Students",
 					field: "numberOfStudents",
 					type: "numeric",
 					width: "1%",
@@ -859,6 +910,29 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					type: "numeric",
 					width: "1%",
 					hidden: !columnFilters["proposedAmount"].selected,
+					cellStyle: {whiteSpace: "nowrap"},
+					headerStyle: {whiteSpace: "nowrap"},
+					editComponent: (props) => (
+						<TextField
+							type="number"
+							inputProps={{min: "0", step: "1"}}
+							value={props.value}
+							onChange={(e) => {
+								if (e.target.value < 0) {
+									return props.onChange(0)
+								} else {
+									return props.onChange(e.target.value)
+								}
+							}}
+						/>
+					),
+				},
+				{
+					title: "Discount",
+					field: "discount",
+					type: "numeric",
+					width: "1%",
+					hidden: !columnFilters["discount"].selected,
 					cellStyle: {whiteSpace: "nowrap"},
 					headerStyle: {whiteSpace: "nowrap"},
 					editComponent: (props) => (
@@ -944,7 +1018,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					),
 				},
 				{
-					title: "Phone No",
+					title: "Phone",
 					field: "phone",
 					width: "1%",
 					hidden: !columnFilters["phone"].selected,
@@ -1395,7 +1469,12 @@ const CrmDetails = ({isSummerCampStudents}) => {
 							isFreeAction: true,
 							onClick: () => history.push("/customer-data-mobile"),
 						},
-
+						{
+							icon: () => <Copy />,
+							tooltip: "Copy Booking Icon",
+							isFreeAction: false,
+							onClick: (e,row) => copyToClipboard(`${process.env.REACT_APP_USER_APP_URL || 'https://livesloka.com'}/booking/${row._id}`),
+						},
 						{
 							icon: "library_add",
 							tooltip: "Duplicate User",

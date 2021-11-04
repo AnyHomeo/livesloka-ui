@@ -10,6 +10,8 @@ import {
 	DialogTitle,
 	Button,
 	MenuItem,
+	Switch,
+	FormControlLabel
 } from "@material-ui/core"
 import Autocomplete from "@material-ui/lab/Autocomplete"
 import {createPlans, getData} from "./../../Services/Services"
@@ -22,6 +24,7 @@ const initialFormData = {
 	interval: "month",
 	intervalCount: 1,
 	products: [],
+	isSubscription: true,
 }
 
 export default function AddPlans({products, openAddPlanModal, setOpenAddPlanModal, setRefresh}) {
@@ -34,11 +37,14 @@ export default function AddPlans({products, openAddPlanModal, setOpenAddPlanModa
 	const [currencies, setCurrencies] = useState([])
 
 	const createPlan = () => {
-		if (!Object.keys(formData).every((key) => !!formData[key])) {
+		if (!Object.keys(formData).every((key) => {
+			console.log(key,!!formData[key])
+			return !!formData[key] || key === "isSubscription"
+		} )) {
 			enqueueSnackbar("All fields are required", {
 				variant: "warning",
 			})
-            return 
+			return
 		}
 		console.log(formData)
 		setLoading(true)
@@ -52,7 +58,7 @@ export default function AddPlans({products, openAddPlanModal, setOpenAddPlanModa
 				})
 				setFormData(initialFormData)
 				setLoading(false)
-                setRefresh(prev => !prev)
+				setRefresh((prev) => !prev)
 			})
 			.catch((err) => {
 				console.log(err)
@@ -65,12 +71,12 @@ export default function AddPlans({products, openAddPlanModal, setOpenAddPlanModa
 
 	useEffect(() => {
 		getData("Currency")
-		.then(data => {
-			setCurrencies(data.data.result)
-		})
-		.catch(err => {
-			console.log(err)
-		})
+			.then((data) => {
+				setCurrencies(data.data.result)
+			})
+			.catch((err) => {
+				console.log(err)
+			})
 	}, [])
 
 	return (
@@ -102,6 +108,18 @@ export default function AddPlans({products, openAddPlanModal, setOpenAddPlanModa
 								/>
 							)}
 						/>
+						<FormControlLabel
+							control={
+								<Switch
+									checked={formData.isSubscription}
+									onChange={() =>
+										setFormData((prev) => ({...prev, isSubscription: !prev.isSubscription}))
+									}
+								/>
+							}
+							label="Subscription"
+						/>
+
 						<TextField
 							onChange={(e) => handleFormDataChange("name", e.target.value)}
 							label="Plan Name"
@@ -141,11 +159,9 @@ export default function AddPlans({products, openAddPlanModal, setOpenAddPlanModa
 								variant="outlined"
 								onChange={(e) => handleFormDataChange("currency", e.target.value)}
 							>
-								{
-									currencies.map((currency) => (
-										<MenuItem value={currency._id}>{currency.currencyName}</MenuItem>
-									))
-								}
+								{currencies.map((currency) => (
+									<MenuItem value={currency._id}>{currency.currencyName}</MenuItem>
+								))}
 							</Select>
 						</FormControl>
 						<TextField
