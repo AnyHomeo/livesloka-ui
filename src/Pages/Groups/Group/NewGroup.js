@@ -113,7 +113,7 @@ const TransferList = React.memo(({toRoom, inRoom, dataToParent, type}) => {
 										inputProps={{"aria-labelledby": labelId}}
 									/>
 								</ListItemIcon>
-								<ListItemText id={labelId} primary={value.username} />
+								<ListItemText id={labelId} primary={getListValue(value)} />
 							</ListItem>
 						)
 					})}
@@ -129,11 +129,22 @@ const TransferList = React.memo(({toRoom, inRoom, dataToParent, type}) => {
 			return ele.firstName.toLowerCase().includes(search)
 		} else if (ele.username) {
 			return ele.username.toLowerCase().includes(search)
-		} else {
+		} else if (ele.userId) {
 			return ele.userId.toLowerCase().includes(search)
+		} else {
+			return true
 		}
 	}
 
+	const getListValue = (ele) => {
+		if (type === "customer" && ele.firstName) {
+			return ele.firstName
+		} else if (ele.username) {
+			return ele.username
+		} else {
+			return ele.userId
+		}
+	}
 	return (
 		<Grid
 			container
