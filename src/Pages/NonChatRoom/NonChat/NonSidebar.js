@@ -18,29 +18,29 @@ function NonSidebar() {
 	const history = useHistory()
 
 	const fetchRooms = () => {
-		axios.get(`${process.env.REACT_APP_API_KEY}/nonrooms`).then(({data}) => {
-			if (data) {
-				if (getRole === 3) {
-					setRooms(data)
-				} else {
-					const filterdRooms = data.filter((el) => !el.agentID || el.agentID === getUserID)
-					setRooms(filterdRooms)
-				}
-			}
-		})
+		// axios.get(`${process.env.REACT_APP_API_KEY}/nonrooms`).then(({data}) => {
+		// 	if (data) {
+		// 		if (getRole === 3) {
+		// 			setRooms(data)
+		// 		} else {
+		// 			const filterdRooms = data.filter((el) => !el.agentID || el.agentID === getUserID)
+		// 			setRooms(filterdRooms)
+		// 		}
+		// 	}
+		// })
 	}
 	const fetchAllRooms = () => {
-		axios.get(`${process.env.REACT_APP_API_KEY}/nonrooms`).then(({data}) => {
-			if (data) {
-				if (getRole === 3) {
-					setRooms(data)
-				} else {
-					const filterdRooms = data.filter((el) => !el.agentID || el.agentID === getUserID)
-					setRooms(filterdRooms)
-				}
-			}
-			setIsAll(true)
-		})
+		// axios.get(`${process.env.REACT_APP_API_KEY}/nonrooms`).then(({data}) => {
+		// 	if (data) {
+		// 		if (getRole === 3) {
+		// 			setRooms(data)
+		// 		} else {
+		// 			const filterdRooms = data.filter((el) => !el.agentID || el.agentID === getUserID)
+		// 			setRooms(filterdRooms)
+		// 		}
+		// 	}
+		// 	setIsAll(true)
+		// })
 	}
 
 	useEffect(() => {

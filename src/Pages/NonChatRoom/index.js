@@ -33,7 +33,7 @@ const ChatRoom = () => {
 		<div className="app">
 			<div className="app_body">
 				<NonSidebar></NonSidebar>
-				{!!roomID ? (
+				{/* {!!roomID ? (
 					<NonChat />
 				) : (
 					<Paper
@@ -54,7 +54,7 @@ const ChatRoom = () => {
 							<Tab label="Groups" />
 						</Tabs>
 					</Paper>
-				)}
+				)} */}
 			</div>
 		</div>
 	)
