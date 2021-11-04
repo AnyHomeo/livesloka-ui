@@ -1,5 +1,4 @@
-import React, {useState, useEffect, useRef} from "react"
-import "./GroupSidebar.css"
+import React, {useState, useEffect, useMemo} from "react"
 import {
 	Accordion,
 	AccordionDetails,
@@ -43,7 +42,9 @@ import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
 
 let socket
-function Sidebar() {
+const Sidebar = React.memo(() => {
+	console.log("sidebar rerendering")
+
 	const useStyles = makeStyles({
 		dialogPaper: {
 			minHeight: "70vh",
@@ -77,6 +78,7 @@ function Sidebar() {
 	const [loading, setLoading] = useState(false)
 
 	const [groupSearch, setGroupSearch] = useState("")
+	const [activeStep, setActiveStep] = React.useState(0)
 
 	const handleClickOpen = () => {
 		setOpen(true)
@@ -107,35 +109,11 @@ function Sidebar() {
 	}
 
 	useEffect(() => {
-		socket = io.connect(process.env.REACT_APP_API_KEY)
+		// socket = io.connect(process.env.REACT_APP_API_KEY)
 
 		axios.get(`${process.env.REACT_APP_API_KEY}/allusers`).then(({data}) => {
 			const {customers, rest} = data
-			// const customers = data.reduce(
-			// 	(a, o) => (
-			// 		o.roleId === 1 && (o.username ? a.push(o.username) : a.push(o.userId.split("@")[0])[0]), a
-			// 	),
-			// 	[]
-			// )
-			// const customers = data.reduce(
-			// 	(a, o) => (o.roleId === 1 && a.push(`${o.username}@${o.userId.split("@")[0]}`), a),
-			// 	[]
-			// )
-			// const teachers = rest.reduce(
-			// 	(a, o) => (o.roleId === 2 && a.push(`${o.username}|${o.userId}`), a),
-			// 	[]
-			// )
-			// const agents = rest.reduce(
-			// 	(a, o) => ((o.roleId === 4 || o.roleId === 5) && a.push(`${o.username}|${o.userId}`), a),
-			// 	[]
-			// )
-
-			// const customersD = customers.reduce((a, o) => (a.push(`${o.firstName}|${o.email}`), a), [])
 			const teachers = rest.filter((el) => el.roleId === 2)
-			// const teachers = rest.reduce(
-			// 	(a, o) => (o.roleId === 2 && a.push(`${o.username}|${o.userId}`), a),
-			// 	[]
-			// )
 			const agents = rest.filter((el) => el.roleId === 4 || el.roleId === 5)
 			const customersD = customers.map((el) => {
 				return {
@@ -150,14 +128,14 @@ function Sidebar() {
 			setLoading(false)
 		})
 
-		return removeListners
+		// return removeListners
 	}, [])
 
 	useEffect(() => {
-		console.log("reloading")
+		console.log("reloading and changing group")
 		if (getRole === 3) {
 			axios.get(`${process.env.REACT_APP_API_KEY}/allgroups`).then(({data}) => {
-				console.log(data)
+				// console.log(data)
 
 				setGroups(data)
 				setAllGroups(data)
@@ -166,17 +144,16 @@ function Sidebar() {
 			axios
 				.get(`${process.env.REACT_APP_API_KEY}/groupByRole/${getRole}/${getUserID}`)
 				.then(({data}) => {
-					console.log(data)
+					// console.log(data)
 
 					setGroups(data)
 					setAllGroups(data)
 				})
 		}
 	}, [reload])
-	const removeListners = () => {
-		socket.removeAllListeners()
-	}
-	const [activeStep, setActiveStep] = React.useState(0)
+	// const removeListners = () => {
+	// 	socket.removeAllListeners()
+	// }
 	const steps = getSteps()
 
 	const handleNext = () => {
@@ -190,6 +167,10 @@ function Sidebar() {
 	const handleReset = () => {
 		setActiveStep(0)
 	}
+
+	useEffect(() => {
+		console.log("groups  is changed and here")
+	}, [groups])
 
 	const createGroup = () => {
 		axios
@@ -299,6 +280,13 @@ function Sidebar() {
 		setGroups(copyGroups)
 		setGroupSearch(value)
 	}
+
+	const renderGroups = useMemo(() => {
+		console.log("group is updating")
+		return groups.map(({groupID, groupName}) => (
+			<GroupSidebarChat key={groupID} id={groupID} name={groupName} />
+		))
+	}, [groups])
 	return (
 		<div className="sidebar">
 			<div className="sidebar_header">
@@ -892,14 +880,18 @@ function Sidebar() {
 					/>
 				</div>
 			</div>
-			<div className="sidebar_chats">
-				{groups.map((group) => (
-					<GroupSidebarChat key={group.groupID} id={group.groupID} name={group.groupName} />
-				))}
+			<div
+				className="sidebar_chats"
+				style={{
+					height: "71vh",
+					overflowY: "auto",
+				}}
+			>
+				{renderGroups}
 			</div>
 		</div>
 	)
-}
+})
 
 export default Sidebar
 

@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {useCallback, useMemo, useState} from "react"
 import {makeStyles} from "@material-ui/core/styles"
 import Grid from "@material-ui/core/Grid"
 import List from "@material-ui/core/List"
@@ -32,7 +32,8 @@ function intersection(a, b) {
 	return a.filter(({_id}) => b.findIndex((el) => el._id === _id) !== -1)
 }
 
-export default function TransferList({toRoom, inRoom, dataToParent, type}) {
+const TransferList = React.memo(({toRoom, inRoom, dataToParent, type}) => {
+	console.log("rerender test list")
 	const classes = useStyles()
 	const [checked, setChecked] = React.useState([])
 
@@ -95,30 +96,43 @@ export default function TransferList({toRoom, inRoom, dataToParent, type}) {
 		}
 	}
 
-	const customList = (items) => (
-		<Paper className={classes.paper}>
-			<List dense component="div" role="list">
-				{items.map((value, idx) => {
-					const labelId = `transfer-list-item-${value._id}-label`
+	const customList = useCallback(
+		(items) => (
+			<Paper className={classes.paper}>
+				<List dense component="div" role="list">
+					{items.map((value, idx) => {
+						const labelId = `transfer-list-item-${value._id}-label`
 
-					return (
-						<ListItem key={idx} role="listitem" button onClick={handleToggle(value)}>
-							<ListItemIcon>
-								<Checkbox
-									checked={checked.findIndex((el) => el._id === value._id) !== -1}
-									tabIndex={-1}
-									disableRipple
-									inputProps={{"aria-labelledby": labelId}}
-								/>
-							</ListItemIcon>
-							<ListItemText id={labelId} primary={value.username} />
-						</ListItem>
-					)
-				})}
-				<ListItem />
-			</List>
-		</Paper>
+						return (
+							<ListItem key={idx} role="listitem" button onClick={handleToggle(value)}>
+								<ListItemIcon>
+									<Checkbox
+										checked={checked.findIndex((el) => el._id === value._id) !== -1}
+										tabIndex={-1}
+										disableRipple
+										inputProps={{"aria-labelledby": labelId}}
+									/>
+								</ListItemIcon>
+								<ListItemText id={labelId} primary={value.username} />
+							</ListItem>
+						)
+					})}
+					<ListItem />
+				</List>
+			</Paper>
+		),
+		[checked]
 	)
+
+	const checkRender = (ele, search) => {
+		if (type === "customer" && ele.firstName) {
+			return ele.firstName.toLowerCase().includes(search)
+		} else if (ele.username) {
+			return ele.username.toLowerCase().includes(search)
+		} else {
+			return ele.userId.toLowerCase().includes(search)
+		}
+	}
 
 	return (
 		<Grid
@@ -129,9 +143,7 @@ export default function TransferList({toRoom, inRoom, dataToParent, type}) {
 			className={classes.root}
 		>
 			<Grid item>
-				{customList(
-					[...left].filter((el) => el.username.toLowerCase().includes(leftSearch.toLowerCase()))
-				)}
+				{customList([...left].filter((el) => checkRender(el, leftSearch.toLowerCase())))}
 				<TextField
 					onChange={(e) => handelChange(e, "left")}
 					value={leftSearch}
@@ -184,9 +196,7 @@ export default function TransferList({toRoom, inRoom, dataToParent, type}) {
 				</Grid>
 			</Grid>
 			<Grid item>
-				{customList(
-					[...right].filter((el) => el.username.toLowerCase().includes(rightSearch.toLowerCase()))
-				)}
+				{customList([...right].filter((el) => checkRender(el, rightSearch.toLowerCase())))}
 				<TextField
 					onChange={(e) => handelChange(e, "right")}
 					value={rightSearch}
@@ -196,4 +206,6 @@ export default function TransferList({toRoom, inRoom, dataToParent, type}) {
 			</Grid>
 		</Grid>
 	)
-}
+})
+
+export default TransferList

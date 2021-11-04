@@ -1,7 +1,6 @@
 import React, {useEffect} from "react"
 import Sidebar from "./Chat/Sidebar"
 import Chat from "./Chat/Chat"
-import "./index.css"
 import {useParams} from "react-router"
 import {makeStyles, Paper, Tab, Tabs} from "@material-ui/core"
 import {useHistory} from "react-router-dom"

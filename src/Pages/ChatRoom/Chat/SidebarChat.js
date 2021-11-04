@@ -93,7 +93,7 @@ function SidebarChat({id, name, room}) {
 					{isNew && id !== parms["roomID"] ? (
 						<p style={{fontWeight: 700}}>{room.username} 💬</p>
 					) : (
-						<p>{room.username}</p>
+						<p>{room.username} VrithikkaET Carnatic Music Group Class - Anuradha</p>
 					)}
 					<p style={{fontSize: 12}}>
 						{user?.timeZone}{" "}

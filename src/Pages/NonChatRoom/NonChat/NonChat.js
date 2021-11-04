@@ -1,33 +1,37 @@
 import React, {useState, useEffect, useRef} from "react"
 import {Avatar, IconButton} from "@material-ui/core"
-import {AttachFile, MoreVert, SearchOutlined} from "@material-ui/icons"
 import SendIcon from "@material-ui/icons/Send"
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon"
-import "./NonChat.css"
 import {useParams} from "react-router-dom"
 import axios from "axios"
 
 import {io} from "socket.io-client"
+import {isAutheticated} from "../../../auth"
 let socket
 
 function NonChat() {
 	const {roomID} = useParams()
 	const [roomName, setRoomName] = useState("")
 	const [message, setMessage] = useState("")
-	const getRole = localStorage.getItem("role")
+	const [timeout, setSTimeout] = useState(undefined)
 
+	const getRole = isAutheticated().roleId
+	const userID = isAutheticated().username
+
+	const [isTyping, setIsTyping] = useState({
+		typing: false,
+		message: "",
+	})
+
+	// const [agents, setAgents] = useState([])
+	// const [showAssign, setshowAssign] = useState(false)
 	const [messages, setMessages] = useState([])
 	const lastElement = useRef(null)
-
-	const scrollToBottom = () => {
-		// lastElement.current?.scrollIntoView({behavior: "smooth"})
-	}
-
 	useEffect(() => {
 		socket = io.connect(process.env.REACT_APP_API_KEY)
 
 		if (roomID) {
-			socket.emit("JOIN_ROOM", {roomID, isAdmin: true}, (error) => {
+			socket.emit("JOIN_NONROOM", {roomID, isAgent: getRole !== 3 ? userID : "admin"}, (error) => {
 				if (error) alert(error)
 			})
 		}
@@ -36,58 +40,65 @@ function NonChat() {
 		}
 	}, [roomID])
 
-	const removeListners = () => {
-		console.log("clean up done")
-		socket.removeAllListeners()
-	}
-	// useEffect(() => {
-	// 	if (roomID) {
-	// 		axios.get(`http://localhost:5000/nonrooms/${roomID}`).then((data) => {
-	// 			const name = data.userID
-	// 			const allMsgs = data.messages
-
-	// 			if (name) {
-	// 				setRoomName(name)
-	// 			}
-	// 			if (allMsgs) {
-	// 				setMessages(allMsgs)
-	// 			}
-	// 		})
-	// 	}
-	// }, [roomID])
-	useEffect(() => {
-		// if (getRole === "admin") {
-		// 	socket.on("nonUserWating", ({message}) => {
-		// 		alert(message)
-		// 	})
-		// }
-	}, [])
-
-	useEffect(() => {
-		scrollToBottom()
-	}, [messages])
 	useEffect(() => {
 		if (roomID) {
-			console.log("listers added")
-			socket.on("messageToNonRoomFromNonUser", ({role, message}) => {
-				console.log("got messag from bot", message)
+			axios.get(`${process.env.REACT_APP_API_KEY}/nonroom/${roomID}`).then(({data}) => {
+				const username = data.username
+				const allMsgs = data.messages
+
+				setRoomName(username)
+
+				if (allMsgs) {
+					setMessages(allMsgs)
+				}
+			})
+			// if (getRole !== 3) {
+			// 	axios.get(`${process.env.REACT_APP_API_KEY}/agents`).then(({data}) => {
+			// 		if (data) {
+			// 			const filterdData = data.filter((el) => el.userId !== userID)
+			// 			setAgents(filterdData)
+			// 		}
+			// 	})
+			// }
+		}
+	}, [roomID])
+
+	useEffect(() => {
+		lastElement.current.scrollIntoView({behavior: "smooth"})
+	}, [messages, isTyping])
+	useEffect(() => {
+		if (roomID) {
+			socket.on("messageToNonRoomFromBot", ({role, message, username}) => {
+				setIsTyping({
+					typing: false,
+					message: "",
+				})
 
 				setMessages((prevState) => {
 					const oldState = [...prevState]
 					oldState.push({
 						message,
 						role,
+						username,
 						createdAt: new Date(),
 					})
 					return oldState
 				})
 			})
-			socket.on("messageToNonRoomFromAdmin", ({role, message}) => {
+
+			socket.on("non-user-typing", ({username, message, typing}) => {
+				setIsTyping({
+					typing,
+					message,
+				})
+			})
+			socket.on("messageToNonRoomFromAdmin", ({role, message, username}) => {
 				console.log(message)
 				setMessages((prevState) => {
 					const oldState = [...prevState]
 					oldState.push({
 						message,
+						username,
 						role,
 						createdAt: new Date(),
 					})
@@ -95,14 +106,21 @@ function NonChat() {
 				})
 			})
 		}
+		return () => {
+			removeListners()
+		}
 	}, [roomID])
 
 	const sendMessage = (e) => {
 		e.preventDefault()
-		const role = getRole === "superadmin" ? 3 : 0
+
+		if (!message) {
+			return
+		}
+		const role = getRole === 3 ? 3 : 4
 		socket.emit(
 			"messageFromNonRoomAdmin",
-			{roomID, message, isSuperAdmin: getRole === "superadmin"},
+			{roomID, message, isSuperAdmin: getRole === 3, username: userID},
 			(error) => {
 				if (error) {
 					alert(JSON.stringify(error))
@@ -115,6 +133,7 @@ function NonChat() {
 			newState.push({
 				message: message,
 				role,
+				username: userID,
 				createdAt: new Date(),
 			})
 			return newState
@@ -123,35 +142,108 @@ function NonChat() {
 		setMessage("")
 	}
 
+	// const handelAssignAgent = async (e, value) => {
+	// 	try {
+	// 		const {data} = await axios.post(`${process.env.REACT_APP_API_KEY}/agents`, {
+	// 			roomID,
+	// 			agentID: value.userId,
+	// 		})
+	// 		if (data) {
+	// 			history.push("/room")
+	// 			socket.emit(
+	// 				"agent-to-agent-assign",
+	// 				{agentID: value.userId, roomID, assigneID: userID, user: data},
+	// 				(error) => {
+	// 					if (error) alert(error)
+	// 				}
+	// 			)
+	// 		}
+	// 	} catch (error) {}
+	// }
+
+	const typingTimeout = () => {
+		console.log("stoped Typing")
+		socket.emit("non-agent-typing", {roomID, username: userID, typing: false}, (error) => {
+			if (error) {
+				alert(JSON.stringify(error))
+			}
+		})
+	}
+
+	const handelChange = (e) => {
+		let ftime = undefined
+		socket.emit("non-agent-typing", {roomID, username: userID, typing: true}, (error) => {
+			if (error) {
+				alert(JSON.stringify(error))
+			}
+		})
+		clearTimeout(timeout)
+		ftime = setTimeout(typingTimeout, 2000)
+		setSTimeout(ftime)
+
+		setMessage(e.target.value)
+	}
+	const removeListners = () => {
+		console.log("clean up done")
+
+		setIsTyping({
+			typing: false,
+			message: "",
+		})
+		socket.removeAllListeners()
+	}
 	return (
 		<div className="chat">
 			<div className="chat_header">
-				<Avatar src={`https://avatars.dicebear.com/api/human/${roomID}.svg`} />
+				<Avatar> {roomName.substr(0, 1)}</Avatar>
 				<div className="chat_headerInfo">
 					<h3 className="chat-room-name">{roomName}</h3>
+					<p style={{color: "#16e35e"}}>{isTyping.typing ? "typing ..." : ""}</p>
 				</div>
-				<div className="chat_headerRight">
-					<IconButton>
-						<SearchOutlined />
-					</IconButton>
-					<IconButton>
-						<AttachFile />
-					</IconButton>
-					<IconButton>
-						<MoreVert />
-					</IconButton>
-				</div>
+				{getRole !== 3 && (
+					<div className="chat_headerRight">
+						{/* {showAssign && (
+							<Autocomplete
+								id="combo-box-demo"
+								options={agents}
+								getOptionLabel={(option) => option.userId}
+								style={{width: 300}}
+								onChange={handelAssignAgent}
+								renderInput={(params) => (
+									<TextField {...params} label="Select Agent" variant="outlined" />
+								)}
+							/>
+						)}
+						{!showAssign ? (
+							<IconButton
+								onClick={() => {
+									setshowAssign(true)
+								}}
+							>
+								<PersonAddIcon />
+							</IconButton>
+						) : (
+							<IconButton
+								onClick={() => {
+									setshowAssign(false)
+								}}
+							>
+								<PersonAddDisabledIcon />
+							</IconButton>
+						)} */}
+					</div>
+				)}
 			</div>
 			<div className="chat_body">
 				{messages.map((message, idx) => (
 					<div className="chat__message-body" key={idx}>
-						{getRole === "admin" ? (
-							<p className={`chat_message ${message.role === 0 ? "chat_receiver" : "user"}`}>
-								{(message.role === 1 || message.role === 3) &&
-									(message.role === 1 ? (
-										<span className="chat_name">{"sumanthale"}</span>
+						{getRole !== 3 ? (
+							<p className={`chat_message ${message.role === 4 ? "chat_receiver" : "user"}`}>
+								{(message.role === 0 || message.role === 3) &&
+									(message.role === 0 ? (
+										<span className="chat_name">{message.username} </span>
 									) : (
-										<span className="chat_name">{"superadmin"}</span>
+										<span className="chat_name">{message.username} </span>
 									))}
 								{message.message}
 								<span className="chat_timestemp">
@@ -160,11 +252,11 @@ function NonChat() {
 							</p>
 						) : (
 							<p className={`chat_message ${message.role === 3 ? "chat_receiver" : "user"}`}>
-								{(message.role === 1 || message.role === 0) &&
-									(message.role === 1 ? (
-										<span className="chat_name">{"sumanthale"}</span>
+								{(message.role === 0 || message.role === 4) &&
+									(message.role === 0 ? (
+										<span className="chat_name">{message.username}</span>
 									) : (
-										<span className="chat_name">{"admin"}</span>
+										<span className="chat_name">{message.username}</span>
 									))}
 								{message.message}
 								<span className="chat_timestemp">
@@ -173,8 +265,7 @@ function NonChat() {
 							</p>
 						)}
 
-						{(message.role === 0 && getRole === "admin") ||
-						(message.role === 3 && getRole === "superadmin") ? (
+						{(message.role === 4 && getRole !== 3) || (message.role === 3 && getRole === 3) ? (
 							<span className="message__arrow--admin">
 								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 13" width="8" height="13">
 									<path
@@ -204,6 +295,19 @@ function NonChat() {
 						)}
 					</div>
 				))}
+
+				{isTyping.message && (
+					<p
+						className={`chat_message user`}
+						style={{
+							background: "#ffa8a8",
+							marginBottom: 30,
+						}}
+					>
+						<span className="chat_name">{roomName}</span>
+						{isTyping.message}
+					</p>
+				)}
 				<div ref={lastElement}></div>
 			</div>
 			<div className="chat_footer">
@@ -211,7 +315,7 @@ function NonChat() {
 				<form onSubmit={sendMessage}>
 					<input
 						value={message}
-						onChange={(e) => setMessage(e.target.value)}
+						onChange={handelChange}
 						type="text"
 						style={{
 							outline: "none",
@@ -219,7 +323,9 @@ function NonChat() {
 						placeholder="Type a message"
 					/>
 				</form>{" "}
-				<SendIcon />
+				<IconButton onClick={sendMessage}>
+					<SendIcon />
+				</IconButton>
 			</div>
 		</div>
 	)

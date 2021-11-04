@@ -1,5 +1,5 @@
 import React from "react"
-import { Switch, Route} from "react-router-dom"
+import {Switch, Route} from "react-router-dom"
 import Login from "../Pages/Login/Login"
 import PasswordReset from "../Pages/Login/PasswordReset"
 import AdminRoute from "../auth/AdminRoutes"

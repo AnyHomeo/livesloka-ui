@@ -1,7 +1,6 @@
 import React from "react"
 import NonSidebar from "./NonChat/NonSidebar"
 import NonChat from "./NonChat/NonChat"
-import "./index.css"
 import {useParams} from "react-router"
 import {makeStyles, Paper, Tab, Tabs} from "@material-ui/core"
 import {useHistory} from "react-router-dom"
@@ -9,7 +8,6 @@ import {useHistory} from "react-router-dom"
 const ChatRoom = () => {
 	const {roomID} = useParams()
 	const history = useHistory()
-	console.log(roomID)
 
 	const useStyles = makeStyles({
 		root: {

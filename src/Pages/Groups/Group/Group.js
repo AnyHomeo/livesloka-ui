@@ -2,7 +2,6 @@ import React, {useState, useEffect, useRef} from "react"
 import {Avatar, Button, FormControlLabel, Switch} from "@material-ui/core"
 import SendIcon from "@material-ui/icons/Send"
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon"
-import "./Group.css"
 import {useHistory, useParams} from "react-router-dom"
 import axios from "axios"
 
@@ -12,12 +11,12 @@ import {isAutheticated} from "../../../auth"
 import {useConfirm} from "material-ui-confirm"
 let socket
 
-function Group() {
+const Group = React.memo(() => {
 	const {groupID} = useParams()
 	const [groupName, setGroupName] = useState("")
 	const [message, setMessage] = useState("")
-	const [timeout, setSTimeout] = useState(undefined)
-	const [user, setUser] = useState(null)
+	// const [timeout, setSTimeout] = useState(undefined)
+	// const [user, setUser] = useState(null)
 	const confirm = useConfirm()
 
 	const [isClosed, SetIsClosed] = useState(false)
@@ -26,10 +25,10 @@ function Group() {
 	const userID = isAutheticated().userId
 	const username = isAutheticated().username
 
-	const [isTyping, setIsTyping] = useState({
-		typing: false,
-		message: "",
-	})
+	// const [isTyping, setIsTyping] = useState({
+	// 	typing: false,
+	// 	message: "",
+	// })
 
 	const [messages, setMessages] = useState([])
 	const lastElement = useRef(null)
@@ -48,7 +47,7 @@ function Group() {
 	}, [groupID])
 
 	const removeListners = () => {
-		console.log("clean up done")
+		console.log("chat Clean up")
 
 		// setIsTyping({
 		// 	typing: false,
@@ -73,7 +72,7 @@ function Group() {
 	}, [groupID])
 	useEffect(() => {
 		lastElement.current.scrollIntoView({behavior: "smooth"})
-	}, [messages, isTyping])
+	}, [messages]) //isTyping is a dep
 	useEffect(() => {
 		if (groupID) {
 			socket.on("messageToGroupFromBot", ({role, message, userID, username}) => {
@@ -115,9 +114,6 @@ function Group() {
 				})
 			})
 		}
-		return () => {
-			removeListners()
-		}
 	}, [groupID])
 
 	const sendMessage = (e) => {
@@ -147,34 +143,6 @@ function Group() {
 		setMessage("")
 	}
 
-	// const handelAssignAgent = async (e, value) => {
-	// 	try {
-	// 		const {data} = await axios.post(`${process.env.REACT_APP_API_KEY}/agents`, {
-	// 			groupID,
-	// 			agentID: value.userId,
-	// 		})
-	// 		if (data) {
-	// 			history.push("/room")
-	// 			socket.emit(
-	// 				"agent-to-agent-assign",
-	// 				{agentID: value.userId, groupID, assigneID: userID, user: data},
-	// 				(error) => {
-	// 					if (error) alert(error)
-	// 				}
-	// 			)
-	// 		}
-	// 	} catch (error) {}
-	// }
-
-	// const typingTimeout = () => {
-	// 	console.log("stoped Typing")
-	// 	socket.emit("admin-group-typing", {groupID, username,userID, typing: false}, (error) => {
-	// 		if (error) {
-	// 			alert(JSON.stringify(error))
-	// 		}
-	// 	})
-	// }
-
 	const handelChange = (e) => {
 		// let ftime = undefined
 		// socket.emit("admin-group-typing", {groupID, username, userID, typing: true}, (error) => {
@@ -191,7 +159,7 @@ function Group() {
 	const handelClosed = async (event) => {
 		SetIsClosed(event.target.checked)
 		try {
-			const {data} = await axios.post(`${process.env.REACT_APP_API_KEY}/closeGroup`, {
+			await axios.post(`${process.env.REACT_APP_API_KEY}/closeGroup`, {
 				groupID,
 				isClosed: event.target.checked,
 			})
@@ -206,7 +174,7 @@ function Group() {
 			confirmationText: "Yes! delete",
 		}).then(async () => {
 			try {
-				const {data} = await axios.post(`${process.env.REACT_APP_API_KEY}/deleteGroup`, {
+				await axios.post(`${process.env.REACT_APP_API_KEY}/deleteGroup`, {
 					groupID,
 				})
 				history.replace("/group")
@@ -302,7 +270,7 @@ function Group() {
 					</div>
 				))}
 
-				{isTyping.message && (
+				{/* {isTyping.message && (
 					<p
 						className={`chat_message user`}
 						style={{
@@ -313,7 +281,7 @@ function Group() {
 						<span className="chat_name">{groupName}</span>
 						{isTyping.message}
 					</p>
-				)}
+				)} */}
 				<div ref={lastElement}></div>
 			</div>
 			{!isClosed && (
@@ -335,6 +303,6 @@ function Group() {
 			)}{" "}
 		</div>
 	)
-}
+})
 
 export default Group

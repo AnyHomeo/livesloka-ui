@@ -1,14 +1,14 @@
 import React, {useEffect} from "react"
 import Group from "./Group/Group"
 import GroupSidebar from "./Group/GroupSidebar"
-import "./index.css"
 import {useParams} from "react-router"
 import {makeStyles, Paper, Tab, Tabs} from "@material-ui/core"
 import {useHistory} from "react-router-dom"
 
-const Groups = () => {
+const Groups = React.memo(() => {
 	const {groupID} = useParams()
 	const history = useHistory()
+	console.log("Groups Rerendering")
 
 	const useStyles = makeStyles({
 		root: {
@@ -28,7 +28,6 @@ const Groups = () => {
 				history.push("/group")
 			}
 		}
-		// setValue(newValue)
 	}
 
 	return (
@@ -60,6 +59,6 @@ const Groups = () => {
 			</div>
 		</div>
 	)
-}
+})
 
 export default Groups
