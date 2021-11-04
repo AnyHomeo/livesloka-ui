@@ -11,10 +11,11 @@ import LibraryAddIcon from "@material-ui/icons/LibraryAdd"
 import SmsIcon from "@material-ui/icons/Sms"
 import {IconButton, makeStyles, Snackbar} from "@material-ui/core"
 import MuiAlert from "@material-ui/lab/Alert"
-
+import {Link} from "react-router-dom"
 import {Alert} from "@material-ui/lab"
 import Axios from "axios"
 import {useConfirm} from "material-ui-confirm"
+import {Activity} from "react-feather"
 const useStyles = makeStyles((theme) => ({
 	iconCont: {
 		display: "flex",
@@ -33,7 +34,6 @@ const MoreModal = ({
 	setInitialFormData,
 }) => {
 	const confirm = useConfirm()
-
 	const classes = useStyles()
 	const [response, setResponse] = useState("")
 	const [success, setSuccess] = useState(false)
@@ -117,6 +117,15 @@ const MoreModal = ({
 								</IconButton>
 								<p>Delete</p>
 							</div>
+							<Link to={`/subscription-data/${data?._id}`}>
+								<div className={classes.iconCont}>
+									<IconButton>
+										<Activity />
+									</IconButton>
+									<p style={{color: "#546e7a"}}>Subscriptions</p>
+								</div>
+							</Link>
+
 							<div
 								className={classes.iconCont}
 								onClick={() => {

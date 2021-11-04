@@ -120,6 +120,7 @@ function Routes() {
 						<AdminRoute path="/room" exact component={ChatRoom} />
 						<AdminRoute path="/nonroom/:roomID" exact component={NonChatRoom} />
 						<AdminRoute path="/nonroom" exact component={NonChatRoom} />
+						<AdminRoute path="/subscription-data/:id" exact component={SubscriptionTransactions} />
 						<AdminRoute path="/group/:groupID" exact component={Groups} />
 						<AdminRoute path="/group" exact component={Groups} />
 						<AdminRoute path="/products" exact component={ProductAndPlans} />

@@ -135,7 +135,7 @@ const Videomanager = () => {
 				</Grid>
 			</Container>
 
-			<AddVideoModal
+			{/* <AddVideoModal
 				open={openAddVideo}
 				setOpen={setOpenAddVideo}
 				category={params.id}
@@ -147,7 +147,7 @@ const Videomanager = () => {
 				setOpen={setOpenAddCertificate}
 				category={params.id}
 				getBackData={getBackData}
-			/>
+			/> */}
 		</div>
 	)
 }

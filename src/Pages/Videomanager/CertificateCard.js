@@ -7,7 +7,7 @@ import {useConfirm} from "material-ui-confirm"
 
 const useStyles = makeStyles(() => ({
 	folderCard: {
-		height: 250,
+		height: "auto",
 		width: 250,
 		borderRadius: 10,
 		display: "flex",
@@ -34,7 +34,6 @@ const CertificateCard = ({
 	let pdf = item?.image
 	let pdfregExp = /%2..*%2F(.*?)\?alt/
 	let pdfmatch = pdf.match(pdfregExp)
-
 	const deleteCertificate = async () => {
 		confirm({title: "Do you want to Delete the certificate?", confirmationText: "Delete"}).then(
 			async () => {
@@ -61,10 +60,15 @@ const CertificateCard = ({
 
 	return (
 		<div className={classes.folderCard}>
-			{pdfmatch[1].split(".")[1] === "jpg" || pdfmatch[1].split(".")[1] === "jpeg" ? (
+			{pdfmatch[1].split(".")[1] === "jpg" ||
+			pdfmatch[1].split(".")[1] === "jpeg" ||
+			pdfmatch[1].split(".")[2] === "jpeg" ||
+			pdfmatch[1].split(".")[2] === "jpg" ||
+			pdfmatch[1].split(".")[3] === "jpeg" ||
+			pdfmatch[1].split(".")[3] === "jpg" ? (
 				<img
 					src={item.image}
-					style={{width: "100%", height: 200, objectFit: "contain"}}
+					style={{width: "100%", height: 150, objectFit: "contain"}}
 					alt=""
 					srcset=""
 				/>

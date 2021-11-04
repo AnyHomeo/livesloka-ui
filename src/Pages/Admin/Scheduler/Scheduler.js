@@ -7,6 +7,7 @@ import {
 	deleteAvailableTimeSlot,
 	getOccupancy,
 	updateScheduleDangerously,
+	createAChatGroupFromScheduleId
 } from "../../../Services/Services"
 import {
 	Button,
@@ -250,6 +251,34 @@ function Scheduler() {
 		}
 	}
 
+	const createGroup = (schedule) =>{
+		console.log(schedule)
+		if(!schedule.group) {
+			confirm({
+				title:"Create Group",
+				description:"Do you really want to create group?"
+			}).then(() => {
+				createAChatGroupFromScheduleId(schedule._id)
+				.then((data) => {
+					let groupId = data.data.result
+					setAllSchedules(prev => {
+						let prevData = [...prev]
+						return prevData.map(prevSchedule => {
+							if(prevSchedule._id === schedule._id){
+								return {
+									...prevSchedule,
+									group:groupId
+								}
+							} else {
+								return prevSchedule
+							}
+						})
+					})
+				})
+			})
+		}
+	}
+
 	useEffect(() => {
 		setSelectedSchedule(allSchedules.filter((schedule) => schedule._id === scheduleId)[0])
 	}, [scheduleId, allSchedules])
@@ -377,10 +406,19 @@ function Scheduler() {
 															onClick={() =>
 																window.open(
 																	`https://api.whatsapp.com/send?phone=${
-																		rowData.whatsAppnumber.indexOf("+") !== -1
-																			? rowData.whatsAppnumber.split("+")[1].split(" ").join("")
-																			: rowData.whatsAppnumber.split(" ").join("")
-																	}`
+																		rowData.countryCode
+																			? rowData.countryCode
+																					.replace("+", "")
+																					.replace(" ", "")
+																					.replace("(", "")
+																					.replace(")", "")
+																					.trim()
+																			: ""
+																	}${rowData.whatsAppnumber
+																		.replace("+", "")
+																		.replace(" ", "")
+																		.replace("(", "")
+																		.replace(")", "")}`
 																)
 															}
 														>
@@ -595,6 +633,7 @@ function Scheduler() {
 														setScheduleId={setScheduleId}
 														addOrRemoveAvailableSlot={addOrRemoveAvailableSlot}
 														teacherID={teacherId}
+														createGroup={createGroup}
 													/>
 												)
 											})}

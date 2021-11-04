@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from "react"
+import React, {useState, useCallback, useEffect} from "react"
 import {
 	FormControl,
 	TextField,
@@ -12,7 +12,7 @@ import {
 	MenuItem,
 } from "@material-ui/core"
 import Autocomplete from "@material-ui/lab/Autocomplete"
-import {createPlans} from "./../../Services/Services"
+import {createPlans, getData} from "./../../Services/Services"
 import {useSnackbar} from "notistack"
 
 const initialFormData = {
@@ -31,6 +31,7 @@ export default function AddPlans({products, openAddPlanModal, setOpenAddPlanModa
 	const {enqueueSnackbar} = useSnackbar()
 	const [loading, setLoading] = useState(false)
 	const [formData, setFormData] = useState(initialFormData)
+	const [currencies, setCurrencies] = useState([])
 
 	const createPlan = () => {
 		if (!Object.keys(formData).every((key) => !!formData[key])) {
@@ -43,7 +44,7 @@ export default function AddPlans({products, openAddPlanModal, setOpenAddPlanModa
 		setLoading(true)
 		createPlans({
 			...formData,
-			products: products.map((product) => product._id),
+			products: formData.products.map((product) => product._id),
 		})
 			.then((data) => {
 				enqueueSnackbar(`${formData.name} Created successfully!`, {
@@ -60,6 +61,16 @@ export default function AddPlans({products, openAddPlanModal, setOpenAddPlanModa
 
 	const handleFormDataChange = useCallback((key, value) => {
 		setFormData((prev) => ({...prev, [key]: value}))
+	}, [])
+
+	useEffect(() => {
+		getData("Currency")
+		.then(data => {
+			setCurrencies(data.data.result)
+		})
+		.catch(err => {
+			console.log(err)
+		})
 	}, [])
 
 	return (
@@ -118,6 +129,23 @@ export default function AddPlans({products, openAddPlanModal, setOpenAddPlanModa
 								<MenuItem value="day">Day</MenuItem>
 								<MenuItem value="week">Week</MenuItem>
 								<MenuItem value="month">Month</MenuItem>
+							</Select>
+						</FormControl>
+						<FormControl fullWidth variant="outlined">
+							<InputLabel id="Currency-type-label">Currency</InputLabel>
+							<Select
+								labelId="Currency-type-label"
+								id="Currency-type-select"
+								value={formData.currency}
+								label="Currency"
+								variant="outlined"
+								onChange={(e) => handleFormDataChange("currency", e.target.value)}
+							>
+								{
+									currencies.map((currency) => (
+										<MenuItem value={currency._id}>{currency.currencyName}</MenuItem>
+									))
+								}
 							</Select>
 						</FormControl>
 						<TextField

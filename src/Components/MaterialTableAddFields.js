@@ -53,7 +53,7 @@ function capitalize(word) {
 	return word.charAt(0).toUpperCase() + word.substring(1)
 }
 
-const MaterialTableAddFields = ({name, status, lookup, categoryLookup, subjectLookup}) => {
+const MaterialTableAddFields = ({name, status, lookup, categoryLookup, subjectLookup,currencies}) => {
 	const [column, setColumn] = useState([])
 	const [data, setData] = useState([])
 	const [loading, setLoading] = useState(true)
@@ -92,11 +92,18 @@ const MaterialTableAddFields = ({name, status, lookup, categoryLookup, subjectLo
 				})
 		}
 	}
+
 	useEffect(() => {
 		if (data.length) {
 			let lengths = data.map((item) => Object.keys(item).length)
 			let v = Object.keys(data[lengths.indexOf(Math.max(...lengths))]).map((key) => {
-				console.log(key)
+				if(name === "Time Zone" && key === "currency"){
+					return {
+						title:"Currency",
+						lookup:currencies,
+						field:"currency"
+					}
+				}
 				if (name === "Agent" && key === "needToFinalizeSalaries") {
 					return {
 						title: "Need to Finalize Salaries",

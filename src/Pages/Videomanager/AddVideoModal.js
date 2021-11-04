@@ -35,8 +35,7 @@ const AddVideoModal = ({
 	}, [])
 
 	useEffect(() => {
-		if (updateVidoeFlag) {
-			// console.log(updateVideoData)
+		if (updateVideoData) {
 			setName(updateVideoData.name)
 			setDescription(updateVideoData.description)
 			setUrl(updateVideoData.url)
@@ -49,7 +48,7 @@ const AddVideoModal = ({
 			setIsPublic(true)
 			setStudentId([])
 		}
-	}, [updateVidoeFlag])
+	}, [updateVideoData])
 
 	const getStudents = async () => {
 		const studentNames = await Axios.get(`${process.env.REACT_APP_API_KEY}/all/admins`)
@@ -79,6 +78,11 @@ const AddVideoModal = ({
 				getBackData(true)
 				setOpen(false)
 				enqueueSnackbar(`Added Successfully`, {variant: "success"})
+				setName("")
+				setDescription("")
+				setUrl("")
+				setIsPublic(true)
+				setStudentId([])
 			}
 		} catch (error) {
 			enqueueSnackbar("Something went wrong, Please try again", {variant: "error"})
@@ -108,6 +112,11 @@ const AddVideoModal = ({
 
 			if (data.status === 200) {
 				getBackData(true)
+				setName("")
+				setDescription("")
+				setUrl("")
+				setIsPublic(true)
+				setStudentId([])
 				setOpen(false)
 				enqueueSnackbar(`Updated Successfully Successfully`, {variant: "success"})
 			}

@@ -375,7 +375,8 @@ const CrmDetails = ({isSummerCampStudents}) => {
 				},
 				lastName: {selected: settings.includes("lastName"), name: "Gaurdian"},
 				classId: {selected: settings.includes("classId"), name: "Class Name"},
-				email: {selected: settings.includes("email"), name: "Email"},
+				email: {selected: settings.includes("email"), name: "Login Id"},
+				emailId: {selected: settings.includes("emailId"), name: "Email"},
 				gender: {selected: settings.includes("gender"), name: "Gender"},
 				whatsAppnumber: {
 					selected: settings.includes("whatsAppnumber"),
@@ -645,10 +646,18 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					headerStyle: {whiteSpace: "nowrap"},
 					editable: "never",
 					render: (rowData) => (
-							<Button style={{color: "black"}} onClick={() => setRewardsModalOpen(rowData._id)}>
-								{rowData.login ? rowData.login.rewards : undefined}
-							</Button>
+						<Button style={{color: "black"}} onClick={() => setRewardsModalOpen(rowData._id)}>
+							{rowData.login ? rowData.login.rewards : undefined}
+						</Button>
 					),
+				},
+				{
+					title: "Email",
+					field: "emailId",
+					hidden: !columnFilters["emailId"].selected,
+					width: "1%",
+					cellStyle: {whiteSpace: "nowrap"},
+					headerStyle: {whiteSpace: "nowrap"},
 				},
 				{
 					title: "Default classes",
@@ -713,7 +722,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					hidden: !columnFilters["subjectId"].selected,
 				},
 				{
-					title: "Email",
+					title: "Login Id",
 					field: "email",
 					width: "1%",
 					cellStyle: {whiteSpace: "nowrap"},
@@ -755,7 +764,16 @@ const CrmDetails = ({isSummerCampStudents}) => {
 										textDecoration: "none",
 									}}
 									target="__blank"
-									href={`https://api.whatsapp.com/send?phone=${rowData.whatsAppnumber
+									href={`https://api.whatsapp.com/send?phone=${
+										rowData.countryCode
+											? rowData.countryCode
+													.replace("+", "")
+													.replace(" ", "")
+													.replace("(", "")
+													.replace(")", "")
+													.trim()
+											: ""
+									}${rowData.whatsAppnumber
 										.replace("+", "")
 										.replace(" ", "")
 										.replace("(", "")
@@ -769,7 +787,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 										/>
 									</Tooltip>
 								</a>
-								{rowData.whatsAppnumber}
+								{rowData.countryCode}{rowData.whatsAppnumber}
 							</div>
 						) : (
 							""
@@ -1394,6 +1412,9 @@ const CrmDetails = ({isSummerCampStudents}) => {
 									teacherId: undefined,
 									className: undefined,
 									proposedAmount: undefined,
+									paidTill: undefined,
+									scheduleDescription: undefined,
+									meetingLink: undefined,
 								})
 								materialTable.dataManager.changeRowEditing()
 								materialTable.setState({
@@ -1571,17 +1592,15 @@ const CrmDetails = ({isSummerCampStudents}) => {
 				TransitionComponent={Transition}
 			>
 				<DialogTitle>
-					<div style={{display: "flex",alignItems: "center",justifyContent: "space-between"}} >
-						<div>
-							Rewards
-						</div>
-					<IconButton onClick={() => setRewardsModalOpen(undefined)}>
-						<X />
-					</IconButton>
+					<div style={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
+						<div>Rewards</div>
+						<IconButton onClick={() => setRewardsModalOpen(undefined)}>
+							<X />
+						</IconButton>
 					</div>
 				</DialogTitle>
 				<DialogContent>
-					<RewardsTable customerId={rewardsModalOpen}  />
+					<RewardsTable customerId={rewardsModalOpen} />
 				</DialogContent>
 			</Dialog>
 		</>

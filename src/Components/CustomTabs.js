@@ -89,6 +89,7 @@ const CustomTabs = () => {
 
 	const [statusMobile, setStatusMobile] = useState()
 	const [catogeryMob, setcatogeryMob] = useState()
+	const [currencies, setCurrencies] = useState({})
 
 	useEffect(() => {
 		getData("Status").then((data) => {
@@ -107,6 +108,14 @@ const CustomTabs = () => {
 						return obj
 					}, {})
 				)
+			})
+		}
+		if(value === 1){
+			getData("Currency").then(currencies => {
+				setCurrencies(currencies.data.result.reduce((obj, item, i) => {
+					obj[item._id] = item.currencyName
+					return obj
+				}, {}))
 			})
 		}
 	}, [value])
@@ -135,6 +144,7 @@ const CustomTabs = () => {
 							status={status[index]}
 							lookup={lookup}
 							categoryLookup={categoryLookup}
+							currencies={currencies}
 						/>
 					) : (
 						<AddFieldsHolder

@@ -222,3 +222,4 @@ export const deleteSubscriptionProduct = (id) => Axios.delete(`${API.main}/produ
 export const createPlans = (data) => Axios.post(`${API.main}/plans`,data)
 export const getAllPlansOfTheProduct = (productId) => Axios.get(`${API.main}/plans?productId=${productId}`)
 export const deleteSubscriptionPlan = (planId) => Axios.delete(`${API.main}/plans/${planId}`)
+export const createAChatGroupFromScheduleId = (scheduleId) => Axios.post(`${API.main}/group/schedule/${scheduleId}`)
