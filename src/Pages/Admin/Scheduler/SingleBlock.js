@@ -13,7 +13,7 @@ import {
 } from "react-feather"
 import {getNewSlots} from "./helpers"
 import {useSnackbar} from "notistack"
-import Axios from 'axios';
+import Axios from "axios"
 
 function SingleBlock({
 	day,
@@ -31,7 +31,7 @@ function SingleBlock({
 	selectedSlots,
 	setSelectedSlots,
 	createGroup,
-	setLoading
+	setLoading,
 }) {
 	const [schedule, setSchedule] = useState({})
 	const classes = useStyles()
@@ -51,7 +51,7 @@ function SingleBlock({
 		}
 	}, [allSchedules, categorizedData, teacher, category, day, time])
 
-	const moveSchedule = (direction, count) =>async (e) => {
+	const moveSchedule = (direction, count) => async (e) => {
 		e.stopPropagation()
 		setLoading(true)
 		let teacherData = categorizedData[category][teacher]
@@ -64,7 +64,9 @@ function SingleBlock({
 			if (slots[day].length) {
 				doesDaysExist = true
 				let hasSchedules = slots[day].some((slot) => {
-					return teacherData.scheduledSlots[slot] && schedule._id !== teacherData.scheduledSlots[slot]
+					return (
+						teacherData.scheduledSlots[slot] && schedule._id !== teacherData.scheduledSlots[slot]
+					)
 				})
 				console.log(hasSchedules)
 				if (hasSchedules) {
@@ -77,24 +79,26 @@ function SingleBlock({
 			enqueueSnackbar("No Available slots to move", {
 				variant: "error",
 			})
+			setLoading(false)
 			return
 		}
 		if (doesHaveBlockingSchedules) {
 			enqueueSnackbar("Blocked by other schedule", {
 				variant: "error",
 			})
+			setLoading(false)
 			return
 		}
 
-		const res = await Axios.post(
-            `${process.env.REACT_APP_API_KEY}/schedule/edit/${schedule._id}`,
-            {...schedule,slots}
-          )
-			setTimeout(() => {
-				setLoading(false)
-			},2000)
-		if(res.status === 200){
-			setRefresh(prev => !prev)
+		const res = await Axios.post(`${process.env.REACT_APP_API_KEY}/schedule/edit/${schedule._id}`, {
+			...schedule,
+			slots,
+		})
+		setTimeout(() => {
+			setLoading(false)
+		}, 2000)
+		if (res.status === 200) {
+			setRefresh((prev) => !prev)
 		}
 	}
 
