@@ -1,8 +1,19 @@
 import React, {useEffect, useState} from "react"
 import Checkbox from "@material-ui/core/Checkbox"
 import {IconButton, makeStyles, Tooltip} from "@material-ui/core"
-import {ArrowDown, ArrowUp, Send, UserCheck} from "react-feather"
-import { getNewSlots } from './helpers';
+import {
+	ArrowDown,
+	ArrowUp,
+	ChevronDown,
+	ChevronsDown,
+	ChevronsUp,
+	ChevronUp,
+	Send,
+	UserCheck,
+} from "react-feather"
+import {getNewSlots} from "./helpers"
+import {useSnackbar} from "notistack"
+import Axios from 'axios';
 
 function SingleBlock({
 	day,
@@ -16,13 +27,15 @@ function SingleBlock({
 	setScheduleId,
 	availableSlotsEditingMode,
 	allSchedules,
-	teacherID,
+	setRefresh,
 	selectedSlots,
 	setSelectedSlots,
 	createGroup,
+	setLoading
 }) {
 	const [schedule, setSchedule] = useState({})
 	const classes = useStyles()
+	const {enqueueSnackbar} = useSnackbar()
 
 	useEffect(() => {
 		if (categorizedData[category][teacher].scheduledSlots[`${day.toUpperCase()}-${time}`]) {
@@ -38,11 +51,51 @@ function SingleBlock({
 		}
 	}, [allSchedules, categorizedData, teacher, category, day, time])
 
-	const moveSchedule = (direction) => (e) => {
+	const moveSchedule = (direction, count) =>async (e) => {
 		e.stopPropagation()
+		setLoading(true)
 		let teacherData = categorizedData[category][teacher]
-		let slots = getNewSlots(schedule.slots, direction)
-		console.log(slots,direction,schedule,teacherData)
+		let slots = getNewSlots(schedule.slots, direction, count)
+		console.log(slots, direction, schedule, teacherData)
+		let doesDaysExist = false
+		let doesHaveBlockingSchedules = false
+		for (let i = 0; i < Object.keys(slots).length; i++) {
+			const day = Object.keys(slots)[i]
+			if (slots[day].length) {
+				doesDaysExist = true
+				let hasSchedules = slots[day].some((slot) => {
+					return teacherData.scheduledSlots[slot] && schedule._id !== teacherData.scheduledSlots[slot]
+				})
+				console.log(hasSchedules)
+				if (hasSchedules) {
+					doesHaveBlockingSchedules = true
+					break
+				}
+			}
+		}
+		if (!doesDaysExist) {
+			enqueueSnackbar("No Available slots to move", {
+				variant: "error",
+			})
+			return
+		}
+		if (doesHaveBlockingSchedules) {
+			enqueueSnackbar("Blocked by other schedule", {
+				variant: "error",
+			})
+			return
+		}
+
+		const res = await Axios.post(
+            `${process.env.REACT_APP_API_KEY}/schedule/edit/${schedule._id}`,
+            {...schedule,slots}
+          )
+			setTimeout(() => {
+				setLoading(false)
+			},2000)
+		if(res.status === 200){
+			setRefresh(prev => !prev)
+		}
 	}
 
 	return (
@@ -105,23 +158,28 @@ function SingleBlock({
 									{schedule.group ? <UserCheck size={20} /> : <Send size={20} />}
 								</IconButton>
 							</Tooltip>
-							<div className={classes.topRight} >
-							<Tooltip
-								title={"Move up by 1 Hour"}
-							>
-								<IconButton size="small" onClick={moveSchedule('up')} >
-									<ArrowUp size={20} />
-								</IconButton>
-							</Tooltip>
-							<Tooltip
-								title={"Move down by 1 Hour"}
-							>
-								<IconButton size="small" onClick={moveSchedule('down')} >
-									<ArrowDown size={20} />
-								</IconButton>
-							</Tooltip>
+							<div className={classes.topRight}>
+								<Tooltip title={"Move up by half an Hour"}>
+									<IconButton size="small" onClick={moveSchedule("up", 0)}>
+										<ChevronUp size={20} />
+									</IconButton>
+								</Tooltip>
+								<Tooltip title={"Move up by one Hour"}>
+									<IconButton size="small" onClick={moveSchedule("up", 1)}>
+										<ChevronsUp size={20} />
+									</IconButton>
+								</Tooltip>
+								<Tooltip title={"Move down by half an Hour"}>
+									<IconButton size="small" onClick={moveSchedule("down", 0)}>
+										<ChevronDown size={20} />
+									</IconButton>
+								</Tooltip>
+								<Tooltip title={"Move down by one Hour"}>
+									<IconButton size="small" onClick={moveSchedule("down", 1)}>
+										<ChevronsDown size={20} />
+									</IconButton>
+								</Tooltip>
 							</div>
-							
 						</>
 					) : categorizedData[category][teacher].availableSlots.includes(
 							`${day.toUpperCase()}-${time}`

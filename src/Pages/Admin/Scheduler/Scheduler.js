@@ -7,7 +7,7 @@ import {
 	deleteAvailableTimeSlot,
 	getOccupancy,
 	updateScheduleDangerously,
-	createAChatGroupFromScheduleId
+	createAChatGroupFromScheduleId,
 } from "../../../Services/Services"
 import {
 	Button,
@@ -26,6 +26,8 @@ import {
 	Tooltip,
 	InputLabel,
 	FormControl,
+	Backdrop,
+	CircularProgress,
 } from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
@@ -174,10 +176,12 @@ function Scheduler() {
 	const [success, setSuccess] = useState(false)
 	const [response, setResponse] = useState("")
 	const [selectedSlots, setSelectedSlots] = useState([])
+	const [refresh, setRefresh] = useState(false)
+	const [loading, setLoading] = useState(false)
 
 	useEffect(() => {
 		getAllSchedulesData()
-	}, [])
+	}, [refresh])
 
 	const getAllSchedulesData = () => {
 		getOccupancy().then((data) => {
@@ -251,23 +255,22 @@ function Scheduler() {
 		}
 	}
 
-	const createGroup = (schedule) =>{
+	const createGroup = (schedule) => {
 		console.log(schedule)
-		if(!schedule.group) {
+		if (!schedule.group) {
 			confirm({
-				title:"Create Group",
-				description:"Do you really want to create group?"
+				title: "Create Group",
+				description: "Do you really want to create group?",
 			}).then(() => {
-				createAChatGroupFromScheduleId(schedule._id)
-				.then((data) => {
+				createAChatGroupFromScheduleId(schedule._id).then((data) => {
 					let groupId = data.data.result
-					setAllSchedules(prev => {
+					setAllSchedules((prev) => {
 						let prevData = [...prev]
-						return prevData.map(prevSchedule => {
-							if(prevSchedule._id === schedule._id){
+						return prevData.map((prevSchedule) => {
+							if (prevSchedule._id === schedule._id) {
 								return {
 									...prevSchedule,
-									group:groupId
+									group: groupId,
 								}
 							} else {
 								return prevSchedule
@@ -285,6 +288,9 @@ function Scheduler() {
 
 	return (
 		<>
+			<Backdrop style={{zIndex:5000}} open={loading}>
+				<CircularProgress color="inherit" />
+			</Backdrop>
 			<OccupancyBars
 				categorizedData={categorizedData}
 				setTeacher={setTeacher}
@@ -634,6 +640,8 @@ function Scheduler() {
 														addOrRemoveAvailableSlot={addOrRemoveAvailableSlot}
 														teacherID={teacherId}
 														createGroup={createGroup}
+														setRefresh={setRefresh}
+														setLoading={setLoading}
 													/>
 												)
 											})}
