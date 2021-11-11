@@ -733,7 +733,6 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					cellStyle: {whiteSpace: "nowrap"},
 					headerStyle: {whiteSpace: "nowrap"},
 					hidden: !columnFilters["paidTill"].selected,
-					editable: "never",
 					render: (rowData) =>
 						rowData.paidTill ? moment(rowData.paidTill).format("MMM DD, yyyy") : "",
 				},
