@@ -145,13 +145,13 @@ export default function AddPlans({
 		if (editingId) {
 			getAPlan(editingId)
 				.then((data) => {
-					console.log(data.data.result)
-					const {intervalCount, amount, currency} = data.data.result
+					const {intervalCount, amount, currency, list} = data.data.result
 					console.log(currency)
 					setFormData((prev) => ({
 						...data.data.result,
 						amount: amount / intervalCount,
 						currency: currency._id,
+						list: list || []
 					}))
 				})
 				.catch((error) => {
@@ -299,7 +299,7 @@ export default function AddPlans({
 							/>
 						</FormControl>
 						<List dense>
-							{formData.list.map((item) => (
+							{ formData.list && formData.list.map((item) => (
 								<ListItem key={item}>
 									<ListItemText primary={item} />
 									<ListItemIcon>
