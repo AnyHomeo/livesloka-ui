@@ -11,11 +11,22 @@ import {
 	Button,
 	MenuItem,
 	Switch,
-	FormControlLabel
+	FormControlLabel,
+	InputAdornment,
+	ListItemText,
 } from "@material-ui/core"
 import Autocomplete from "@material-ui/lab/Autocomplete"
-import {createPlans, getData} from "./../../Services/Services"
+import {createPlans, getAPlan, getData, updatePlan} from "./../../Services/Services"
 import {useSnackbar} from "notistack"
+import OutlinedInput from "@material-ui/core/OutlinedInput"
+import Fab from "@material-ui/core/Fab"
+import {Add} from "@material-ui/icons"
+import ListItem from "@material-ui/core/ListItem"
+import EditIcon from "@material-ui/icons/Edit"
+import DeleteIcon from "@material-ui/icons/Delete"
+import IconButton from "@material-ui/core/IconButton"
+import List from "@material-ui/core/List"
+import ListItemIcon from "@material-ui/core/ListItemIcon"
 
 const initialFormData = {
 	name: "",
@@ -24,45 +35,96 @@ const initialFormData = {
 	interval: "month",
 	intervalCount: 1,
 	products: [],
-	isSubscription: true,
+	isSubscription: false,
+	list: [],
+	currency: "",
 }
 
-export default function AddPlans({products, openAddPlanModal, setOpenAddPlanModal, setRefresh}) {
-	const handleClose = () => {
-		setOpenAddPlanModal(false)
-	}
+export default function AddPlans({
+	products,
+	openAddPlanModal,
+	setOpenAddPlanModal,
+	setRefresh,
+	editingId,
+	setEditingId,
+}) {
 	const {enqueueSnackbar} = useSnackbar()
 	const [loading, setLoading] = useState(false)
 	const [formData, setFormData] = useState(initialFormData)
 	const [currencies, setCurrencies] = useState([])
+	const [listItem, setListItem] = useState("")
+	const [initialListItem, setInitialListItem] = useState("")
 
-	const createPlan = () => {
-		if (!Object.keys(formData).every((key) => {
-			console.log(key,!!formData[key])
-			return !!formData[key] || key === "isSubscription"
-		} )) {
-			enqueueSnackbar("All fields are required", {
-				variant: "warning",
-			})
-			return
-		}
-		console.log(formData)
+	const handleClose = () => {
+		setOpenAddPlanModal(false)
+		setEditingId()
+		setFormData(initialFormData)
+	}
+
+	const createOrUpdatePlan = () => {
 		setLoading(true)
-		createPlans({
-			...formData,
-			products: formData.products.map((product) => product._id),
-		})
-			.then((data) => {
-				enqueueSnackbar(`${formData.name} Created successfully!`, {
-					variant: "success",
+		if (editingId) {
+			updatePlan(
+				{
+					...formData,
+					amount: formData.amount * formData.intervalCount,
+				},
+				editingId
+			)
+				.then(() => {
+					enqueueSnackbar(`${formData.name} Updated successfully!`, {
+						variant: "success",
+					})
+					setFormData(initialFormData)
+					setLoading(false)
+					setRefresh((prev) => !prev)
 				})
-				setFormData(initialFormData)
-				setLoading(false)
-				setRefresh((prev) => !prev)
+				.catch((err) => {
+					console.log(err)
+				})
+		} else {
+			if (
+				!Object.keys(formData).every((key) => {
+					return !!formData[key] || key === "isSubscription"
+				})
+			) {
+				enqueueSnackbar("All fields are required", {
+					variant: "warning",
+				})
+				return
+			}
+			createPlans({
+				...formData,
+				amount: formData.amount * formData.intervalCount,
+				products: formData.products.map((product) => product._id),
 			})
-			.catch((err) => {
-				console.log(err)
+				.then(() => {
+					enqueueSnackbar(`${formData.name} Created successfully!`, {
+						variant: "success",
+					})
+					setFormData(initialFormData)
+					setLoading(false)
+					setRefresh((prev) => !prev)
+				})
+				.catch((err) => {
+					console.log(err)
+				})
+		}
+	}
+
+	const addOrUpdateList = () => {
+		if (initialListItem) {
+			setFormData((prev) => {
+				let {list} = prev
+				let index = list.indexOf(initialListItem)
+				list[index] = listItem
+				return prev
 			})
+		} else {
+			setFormData((prev) => ({...prev, list: [listItem, ...prev.list]}))
+		}
+		setInitialListItem("")
+		setListItem("")
 	}
 
 	const handleFormDataChange = useCallback((key, value) => {
@@ -79,6 +141,36 @@ export default function AddPlans({products, openAddPlanModal, setOpenAddPlanModa
 			})
 	}, [])
 
+	useEffect(() => {
+		if (editingId) {
+			getAPlan(editingId)
+				.then((data) => {
+					console.log(data.data.result)
+					const {intervalCount, amount, currency} = data.data.result
+					console.log(currency)
+					setFormData((prev) => ({
+						...data.data.result,
+						amount: amount / intervalCount,
+						currency: currency._id,
+					}))
+				})
+				.catch((error) => {
+					console.log(error)
+				})
+		}
+	}, [editingId])
+
+	const deleteListItem = (listItem) => {
+		if (listItem && formData.list.includes(listItem)) {
+			setFormData((prev) => {
+				let prevData = {...prev}
+				let index = prev.list.indexOf(listItem)
+				prevData.list.splice(index, 1)
+				return prevData
+			})
+		}
+	}
+
 	return (
 		<div>
 			<Dialog
@@ -87,38 +179,43 @@ export default function AddPlans({products, openAddPlanModal, setOpenAddPlanModa
 				aria-labelledby="Add Plans"
 				aria-describedby="Add Plans"
 			>
-				<DialogTitle id="add-plans-title">Add Plans</DialogTitle>
+				<DialogTitle id="add-plans-title">{"Add"} Plans</DialogTitle>
 				<DialogContent>
 					<div style={{display: "flex", flexDirection: "column", width: 500, gap: 10}}>
-						<Autocomplete
-							multiple
-							freeSolo
-							disableClearable
-							options={products}
-							getOptionLabel={(option) => option.name}
-							onChange={(e, v) => handleFormDataChange("products", v)}
-							value={formData.products}
-							renderInput={(params) => (
-								<TextField
-									{...params}
-									label="Select Products"
-									margin="normal"
-									variant="outlined"
-									InputProps={{...params.InputProps, type: "search"}}
-								/>
-							)}
-						/>
-						<FormControlLabel
-							control={
-								<Switch
-									checked={formData.isSubscription}
-									onChange={() =>
-										setFormData((prev) => ({...prev, isSubscription: !prev.isSubscription}))
-									}
-								/>
-							}
-							label="Subscription"
-						/>
+						{!editingId && (
+							<Autocomplete
+								multiple
+								freeSolo
+								disableClearable
+								disabled={!!editingId}
+								options={products}
+								getOptionLabel={(option) => option.name}
+								onChange={(e, v) => handleFormDataChange("products", v)}
+								value={formData.products}
+								renderInput={(params) => (
+									<TextField
+										{...params}
+										label="Select Products"
+										margin="normal"
+										variant="outlined"
+										InputProps={{...params.InputProps, type: "search"}}
+									/>
+								)}
+							/>
+						)}
+						{!editingId && (
+							<FormControlLabel
+								control={
+									<Switch
+										checked={formData.isSubscription}
+										onChange={() =>
+											setFormData((prev) => ({...prev, isSubscription: !prev.isSubscription}))
+										}
+									/>
+								}
+								label="Subscription"
+							/>
+						)}
 
 						<TextField
 							onChange={(e) => handleFormDataChange("name", e.target.value)}
@@ -139,14 +236,20 @@ export default function AddPlans({products, openAddPlanModal, setOpenAddPlanModa
 							<Select
 								labelId="interval-type-label"
 								id="interval-type-select"
-								value={formData.interval}
+								value={`${formData.interval}-${formData.intervalCount}`}
 								label="Interval Type"
 								variant="outlined"
-								onChange={(e) => handleFormDataChange("interval", e.target.value)}
+								onChange={(e) => {
+									const [interval, intervalCount] = e.target.value.split("-")
+									handleFormDataChange("interval", interval)
+									handleFormDataChange("intervalCount", parseInt(intervalCount))
+								}}
 							>
-								<MenuItem value="day">Day</MenuItem>
-								<MenuItem value="week">Week</MenuItem>
-								<MenuItem value="month">Month</MenuItem>
+								<MenuItem value={"month-1"}>One Month</MenuItem>
+								<MenuItem value={"month-2"}>Two Month</MenuItem>
+								<MenuItem value={"month-3"}>Quarterly</MenuItem>
+								<MenuItem value={"month-6"}>Half Yearly</MenuItem>
+								<MenuItem value={"month-12"}>Annual</MenuItem>
 							</Select>
 						</FormControl>
 						<FormControl fullWidth variant="outlined">
@@ -165,23 +268,64 @@ export default function AddPlans({products, openAddPlanModal, setOpenAddPlanModa
 							</Select>
 						</FormControl>
 						<TextField
-							onChange={(e) => handleFormDataChange("intervalCount", e.target.value)}
-							label="Interval Count"
-							variant="outlined"
-							value={formData.intervalCount}
-						/>
-						<TextField
 							onChange={(e) => handleFormDataChange("amount", e.target.value)}
-							label="Price"
+							label="Enter Single Month Price"
 							variant="outlined"
+							disabled={formData.isSubscription && editingId}
 							value={formData.amount}
 						/>
+						<FormControl variant="outlined">
+							<InputLabel htmlFor="list-item">Add Description List Item</InputLabel>
+							<OutlinedInput
+								id="list-item"
+								label="Add Description List Item"
+								value={listItem}
+								onChange={(e) => setListItem(e.target.value)}
+								fullWidth
+								onKeyUp={(e) => {
+									if (e.key === "Enter") {
+										e.preventDefault()
+										addOrUpdateList()
+									}
+								}}
+								endAdornment={
+									<InputAdornment position="end">
+										<Fab size="small" onClick={() => addOrUpdateList()} edge="end">
+											<Add />
+										</Fab>
+									</InputAdornment>
+								}
+								labelWidth={70}
+							/>
+						</FormControl>
+						<List dense>
+							{formData.list.map((item) => (
+								<ListItem key={item}>
+									<ListItemText primary={item} />
+									<ListItemIcon>
+										<IconButton
+											onClick={() => {
+												setInitialListItem(item)
+												setListItem(item)
+											}}
+										>
+											<EditIcon />
+										</IconButton>
+									</ListItemIcon>
+									<ListItemIcon>
+										<IconButton onClick={() => deleteListItem(item)}>
+											<DeleteIcon />
+										</IconButton>
+									</ListItemIcon>
+								</ListItem>
+							))}
+						</List>
 					</div>
 				</DialogContent>
 				<DialogActions>
 					<Button
 						disabled={loading}
-						onClick={createPlan}
+						onClick={createOrUpdatePlan}
 						color="primary"
 						variant="contained"
 						autoFocus

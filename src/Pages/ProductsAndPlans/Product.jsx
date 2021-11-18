@@ -1,5 +1,5 @@
 import React, {useCallback, useState, useEffect} from "react"
-import {Chip, Fab, makeStyles, Typography} from "@material-ui/core"
+import {Chip, makeStyles, Typography} from "@material-ui/core"
 import {Calendar, Trash2, Edit} from "react-feather"
 import {Avatar, IconButton, Grid} from "@material-ui/core"
 import moment from "moment"
@@ -9,7 +9,7 @@ import {deleteSubscriptionProduct, getAllPlansOfTheProduct} from "../../Services
 import {useSnackbar} from "notistack"
 import {deleteSubscriptionPlan} from "./../../Services/Services"
 
-function Product({product, setProductsRefresh, plansRefresh}) {
+function Product({product, setProductsRefresh, plansRefresh, editingId, setEditingId, setOpenAddPlanModal}) {
 	const classes = useStyles()
 	const [isPlansOpen, setIsPlansOpen] = useState(false)
 	const [plans, setPlans] = useState([])
@@ -89,6 +89,11 @@ function Product({product, setProductsRefresh, plansRefresh}) {
 		[confirm, enqueueSnackbar]
 	)
 
+	const onEditClick = (planId) => {
+		setEditingId(planId)
+		setOpenAddPlanModal(true)
+	}
+
 	return (
 		<div className={classes.card}>
 			<Grid container justifyContent="space-between">
@@ -109,9 +114,6 @@ function Product({product, setProductsRefresh, plansRefresh}) {
 				</Grid>
 				<Grid item xs={12} sm={12} md={3}>
 					<div className={classes.flexEnd}>
-						{/* <IconButton>
-							<Edit />
-						</IconButton> */}
 						<IconButton onClick={onDeleteClick}>
 							<Trash2 />
 						</IconButton>
@@ -150,17 +152,20 @@ function Product({product, setProductsRefresh, plansRefresh}) {
 									) : (
 										""
 									)}
+									<Typography variant='caption' style={{textAlign:'right'}} >
+										{item.currency.prefix || "$"} {Number(item.amount / item.intervalCount).toFixed(2)}
+									</Typography>
 									<Typography variant="h3" style={{textAlign: "center"}}>
 										{item.name}
 									</Typography>
 									<Typography variant="caption">{item.description}</Typography>
 									<div className={classes.planActions}>
-										{/* <Fab size="small">
-											<Edit />
-										</Fab> */}
-										<Fab size="small" onClick={() => onPlanDeleteClick(item)}>
-											<Trash2 />
-										</Fab>
+										<IconButton onClick={() => onEditClick(item._id)} >
+											<Edit size={16} />
+										</IconButton>
+										<IconButton onClick={() => onPlanDeleteClick(item)}>
+											<Trash2 size={16} />
+										</IconButton>
 									</div>
 								</div>
 							</Grid>
@@ -207,7 +212,7 @@ const useStyles = makeStyles({
 		alignItems: "center",
 		justifyContent: "center",
 		border: "2px dashed #aaa",
-		minHeight: 200,
+		minHeight: 150,
 		fontSize: "1rem",
 	},
 	planActions: {
@@ -218,11 +223,13 @@ const useStyles = makeStyles({
 	},
 	planTitle: {
 		textAlign: "center",
-		padding: "10px 0",
+		padding: "5px 0",
 	},
 	status: {
 		transform: "translateX(-20px)",
 		width: "fit-content",
+		position: "absolute",
+		top:10
 	},
 	currency: {
 		transform: "translateX(-20px)",

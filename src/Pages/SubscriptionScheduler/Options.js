@@ -4,14 +4,14 @@ import {
 	getTeacherSlotsForOptions,
 	getData,
 	postOptions,
+	getPlansByCustomer,
 } from "./../../Services/Services"
-import {Autocomplete, Alert} from "@material-ui/lab"
+import {Autocomplete} from "@material-ui/lab"
 import {
 	TextField,
 	Card,
 	Grid,
 	capitalize,
-	Snackbar,
 	Chip,
 	Button,
 	List,
@@ -20,6 +20,7 @@ import {
 	ListItemSecondaryAction,
 	Checkbox,
 	CircularProgress,
+	Typography,
 } from "@material-ui/core"
 import {ToggleButton, ToggleButtonGroup} from "@material-ui/lab"
 import styles from "./style.module.scss"
@@ -28,6 +29,8 @@ import {X} from "react-feather"
 import Lottie from "react-lottie"
 import loadingAnimation from "../../Images/loading.json"
 import Optionstable from "./Optionstable"
+import {useSnackbar} from "notistack"
+import FormControlLabel from "@material-ui/core/FormControlLabel"
 
 const defaultOptions = {
 	loop: true,
@@ -39,16 +42,11 @@ const defaultOptions = {
 }
 
 let days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
-let snackbarInitialState = {
-	isShown: false,
-	message: "",
-	type: "error",
-}
+
 function Options() {
 	const [customers, setCustomers] = useState([])
 	const [selectedCustomer, setSelectedCustomer] = useState({})
 	const [selectedDays, setSelectedDays] = useState([])
-	const [message, setMessage] = useState(snackbarInitialState)
 	const [selectedTeacher, setSelectedTeacher] = useState("")
 	const [teachers, setTeachers] = useState([])
 	const [teacherData, setTeacherData] = useState({})
@@ -57,9 +55,10 @@ function Options() {
 	const [btnLoading, setBtnLoading] = useState(false)
 	const [loading, setLoading] = useState(false)
 	const [refresh, setRefresh] = useState(false)
-	const [checked, setChecked] = React.useState([])
+	const [checked, setChecked] = useState([])
+	const {enqueueSnackbar} = useSnackbar()
+	const [plans, setPlans] = useState([])
 
-	console.log(checked)
 	useEffect(() => {
 		;(async () => {
 			setLoading(true)
@@ -120,25 +119,17 @@ function Options() {
 						})
 						setTeacherData({...data.data.result, availableSlots: slots})
 					} else {
-						setMessage({
-							isShown: true,
-							message: "No available slots for Teacher",
-							type: "warning",
+						enqueueSnackbar("No available slots for Teacher", {
+							variant: "error",
 						})
 					}
 				} catch (error) {
 					console.log(error)
-					setMessage({
-						isShown: true,
-						message: "Cannot select Teacher",
-						type: "error",
-					})
+					enqueueSnackbar("Cannot select Teacher", {variant: "error"})
 				}
 			})()
 		}
-	}, [selectedTeacher])
-
-	const handleSnackbarClose = () => setMessage(snackbarInitialState)
+	}, [selectedTeacher, enqueueSnackbar])
 
 	const handleToggle = (value) => () => {
 		const currentIndex = checked.indexOf(value)
@@ -154,20 +145,29 @@ function Options() {
 
 	const submitOptions = async () => {
 		setBtnLoading(true)
+		let plansSelected = plans.filter(plan => plan.isSelected)
+		if(!plansSelected.length) {
+		setBtnLoading(false)
+			return enqueueSnackbar("Atleast select a single plan", {
+				variant: "error",
+			})
+		}
 		const formData = {
 			customer: selectedCustomer._id,
 			teacher: selectedTeacher.id,
 			options,
 			schedules: checked,
+			discounts: plansSelected.map(plan => ({
+				plan:plan._id,
+				amount:plan.discount || 0
+			}))
 		}
 
 		try {
 			const data = await postOptions(formData)
 			if (data.status === 200) {
-				setMessage({
-					isShown: true,
-					message: data.data.message || "Options added successfully",
-					type: "success",
+				enqueueSnackbar(data.data.message || "Options added successfully", {
+					variant: "success",
 				})
 				setChecked([])
 				setOptions([])
@@ -177,39 +177,36 @@ function Options() {
 			}
 		} catch (error) {
 			console.log(error)
-			if(error?.response?.data?.error){
-				setMessage({
-					isShown: true,
-					message: error?.response?.data?.error || "Something went wrong!",
-					type: "warning",
-				})
-			} else {
-				setMessage({
-					isShown: true,
-					message: "Soemthing went wrong",
-					type: "warning",
-				})
-			}
+			enqueueSnackbar(error?.response?.data?.error || "Something went wrong!", {
+				variant: "warning",
+			})
 		}
 		setBtnLoading(false)
 	}
+
+	useEffect(() => {
+		if (selectedCustomer._id) {
+			getPlansByCustomer(selectedCustomer._id)
+				.then((data) => {
+					setPlans(data?.data?.result || [])
+				})
+				.catch((err) => {
+					console.log(err?.response?.data?.error)
+					enqueueSnackbar(err?.response?.data?.error || "Something went wrong!", {
+						variant: "error",
+					})
+				})
+		}
+	}, [selectedCustomer, enqueueSnackbar])
 
 	if (loading) {
 		return <Lottie options={defaultOptions} height={400} width={400} />
 	}
 
+	console.log(plans)
+
 	return (
 		<>
-			<Snackbar
-				open={message.isShown}
-				autoHideDuration={6000}
-				anchorOrigin={{vertical: "top", horizontal: "right"}}
-				onClose={() => handleSnackbarClose()}
-			>
-				<Alert onClose={() => handleSnackbarClose()} variant="filled" severity={message.type}>
-					{message.message}
-				</Alert>
-			</Snackbar>
 			<div className={styles.maxWidth1200}>
 				<h2 className={styles.title}>Create Regular classes Schedule Options to customers</h2>
 				<Grid container spacing={3}>
@@ -228,10 +225,8 @@ function Options() {
 											if (teacher) {
 												setSelectedTeacher(teacher)
 											} else {
-												setMessage({
-													isShown: true,
-													message: "No Teacher For selected Customer",
-													type: "warning",
+												enqueueSnackbar("No Teacher For selected Customer", {
+													variant: "error",
 												})
 											}
 										}}
@@ -349,6 +344,70 @@ function Options() {
 										)
 									})}
 							</List>
+							<h1 style={{textAlign: "center", margin: "10px 0px"}}> Select Plans to display </h1>
+							<Grid container spacing={3}>
+								{plans.map((plan, i) => {
+									return (
+										<Grid item key={plan._id} xs={12} sm={6} md={4}>
+											<div className={styles.planCard}>
+												<Typography align="center" variant="h4">
+													{plan.name}
+												</Typography>
+												<Typography>
+													{selectedCustomer.Currency} {plan.amount / plan.intervalCount}
+												</Typography>
+												<Typography align='center' >
+													{plan.description}
+												</Typography>
+												<Typography align='center' >
+												{plan.intervalCount} {plan.interval}{plan.intervalCount===1 ? '' : 's'} plan
+ 												</Typography>
+												<TextField
+													type="number"
+													variant="outlined"
+													onChange={(e) =>
+														setPlans((prev) => {
+															let prevData = [...prev]
+															prevData[i].discount = e.target.value
+															return prevData
+														})
+													}
+													label="Discount Amount"
+													value={plan.discount}
+												/>
+												<Checkbox checked={plan.isSelected} className={styles.checkbox}
+													onChange={(e) => {
+														setPlans((prev) => {
+															let prevData = [...prev]
+															prevData[i].isSelected = !prevData[i].isSelected
+															return prevData
+														})
+													}} />
+											</div>
+											
+										</Grid>
+									)
+								})}
+
+							</Grid>
+							
+							<div
+								style={{
+									display: "flex",
+									justifyContent: "center",
+									alignItems: "center",
+									marginTop: 30,
+								}}
+							>
+								<Button
+									disabled={btnLoading}
+									variant="contained"
+									color="primary"
+									onClick={submitOptions}
+								>
+									{btnLoading ? <CircularProgress style={{height: 25, width: 25}} /> : "Submit"}
+								</Button>
+							</div>
 						</Card>
 					</Grid>
 					<Grid item xs={12} sm={6} md={4} lg={3}>
@@ -390,28 +449,11 @@ function Options() {
 													</div>
 												</div>
 											)
+										} else {
+											return ""
 										}
 									})
 								})}
-
-							<div
-								style={{
-									display: "flex",
-									justifyContent: "center",
-									alignItems: "center",
-									marginTop: 80,
-								}}
-							>
-								<Button
-									style={{position: "absolute", bottom: "20px"}}
-									disabled={btnLoading}
-									variant="contained"
-									color="primary"
-									onClick={submitOptions}
-								>
-									{btnLoading ? <CircularProgress style={{height: 25, width: 25}} /> : "Submit"}
-								</Button>
-							</div>
 						</Card>
 					</Grid>
 				</Grid>

@@ -15,6 +15,7 @@ function ProductsAndPlans() {
 	const [products, setProducts] = useState([])
 	const [openAddProductModal, setOpenAddProductModal] = useState(false)
 	const [openAddPlanModal, setOpenAddPlanModal] = useState(false)
+	const [editingId, setEditingId] = useState()
 
 	useEffect(() => {
 		;(async () => {
@@ -63,9 +64,11 @@ function ProductsAndPlans() {
 				setOpenAddPlanModal={setOpenAddPlanModal}
 				openAddPlanModal={openAddPlanModal}
 				products={products}
+				editingId={editingId}
+				setEditingId={setEditingId}
 			/>
 			{filteredProducts.map((product) => (
-				<Product key={product._id} product={product} setProductsRefresh={setProductsRefresh} plansRefresh={plansRefresh} />
+				<Product key={product._id} setOpenAddPlanModal={setOpenAddPlanModal} editingId={editingId} setEditingId={setEditingId} product={product} setProductsRefresh={setProductsRefresh} plansRefresh={plansRefresh} />
 			))}
 		</Container>
 	)

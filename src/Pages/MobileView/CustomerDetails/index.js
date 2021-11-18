@@ -588,7 +588,7 @@ const CustomerDetails = () => {
                       overflow: "hidden",
                     }}
                   >
-                    <a href={`https://wa.me/${data.countryCode ?data.countryCode : data.countryCode}${data.whatsAppnumber}`}>
+                    <a href={`https://wa.me/${data.countryCode ? data.countryCode : data.countryCode}${data.whatsAppnumber}`} target='_blank'  rel="noreferrer" >
                       <IconButton>
                         <WhatsAppIcon style={{ color: "#fff" }} />
                       </IconButton>
@@ -695,7 +695,7 @@ const CustomerDetails = () => {
                         overflow: "hidden",
                       }}
                     >
-                      <a href={`https://wa.me/${data.whatsAppnumber}`}>
+                      <a href={`https://wa.me/${data.countryCode ? data.countryCode : data.countryCode}${data.whatsAppnumber}`} target='_blank'  rel="noreferrer" >
                         <IconButton>
                           <WhatsAppIcon style={{ color: "#fff" }} />
                         </IconButton>
