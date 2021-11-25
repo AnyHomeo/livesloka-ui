@@ -9,25 +9,6 @@ import {
   Chip,
 } from "@material-ui/core/";
 
-function LinearProgressWithLabel(props) {
-  return (
-    <Box display="flex" width="100%" alignItems="center">
-      <Box width="65%" mr={1}>
-        <LinearProgress
-          variant="determinate"
-          color={props.value >= 70 ? "secondary" : "primary"}
-          {...props}
-        />
-      </Box>
-      <Box width="35%">
-        <Typography variant="body2" color="textSecondary">{`${Math.round(
-          props.value
-        )}% Occupied`}</Typography>
-      </Box>
-    </Box>
-  );
-}
-
 const OccupancyBars = ({
   setTeacher,
   setTeacherId,

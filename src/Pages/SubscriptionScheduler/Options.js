@@ -30,7 +30,9 @@ import Lottie from "react-lottie"
 import loadingAnimation from "../../Images/loading.json"
 import Optionstable from "./Optionstable"
 import {useSnackbar} from "notistack"
-import FormControlLabel from "@material-ui/core/FormControlLabel"
+import DateFnsUtils from "@date-io/date-fns"
+import {DatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers"
+import { makeStyles } from '@material-ui/core/styles';
 
 const defaultOptions = {
 	loop: true,
@@ -58,6 +60,9 @@ function Options() {
 	const [checked, setChecked] = useState([])
 	const {enqueueSnackbar} = useSnackbar()
 	const [plans, setPlans] = useState([])
+	const [startDate, setStartDate] = useState(new Date())
+
+	const classes = useStyles()
 
 	useEffect(() => {
 		;(async () => {
@@ -145,9 +150,9 @@ function Options() {
 
 	const submitOptions = async () => {
 		setBtnLoading(true)
-		let plansSelected = plans.filter(plan => plan.isSelected)
-		if(!plansSelected.length) {
-		setBtnLoading(false)
+		let plansSelected = plans.filter((plan) => plan.isSelected)
+		if (!plansSelected.length) {
+			setBtnLoading(false)
 			return enqueueSnackbar("Atleast select a single plan", {
 				variant: "error",
 			})
@@ -156,11 +161,12 @@ function Options() {
 			customer: selectedCustomer._id,
 			teacher: selectedTeacher.id,
 			options,
+			startDate,
 			schedules: checked,
-			discounts: plansSelected.map(plan => ({
-				plan:plan._id,
-				amount:plan.discount || 0
-			}))
+			discounts: plansSelected.map((plan) => ({
+				plan: plan._id,
+				amount: plan.discount || 0,
+			})),
 		}
 
 		try {
@@ -173,6 +179,7 @@ function Options() {
 				setOptions([])
 				setSelectedCustomer({})
 				setSelectedTeacher("")
+				setPlans([])
 				setRefresh(true)
 			}
 		} catch (error) {
@@ -344,7 +351,11 @@ function Options() {
 										)
 									})}
 							</List>
-							<h1 style={{textAlign: "center", margin: "10px 0px"}}> Select Plans to display </h1>
+							{
+								plans.length ? (
+									<h1 style={{textAlign: "center", margin: "10px 0px"}}> Select Plans to display </h1>
+								) : ""
+							}
 							<Grid container spacing={3}>
 								{plans.map((plan, i) => {
 									return (
@@ -354,14 +365,13 @@ function Options() {
 													{plan.name}
 												</Typography>
 												<Typography>
-													{selectedCustomer.Currency} {plan.amount / plan.intervalCount}
+													{plan?.currency?.prefix || '$'} {plan.amount / plan.intervalCount}
 												</Typography>
-												<Typography align='center' >
-													{plan.description}
+												<Typography align="center">{plan.description}</Typography>
+												<Typography align="center">
+													{plan.intervalCount} {plan.interval}
+													{plan.intervalCount === 1 ? "" : "s"} plan
 												</Typography>
-												<Typography align='center' >
-												{plan.intervalCount} {plan.interval}{plan.intervalCount===1 ? '' : 's'} plan
- 												</Typography>
 												<TextField
 													type="number"
 													variant="outlined"
@@ -375,22 +385,37 @@ function Options() {
 													label="Discount Amount"
 													value={plan.discount}
 												/>
-												<Checkbox checked={plan.isSelected} className={styles.checkbox}
+												<Checkbox
+													checked={plan.isSelected}
+													className={styles.checkbox}
 													onChange={(e) => {
 														setPlans((prev) => {
 															let prevData = [...prev]
 															prevData[i].isSelected = !prevData[i].isSelected
 															return prevData
 														})
-													}} />
+													}}
+												/>
 											</div>
-											
 										</Grid>
 									)
 								})}
-
 							</Grid>
-							
+							<div className={classes.datePickerWrapper}>
+								<MuiPickersUtilsProvider utils={DateFnsUtils}>
+									<DatePicker
+										margin="normal"
+										fullWidth
+										disablePast
+										id="date-picker-dialog"
+										label="Select Start Date"
+										inputVariant="outlined"
+										variant="dialog"
+										value={startDate}
+										onChange={(date) => setStartDate(new Date(date))}
+									/>
+								</MuiPickersUtilsProvider>
+							</div>
 							<div
 								style={{
 									display: "flex",
@@ -467,3 +492,10 @@ function Options() {
 }
 
 export default Options
+
+const useStyles = makeStyles(() => ({
+	datePickerWrapper:{
+		maxWidth: 400,
+		margin:'10px auto'
+	}
+}))

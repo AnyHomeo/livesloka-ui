@@ -2,18 +2,19 @@ import React, {useEffect, useState} from "react"
 import Checkbox from "@material-ui/core/Checkbox"
 import {IconButton, makeStyles, Tooltip} from "@material-ui/core"
 import {
-	ArrowDown,
-	ArrowUp,
 	ChevronDown,
 	ChevronsDown,
 	ChevronsUp,
 	ChevronUp,
 	Send,
+	Star,
 	UserCheck,
 } from "react-feather"
 import {getNewSlots} from "./helpers"
 import {useSnackbar} from "notistack"
 import Axios from "axios"
+import {useConfirm} from "material-ui-confirm"
+import {Avatar} from "@material-ui/core"
 
 function SingleBlock({
 	day,
@@ -32,10 +33,13 @@ function SingleBlock({
 	setSelectedSlots,
 	createGroup,
 	setLoading,
+	toggleShiftScheduleMode,
+	options,
 }) {
 	const [schedule, setSchedule] = useState({})
 	const classes = useStyles()
 	const {enqueueSnackbar} = useSnackbar()
+	const confirm = useConfirm()
 
 	useEffect(() => {
 		if (categorizedData[category][teacher].scheduledSlots[`${day.toUpperCase()}-${time}`]) {
@@ -53,52 +57,62 @@ function SingleBlock({
 
 	const moveSchedule = (direction, count) => async (e) => {
 		e.stopPropagation()
-		setLoading(true)
-		let teacherData = categorizedData[category][teacher]
-		let slots = getNewSlots(schedule.slots, direction, count)
-		console.log(slots, direction, schedule, teacherData)
-		let doesDaysExist = false
-		let doesHaveBlockingSchedules = false
-		for (let i = 0; i < Object.keys(slots).length; i++) {
-			const day = Object.keys(slots)[i]
-			if (slots[day].length) {
-				doesDaysExist = true
-				let hasSchedules = slots[day].some((slot) => {
-					return (
-						teacherData.scheduledSlots[slot] && schedule._id !== teacherData.scheduledSlots[slot]
-					)
-				})
-				console.log(hasSchedules)
-				if (hasSchedules) {
-					doesHaveBlockingSchedules = true
-					break
+		try {
+			await confirm({
+				title: "Are you sure to shift the schedule?",
+			})
+			setLoading(true)
+			let teacherData = categorizedData[category][teacher]
+			let slots = getNewSlots(schedule.slots, direction, count)
+			console.log(slots, direction, schedule, teacherData)
+			let doesDaysExist = false
+			let doesHaveBlockingSchedules = false
+			for (let i = 0; i < Object.keys(slots).length; i++) {
+				const day = Object.keys(slots)[i]
+				if (slots[day].length) {
+					doesDaysExist = true
+					let hasSchedules = slots[day].some((slot) => {
+						return (
+							teacherData.scheduledSlots[slot] && schedule._id !== teacherData.scheduledSlots[slot]
+						)
+					})
+					console.log(hasSchedules)
+					if (hasSchedules) {
+						doesHaveBlockingSchedules = true
+						break
+					}
 				}
 			}
-		}
-		if (!doesDaysExist) {
-			enqueueSnackbar("No Available slots to move", {
-				variant: "error",
-			})
-			setLoading(false)
-			return
-		}
-		if (doesHaveBlockingSchedules) {
-			enqueueSnackbar("Blocked by other schedule", {
-				variant: "error",
-			})
-			setLoading(false)
-			return
-		}
+			if (!doesDaysExist) {
+				enqueueSnackbar("No Available slots to move", {
+					variant: "error",
+				})
+				setLoading(false)
+				return
+			}
+			if (doesHaveBlockingSchedules) {
+				enqueueSnackbar("Blocked by other schedule", {
+					variant: "error",
+				})
+				setLoading(false)
+				return
+			}
 
-		const res = await Axios.post(`${process.env.REACT_APP_API_KEY}/schedule/edit/${schedule._id}`, {
-			...schedule,
-			slots,
-		})
-		setTimeout(() => {
-			setLoading(false)
-		}, 2000)
-		if (res.status === 200) {
-			setRefresh((prev) => !prev)
+			const res = await Axios.post(
+				`${process.env.REACT_APP_API_KEY}/schedule/edit/${schedule._id}`,
+				{
+					...schedule,
+					slots,
+				}
+			)
+			setTimeout(() => {
+				setLoading(false)
+			}, 2000)
+			if (res.status === 200) {
+				setRefresh((prev) => !prev)
+			}
+		} catch (error) {
+			console.error(error)
 		}
 	}
 
@@ -147,6 +161,16 @@ function SingleBlock({
 					}}
 					className="blockName"
 				>
+					<div>
+						{options[`${day.toUpperCase()}-${time}`] &&
+							options[`${day.toUpperCase()}-${time}`].map((customer) => (
+								<Tooltip title={customer}>
+									<div style={{position: "absolute", bottom: 0, left: 0}}>
+										<Star size={16} color="#000" />
+									</div>
+								</Tooltip>
+							))}
+					</div>
 					{Object.keys(schedule).length ? (
 						<>
 							{schedule.className}
@@ -162,28 +186,46 @@ function SingleBlock({
 									{schedule.group ? <UserCheck size={20} /> : <Send size={20} />}
 								</IconButton>
 							</Tooltip>
-							<div className={classes.topRight}>
-								<Tooltip title={"Move up by half an Hour"}>
-									<IconButton size="small" onClick={moveSchedule("up", 0)}>
-										<ChevronUp size={20} />
-									</IconButton>
-								</Tooltip>
-								<Tooltip title={"Move up by one Hour"}>
-									<IconButton size="small" onClick={moveSchedule("up", 1)}>
-										<ChevronsUp size={20} />
-									</IconButton>
-								</Tooltip>
-								<Tooltip title={"Move down by half an Hour"}>
-									<IconButton size="small" onClick={moveSchedule("down", 0)}>
-										<ChevronDown size={20} />
-									</IconButton>
-								</Tooltip>
-								<Tooltip title={"Move down by one Hour"}>
-									<IconButton size="small" onClick={moveSchedule("down", 1)}>
-										<ChevronsDown size={20} />
-									</IconButton>
-								</Tooltip>
-							</div>
+							{toggleShiftScheduleMode ? (
+								<div className={classes.topRight}>
+									<Tooltip title={"Move up by half an Hour"}>
+										<IconButton size="small" onClick={moveSchedule("up", 0)}>
+											<ChevronUp size={20} />
+										</IconButton>
+									</Tooltip>
+									<Tooltip title={"Move up by one Hour"}>
+										<IconButton size="small" onClick={moveSchedule("up", 1)}>
+											<ChevronsUp size={20} />
+										</IconButton>
+									</Tooltip>
+									<Tooltip title={"Move down by half an Hour"}>
+										<IconButton size="small" onClick={moveSchedule("down", 0)}>
+											<ChevronDown size={20} />
+										</IconButton>
+									</Tooltip>
+									<Tooltip title={"Move down by one Hour"}>
+										<IconButton size="small" onClick={moveSchedule("down", 1)}>
+											<ChevronsDown size={20} />
+										</IconButton>
+									</Tooltip>
+								</div>
+							) : (
+								<div className={classes.topRight}>
+									<div className={classes.flex}>
+										{schedule.students && schedule.students.length
+											? schedule.students.map((student) =>
+													student.age ? (
+														<Tooltip title={student?.firstName}>
+															<div className={classes.smallAvatar}>{student.age}</div>
+														</Tooltip>
+													) : (
+														""
+													)
+											  )
+											: ""}
+									</div>
+								</div>
+							)}
 						</>
 					) : categorizedData[category][teacher].availableSlots.includes(
 							`${day.toUpperCase()}-${time}`
@@ -228,6 +270,18 @@ const useStyles = makeStyles(() => ({
 		position: "absolute",
 		top: 5,
 		right: 5,
+	},
+	flex: {
+		display: "flex",
+		alignItems: "center",
+		gap: 5,
+	},
+	smallAvatar: {
+		borderRadius: 10,
+		padding: "0px 8px",
+		backgroundColor: "#3A68D5",
+		display: "grid",
+		placeItems: "center",
 	},
 }))
 

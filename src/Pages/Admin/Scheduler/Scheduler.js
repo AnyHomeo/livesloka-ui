@@ -8,6 +8,7 @@ import {
 	getOccupancy,
 	updateScheduleDangerously,
 	createAChatGroupFromScheduleId,
+	getOptionsOfATeacher,
 } from "../../../Services/Services"
 import {
 	Button,
@@ -178,6 +179,8 @@ function Scheduler() {
 	const [selectedSlots, setSelectedSlots] = useState([])
 	const [refresh, setRefresh] = useState(false)
 	const [loading, setLoading] = useState(false)
+	const [toggleShiftScheduleMode, setToggleShiftScheduleMode] = useState(false)
+	const [options, setOptions] = useState({});
 
 	useEffect(() => {
 		getAllSchedulesData()
@@ -285,6 +288,49 @@ function Scheduler() {
 	useEffect(() => {
 		setSelectedSchedule(allSchedules.filter((schedule) => schedule._id === scheduleId)[0])
 	}, [scheduleId, allSchedules])
+
+	useEffect(() => {
+		if(teacherId){
+			getOptionsOfATeacher(teacherId)
+			.then(response => {
+				setOptions(response.data.result.reduce((acc,option) => {
+					const { options, schedules, customer} = option
+					options.forEach((option) => {
+						Object.keys(option).forEach((day) => {
+							if(day !== '_id'){
+								let slot = option[day]
+								if(!acc[slot]){
+									acc[slot] = [customer.firstName]
+								} else {
+									acc[slot].push(customer.firstName)
+								}
+							}
+						})
+					})
+
+					schedules.forEach((schedule) => {
+						const { slots } = schedule
+						Object.keys(slots).forEach((day) => {
+							let slot = slots[day]
+							console.log(slot)
+							slot.forEach((slot) => {
+								if(!acc[slot]){
+									acc[slot] = [customer.firstName]
+								} else {
+									acc[slot].push(customer.firstName)
+								}
+							})
+						})
+					})
+
+					return acc
+				},{}))
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		}
+	},[teacherId])
 
 	return (
 		<>
@@ -559,6 +605,15 @@ function Scheduler() {
 								label="Adjust Slots"
 							/>
 						</FormGroup>
+						<FormControlLabel
+								control={
+									<Switch
+										checked={toggleShiftScheduleMode}
+										onChange={() => setToggleShiftScheduleMode((prev) => !prev)}
+									/>
+								}
+								label="DayLight Savings"
+							/>
 					</div>
 					<div
 						style={{
@@ -625,6 +680,7 @@ function Scheduler() {
 											{days.map((day, j) => {
 												return (
 													<SingleBlock
+														options={options}
 														selectedSlots={selectedSlots}
 														setSelectedSlots={setSelectedSlots}
 														allSchedules={allSchedules}
@@ -642,6 +698,7 @@ function Scheduler() {
 														createGroup={createGroup}
 														setRefresh={setRefresh}
 														setLoading={setLoading}
+														toggleShiftScheduleMode={toggleShiftScheduleMode}
 													/>
 												)
 											})}
