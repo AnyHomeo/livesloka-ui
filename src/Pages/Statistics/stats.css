@@ -60,6 +60,22 @@
 	right: 0;
 	top: 0;
 }
+
+.new-old-customer{
+	position: absolute;
+	right:3px;
+	top:3px;
+	background-color:#86A2E3;
+	padding:2px;
+	height: 20px;
+	width:20px;
+	display:flex;
+	align-items:center;
+	justify-content: center;
+	border-radius: 50%;
+	z-index: 5;
+}
+
 .info-wrapper {
 	display: flex;
 	flex-direction: row;

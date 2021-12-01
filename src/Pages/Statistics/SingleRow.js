@@ -128,6 +128,8 @@ function SingleRow({
 								cursor: "pointer",
 							}}
 						>
+					<div className="new-old-customer" >{singleData.students.some((student) => student.autoDemo) ? "N" : "O"}</div>
+
 							<div
 								className="teacher-name"
 								style={{
@@ -146,6 +148,7 @@ function SingleRow({
 							>
 								{singleData.teacher && singleData.teacher.TeacherName}
 							</div>
+
 							<div
 								className="students"
 								style={{marginLeft: 3, marginBottom: 10, cursor: "pointer"}}

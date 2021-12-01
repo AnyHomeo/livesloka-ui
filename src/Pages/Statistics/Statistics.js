@@ -4,7 +4,7 @@ import Tab from "@material-ui/core/Tab"
 import SingleDayStats from "./SingleDayStats"
 import WhatsAppIcon from "@material-ui/icons/WhatsApp"
 import "./stats.css"
-import { Box, Button, FormControl, Icon, IconButton, InputAdornment, InputLabel, Tooltip } from "@material-ui/core"
+import { Box, Button, Chip, FormControl, Icon, IconButton, InputAdornment, InputLabel, Tooltip } from "@material-ui/core"
 import Dialog from "@material-ui/core/Dialog"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
@@ -179,6 +179,17 @@ function Statistics() {
 										<CheckCircleIcon style={{ color: "green" }} />
 									) : (
 										<CancelIcon style={{ color: "red" }} />
+									),
+							},
+							{
+								field: "autoDemo",
+								title: "Customer Type",
+								type: "boolean",
+								render: (rowData) =>
+									rowData.autoDemo ? (
+										<Chip label="New" size="small" color="primary" />
+									) : (
+										<Chip label="Old" size="small" color="secondary" />
 									),
 							},
 							{
