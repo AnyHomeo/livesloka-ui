@@ -58,6 +58,7 @@ import MoreModal from "./MoreModal"
 import AnalogClockTime from "../../../Components/AnalogClockTime"
 import RewardsTable from "./RewardsTable"
 import {Copy} from 'react-feather';
+import { Container } from '@material-ui/core';
 
 const copyToClipboard = (text) => {
 	var textField = document.createElement("textarea")
@@ -1168,18 +1169,18 @@ const CrmDetails = ({isSummerCampStudents}) => {
 			</Snackbar>
 			<div>
 				{statisticsOpen && statisticsData && (
-					<div style={{backgroundColor: "white"}}>
-						<Grid container style={{margin: "0 auto", width: "90%"}}>
+					<Container>
+						<Grid container>
 							<Grid item xs={12} md={6}>
 								<div>
 									<h1 className={classes.titleCard}>Statistics on Classes Left</h1>
 								</div>
-								<Grid container style={{display: "flex", flexDirection: "row"}}>
+								<Grid container >
 									<Grid item xs={6} sm={4}>
 										<Card
 											onClick={() => setFilterName("lessThanOrEqualToMinusTwo")}
 											className={classes.card}
-											style={{backgroundColor: "#e74c3c"}}
+											style={{backgroundColor: "#6a89cc"}}
 										>
 											<h2>{"<-2"}</h2>
 											<h1 style={{color: "white"}}>{statisticsData.customersLessThanMinus2}</h1>
@@ -1212,8 +1213,8 @@ const CrmDetails = ({isSummerCampStudents}) => {
 								<div>
 									<h1 className={classes.titleCard}>Statistics according to Class Status</h1>
 								</div>
-								<Grid container style={{display: "flex", flexDirection: "row"}}>
-									<Grid item xs={6} sm={3}>
+								<Grid container >
+									<Grid item xs={6} sm={4}>
 										<Card
 											onClick={() => setFilterName("new")}
 											className={classes.card}
@@ -1223,17 +1224,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 											<h1 style={{color: "white"}}>{statisticsData.newCustomers}</h1>
 										</Card>
 									</Grid>
-									<Grid item xs={6} sm={3}>
-										<Card
-											onClick={() => setFilterName("autoDemo")}
-											className={classes.card}
-											style={{backgroundColor: "#d35400"}}
-										>
-											<h2>Auto Demo</h2>
-											<h1 style={{color: "white"}}>{statisticsData.autoDemoCustomers}</h1>
-										</Card>
-									</Grid>
-									<Grid item xs={6} sm={3}>
+									<Grid item xs={6} sm={4}>
 										<Card
 											onClick={() => setFilterName("demo")}
 											className={classes.card}
@@ -1243,7 +1234,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 											<h1 style={{color: "white"}}>{statisticsData.demoCustomers}</h1>
 										</Card>
 									</Grid>
-									<Grid item xs={6} sm={3}>
+									<Grid item xs={6} sm={4}>
 										<Card
 											onClick={() => setFilterName("inClass")}
 											className={classes.card}
@@ -1255,8 +1246,47 @@ const CrmDetails = ({isSummerCampStudents}) => {
 									</Grid>
 								</Grid>
 							</Grid>
+
+							
+							<Grid item xs={12} md={6}>
+								<div>
+									<h1 className={classes.titleCard}>Statistics on Auto Demo</h1>
+								</div>
+								<Grid container>
+									<Grid item xs={6} sm={4}>
+										<Card
+											onClick={() => setFilterName("pastDueDate")}
+											className={classes.card}
+											style={{backgroundColor: "#d35400"}}
+										>
+											<h2>Due Past</h2>
+											<h1 style={{color: "white"}}>{statisticsData.pastDueDateCustomers}</h1>
+										</Card>
+									</Grid>
+									<Grid item xs={6} sm={4}>
+										<Card
+											onClick={() => setFilterName("dueDateToday")}
+											className={classes.card}
+											style={{backgroundColor: "#d35400"}}
+										>
+											<h2>Due Today</h2>
+											<h1 style={{color: "white"}}>{statisticsData.dueDateToday}</h1>
+										</Card>
+									</Grid>
+									<Grid item xs={6} sm={4}>
+										<Card
+											onClick={() => setFilterName("autoDemo")}
+											className={classes.card}
+											style={{backgroundColor: "#3498db"}}
+										>
+											<h2>Auto Demo</h2>
+											<h1 style={{color: "white"}}>{statisticsData.autoDemoCustomers}</h1>
+										</Card>
+									</Grid>
+								</Grid>
+							</Grid>
 						</Grid>
-					</div>
+					</Container>
 				)}
 				{filterOpen ? (
 					<div
