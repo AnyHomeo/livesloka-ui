@@ -204,8 +204,12 @@ function Statistics() {
 							},
 							{
 								field: "numberOfClassesBought",
-								title: "Classes Left",
+								title: "Classes Left / Due Date",
 								tooltip: "Sort by Classes Left",
+								width: "1%",
+								cellStyle: {whiteSpace: "nowrap"},
+								headerStyle: {whiteSpace: "nowrap"},
+								render: (rowData) => rowData.autoDemo ? momentTZ(rowData.paidTill).format("MMM DD, YYYY") : rowData.numberOfClassesBought
 							},
 							{
 								title: "Time Zone",
