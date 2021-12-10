@@ -3,36 +3,46 @@ import React, {useState, useEffect} from "react"
 import MaterialTable, {MTableBodyRow} from "material-table"
 import MuiAlert from "@material-ui/lab/Alert"
 import {getData, addInField, editField, deleteField} from "../Services/Services"
-import {Button, Chip, CircularProgress, Snackbar, TextField} from "@material-ui/core"
+import {Button, Chip, Snackbar, TextField} from "@material-ui/core"
 import {Autocomplete} from "@material-ui/lab"
 import useWindowDimensions from "./useWindowDimensions"
 import {isAutheticated} from "../auth"
 import {firebase} from "../Firebase"
+
 const DropdownEditor = ({onChange, value}) => {
 	const [arr, setArr] = useState(value)
+	const [options, setOptions] = useState([])
+
+	useEffect(() => {
+		getData("Subject")
+			.then((response) => {
+				console.log({result: response.data.result})
+				setOptions(response.data.result)
+			})
+			.catch((error) => {
+				console.log(error)
+			})
+	}, [])
+
 	return (
 		<Autocomplete
 			multiple
-			options={[
-				{_id: "2345455", className: "CLASS OLD"},
-				{_id: "12345", className: "class1"},
-				{_id: "12348", className: "class2"},
-				{_id: "12349", className: "class3"},
-			]}
+			options={options}
 			value={arr}
 			filterSelectedOptions
 			getOptionSelected={(option) => arr.map((i) => i._id).includes(option._id)}
-			getOptionLabel={(option) => option.className}
+			getOptionLabel={(option) => option.subjectName}
 			onChange={(_, newVal) => {
 				setArr(newVal)
-				onChange(newVal)
+				console.log(newVal)
+				onChange(newVal.map((i) => i._id))
 			}}
 			renderInput={(params) => (
 				<TextField {...params} label={"Subjects"} variant="standard" margin="dense" />
 			)}
 			renderTags={(value, getTagProps) =>
 				value.map((option, index) => (
-					<Chip variant="outlined" label={option.className} {...getTagProps({index})} />
+					<Chip variant="outlined" color="primary" size="small" label={option.subjectName} {...getTagProps({index})} />
 				))
 			}
 		/>
@@ -53,7 +63,14 @@ function capitalize(word) {
 	return word.charAt(0).toUpperCase() + word.substring(1)
 }
 
-const MaterialTableAddFields = ({name, status, lookup, categoryLookup, subjectLookup,currencies}) => {
+const MaterialTableAddFields = ({
+	name,
+	status,
+	lookup,
+	categoryLookup,
+	subjectLookup,
+	currencies,
+}) => {
 	const [column, setColumn] = useState([])
 	const [data, setData] = useState([])
 	const [loading, setLoading] = useState(true)
@@ -62,13 +79,14 @@ const MaterialTableAddFields = ({name, status, lookup, categoryLookup, subjectLo
 	const [response, setResponse] = useState("")
 	const {height} = useWindowDimensions()
 	const [imageLoading, setImageLoading] = useState(false)
+	const [refresh, setRefresh] = useState(false);
 
 	useEffect(() => {
 		getData(name).then((response) => {
 			setData(response.data.result)
 			setLoading(false)
 		})
-	}, [])
+	}, [refresh])
 
 	const handleFileUpload = async (e, props) => {
 		setImageLoading(true)
@@ -97,18 +115,32 @@ const MaterialTableAddFields = ({name, status, lookup, categoryLookup, subjectLo
 		if (data.length) {
 			let lengths = data.map((item) => Object.keys(item).length)
 			let v = Object.keys(data[lengths.indexOf(Math.max(...lengths))]).map((key) => {
-				if(key === "isNotAvailableInBooking"){
+				if (key === "subjects") {
 					return {
-						title:"Disable in Booking",
-						type:"boolean",
-						field:"isNotAvailableInBooking"
+						title: humanReadable(key),
+						field: key,
+						render: (rowData) =>
+							rowData[key] &&
+							rowData[key].map((subject) => (
+									<Chip variant="default" color="primary" size="small" key={subject._id} label={subject.subjectName} />
+							)),
+						editComponent: (props) => {
+							return <DropdownEditor {...props} value={props?.rowData?.subjects || []} />
+						},
 					}
 				}
-				if(name === "Time Zone" && key === "currency"){
+				if (key === "isNotAvailableInBooking") {
 					return {
-						title:"Currency",
-						lookup:currencies,
-						field:"currency"
+						title: "Disable in Booking",
+						type: "boolean",
+						field: "isNotAvailableInBooking",
+					}
+				}
+				if (name === "Time Zone" && key === "currency") {
+					return {
+						title: "Currency",
+						lookup: currencies,
+						field: "currency",
 					}
 				}
 				if (name === "Agent" && key === "needToFinalizeSalaries") {
@@ -125,11 +157,11 @@ const MaterialTableAddFields = ({name, status, lookup, categoryLookup, subjectLo
 						field: "isDemoIncludedInSalaries",
 					}
 				}
-				if(name === "Time Zone" && key === "timeZonePriority"){
+				if (name === "Time Zone" && key === "timeZonePriority") {
 					return {
 						title: "Show in Auto Booking",
 						field: key,
-						type:"boolean"
+						type: "boolean",
 					}
 				}
 				if (name === "Subject" && key === "category") {
@@ -146,19 +178,19 @@ const MaterialTableAddFields = ({name, status, lookup, categoryLookup, subjectLo
 						lookup: categoryLookup,
 					}
 				}
-				if(name === "Teacher" && key === "subject"){
+				if (name === "Teacher" && key === "subject") {
 					return {
 						title: "Subject",
 						field: key,
 						lookup: subjectLookup,
 					}
 				}
-				if ( 
+				if (
 					key === "zoomJwt" ||
 					key === "zoomSecret" ||
 					key === "zoomApi" ||
 					key === "summerCampDescription" ||
-					key == "summerCampImageLink"
+					key === "summerCampImageLink"
 				) {
 					return {
 						title: humanReadable(key),
@@ -255,7 +287,7 @@ const MaterialTableAddFields = ({name, status, lookup, categoryLookup, subjectLo
 			})
 			setColumn(v)
 		}
-	}, [lookup, categoryLookup, data,subjectLookup])
+	}, [lookup, categoryLookup, data, subjectLookup])
 
 	const handleClose = (event, reason) => {
 		if (reason === "clickaway") {
@@ -301,13 +333,8 @@ const MaterialTableAddFields = ({name, status, lookup, categoryLookup, subjectLo
 						return addInField(`Add ${name}`, newData)
 							.then((fetchedData) => {
 								if (fetchedData.data.status === "ok") {
-									if (fetchedData.data.result.classesStatus) {
-										fetchedData.data.result.status = fetchedData.data.result.classesStatus
-									}
-									const {id, _id} = fetchedData.data.result
-									newData = {...newData, id, _id}
-									setData([...data, newData])
 									setSuccess(true)
+									setRefresh(prev => !prev)
 									setResponse(fetchedData.data.message)
 									setOpen(true)
 									setLoading(false)
@@ -323,17 +350,15 @@ const MaterialTableAddFields = ({name, status, lookup, categoryLookup, subjectLo
 							})
 					},
 					onRowUpdate: (newData, oldData) => {
-						if(name === "Teacher"){
+						if (name === "Teacher") {
 							newData.isDemoIncludedInSalaries = !!newData.isDemoIncludedInSalaries
-							newData.isNotAvailableInBooking = !!newData.isNotAvailableInBooking	
+							newData.isNotAvailableInBooking = !!newData.isNotAvailableInBooking
 						}
-						
+
 						return editField(`Update ${name}`, newData).then((fetchedData) => {
 							if (fetchedData.data.status === "OK") {
-								const dataUpdate = [...data]
-								const index = oldData.tableData.id
-								dataUpdate[index] = newData
-								setData([...dataUpdate])
+								
+								setRefresh(prev => !prev)
 								setSuccess(true)
 								setResponse(fetchedData.data.message)
 								setOpen(true)

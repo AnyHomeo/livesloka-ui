@@ -49,7 +49,7 @@ exports.services = {
 		"Update Currency": "/admin/update/Currency",
 		"Delete Currency": "/admin/delete/Currency",
 
-		Country: "/admin/get/Country",
+		Country: "/admin/get/Country?populate=subjects",
 		"Add Country": "/admin/add/Country",
 		"Update Country": "/admin/update/Country",
 		"Delete Country": "/admin/delete/Country",
