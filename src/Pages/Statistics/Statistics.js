@@ -209,7 +209,7 @@ function Statistics() {
 								width: "1%",
 								cellStyle: {whiteSpace: "nowrap"},
 								headerStyle: {whiteSpace: "nowrap"},
-								render: (rowData) => rowData.autoDemo ? momentTZ(rowData.paidTill).format("MMM DD, YYYY") : rowData.numberOfClassesBought
+								render: (rowData) => rowData.autoDemo && rowData.paidTill ? momentTZ(rowData.paidTill).format("MMM DD, YYYY") : rowData.numberOfClassesBought
 							},
 							{
 								title: "Time Zone",
