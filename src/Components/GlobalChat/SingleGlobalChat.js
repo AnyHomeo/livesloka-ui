@@ -3,30 +3,26 @@ import {Avatar, Chip, IconButton} from "@material-ui/core"
 import {useHistory} from "react-router-dom"
 // import axios from "axios"
 // import {io} from "socket.io-client"
-import {isAutheticated} from "../../../auth"
 import axios from "axios"
 import {Add, Replay} from "@material-ui/icons"
+import {isAutheticated} from "../../auth"
 
 // let socket
 
-function NonSidebarChat({room, setCurrentRoom}) {
+function SingleGlobalChat({room, setCurrentRoom}) {
 	const {roomID, username, messageSeen} = room
-	const history = useHistory()
+	// const history = useHistory()
 	const getRole = isAutheticated().roleId
 
 	// const parms = useParams()
-	console.log("nonsidebar chat rere")
 
-	// console.log(isNew)
 	const [showAB, setShowAB] = useState(true)
 
-	const handelClick = () => {
-		// axios.post(`${process.env.REACT_APP_API_KEY}/lastmessage/${id}`).then(({data}) => {
-		// 	console.log(data)
-		// })
-		setCurrentRoom(roomID)
-		history.push(`/nonroom/${roomID}`)
-	}
+	// const handelClick = () => {
+	// 	// console.log("handel click")
+	// 	// setCurrentRoom(roomID)
+	// 	// history.push(`/nonroom/${roomID}`)
+	// }
 
 	const handelAssign = (e) => {
 		e.stopPropagation()
@@ -45,20 +41,9 @@ function NonSidebarChat({room, setCurrentRoom}) {
 			})
 	}
 	return (
-		<div className="sidebarChat_head" key={roomID} onClick={handelClick}>
-			<div
-				className="sidebarChat"
-				// style={{backgroundColor: `${room.agentID ? "rgb(200 250 161)" : ""}`}}
-			>
-				<Avatar
-				// style={{
-				// 	boxShadow: `${
-				// 		roomID === parms["roomID"] ? "0px 0 0 7.5px #f6f6f6, 0px 0 0 10px #00ffad" : ""
-				// 	}`,
-				// }}
-				>
-					{username.substr(0, 1)}
-				</Avatar>
+		<div className="sidebarChat_head" key={roomID}>
+			<div className="sidebarChat">
+				<Avatar>{username.substr(0, 1)}</Avatar>
 				<div className="sidebarChat_info">
 					{room.ping ? <p style={{fontWeight: 700}}>{username} 💬</p> : <p>{username}</p>}
 					<p style={{fontSize: 12, display: "flex", alignItems: "center"}}>
@@ -84,7 +69,7 @@ function NonSidebarChat({room, setCurrentRoom}) {
 	)
 }
 
-export default React.memo(NonSidebarChat)
+export default React.memo(SingleGlobalChat)
 
 const lastMessage = ({messages}) => {
 	if (messages.length > 0) {

@@ -2,18 +2,16 @@ import React, {useState, useEffect, useRef} from "react"
 import {Avatar, Button, IconButton} from "@material-ui/core"
 import SendIcon from "@material-ui/icons/Send"
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon"
-import {useParams, useHistory} from "react-router-dom"
+import {useHistory} from "react-router-dom"
 import axios from "axios"
 
 import {io} from "socket.io-client"
-import {isAutheticated} from "../../../auth"
-import {PersonAdd} from "@material-ui/icons"
 import {useConfirm} from "material-ui-confirm"
+import {isAutheticated} from "../../auth"
 
 let socket
 
-function NonChat() {
-	const {roomID} = useParams()
+function MainGlobalChat({roomID}) {
 	const [room, setRoom] = useState({
 		name: "",
 		admin: false,
@@ -63,14 +61,6 @@ function NonChat() {
 					setMessages(allMsgs)
 				}
 			})
-			// if (getRole !== 3) {
-			// 	axios.get(`${process.env.REACT_APP_API_KEY}/agents`).then(({data}) => {
-			// 		if (data) {
-			// 			const filterdData = data.filter((el) => el.userId !== userID)
-			// 			setAgents(filterdData)
-			// 		}
-			// 	})
-			// }
 		}
 	}, [roomID])
 
@@ -153,25 +143,6 @@ function NonChat() {
 		setMessage("")
 	}
 
-	// const handelAssignAgent = async (e, value) => {
-	// 	try {
-	// 		const {data} = await axios.post(`${process.env.REACT_APP_API_KEY}/agents`, {
-	// 			roomID,
-	// 			agentID: value.userId,
-	// 		})
-	// 		if (data) {
-	// 			history.push("/room")
-	// 			socket.emit(
-	// 				"agent-to-agent-assign",
-	// 				{agentID: value.userId, roomID, assigneID: userID, user: data},
-	// 				(error) => {
-	// 					if (error) alert(error)
-	// 				}
-	// 			)
-	// 		}
-	// 	} catch (error) {}
-	// }
-
 	const typingTimeout = () => {
 		console.log("stoped Typing")
 		socket.emit("non-agent-typing", {roomID, username: userID, typing: false}, (error) => {
@@ -235,12 +206,16 @@ function NonChat() {
 							backgroundColor: "#E84545",
 						}}
 						onClick={deleteNonChat}
+						size="small"
 					>
 						Delete Chat
 					</Button>
 				</div>
 			</div>
-			<div className="chat_body">
+			<div
+				className="chat_body"
+				style={{minHeight: "calc(100vh - 208px)", maxHeight: "calc(100vh - 208px)"}}
+			>
 				{messages.map((message, idx) => (
 					<div className="chat__message-body" key={idx}>
 						{getRole !== 3 ? (
@@ -317,7 +292,6 @@ function NonChat() {
 				<div ref={lastElement}></div>
 			</div>
 			<div className="chat_footer">
-				<InsertEmoticonIcon />
 				<form onSubmit={sendMessage}>
 					<input
 						value={message}
@@ -337,4 +311,4 @@ function NonChat() {
 	)
 }
 
-export default NonChat
+export default MainGlobalChat

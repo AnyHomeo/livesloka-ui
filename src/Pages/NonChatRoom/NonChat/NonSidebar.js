@@ -1,68 +1,102 @@
-import React, {useState, useEffect} from "react"
+import React, {useState, useEffect, useCallback} from "react"
 import {Avatar, Chip, IconButton} from "@material-ui/core"
 import {AddCircle, SearchOutlined} from "@material-ui/icons"
 import NonSidebarChat from "./NonSidebarChat"
 import axios from "axios"
 import {isAutheticated} from "../../../auth"
-// import {io} from "socket.io-client"
+import {io} from "socket.io-client"
 import {useHistory} from "react-router"
 
-// let socket
+let socket
 function NonSidebar() {
 	const [rooms, setRooms] = useState([])
 	const [searchValue, setSearchValue] = useState("")
 
-	const [isAll, setIsAll] = useState(false)
+	// const [isAll, setIsAll] = useState(false)
 	const getRole = isAutheticated().roleId
-	const getUserID = isAutheticated().userId
+	const ID = isAutheticated()._id
 	const history = useHistory()
 
 	const fetchRooms = () => {
-		// axios.get(`${process.env.REACT_APP_API_KEY}/nonrooms`).then(({data}) => {
-		// 	if (data) {
-		// 		if (getRole === 3) {
-		// 			setRooms(data)
-		// 		} else {
-		// 			const filterdRooms = data.filter((el) => !el.agentID || el.agentID === getUserID)
-		// 			setRooms(filterdRooms)
-		// 		}
-		// 	}
-		// })
+		axios.get(`${process.env.REACT_APP_API_KEY}/nonrooms`).then(({data}) => {
+			if (data) {
+				if (getRole === 3) {
+					setRooms(data)
+				} else {
+					const filterdRooms = data.filter((el) => el.agentID && el.agentID._id === ID)
+					setRooms(filterdRooms)
+				}
+			}
+		})
 	}
-	const fetchAllRooms = () => {
-		// axios.get(`${process.env.REACT_APP_API_KEY}/nonrooms`).then(({data}) => {
-		// 	if (data) {
-		// 		if (getRole === 3) {
-		// 			setRooms(data)
-		// 		} else {
-		// 			const filterdRooms = data.filter((el) => !el.agentID || el.agentID === getUserID)
-		// 			setRooms(filterdRooms)
-		// 		}
-		// 	}
-		// 	setIsAll(true)
-		// })
-	}
+	// const fetchAllRooms = () => {
+	// 	axios.get(`${process.env.REACT_APP_API_KEY}/nonrooms`).then(({data}) => {
+	// 		if (data) {
+	// 			if (getRole === 3) {
+	// 				setRooms(data)
+	// 			} else {
+	// 				const filterdRooms = data.filter((el) => el.agentID && el.agentID._id === ID)
+	// 				setRooms(filterdRooms)
+	// 			}
+	// 		}
+	// 		setIsAll(true)
+	// 	})
+	// }
+
+	// useEffect(() => {
+	// 	socket = io.connect(process.env.REACT_APP_API_KEY)
+	// 	fetchRooms()
+	// 	// socket.on("userWating", ({userID, roomID}) => {
+	// 	// 	fetchRooms()
+	// 	// })
+	// 	// socket.on("agent-disconnected", () => {
+	// 	// 	fetchRooms()
+	// 	// })
+	// 	// socket.on("agent-joined-room", (isAgent) => {
+	// 	// 	fetchRooms()
+	// 	// })
+
+	// 	return removeListners
+	// }, [])
 
 	useEffect(() => {
-		// socket = io.connect(process.env.REACT_APP_API_KEY)
+		socket = io.connect(process.env.REACT_APP_API_KEY)
 		fetchRooms()
-		// socket.on("userWating", ({userID, roomID}) => {
-		// 	fetchRooms()
-		// })
-		// socket.on("agent-disconnected", () => {
-		// 	fetchRooms()
-		// })
-		// socket.on("agent-joined-room", (isAgent) => {
-		// 	fetchRooms()
-		// })
-
-		return removeListners
+		socket.on("non-user-pinged", ({roomID}) => {
+			setRooms((rooms) => {
+				return rooms.map((room) => {
+					if (room.roomID === roomID) {
+						return {
+							...room,
+							ping: true,
+						}
+					}
+					return room
+				})
+			})
+		})
+		return () => {
+			removeListners()
+		}
 	}, [])
-
 	const removeListners = () => {
 		console.log("unmounted non sidebar")
-		// socket.removeAllListeners()
+		socket.removeAllListeners()
 	}
+
+	const setCurrentRoom = useCallback((roomID) => {
+		setRooms((rooms) => {
+			return rooms.map((room) => {
+				if (room.roomID === roomID) {
+					return {
+						...room,
+						ping: false,
+					}
+				}
+				return room
+			})
+		})
+	}, [])
 	return (
 		<div className="sidebar">
 			<div className="sidebar_header">
@@ -116,9 +150,9 @@ function NonSidebar() {
 				{rooms
 					.filter((room) => room.username.toLowerCase().includes(searchValue))
 					.map((room) => (
-						<NonSidebarChat key={room.roomID} room={room} />
+						<NonSidebarChat key={room.roomID} room={room} setCurrentRoom={setCurrentRoom} />
 					))}
-				<div
+				{/* <div
 					style={{
 						textAlign: "center",
 					}}
@@ -131,10 +165,10 @@ function NonSidebar() {
 							<p>Get All Chats</p>
 						</>
 					)}
-				</div>
+				</div> */}
 			</div>
 		</div>
 	)
 }
 
-export default NonSidebar
+export default React.memo(NonSidebar)
