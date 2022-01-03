@@ -226,3 +226,4 @@ export const createAChatGroupFromScheduleId = (scheduleId) => Axios.post(`${API.
 export const getAPlan = (planId) => Axios.get(`${API.main}/plans/${planId}`)
 export const updatePlan = (formData,plan) => Axios.put(`${API.main}/plans/${plan}`,formData)
 export const getPlansByCustomer = (customer) => Axios.get(`${API.main}/plans?customerId=${customer}`)
+export const getOptionsOfATeacher = (teacherId) => Axios.get(`${API.main}/options/teacher/${teacherId}`)
