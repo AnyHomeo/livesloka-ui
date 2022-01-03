@@ -5,6 +5,7 @@ import TopBar from "./TopBar"
 import "./Topbar.css"
 import io from "socket.io-client"
 import {useSnackbar} from "notistack"
+import RightChat from "./RightChat/RightChat"
 var audio = new Audio(require("./notification.mp3"))
 
 const socket = io(process.env.REACT_APP_CMS_API_KEY)
@@ -39,22 +40,32 @@ const DashboardLayout = ({children}) => {
 	const classes = useStyles()
 	const [isMobileNavOpen, setMobileNavOpen] = useState(false)
 
+	const [rightChatOpen, setRightChatOpen] = useState(false)
+
 	useEffect(() => {
 		socket.on("customer-submission", ({name}) => {
 			enqueueSnackbar(`${name} Just Registered Successfully!`, {variant: "success"})
-      audio.play();
+			audio.play()
 		})
 	}, [])
 
 	return (
 		<div className={classes.root}>
-			<TopBar onMobileNavOpen={() => setMobileNavOpen(true)} />
+			<TopBar
+				onMobileNavOpen={() => setMobileNavOpen(true)}
+				rightChatOpen={rightChatOpen}
+				setRightChatOpen={setRightChatOpen}
+			/>
 			<NavBar onMobileClose={() => setMobileNavOpen(false)} openMobile={isMobileNavOpen} />
+
 			<div className={classes.wrapper}>
 				<div className={classes.contentContainer}>
 					<div className={classes.content}>{children}</div>
 				</div>
 			</div>
+			{rightChatOpen && (
+				<RightChat rightChatOpen={rightChatOpen} setRightChatOpen={setRightChatOpen} />
+			)}
 		</div>
 	)
 }

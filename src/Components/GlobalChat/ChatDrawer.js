@@ -68,16 +68,21 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-export default function ChatDrawer() {
+export default function ChatDrawer({open, setOpen}) {
+	// console.log(open)
 	const classes = useStyles()
-	const [open, setOpen] = React.useState(false)
+	// const [open, setOpen] = React.useState(false)
 
 	const handleDrawerOpen = () => {
-		setOpen(true)
+		if (setOpen !== undefined) {
+			setOpen(true)
+		}
 	}
 
 	const handleDrawerClose = () => {
-		setOpen(false)
+		if (setOpen !== undefined) {
+			setOpen(false)
+		}
 	}
 
 	return (
