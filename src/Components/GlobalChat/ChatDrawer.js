@@ -8,6 +8,14 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft"
 import CloseIcon from "@material-ui/icons/Close"
 import Chat from "@material-ui/icons/Chat"
 import GlobalChat from "./GlobalChat"
+import {Resizable} from "re-resizable"
+
+const style = {
+	display: "flex",
+	alignItems: "center",
+	justifyContent: "center",
+	border: "solid 1px #ddd",
+}
 
 const drawerWidth = 350
 
@@ -104,6 +112,17 @@ export default function ChatDrawer({open, setOpen}) {
 				<Divider />
 				{open && <GlobalChat />}
 			</Drawer>
+
+			{/* <div className={classes.drawer}>
+					<div className={classes.drawerHeader}>
+						<IconButton>{<ChevronLeftIcon />}</IconButton>
+						<div>Non Rooms</div>
+						<IconButton onClick={handleDrawerClose}>{<CloseIcon />}</IconButton>
+					</div>
+					<Divider />
+					{open && <GlobalChat />}
+				</div> */}
+			{/* </Resizable> */}
 		</div>
 	)
 }
