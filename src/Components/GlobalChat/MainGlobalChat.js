@@ -8,6 +8,7 @@ import axios from "axios"
 import {io} from "socket.io-client"
 import {useConfirm} from "material-ui-confirm"
 import {isAutheticated} from "../../auth"
+import getRandomColor from "../../Services/randomColor"
 
 let socket
 
@@ -45,7 +46,7 @@ function MainGlobalChat({roomID}) {
 		return () => {
 			removeListners()
 		}
-	}, [roomID])
+	}, [])
 
 	useEffect(() => {
 		if (roomID) {
@@ -62,7 +63,7 @@ function MainGlobalChat({roomID}) {
 				}
 			})
 		}
-	}, [roomID])
+	}, [])
 
 	useEffect(() => {
 		lastElement.current.scrollIntoView({behavior: "smooth"})
@@ -110,7 +111,7 @@ function MainGlobalChat({roomID}) {
 		return () => {
 			removeListners()
 		}
-	}, [roomID])
+	}, [])
 
 	const sendMessage = (e) => {
 		e.preventDefault()
@@ -166,7 +167,7 @@ function MainGlobalChat({roomID}) {
 		setMessage(e.target.value)
 	}
 	const removeListners = () => {
-		console.log("clean up done")
+		console.log("Global Main CHAT")
 
 		setIsTyping({
 			typing: false,
@@ -192,7 +193,14 @@ function MainGlobalChat({roomID}) {
 	return (
 		<div className="chat">
 			<div className="chat_header">
-				<Avatar> {room.name.substr(0, 1)}</Avatar>
+				<Avatar
+					style={{
+						backgroundColor: `${getRandomColor()}`,
+					}}
+				>
+					{" "}
+					{room.name.substr(0, 1)}
+				</Avatar>
 				<div className="chat_headerInfo">
 					<h3 className="chat-room-name">{room.name}</h3>
 					<p style={{color: "#16e35e"}}>{isTyping.typing ? "typing ..." : ""}</p>

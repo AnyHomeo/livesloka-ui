@@ -6,6 +6,7 @@ import {useHistory} from "react-router-dom"
 import {isAutheticated} from "../../../auth"
 import axios from "axios"
 import {Add, Replay} from "@material-ui/icons"
+import getRandomColor from "../../../Services/randomColor"
 
 // let socket
 
@@ -51,11 +52,14 @@ function NonSidebarChat({room, setCurrentRoom}) {
 				// style={{backgroundColor: `${room.agentID ? "rgb(200 250 161)" : ""}`}}
 			>
 				<Avatar
-				// style={{
-				// 	boxShadow: `${
-				// 		roomID === parms["roomID"] ? "0px 0 0 7.5px #f6f6f6, 0px 0 0 10px #00ffad" : ""
-				// 	}`,
-				// }}
+					// style={{
+					// 	boxShadow: `${
+					// 		roomID === parms["roomID"] ? "0px 0 0 7.5px #f6f6f6, 0px 0 0 10px #00ffad" : ""
+					// 	}`,
+					// }}
+					style={{
+						backgroundColor: `${getRandomColor()}`,
+					}}
 				>
 					{username.substr(0, 1)}
 				</Avatar>

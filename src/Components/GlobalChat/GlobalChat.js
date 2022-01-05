@@ -59,7 +59,7 @@ const GlobalChat = () => {
 		}
 	}, [])
 	const removeListners = () => {
-		console.log("unmounted non sidebar")
+		console.log("UnMounted Global CHAT")
 		socket.removeAllListeners()
 	}
 	const setCurrentRoom = useCallback((roomID) => {
@@ -79,6 +79,7 @@ const GlobalChat = () => {
 		console.log(roomObj)
 
 		setOpen(roomObj)
+		setCurrentRoom(roomObj.roomID)
 	}
 	const handelChange = (e) => {
 		const value = e.target.value.toLowerCase().trim()
@@ -111,12 +112,8 @@ const GlobalChat = () => {
 								{rooms
 									.filter((room) => room.username.toLowerCase().includes(searchValue))
 									.map((room) => (
-										<div onClick={() => handelRoom(room)}>
-											<SingleGlobalChat
-												key={room.roomID}
-												room={room}
-												setCurrentRoom={setCurrentRoom}
-											/>
+										<div onClick={() => handelRoom(room)} key={room.roomID}>
+											<SingleGlobalChat room={room} />
 										</div>
 									))}
 							</div>

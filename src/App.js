@@ -13,7 +13,6 @@ import {ToastContainer, toast} from "react-toastify"
 
 import "react-toastify/dist/ReactToastify.css"
 import {Link, useHistory, useLocation} from "react-router-dom"
-import Global from "./Components/GlobalChat"
 let socket
 
 const queryClient = new QueryClient()
@@ -98,7 +97,6 @@ const App = () => {
 					<GlobalStyles />
 					<Routes />
 					<ToastContainer />
-					<Global />
 				</ConfirmProvider>
 			</QueryClientProvider>
 		</ThemeProvider>

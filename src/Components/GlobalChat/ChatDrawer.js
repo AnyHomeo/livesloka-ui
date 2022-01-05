@@ -73,11 +73,11 @@ export default function ChatDrawer({open, setOpen}) {
 	const classes = useStyles()
 	// const [open, setOpen] = React.useState(false)
 
-	const handleDrawerOpen = () => {
-		if (setOpen !== undefined) {
-			setOpen(true)
-		}
-	}
+	// const handleDrawerOpen = () => {
+	// 	if (setOpen !== undefined) {
+	// 		setOpen(true)
+	// 	}
+	// }
 
 	const handleDrawerClose = () => {
 		if (setOpen !== undefined) {
@@ -87,8 +87,6 @@ export default function ChatDrawer({open, setOpen}) {
 
 	return (
 		<div className={classes.root}>
-			<BotButton handelClick={handleDrawerOpen} />
-
 			<Drawer
 				className={classes.drawer}
 				variant="persistent"
@@ -106,19 +104,6 @@ export default function ChatDrawer({open, setOpen}) {
 				<Divider />
 				{open && <GlobalChat />}
 			</Drawer>
-		</div>
-	)
-}
-const BotButton = ({handelClick}) => {
-	return (
-		<div
-			id="chat-circle"
-			onClick={(e) => {
-				e.stopPropagation()
-				handelClick()
-			}}
-		>
-			<Chat style={{fontSize: 30}} />
 		</div>
 	)
 }

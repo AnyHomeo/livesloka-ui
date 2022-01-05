@@ -6,10 +6,11 @@ import {useHistory} from "react-router-dom"
 import axios from "axios"
 import {Add, Replay} from "@material-ui/icons"
 import {isAutheticated} from "../../auth"
+import getRandomColor from "../../Services/randomColor"
 
 // let socket
 
-function SingleGlobalChat({room, setCurrentRoom}) {
+function SingleGlobalChat({room}) {
 	const {roomID, username, messageSeen} = room
 	// const history = useHistory()
 	const getRole = isAutheticated().roleId
@@ -20,7 +21,7 @@ function SingleGlobalChat({room, setCurrentRoom}) {
 
 	// const handelClick = () => {
 	// 	// console.log("handel click")
-	// 	// setCurrentRoom(roomID)
+	// 	setCurrentRoom(roomID)
 	// 	// history.push(`/nonroom/${roomID}`)
 	// }
 
@@ -43,7 +44,13 @@ function SingleGlobalChat({room, setCurrentRoom}) {
 	return (
 		<div className="sidebarChat_head" key={roomID}>
 			<div className="sidebarChat">
-				<Avatar>{username.substr(0, 1)}</Avatar>
+				<Avatar
+					style={{
+						backgroundColor: `${getRandomColor()}`,
+					}}
+				>
+					{username.substr(0, 1)}
+				</Avatar>
 				<div className="sidebarChat_info">
 					{room.ping ? <p style={{fontWeight: 700}}>{username} 💬</p> : <p>{username}</p>}
 					<p style={{fontSize: 12, display: "flex", alignItems: "center"}}>

@@ -365,7 +365,6 @@ import HistoryIcon from "@material-ui/icons/History"
 
 import noti from "./notification.mp3"
 import AssignChats from "./AssignChats"
-import {Announcement, Chat, Replay} from "@material-ui/icons"
 var audio = new Audio(noti)
 
 let socket
@@ -410,7 +409,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const TopBar = ({className, onMobileNavOpen, rightChatOpen, setRightChatOpen, ...rest}) => {
+const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 	const classes = useStyles()
 
 	const [AllTimeZones, setAllTimeZones] = useState(new Date())
@@ -660,12 +659,6 @@ const TopBar = ({className, onMobileNavOpen, rightChatOpen, setRightChatOpen, ..
 					>
 						<IconButton color="inherit">
 							<InputIcon />
-						</IconButton>
-					</a>
-
-					<a onClick={() => setRightChatOpen(!rightChatOpen)} style={{color: "white"}}>
-						<IconButton color="inherit">
-							<Chat />
 						</IconButton>
 					</a>
 				</div>

@@ -4,7 +4,7 @@ import "./SidebarChat.css"
 import {Link, useHistory, useParams} from "react-router-dom"
 import axios from "axios"
 import {io} from "socket.io-client"
-
+import getRandomColor from "../../../Services/randomColor"
 let socket
 
 function SidebarChat({id, name, room}) {
@@ -85,6 +85,7 @@ function SidebarChat({id, name, room}) {
 						boxShadow: `${
 							id === parms["roomID"] ? "0px 0 0 7.5px #f6f6f6, 0px 0 0 10px #00ffad" : ""
 						}`,
+						backgroundColor: `${getRandomColor()}`,
 					}}
 				>
 					{room.username.substr(0, 1)}

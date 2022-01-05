@@ -5,7 +5,8 @@ import TopBar from "./TopBar"
 import "./Topbar.css"
 import io from "socket.io-client"
 import {useSnackbar} from "notistack"
-import RightChat from "./RightChat/RightChat"
+import Global from "../Components/GlobalChat"
+import {Chat} from "@material-ui/icons"
 var audio = new Audio(require("./notification.mp3"))
 
 const socket = io(process.env.REACT_APP_CMS_API_KEY)
@@ -51,11 +52,7 @@ const DashboardLayout = ({children}) => {
 
 	return (
 		<div className={classes.root}>
-			<TopBar
-				onMobileNavOpen={() => setMobileNavOpen(true)}
-				rightChatOpen={rightChatOpen}
-				setRightChatOpen={setRightChatOpen}
-			/>
+			<TopBar onMobileNavOpen={() => setMobileNavOpen(true)} />
 			<NavBar onMobileClose={() => setMobileNavOpen(false)} openMobile={isMobileNavOpen} />
 
 			<div className={classes.wrapper}>
@@ -63,11 +60,26 @@ const DashboardLayout = ({children}) => {
 					<div className={classes.content}>{children}</div>
 				</div>
 			</div>
-			{rightChatOpen && (
-				<RightChat rightChatOpen={rightChatOpen} setRightChatOpen={setRightChatOpen} />
+			{rightChatOpen ? (
+				<Global rightChatOpen={rightChatOpen} setRightChatOpen={setRightChatOpen} />
+			) : (
+				<BotButton setRightChatOpen={setRightChatOpen} />
 			)}
 		</div>
 	)
 }
 
 export default DashboardLayout
+const BotButton = ({setRightChatOpen}) => {
+	return (
+		<div
+			id="chat-circle"
+			onClick={(e) => {
+				e.stopPropagation()
+				setRightChatOpen(true)
+			}}
+		>
+			<Chat style={{fontSize: 30}} />
+		</div>
+	)
+}
