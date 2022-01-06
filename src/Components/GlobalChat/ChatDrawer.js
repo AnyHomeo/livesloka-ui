@@ -8,7 +8,6 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft"
 import CloseIcon from "@material-ui/icons/Close"
 import Chat from "@material-ui/icons/Chat"
 import GlobalChat from "./GlobalChat"
-import {Resizable} from "re-resizable"
 
 const style = {
 	display: "flex",

@@ -17,10 +17,12 @@ import {
 } from "@material-ui/core"
 import {useHistory} from "react-router-dom"
 import axios from "axios"
+import "./Responses/response.css"
 
 import Card from "@material-ui/core/Card"
 import CardContent from "@material-ui/core/CardContent"
 import {io} from "socket.io-client"
+import ResponseList from "./Responses/ResponseList"
 
 let socket
 const ChatRoom = () => {
@@ -45,7 +47,7 @@ const ChatRoom = () => {
 	const [isClosed, SetIsClosed] = useState(false)
 
 	const [time, setTime] = React.useState(5)
-
+	const [responses, setResponses] = React.useState(null)
 	const handleChangeSeconds = (event) => {
 		setTime(event.target.value)
 		axios
@@ -78,11 +80,14 @@ const ChatRoom = () => {
 		axios
 			.get(`${process.env.REACT_APP_API_KEY}/getNonChatConfig`)
 			.then(({data}) => {
-				const {show, time, responseMesssages} = data[0]
+				const {show, time, responseMessages} = data[0]
 
 				setTime(time)
 				SetIsClosed(show)
-				// console.log(result)
+				setResponses(
+					responseMessages.map((el) => ({id: Math.floor(Math.random() * 10000), text: el}))
+				)
+				// console.log(responseMessages.map((el, idx) => ({id: idx, text: el})))
 			})
 			.catch((err) => {
 				console.log(err)
@@ -130,9 +135,14 @@ const ChatRoom = () => {
 							<Tab label="Groups" />
 						</Tabs>
 
-						<Box display="flex" justifyContent="center" alignItems="center" marginTop={"25vh"}>
-							{" "}
-							<Card style={{minWidth: 200}}>
+						<Box display="flex" justifyContent="space-around" marginTop={"5vh"}>
+							{responses !== null && (
+								<div className="response-app">
+									<ResponseList responseMessages={responses} />
+								</div>
+							)}
+
+							<Card style={{minWidth: 200, alignSelf: "flex-start"}}>
 								<CardContent className={classes.cardContent}>
 									<FormControl className={classes.formControl}>
 										<InputLabel id="demo-simple-select-label">Open Chat in (sec)</InputLabel>
