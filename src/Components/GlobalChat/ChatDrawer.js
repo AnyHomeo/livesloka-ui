@@ -94,7 +94,33 @@ export default function ChatDrawer({open, setOpen}) {
 
 	return (
 		<div className={classes.root}>
-			<Drawer
+			<Resizable
+				defaultSize={{
+					width: 500,
+					height: "100vh",
+				}}
+			>
+				<div
+					style={{
+						marginTop: 80,
+						display: "flex",
+						justifyContent: "space-between",
+						alignItems: "center",
+					}}
+				>
+					<IconButton>{<ChevronLeftIcon />}</IconButton>
+					<div>Non Rooms</div>
+					<IconButton onClick={handleDrawerClose}>{<CloseIcon />}</IconButton>
+				</div>
+				<Divider />
+
+				{open && (
+					<div>
+						<GlobalChat />
+					</div>
+				)}
+			</Resizable>
+			{/* <Drawer
 				className={classes.drawer}
 				variant="persistent"
 				anchor="right"
@@ -110,18 +136,7 @@ export default function ChatDrawer({open, setOpen}) {
 				</div>
 				<Divider />
 				{open && <GlobalChat />}
-			</Drawer>
-
-			{/* <div className={classes.drawer}>
-					<div className={classes.drawerHeader}>
-						<IconButton>{<ChevronLeftIcon />}</IconButton>
-						<div>Non Rooms</div>
-						<IconButton onClick={handleDrawerClose}>{<CloseIcon />}</IconButton>
-					</div>
-					<Divider />
-					{open && <GlobalChat />}
-				</div> */}
-			{/* </Resizable> */}
+			</Drawer> */}
 		</div>
 	)
 }
