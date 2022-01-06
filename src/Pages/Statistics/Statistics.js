@@ -4,7 +4,7 @@ import Tab from "@material-ui/core/Tab"
 import SingleDayStats from "./SingleDayStats"
 import WhatsAppIcon from "@material-ui/icons/WhatsApp"
 import "./stats.css"
-import { Box, Button, Chip, FormControl, Icon, IconButton, InputAdornment, InputLabel, Tooltip } from "@material-ui/core"
+import { Box, Button, Chip, FormControl, Icon, IconButton, InputAdornment, InputLabel, Tooltip,Switch } from "@material-ui/core"
 import Dialog from "@material-ui/core/Dialog"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
@@ -18,6 +18,7 @@ import useDocumentTitle from "../../Components/useDocumentTitle"
 import Snackbar from "@material-ui/core/Snackbar"
 import Alert from "@material-ui/lab/Alert"
 import { getTimeZones } from "../../Services/Services"
+import { editCustomer } from './../../Services/Services';
 
 
 let days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
@@ -97,6 +98,26 @@ function Statistics() {
 		setValue(newValue)
 	}
 
+	const toggleJoinButton = async (rowData) => {
+		try {
+			await editCustomer({
+				isJoinButtonEnabledByAdmin: !rowData.isJoinButtonEnabledByAdmin,
+				_id: rowData._id,
+			})
+			setDialogData((prev) => {
+				let index = rowData.tableData.id
+				let prevData = {...prev}
+				prevData.students[index] = {
+					...rowData,
+					isJoinButtonEnabledByAdmin: !rowData.isJoinButtonEnabledByAdmin,
+				}
+				return prevData
+			})
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
 
 	return (
 		<div>
@@ -171,6 +192,23 @@ function Statistics() {
 						title="Student Details"
 						columns={[
 							{
+								title: "Join",
+								width: "1%",
+								align: "center",
+								editable: "never",
+								cellStyle: {whiteSpace: "nowrap"},
+								headerStyle: {whiteSpace: "nowrap"},
+								field: "isJoinButtonEnabledByAdmin",
+								render: (rowData) => (
+									<Switch
+										onChange={() => toggleJoinButton(rowData)}
+										checked={rowData.isJoinButtonEnabledByAdmin}
+										name="isJoinButtonEnabledByAdmin"
+										inputProps={{"aria-label": "secondary checkbox"}}
+									/>
+								),
+							},
+							{
 								field: "isStudentJoined",
 								title: "Present",
 								type: "boolean",
@@ -218,7 +256,7 @@ function Statistics() {
 							},
 							{
 								field: "email",
-								title: "Email",
+								title: "User Id",
 								tooltip: "Sort by Email",
 							},
 							{
@@ -233,7 +271,7 @@ function Statistics() {
 													window.open(
 														`https://api.whatsapp.com/send?phone=${rowData.whatsAppnumber.indexOf("+") !== -1
 															? rowData.whatsAppnumber.split("+")[1].split(" ").join("")
-															: rowData.whatsAppnumber.split(" ").join("")
+															: rowData.countryCode ? rowData.countryCode + rowData.whatsAppnumber.split(" ").join("") : rowData.whatsAppnumber.split(" ").join("")
 														}`
 													)
 												}
@@ -241,7 +279,7 @@ function Statistics() {
 												<WhatsAppIcon />
 											</IconButton>
 										</Tooltip>
-										{rowData.whatsAppnumber}
+										{rowData.countryCode} {rowData.whatsAppnumber}
 									</div>
 								),
 							},

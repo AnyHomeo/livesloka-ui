@@ -36,29 +36,6 @@ const thumbsContainer = {
 	marginTop: 16,
 }
 
-const thumb = {
-	display: "inline-flex",
-	borderRadius: 2,
-	marginBottom: 8,
-	marginRight: 8,
-	width: 100,
-	height: 100,
-	padding: 4,
-	boxSizing: "border-box",
-}
-
-const thumbInner = {
-	display: "flex",
-	minWidth: 0,
-	overflow: "hidden",
-}
-
-const img = {
-	display: "block",
-	width: "auto",
-	height: "100%",
-}
-
 function NotificationSettings() {
 	const [notificationImage, setnotificationImage] = useState()
 	const {getRootProps, getInputProps} = useDropzone({
@@ -85,7 +62,7 @@ function NotificationSettings() {
 		message: "",
 		severity: "error",
 	})
-	const {width, height} = useWindowDimensions()
+	const {width} = useWindowDimensions()
 	const [allClassNames, setAllClassNames] = useState([])
 	const [selectedClassNames, setSelectedClassNames] = useState([])
 	const [allTeachers, setAllTeachers] = useState([])
@@ -244,7 +221,7 @@ function NotificationSettings() {
 					console.log(err)
 				})
 		}
-	}, [])
+	}, [allTeachers.length])
 
 	const thumbs =
 		notificationImage &&
@@ -252,6 +229,7 @@ function NotificationSettings() {
 			<div key={file.name}>
 				<div>
 					<img
+						alt=""
 						src={URL.createObjectURL(file)}
 						style={{width: 500, height: 140, objectFit: "cover"}}
 					/>

@@ -394,7 +394,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 				},
 				paidTill: {
 					selected: settings.includes("paidTill"),
-					name: "Subscribed Till",
+					name: "Due Date",
 				},
 				oneToOne: {selected: settings.includes("oneToOne"), name: "Group"},
 				requestedSubjects: {
@@ -729,7 +729,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					),
 				},
 				{
-					title: "Subscribed Till",
+					title: "Due Date",
 					field: "paidTill",
 					width: "1%",
 					type: "date",
