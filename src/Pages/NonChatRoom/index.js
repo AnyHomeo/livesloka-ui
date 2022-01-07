@@ -5,6 +5,7 @@ import {useParams} from "react-router"
 import {makeStyles} from "@material-ui/core/styles"
 import {
 	Box,
+	Chip,
 	FormControl,
 	FormControlLabel,
 	InputLabel,
@@ -30,10 +31,22 @@ const ChatRoom = () => {
 	const history = useHistory()
 	const useStyles = makeStyles({
 		root: {
-			flexGrow: 1,
+			flex: "0.75 1",
+			backgroundImage: `url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1124&q=100')`,
+			backgroundSize: "cover",
 		},
 		formControl: {
 			minWidth: 120,
+		},
+		card: {
+			minWidth: 200,
+			alignSelf: "flex-start",
+			background: `rgba(0, 0, 0, 0.25)`,
+			boxShadow: `0 8px 32px 0 rgba(31, 38, 135, 0.37)`,
+			backdropFilter: `blur(4px)`,
+			borderRadius: `10px`,
+			border: `1px solid rgba(255, 255, 255, 0.18)`,
+			color: "#fff",
 		},
 		cardContent: {
 			display: "flex",
@@ -80,14 +93,16 @@ const ChatRoom = () => {
 		axios
 			.get(`${process.env.REACT_APP_API_KEY}/getNonChatConfig`)
 			.then(({data}) => {
-				const {show, time, responseMessages} = data[0]
+				if (data[0]) {
+					const {show, time, responseMessages} = data[0]
+					console.log(data)
 
-				setTime(time)
-				SetIsClosed(show)
-				setResponses(
-					responseMessages.map((el) => ({id: Math.floor(Math.random() * 10000), text: el}))
-				)
-				// console.log(responseMessages.map((el, idx) => ({id: idx, text: el})))
+					setTime(time)
+					SetIsClosed(show)
+					setResponses(
+						responseMessages.map((el) => ({id: Math.floor(Math.random() * 10000), text: el}))
+					)
+				}
 			})
 			.catch((err) => {
 				console.log(err)
@@ -117,17 +132,12 @@ const ChatRoom = () => {
 				{!!roomID ? (
 					<NonChat />
 				) : (
-					<Paper
-						className={classes.root}
-						style={{
-							flex: "0.75 1",
-						}}
-					>
+					<Paper className={classes.root}>
 						<Tabs
 							value={value}
 							onChange={handleChange}
-							indicatorColor="primary"
-							textColor="primary"
+							indicatorColor="secondary"
+							textColor="secondary"
 							centered
 						>
 							<Tab label="Room" />
@@ -142,16 +152,28 @@ const ChatRoom = () => {
 								</div>
 							)}
 
-							<Card style={{minWidth: 200, alignSelf: "flex-start"}}>
+							<Card className={classes.card}>
 								<CardContent className={classes.cardContent}>
 									<FormControl className={classes.formControl}>
-										<InputLabel id="demo-simple-select-label">Open Chat in (sec)</InputLabel>
+										<InputLabel
+											id="demo-simple-select-label"
+											style={{
+												color: "#fff",
+											}}
+										>
+											Open Chat in (sec)
+										</InputLabel>
 										<Select
 											labelId="demo-simple-select-label"
 											id="demo-simple-select"
 											value={time}
 											onChange={handleChangeSeconds}
 											fullWidth
+											style={{
+												borderColor: "#fff",
+												color: "#fff",
+												textAlign: "center",
+											}}
 										>
 											<MenuItem value={1}>1</MenuItem>
 											<MenuItem value={3}>3</MenuItem>

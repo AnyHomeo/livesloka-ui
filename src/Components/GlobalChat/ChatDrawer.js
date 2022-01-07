@@ -1,7 +1,7 @@
 import React from "react"
 import {makeStyles, useTheme} from "@material-ui/core/styles"
 import Drawer from "@material-ui/core/Drawer"
-
+import {Resizable} from "re-resizable"
 import Divider from "@material-ui/core/Divider"
 import IconButton from "@material-ui/core/IconButton"
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft"
@@ -21,6 +21,7 @@ const drawerWidth = 350
 const useStyles = makeStyles((theme) => ({
 	root: {
 		display: "flex",
+		position: "relative",
 	},
 	appBar: {
 		transition: theme.transitions.create(["margin", "width"], {
@@ -96,8 +97,8 @@ export default function ChatDrawer({open, setOpen}) {
 		<div className={classes.root}>
 			<Resizable
 				defaultSize={{
-					width: 500,
-					height: "100vh",
+					width: 360,
+					height: "80vh",
 				}}
 			>
 				<div
@@ -114,13 +115,8 @@ export default function ChatDrawer({open, setOpen}) {
 				</div>
 				<Divider />
 
-				{open && (
-					<div>
-						<GlobalChat />
-					</div>
-				)}
-			</Resizable>
-			{/* <Drawer
+				{open && <GlobalChat />}
+				{/* <Drawer
 				className={classes.drawer}
 				variant="persistent"
 				anchor="right"
@@ -137,6 +133,7 @@ export default function ChatDrawer({open, setOpen}) {
 				<Divider />
 				{open && <GlobalChat />}
 			</Drawer> */}
+			</Resizable>
 		</div>
 	)
 }

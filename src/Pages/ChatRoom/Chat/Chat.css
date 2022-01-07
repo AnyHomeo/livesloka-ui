@@ -99,7 +99,14 @@
 	border: none;
 	margin: 0 10px 0px 10px;
 }
-
+.chat_footer > form > textarea {
+	flex: 1;
+	border-radius: 30px;
+	padding: 10px;
+	border: none;
+	margin: 0 10px 0px 10px;
+	overflow: auto;
+}
 .chat__message-body {
 	position: relative;
 	margin: 25px 0;

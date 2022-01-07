@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from "react"
-import {Avatar, Button, IconButton} from "@material-ui/core"
+import {Avatar, Button, Chip, IconButton} from "@material-ui/core"
 import SendIcon from "@material-ui/icons/Send"
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon"
 import {useHistory} from "react-router-dom"
@@ -35,6 +35,8 @@ function MainGlobalChat({roomID}) {
 	// const [showAssign, setshowAssign] = useState(false)
 	const [messages, setMessages] = useState([])
 	const lastElement = useRef(null)
+	const [responses, setResponses] = React.useState([])
+
 	useEffect(() => {
 		socket = io.connect(process.env.REACT_APP_API_KEY)
 
@@ -50,6 +52,7 @@ function MainGlobalChat({roomID}) {
 
 	useEffect(() => {
 		if (roomID) {
+			console.log("reloadingngngn")
 			axios.get(`${process.env.REACT_APP_API_KEY}/nonroom/${roomID}`).then(({data}) => {
 				const allMsgs = data.messages
 
@@ -119,6 +122,13 @@ function MainGlobalChat({roomID}) {
 		if (!message) {
 			return
 		}
+		handelSendMessage(message)
+
+		setMessage("")
+	}
+
+	const handelSendMessage = (message) => {
+		console.log(message)
 		const role = getRole === 3 ? 3 : 4
 		socket.emit(
 			"messageFromNonRoomAdmin",
@@ -140,8 +150,6 @@ function MainGlobalChat({roomID}) {
 			})
 			return newState
 		})
-
-		setMessage("")
 	}
 
 	const typingTimeout = () => {
@@ -184,18 +192,30 @@ function MainGlobalChat({roomID}) {
 				await axios.post(`${process.env.REACT_APP_API_KEY}/deleteNonChat`, {
 					roomID,
 				})
-				history.replace("/nonroom")
+				// go back
 			} catch (error) {
 				console.log(error)
 			}
 		})
 	}
+	useEffect(() => {
+		axios
+			.get(`${process.env.REACT_APP_API_KEY}/getNonChatConfig`)
+			.then(({data}) => {
+				const {responseMessages} = data[0]
+				setResponses(responseMessages)
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+	}, [])
+
 	return (
 		<div className="chat">
 			<div className="chat_header">
 				<Avatar
 					style={{
-						backgroundColor: `${getRandomColor()}`,
+						backgroundColor: `#222831`,
 					}}
 				>
 					{" "}
@@ -222,7 +242,7 @@ function MainGlobalChat({roomID}) {
 			</div>
 			<div
 				className="chat_body"
-				style={{minHeight: "calc(100vh - 208px)", maxHeight: "calc(100vh - 208px)"}}
+				style={{minHeight: "calc(100vh - 280px)", maxHeight: "calc(100vh - 280px)"}}
 			>
 				{messages.map((message, idx) => (
 					<div className="chat__message-body" key={idx}>
@@ -296,6 +316,32 @@ function MainGlobalChat({roomID}) {
 						<span className="chat_name">{room.name}</span>
 						{isTyping.message}
 					</p>
+				)}
+				{!!responses && (
+					<div
+						style={{
+							padding: "15px 5px",
+							overflowX: "auto",
+							display: "flex",
+							justifyContent: "flex-start",
+							gap: "10px",
+						}}
+					>
+						{responses.map((el, idx) => (
+							<Chip
+								label={el}
+								key={idx}
+								variant="outlined"
+								onClick={() => {
+									handelSendMessage(el)
+								}}
+								style={{
+									maxWidth: "300px",
+									cursor: "pointer",
+								}}
+							/>
+						))}
+					</div>
 				)}
 				<div ref={lastElement}></div>
 			</div>

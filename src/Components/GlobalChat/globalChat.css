@@ -15,7 +15,7 @@
 	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
 .chatbot__message-window {
-	height: calc(100vh - 140px);
+	height: calc(100vh - 200px);
 	padding: 40px 20px 20px;
 	background-color: #fff;
 	overflow-x: none;
@@ -25,12 +25,12 @@
 	background-position: center;
 }
 .chathome__message-window {
-	min-height: calc(100vh - 140px);
+	min-height: calc(100vh - 200px);
 	padding: 10px 20px 2px 20px;
 	background-color: #fff;
 	overflow-x: none;
 	flex-grow: 1;
-	max-height: calc(100vh - 140px);
+	max-height: calc(100vh - 200px);
 	overflow: auto;
 }
 .chathome__entry {

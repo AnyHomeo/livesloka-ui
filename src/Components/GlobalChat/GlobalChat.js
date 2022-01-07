@@ -2,17 +2,7 @@ import React, {useCallback, useEffect, useState} from "react"
 import axios from "axios"
 import {isAutheticated} from "../../auth"
 import {io} from "socket.io-client"
-import {
-	Avatar,
-	Divider,
-	IconButton,
-	List,
-	ListItem,
-	ListItemAvatar,
-	ListItemText,
-	ListSubheader,
-	TextField,
-} from "@material-ui/core"
+import {IconButton, List, TextField} from "@material-ui/core"
 import SingleGlobalChat from "./SingleGlobalChat"
 import MainGlobalChat from "./MainGlobalChat"
 import ChevronLeft from "@material-ui/icons/ChevronLeft"
@@ -88,9 +78,8 @@ const GlobalChat = () => {
 	return (
 		<div>
 			<IconButton
-				style={{position: "absolute", top: "8px", left: "13px", zIndex: 100}}
+				style={{position: "absolute", top: "80px", left: "6px", zIndex: 100}}
 				onClick={() => {
-					console.log("clicked buttonnn")
 					setOpen(null)
 				}}
 			>
