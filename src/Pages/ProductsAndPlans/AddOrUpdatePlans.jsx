@@ -91,6 +91,7 @@ export default function AddPlans({
 				enqueueSnackbar("All fields are required", {
 					variant: "warning",
 				})
+				setLoading(false)
 				return
 			}
 			createPlans({

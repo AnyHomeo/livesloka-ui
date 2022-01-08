@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useEffect, useMemo, useState} from "react"
 import "./scheduler.css"
 import OccupancyBars from "./OccupancyBars"
 import useWindowDimensions from "../../../Components/useWindowDimensions"
@@ -43,6 +43,7 @@ import useDocumentTitle from "../../../Components/useDocumentTitle"
 import MaterialTable from "material-table"
 import WhatsAppIcon from "@material-ui/icons/WhatsApp"
 import OutlinedInput from "@material-ui/core/OutlinedInput"
+import { getData } from './../../../Services/Services';
 
 const times = [
 	"12:00 AM-12:30 AM",
@@ -181,6 +182,7 @@ function Scheduler() {
 	const [loading, setLoading] = useState(false)
 	const [toggleShiftScheduleMode, setToggleShiftScheduleMode] = useState(false)
 	const [options, setOptions] = useState({});
+	const [timeZones, setTimeZones] = useState([]);
 
 	useEffect(() => {
 		getAllSchedulesData()
@@ -192,6 +194,15 @@ function Scheduler() {
 			setAllSchedules(data.data.allSchedules)
 		})
 	}
+
+	useEffect(() => {
+		getData("Time Zone").then(response => {
+			setTimeZones(response.data.result)
+		})
+		.catch(err => {
+			console.log(err)
+		})
+	},[])
 
 	const deleteSchedule = async () => {
 		try {
@@ -332,6 +343,13 @@ function Scheduler() {
 		}
 	},[teacherId])
 
+	const timeZoneLookup = useMemo(() => timeZones.reduce((acc,zone)=>{
+		acc[zone.id] = zone.timeZoneName
+		return acc
+	},{}),[timeZones])
+
+	console.log(timeZoneLookup)
+
 	return (
 		<>
 			<Backdrop style={{zIndex:5000}} open={loading}>
@@ -436,6 +454,12 @@ function Scheduler() {
 											field: "lastName",
 											title: "Last Name",
 											tooltip: "Sort by Last Name",
+										},
+										{
+											field:"timeZoneId",
+											title:"Timezone",
+											tooltip:"Timezone of customer",
+											lookup:timeZoneLookup
 										},
 										{
 											field: "numberOfClassesBought",

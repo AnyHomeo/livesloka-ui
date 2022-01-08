@@ -52,13 +52,14 @@ import {getSettings, updateSettings} from "../../../Services/Services"
 import axios from "axios"
 import StudentHistoryTable from "./StudentsHistoryTable"
 import {useHistory} from "react-router-dom"
-import {Smartphone, X} from "react-feather"
+import {DollarSign, Smartphone, X} from "react-feather"
 import useDocumentTitle from "../../../Components/useDocumentTitle"
 import MoreModal from "./MoreModal"
 import AnalogClockTime from "../../../Components/AnalogClockTime"
 import RewardsTable from "./RewardsTable"
 import {Copy} from 'react-feather';
 import { Container } from '@material-ui/core';
+import EditPlans from './EditPlans';
 
 const copyToClipboard = (text) => {
 	var textField = document.createElement("textarea")
@@ -302,6 +303,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 	const [moreOptionSelectedData, setMoreOptionSelectedData] = useState()
 	const [analogClockOpen, setAnalogClockOpen] = useState(false)
 	const [rewardsModalOpen, setRewardsModalOpen] = useState(undefined)
+	const [plansCustomerId, setPlansCustomerId] = useState("");
 
 	const Alert = (props) => <MuiAlert elevation={6} variant="filled" {...props} />
 	const fetchData = useCallback(async () => {
@@ -392,7 +394,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 				},
 				paidTill: {
 					selected: settings.includes("paidTill"),
-					name: "Subscribed Till",
+					name: "Due Date",
 				},
 				oneToOne: {selected: settings.includes("oneToOne"), name: "Group"},
 				requestedSubjects: {
@@ -727,7 +729,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					),
 				},
 				{
-					title: "Subscribed Till",
+					title: "Due Date",
 					field: "paidTill",
 					width: "1%",
 					type: "date",
@@ -1144,7 +1146,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 	return (
 		<>
 			{analogClockOpen ? <AnalogClockTime /> : null}
-
+			<EditPlans customerId={plansCustomerId} setCustomerId={setPlansCustomerId} />
 			<MoreModal
 				open={moreOptionOpen}
 				setOpen={setMoreOptionOpen}
@@ -1447,18 +1449,10 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					}}
 					actions={[
 						(rowData) => ({
-							icon: () => (
-								<SmsOutlinedIcon
-									style={{
-										color: "#3f51B5",
-									}}
-								/>
-							),
-							tooltip: "Add comment",
+							icon: () => <DollarSign/>,
+							tooltip: "Update Plans",
 							onClick: (event, rowData) => {
-								setOpen(true)
-								setName(rowData.firstName)
-								setId(rowData._id)
+								setPlansCustomerId(rowData._id)
 							},
 						}),
 						{

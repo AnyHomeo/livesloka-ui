@@ -64,6 +64,9 @@ function SingleDayStats({day, value, setDialogOpen, setDialogData, refresh, aler
 	const [otherSchedules, setOtherSchedules] = useState({})
 	const [allAgents, setAllAgents] = useState({})
 
+	let todayDay = moment().get("day")
+	let daysToAddToday = value >= todayDay ? (value - todayDay) : (7 - (todayDay - value))
+
 	useEffect(() => {
 		socket.on("teacher-joined", ({scheduleId}) => {
 			setTodayData((prev) => {
@@ -119,13 +122,13 @@ function SingleDayStats({day, value, setDialogOpen, setDialogData, refresh, aler
 			let date = new Date().toLocaleString("en-US", {
 				timeZone: "Asia/Kolkata",
 			})
-			const {slot, secondsLeft} = getSlotFromTime(date)
+			const {slot } = getSlotFromTime(date)
 			setSelectedSlot(slot)
 			setInterval(() => {
 				let date = new Date().toLocaleString("en-US", {
 					timeZone: "Asia/Kolkata",
 				})
-				const {slot, secondsLeft} = getSlotFromTime(date)
+				const {slot} = getSlotFromTime(date)
 				setSelectedSlot(slot)
 			}, 30 * 60 * 1000)
 		}, (secondsLeft + 3) * 1000)
@@ -136,7 +139,7 @@ function SingleDayStats({day, value, setDialogOpen, setDialogData, refresh, aler
 			.catch((err) => {
 				console.log(err)
 			})
-		getTodayLeaves(moment().set("day", value).format("YYYY-MM-DD"))
+		getTodayLeaves(moment().add(daysToAddToday,"day").format("YYYY-MM-DD"))
 			.then((data) => {
 				setLeaves(data.data.result)
 			})
@@ -160,7 +163,7 @@ function SingleDayStats({day, value, setDialogOpen, setDialogData, refresh, aler
 			.catch((err) => {
 				console.log(err)
 			})
-	}, [refresh])
+	}, [refresh,day])
 
 	useEffect(() => {
 		getAdminAssignedClasses()
