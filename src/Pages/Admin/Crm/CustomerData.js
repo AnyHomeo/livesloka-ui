@@ -1,7 +1,8 @@
 import React, {useEffect, useState, useRef, useCallback} from "react"
 import MaterialTable from "material-table"
 import {makeStyles} from "@material-ui/core/styles"
-import SmsOutlinedIcon from "@material-ui/icons/SmsOutlined"
+import {Link} from "react-router-dom"
+import {Edit} from "react-feather"
 import useWindowDimensions from "../../../Components/useWindowDimensions"
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined"
 import WhatsAppIcon from "@material-ui/icons/WhatsApp"
@@ -57,9 +58,9 @@ import useDocumentTitle from "../../../Components/useDocumentTitle"
 import MoreModal from "./MoreModal"
 import AnalogClockTime from "../../../Components/AnalogClockTime"
 import RewardsTable from "./RewardsTable"
-import {Copy} from 'react-feather';
-import { Container } from '@material-ui/core';
-import EditPlans from './EditPlans';
+import {Copy} from "react-feather"
+import {Container} from "@material-ui/core"
+import EditPlans from "./EditPlans"
 
 const copyToClipboard = (text) => {
 	var textField = document.createElement("textarea")
@@ -303,7 +304,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 	const [moreOptionSelectedData, setMoreOptionSelectedData] = useState()
 	const [analogClockOpen, setAnalogClockOpen] = useState(false)
 	const [rewardsModalOpen, setRewardsModalOpen] = useState(undefined)
-	const [plansCustomerId, setPlansCustomerId] = useState("");
+	const [plansCustomerId, setPlansCustomerId] = useState("")
 
 	const Alert = (props) => <MuiAlert elevation={6} variant="filled" {...props} />
 	const fetchData = useCallback(async () => {
@@ -691,11 +692,16 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					cellStyle: {whiteSpace: "nowrap"},
 					headerStyle: {whiteSpace: "nowrap"},
 					editable: "never",
-					render: (rowData) => (
-						<Button style={{color: "black"}} onClick={() => setRewardsModalOpen(rowData._id)}>
-							{rowData.login ? rowData.login.rewards : undefined}
-						</Button>
-					),
+					render: (rowData) => {
+						return (
+							<Button
+								style={{color: "black"}}
+								onClick={() => setRewardsModalOpen(rowData?.login?.userId)}
+							>
+								{rowData.login ? rowData.login.rewards : undefined}
+							</Button>
+						)
+					},
 				},
 				{
 					title: "Email",
@@ -840,7 +846,8 @@ const CrmDetails = ({isSummerCampStudents}) => {
 										/>
 									</Tooltip>
 								</a>
-								{rowData.countryCode}{rowData.whatsAppnumber}
+								{rowData.countryCode}
+								{rowData.whatsAppnumber}
 							</div>
 						) : (
 							""
@@ -1177,7 +1184,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 								<div>
 									<h1 className={classes.titleCard}>Statistics on Classes Left</h1>
 								</div>
-								<Grid container >
+								<Grid container>
 									<Grid item xs={6} sm={4}>
 										<Card
 											onClick={() => setFilterName("lessThanOrEqualToMinusTwo")}
@@ -1215,7 +1222,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 								<div>
 									<h1 className={classes.titleCard}>Statistics according to Class Status</h1>
 								</div>
-								<Grid container >
+								<Grid container>
 									<Grid item xs={6} sm={4}>
 										<Card
 											onClick={() => setFilterName("new")}
@@ -1249,7 +1256,6 @@ const CrmDetails = ({isSummerCampStudents}) => {
 								</Grid>
 							</Grid>
 
-							
 							<Grid item xs={12} md={6}>
 								<div>
 									<h1 className={classes.titleCard}>Statistics on Auto Demo</h1>
@@ -1449,7 +1455,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					}}
 					actions={[
 						(rowData) => ({
-							icon: () => <DollarSign/>,
+							icon: () => <DollarSign />,
 							tooltip: "Update Plans",
 							onClick: (event, rowData) => {
 								setPlansCustomerId(rowData._id)
@@ -1496,7 +1502,12 @@ const CrmDetails = ({isSummerCampStudents}) => {
 							icon: () => <Copy />,
 							tooltip: "Copy Booking Icon",
 							isFreeAction: false,
-							onClick: (e,row) => copyToClipboard(`${process.env.REACT_APP_USER_APP_URL || 'https://livesloka.com'}/booking/${row._id}`),
+							onClick: (e, row) =>
+								copyToClipboard(
+									`${process.env.REACT_APP_USER_APP_URL || "https://livesloka.com"}/booking/${
+										row._id
+									}`
+								),
 						},
 						{
 							icon: "library_add",
@@ -1693,14 +1704,29 @@ const CrmDetails = ({isSummerCampStudents}) => {
 				aria-labelledby="rewards-modal"
 				TransitionComponent={Transition}
 			>
-				<DialogTitle>
+				{console.log(rewardsModalOpen)}
+				<div style={{display: "flex", justifyContent: "space-between", padding: 15}}>
+					<div>
+						<Link to={`/update/rewards/${rewardsModalOpen}`}>
+							<IconButton>
+								<Edit />
+							</IconButton>
+						</Link>
+					</div>
+
+					<IconButton onClick={() => setRewardsModalOpen(undefined)}>
+						<X />
+					</IconButton>
+				</div>
+
+				{/* <DialogTitle>
 					<div style={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
 						<div>Rewards</div>
 						<IconButton onClick={() => setRewardsModalOpen(undefined)}>
 							<X />
 						</IconButton>
 					</div>
-				</DialogTitle>
+				</DialogTitle> */}
 				<DialogContent>
 					<RewardsTable customerId={rewardsModalOpen} />
 				</DialogContent>

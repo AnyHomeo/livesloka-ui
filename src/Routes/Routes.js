@@ -51,6 +51,7 @@ import ProductAndPlans from "../Pages/ProductsAndPlans"
 import {SubscriptionTransactions} from "../Pages/SubscriptionTransactions"
 import {Folders, Videomanager} from "../Pages/Videomanager"
 import CategorizeVideo from "../Pages/Videomanager/CategorizeVideo"
+import UpdateNumberOfBoughtRewards from "../Pages/Admin/Crm/UpdateNumberOfRewards"
 
 function Routes() {
 	return (
@@ -74,6 +75,8 @@ function Routes() {
 						<AdminRoute path="/inclass" exact component={DemoAndInclassStudents} />
 						<AdminRoute path="/update/classes" exact component={UpdateNumberOfBoughtClasses} />
 						<AdminRoute path="/update/classes/:id" exact component={UpdateNumberOfBoughtClasses} />
+						<AdminRoute path="/update/rewards" exact component={UpdateNumberOfBoughtRewards} />
+						<AdminRoute path="/update/rewards/:id" exact component={UpdateNumberOfBoughtRewards} />
 						<AdminRoute path="/zoom-dashboard" exact component={ZoomAccountDashboard} />
 						<AdminRoute path="/customer-data" exact component={CustomerData} />
 						<AdminRoute path="/customer-data-mobile" exact component={CustomerDetails} />
