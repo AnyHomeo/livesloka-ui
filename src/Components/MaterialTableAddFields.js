@@ -115,6 +115,13 @@ const MaterialTableAddFields = ({
 		if (data.length) {
 			let lengths = data.map((item) => Object.keys(item).length)
 			let v = Object.keys(data[lengths.indexOf(Math.max(...lengths))]).map((key) => {
+				if(key ==="rewards"){
+					return {
+						title: "Rewards",
+						type: "numeric",
+						field: "rewards",
+					}	
+				}
 				if (key === "subjects") {
 					return {
 						title: humanReadable(key),

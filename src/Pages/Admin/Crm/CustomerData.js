@@ -17,6 +17,7 @@ import {
 	getByUserSettings,
 	getSummerCampStudents,
 	getCustomerDatFromFilterName,
+	getCustomerRewards,
 } from "../../../Services/Services"
 import Button from "@material-ui/core/Button"
 import Dialog from "@material-ui/core/Dialog"
@@ -304,6 +305,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 	const [analogClockOpen, setAnalogClockOpen] = useState(false)
 	const [rewardsModalOpen, setRewardsModalOpen] = useState(undefined)
 	const [plansCustomerId, setPlansCustomerId] = useState("");
+	const [rewards, setRewards] = useState([]);
 
 	const Alert = (props) => <MuiAlert elevation={6} variant="filled" {...props} />
 	const fetchData = useCallback(async () => {
@@ -323,6 +325,18 @@ const CrmDetails = ({isSummerCampStudents}) => {
 			console.error(error)
 		}
 	}, [isSummerCampStudents])
+
+	useEffect(() => {
+		if(rewardsModalOpen){
+			getCustomerRewards(rewardsModalOpen)
+			.then(data =>{
+				setRewards(data.data.result.redeems)
+			})
+			.catch(error =>{
+				console.log(error)
+			})
+		}
+	}, [rewardsModalOpen])
 
 	//basic data loading
 	useEffect(() => {
@@ -692,7 +706,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					headerStyle: {whiteSpace: "nowrap"},
 					editable: "never",
 					render: (rowData) => (
-						<Button style={{color: "black"}} onClick={() => setRewardsModalOpen(rowData._id)}>
+						<Button style={{color: "black"}} onClick={() => setRewardsModalOpen(rowData.email)}>
 							{rowData.login ? rowData.login.rewards : undefined}
 						</Button>
 					),
@@ -1702,7 +1716,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					</div>
 				</DialogTitle>
 				<DialogContent>
-					<RewardsTable customerId={rewardsModalOpen} />
+					<RewardsTable customerId={rewardsModalOpen} redeems={rewards}/>
 				</DialogContent>
 			</Dialog>
 		</>
