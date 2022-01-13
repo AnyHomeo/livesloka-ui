@@ -6,10 +6,7 @@ import {IconButton, List, TextField} from "@material-ui/core"
 import SingleGlobalChat from "./SingleGlobalChat"
 import MainGlobalChat from "./MainGlobalChat"
 import ChevronLeft from "@material-ui/icons/ChevronLeft"
-import noti from "./notification.mp3"
-import coins from "./coins.mp3"
 let socket
-var audio = new Audio(noti)
 const GlobalChat = () => {
 	const getRole = isAutheticated().roleId
 	const ID = isAutheticated()._id
@@ -46,12 +43,10 @@ const GlobalChat = () => {
 					return room
 				})
 			})
-			audio.play()
 		})
 
 		socket.on("new-non-user-pinged", () => {
 			fetchRooms()
-			audio.play()
 		})
 		return () => {
 			removeListners()
