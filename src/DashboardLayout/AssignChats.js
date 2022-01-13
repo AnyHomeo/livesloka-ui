@@ -12,8 +12,13 @@ import {useHistory} from "react-router"
 import axios from "axios"
 import {isAutheticated} from "../auth"
 import {io} from "socket.io-client"
-
+import noti from "./notification.mp3"
+import newuserping from "./newuserping.mp3"
 let socket
+
+const userping = new Audio(noti)
+const newping = new Audio(newuserping)
+
 const useStyles = makeStyles({
 	list: {
 		width: 250,
@@ -40,6 +45,11 @@ const AssignChats = React.memo(() => {
 		socket = io.connect(process.env.REACT_APP_API_KEY)
 		socket.on("new-non-user-pinged", () => {
 			setNonCount((prev) => prev + 1)
+			newping.play()
+		})
+		socket.on("non-user-pinged", ({roomID}) => {
+			console.log("user pinged")
+			userping.play()
 		})
 	}, [])
 	useEffect(() => {
