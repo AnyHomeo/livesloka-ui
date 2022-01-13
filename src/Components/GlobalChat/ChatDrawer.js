@@ -11,12 +11,8 @@ import GlobalChat from "./GlobalChat"
 import {io} from "socket.io-client"
 import axios from "axios"
 import {FormControlLabel, Switch} from "@material-ui/core"
-import noti from "./notification.mp3"
-import newuserping from "./newuserping.mp3"
-let socket
 
-const userping = new Audio(noti)
-const newping = new Audio(newuserping)
+let socket
 
 const drawerWidth = 350
 
@@ -110,13 +106,6 @@ export default function ChatDrawer({open, setOpen}) {
 			.catch((err) => {
 				console.log(err)
 			})
-		socket.on("non-user-pinged", ({roomID}) => {
-			newping.play()
-		})
-
-		socket.on("new-non-user-pinged", () => {
-			userping.play()
-		})
 		return () => {
 			removeListners()
 		}
