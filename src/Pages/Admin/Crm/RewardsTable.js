@@ -7,39 +7,7 @@ import TableRow from "@material-ui/core/TableRow"
 import TableCell from "@material-ui/core/TableCell"
 import TableBody from "@material-ui/core/TableBody"
 
-function RewardsTable({customerId}) {
-	const rewardsHistory = [
-		{
-			prev: 0,
-			next: 1,
-			teacher:'Jill Mehta Bharatanatyam',
-			comment: "Teacher Absent",
-		},
-		{
-			prev: 1,
-			next: 2,
-			teacher:'Jill Mehta Bharatanatyam',
-			comment: "Teacher Absent",
-		},
-		{
-			prev: 2,
-			next: 3,
-			teacher:'Jill Mehta Bharatanatyam',
-			comment: "Teacher Absent",
-		},
-		{
-			prev: 3,
-			next: 4,
-			teacher:'Jill Mehta Bharatanatyam',
-			comment: "Teacher Absent",
-		},
-		{
-			prev: 4,
-			next: 5,
-			teacher:'Jill Mehta Bharatanatyam',
-			comment: "Teacher Absent",
-		},
-	]
+function RewardsTable({redeems}) {
 
 	return (
 		<TableContainer component={Paper}>
@@ -48,19 +16,17 @@ function RewardsTable({customerId}) {
 					<TableRow>
 						<TableCell>Previous </TableCell>
 						<TableCell>Next </TableCell>
-						<TableCell>Teacher </TableCell>
 						<TableCell align="right">Comment</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{rewardsHistory.map((row) => (
+					{redeems.map((row) => (
 						<TableRow key={row.name}>
 							<TableCell component="th" scope="row">
 								{row.prev}
 							</TableCell>
-							<TableCell align="right">{row.next}</TableCell>
-							<TableCell align="right">{row.teacher}</TableCell>
-							<TableCell align="right">{row.comment}</TableCell>
+							<TableCell align="right">{row.present}</TableCell>
+							<TableCell align="right">{row.message}</TableCell>
 						</TableRow>
 					))}
 				</TableBody>

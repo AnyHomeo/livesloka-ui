@@ -46,14 +46,14 @@ function SingleRow({
 				updatedSchedules = prevIds
 				return prevIds
 			})
-			let data = await updateSchedulesOfAdminToday(updatedSchedules)
+			await updateSchedulesOfAdminToday(updatedSchedules)
 			socket.emit("agent-assigned-class", {
 				[allAgents[isAutheticated().agentId]]: id,
 			})
 		} else {
 			let updatedSchedules = [...schedulesAssignedToMe, id]
 			setSchedulesAssignedToMe((prev) => [...prev, id])
-			let data = await updateSchedulesOfAdminToday(updatedSchedules)
+			await updateSchedulesOfAdminToday(updatedSchedules)
 			socket.emit("agent-assigned-class", {
 				[allAgents[isAutheticated().agentId]]: id,
 			})
@@ -286,7 +286,6 @@ function SingleRow({
 											top: "-1%",
 											transform: "translateX(-50%)",
 											left: "50%",
-											height: 40,
 											width: "100%",
 											borderRadius: 20,
 											height: 16,
@@ -314,7 +313,6 @@ function SingleRow({
 											height: 40,
 											width: "100%",
 											borderRadius: 20,
-											height: 16,
 											backgroundColor: "#3867d6",
 											color: "white",
 											border: "2px solid #3867d6",
@@ -340,7 +338,6 @@ function SingleRow({
 											height: 40,
 											width: "100%",
 											borderRadius: 20,
-											height: 16,
 											backgroundColor: "#130f40",
 											color: "white",
 											border: "2px solid #130f40",

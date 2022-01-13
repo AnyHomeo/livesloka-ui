@@ -17,24 +17,7 @@
 			margin: 20px auto;
 		}
 
-		.planCard{
-			height: 100%;
-			box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-			border-radius: 15px;
-			padding: 20px;
-			box-sizing: border-box;
-			position:relative;
-			display: flex;
-			align-items:center;
-			flex-direction: column;
-			gap:10px;
-			.checkbox{
-				position:absolute;
-				top:0px;
-				right:0px;
-			}
-		}
-
+		
 		.dayCard {
 			height: 100%;
 			box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -98,3 +81,22 @@
 		top: 5px;
 	}
 }
+
+.planCard{
+	height: 100%;
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+	border-radius: 15px;
+	padding: 20px;
+	box-sizing: border-box;
+	position:relative;
+	display: flex;
+	align-items:center;
+	flex-direction: column;
+	gap:10px;
+	.checkbox{
+		position:absolute;
+		top:0px;
+		right:0px;
+	}
+}
+
