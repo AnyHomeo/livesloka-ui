@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useEffect, useState} from "react"
 import {makeStyles, useTheme} from "@material-ui/core/styles"
 import Drawer from "@material-ui/core/Drawer"
 import {Resizable} from "re-resizable"
@@ -8,7 +8,11 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft"
 import CloseIcon from "@material-ui/icons/Close"
 import Chat from "@material-ui/icons/Chat"
 import GlobalChat from "./GlobalChat"
+import {io} from "socket.io-client"
+import axios from "axios"
+import {FormControlLabel, Switch} from "@material-ui/core"
 
+let socket
 const style = {
 	display: "flex",
 	alignItems: "center",
@@ -86,6 +90,7 @@ export default function ChatDrawer({open, setOpen}) {
 	// 		setOpen(true)
 	// 	}
 	// }
+	const [isClosed, SetIsClosed] = useState(false)
 
 	const handleDrawerClose = () => {
 		if (setOpen !== undefined) {
@@ -93,6 +98,38 @@ export default function ChatDrawer({open, setOpen}) {
 		}
 	}
 
+	useEffect(() => {
+		socket = io.connect(`${process.env.REACT_APP_API_KEY}/`)
+		axios
+			.get(`${process.env.REACT_APP_API_KEY}/getNonChatConfig`)
+			.then(({data}) => {
+				if (data[0]) {
+					const {show} = data[0]
+
+					SetIsClosed(show)
+				}
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+	}, [])
+	const handelClosed = async (event) => {
+		SetIsClosed(event.target.checked)
+		axios
+			.post(`${process.env.REACT_APP_API_KEY}/updateShowNonChat`, {
+				show: event.target.checked,
+			})
+			.then(({data}) => {
+				console.log(data)
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+
+		socket.emit("toggleNonChatBot", {show: event.target.checked}, (error) => {
+			if (error) alert(error)
+		})
+	}
 	return (
 		<div className={classes.root}>
 			<Resizable
@@ -110,7 +147,11 @@ export default function ChatDrawer({open, setOpen}) {
 					}}
 				>
 					<IconButton>{<ChevronLeftIcon />}</IconButton>
-					<div>Non Rooms</div>
+					<div>Livesloka.com</div>{" "}
+					<FormControlLabel
+						control={<Switch checked={isClosed} onChange={handelClosed} />}
+						label={`${isClosed ? "Open" : "Hidden"}`}
+					/>
 					<IconButton onClick={handleDrawerClose}>{<CloseIcon />}</IconButton>
 				</div>
 				<Divider />
