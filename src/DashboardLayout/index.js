@@ -41,7 +41,7 @@ const DashboardLayout = ({children}) => {
 	const classes = useStyles()
 	const [isMobileNavOpen, setMobileNavOpen] = useState(false)
 
-	const [rightChatOpen, setRightChatOpen] = useState(false)
+	const [rightChatOpen, setRightChatOpen] = useState(true)
 
 	useEffect(() => {
 		socket.on("customer-submission", ({name}) => {

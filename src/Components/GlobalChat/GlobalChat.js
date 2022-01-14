@@ -44,6 +44,10 @@ const GlobalChat = () => {
 				})
 			})
 		})
+
+		socket.on("new-non-user-pinged", () => {
+			fetchRooms()
+		})
 		return () => {
 			removeListners()
 		}
@@ -81,6 +85,7 @@ const GlobalChat = () => {
 				style={{position: "absolute", top: "80px", left: "6px", zIndex: 100}}
 				onClick={() => {
 					setOpen(null)
+					// fetchRooms()
 				}}
 			>
 				{<ChevronLeft />}
