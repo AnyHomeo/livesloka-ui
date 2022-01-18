@@ -46,7 +46,7 @@
 }
 aside.emoji-picker-react {
 	width: 90% !important;
-	position: absolute;
+	position: absolute !important;
 	bottom: -60px;
 	right: 22px;
 }
