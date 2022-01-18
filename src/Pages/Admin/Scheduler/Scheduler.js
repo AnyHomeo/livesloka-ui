@@ -43,7 +43,7 @@ import useDocumentTitle from "../../../Components/useDocumentTitle"
 import MaterialTable from "material-table"
 import WhatsAppIcon from "@material-ui/icons/WhatsApp"
 import OutlinedInput from "@material-ui/core/OutlinedInput"
-import { getData } from './../../../Services/Services';
+import {getData} from "./../../../Services/Services"
 
 const times = [
 	"12:00 AM-12:30 AM",
@@ -181,8 +181,8 @@ function Scheduler() {
 	const [refresh, setRefresh] = useState(false)
 	const [loading, setLoading] = useState(false)
 	const [toggleShiftScheduleMode, setToggleShiftScheduleMode] = useState(false)
-	const [options, setOptions] = useState({});
-	const [timeZones, setTimeZones] = useState([]);
+	const [options, setOptions] = useState({})
+	const [timeZones, setTimeZones] = useState([])
 
 	useEffect(() => {
 		getAllSchedulesData()
@@ -196,13 +196,14 @@ function Scheduler() {
 	}
 
 	useEffect(() => {
-		getData("Time Zone").then(response => {
-			setTimeZones(response.data.result)
-		})
-		.catch(err => {
-			console.log(err)
-		})
-	},[])
+		getData("Time Zone")
+			.then((response) => {
+				setTimeZones(response.data.result)
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+	}, [])
 
 	const deleteSchedule = async () => {
 		try {
@@ -301,58 +302,64 @@ function Scheduler() {
 	}, [scheduleId, allSchedules])
 
 	useEffect(() => {
-		if(teacherId){
+		if (teacherId) {
 			getOptionsOfATeacher(teacherId)
-			.then(response => {
-				setOptions(response.data.result.reduce((acc,option) => {
-					const { options, schedules, customer} = option
-					options.forEach((option) => {
-						Object.keys(option).forEach((day) => {
-							if(day !== '_id'){
-								let slot = option[day]
-								if(!acc[slot]){
-									acc[slot] = [customer.firstName]
-								} else {
-									acc[slot].push(customer.firstName)
-								}
-							}
-						})
-					})
-
-					schedules.forEach((schedule) => {
-						const { slots } = schedule
-						Object.keys(slots).forEach((day) => {
-							let slot = slots[day]
-							console.log(slot)
-							slot.forEach((slot) => {
-								if(!acc[slot]){
-									acc[slot] = [customer.firstName]
-								} else {
-									acc[slot].push(customer.firstName)
-								}
+				.then((response) => {
+					setOptions(
+						response.data.result.reduce((acc, option) => {
+							const {options, schedules, customer} = option
+							options.forEach((option) => {
+								Object.keys(option).forEach((day) => {
+									if (day !== "_id") {
+										let slot = option[day]
+										if (!acc[slot]) {
+											acc[slot] = [customer.firstName]
+										} else {
+											acc[slot].push(customer.firstName)
+										}
+									}
+								})
 							})
-						})
-					})
 
-					return acc
-				},{}))
-			})
-			.catch(err => {
-				console.log(err)
-			})
+							schedules.forEach((schedule) => {
+								const {slots} = schedule
+								Object.keys(slots).forEach((day) => {
+									let slot = slots[day]
+									console.log(slot)
+									slot.forEach((slot) => {
+										if (!acc[slot]) {
+											acc[slot] = [customer.firstName]
+										} else {
+											acc[slot].push(customer.firstName)
+										}
+									})
+								})
+							})
+
+							return acc
+						}, {})
+					)
+				})
+				.catch((err) => {
+					console.log(err)
+				})
 		}
-	},[teacherId])
+	}, [teacherId])
 
-	const timeZoneLookup = useMemo(() => timeZones.reduce((acc,zone)=>{
-		acc[zone.id] = zone.timeZoneName
-		return acc
-	},{}),[timeZones])
+	const timeZoneLookup = useMemo(
+		() =>
+			timeZones.reduce((acc, zone) => {
+				acc[zone.id] = zone.timeZoneName
+				return acc
+			}, {}),
+		[timeZones]
+	)
 
 	console.log(timeZoneLookup)
 
 	return (
 		<>
-			<Backdrop style={{zIndex:5000}} open={loading}>
+			<Backdrop style={{zIndex: 5000}} open={loading}>
 				<CircularProgress color="inherit" />
 			</Backdrop>
 			<OccupancyBars
@@ -456,10 +463,10 @@ function Scheduler() {
 											tooltip: "Sort by Last Name",
 										},
 										{
-											field:"timeZoneId",
-											title:"Timezone",
-											tooltip:"Timezone of customer",
-											lookup:timeZoneLookup
+											field: "timeZoneId",
+											title: "Timezone",
+											tooltip: "Timezone of customer",
+											lookup: timeZoneLookup,
 										},
 										{
 											field: "numberOfClassesBought",
@@ -630,14 +637,14 @@ function Scheduler() {
 							/>
 						</FormGroup>
 						<FormControlLabel
-								control={
-									<Switch
-										checked={toggleShiftScheduleMode}
-										onChange={() => setToggleShiftScheduleMode((prev) => !prev)}
-									/>
-								}
-								label="DayLight Savings"
-							/>
+							control={
+								<Switch
+									checked={toggleShiftScheduleMode}
+									onChange={() => setToggleShiftScheduleMode((prev) => !prev)}
+								/>
+							}
+							label="DayLight Savings"
+						/>
 					</div>
 					<div
 						style={{
@@ -677,7 +684,7 @@ function Scheduler() {
 							</div>
 						</div>
 					</div>
-					<div style={{width: "100%", display: "flex", flexDirection: "row"}}>
+					<div style={{width: "100%", display: "flex", flexDirection: "row", position: "relative"}}>
 						<div
 							style={{
 								width: width < 700 ? "10%" : "5%",

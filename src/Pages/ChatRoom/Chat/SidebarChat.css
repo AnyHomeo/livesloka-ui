@@ -52,3 +52,7 @@ a {
 	flex: 0.25 1;
 	max-width: 374px;
 }
+
+.sidebarChat_head2 {
+	flex: 0.25 1;
+}
