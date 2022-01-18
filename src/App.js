@@ -1,6 +1,6 @@
 import "react-perfect-scrollbar/dist/css/styles.css"
-import React, {useEffect} from "react"
-import {Snackbar, ThemeProvider} from "@material-ui/core"
+import React, {useCallback, useEffect} from "react"
+import {ThemeProvider} from "@material-ui/core"
 import GlobalStyles from "./Components/GlobalStyles"
 import theme from "./theme"
 import Routes from "./Routes/Routes"
@@ -12,22 +12,29 @@ import {isAutheticated} from "./auth"
 import {ToastContainer, toast} from "react-toastify"
 
 import "react-toastify/dist/ReactToastify.css"
-import {Link, useHistory, useLocation} from "react-router-dom"
+import {useHistory, useLocation} from "react-router-dom"
 let socket
 
 const queryClient = new QueryClient()
 const App = () => {
 	if (process.env.REACT_APP_STAGING === "PROD") console.log = function no_console() {}
 
-	let users = []
 	const history = useHistory()
 	const location = useLocation()
+
+	const handelToast = useCallback(
+		(roomID) => {
+			history.replace(`/room/${roomID}`)
+		},
+		[history]
+	)
+
 	useEffect(() => {
 		socket = io.connect(process.env.REACT_APP_API_KEY)
 		if (isAutheticated().roleId !== 3) {
+			let users = []
 			socket.on("userWating", ({userID, roomID, typeMessage}) => {
 				if (!users.find((el) => el === userID)) {
-					// users.push(userID)
 					console.log("/room/" + roomID)
 
 					if (location.pathname === `/room/${roomID}`) {
@@ -55,7 +62,7 @@ const App = () => {
 			})
 		}
 		return removeListners
-	}, [location])
+	}, [location, handelToast])
 
 	useEffect(() => {
 		if (isAutheticated().roleId !== 3) {
@@ -82,12 +89,9 @@ const App = () => {
 			})
 		}
 		return removeListners
-	}, [location])
+	}, [location, handelToast])
 	const removeListners = () => {
 		socket.removeAllListeners()
-	}
-	const handelToast = (roomID) => {
-		history.replace(`/room/${roomID}`)
 	}
 
 	return (
