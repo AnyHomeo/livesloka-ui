@@ -2,6 +2,8 @@ import React, {useState, useEffect, useRef} from "react"
 import {Avatar, Button, Chip, IconButton} from "@material-ui/core"
 import SendIcon from "@material-ui/icons/Send"
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon"
+import Picker from "emoji-picker-react"
+
 import {useHistory} from "react-router-dom"
 import axios from "axios"
 
@@ -36,6 +38,13 @@ function MainGlobalChat({roomID}) {
 	const [messages, setMessages] = useState([])
 	const lastElement = useRef(null)
 	const [responses, setResponses] = React.useState([])
+
+	const [showPicker, setShowPicker] = useState(false)
+
+	const onEmojiClick = (event, emojiObject) => {
+		setMessage((prevInput) => prevInput + emojiObject.emoji)
+		setShowPicker(false)
+	}
 
 	useEffect(() => {
 		socket = io.connect(process.env.REACT_APP_API_KEY)
@@ -327,27 +336,37 @@ function MainGlobalChat({roomID}) {
 							gap: "10px",
 						}}
 					>
-						{responses.map((el, idx) => (
-							<Chip
-								label={el}
-								key={idx}
-								variant="outlined"
-								onClick={() => {
-									handelSendMessage(el)
-								}}
-								style={{
-									maxWidth: "300px",
-									cursor: "pointer",
-								}}
-							/>
-						))}
+						{responses.map((el, idx) => {
+							let resp = el.split("~")
+							let message = resp.length > 1 ? resp[1] : resp[0]
+							return (
+								<Chip
+									label={resp[0]}
+									key={idx}
+									variant="outlined"
+									onClick={() => {
+										// handelSendMessage(message)
+										setMessage(message)
+									}}
+									style={{
+										maxWidth: "300px",
+										cursor: "pointer",
+									}}
+								/>
+							)
+						})}
 					</div>
 				)}
 				<div ref={lastElement}></div>
 			</div>
 			<div className="chat_footer">
+				<InsertEmoticonIcon
+					style={{cursor: "pointer"}}
+					onClick={() => setShowPicker((val) => !val)}
+				/>
+				{showPicker && <Picker pickerStyle={{width: "100%"}} onEmojiClick={onEmojiClick} />}
 				<form onSubmit={sendMessage}>
-					<input
+					{/* <input
 						value={message}
 						onChange={handelChange}
 						type="text"
@@ -355,7 +374,16 @@ function MainGlobalChat({roomID}) {
 							outline: "none",
 						}}
 						placeholder="Type a message"
-					/>
+					/> */}
+					<textarea
+						value={message}
+						onChange={handelChange}
+						type="text"
+						style={{
+							outline: "none",
+						}}
+						placeholder="Type a message"
+					></textarea>
 				</form>{" "}
 				<IconButton onClick={sendMessage}>
 					<SendIcon />

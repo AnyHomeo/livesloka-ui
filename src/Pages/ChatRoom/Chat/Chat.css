@@ -101,11 +101,17 @@
 }
 .chat_footer > form > textarea {
 	flex: 1;
-	border-radius: 30px;
-	padding: 10px;
+	/* border-radius: 30px;
+	padding: 10px; */
 	border: none;
 	margin: 0 10px 0px 10px;
 	overflow: auto;
+	border-radius: 20px;
+	padding: 5px 11px;
+	resize: none;
+}
+.chat_footer > form > textarea::-webkit-scrollbar {
+	display: none;
 }
 .chat__message-body {
 	position: relative;

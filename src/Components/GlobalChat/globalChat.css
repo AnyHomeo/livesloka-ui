@@ -44,3 +44,9 @@
 	border-bottom-right-radius: 10px;
 	margin-top: auto;
 }
+aside.emoji-picker-react {
+	width: 90% !important;
+	position: absolute;
+	bottom: -60px;
+	right: 22px;
+}
