@@ -54,7 +54,7 @@ function SingleGlobalChat({room}) {
 				<div className="sidebarChat_info">
 					{room.ping ? <p style={{fontWeight: 700}}>{username} 💬</p> : <p>{username}</p>}
 					<p style={{fontSize: 12, display: "flex", alignItems: "center"}}>
-						{lastMessage(room)} {messageSeen === false ? <Replay></Replay> : null}
+						{lastMessage(room)} {messageSeen === false ? <Replay fontSize="small"></Replay> : null}
 					</p>
 
 					{getRole === 3 &&
@@ -66,6 +66,7 @@ function SingleGlobalChat({room}) {
 										aria-label="delete"
 										onClick={(e) => handelAssign(e)}
 										className="assign-btn"
+										style={{top: "-15%"}}
 									>
 										<Add />
 									</IconButton>
