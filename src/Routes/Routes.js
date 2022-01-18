@@ -52,6 +52,8 @@ import {SubscriptionTransactions} from "../Pages/SubscriptionTransactions"
 import {Folders, Videomanager} from "../Pages/Videomanager"
 import CategorizeVideo from "../Pages/Videomanager/CategorizeVideo"
 import UpdateNumberOfBoughtRewards from "../Pages/Admin/Crm/UpdateNumberOfRewards"
+import InvoicePages from "../Pages/Accountant/InvoicePages"
+import RoleManagement from "../Pages/RoleManagement/RoleManagement"
 
 function Routes() {
 	return (
@@ -131,6 +133,8 @@ function Routes() {
 						<AdminRoute path="/video-folders" exact component={Folders} />
 						<AdminRoute path="/video-folders/:id" exact component={Videomanager} />
 						<AdminRoute path="/video-folders/:type/:id" exact component={CategorizeVideo} />
+						<AdminRoute path="/accountant/invoice" exact component={InvoicePages} />
+						<AdminRoute path="/role-management" exact component={RoleManagement} />
 					</DashboardLayout>
 				</SnackbarProvider>
 				<Route path="*" component={NotFoundView} />
