@@ -128,7 +128,9 @@ function SingleRow({
 								cursor: "pointer",
 							}}
 						>
-					<div className="new-old-customer" >{singleData.students.some((student) => student.autoDemo) ? "N" : "O"}</div>
+							<div className="new-old-customer">
+								{singleData.students.some((student) => student.autoDemo) ? "N" : "O"}
+							</div>
 
 							<div
 								className="teacher-name"
@@ -310,7 +312,7 @@ function SingleRow({
 											top: "-1%",
 											transform: "translateX(-50%)",
 											left: "50%",
-											height: 40,
+											height: 16,
 											width: "100%",
 											borderRadius: 20,
 											backgroundColor: "#3867d6",

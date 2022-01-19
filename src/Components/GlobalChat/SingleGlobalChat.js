@@ -42,7 +42,7 @@ function SingleGlobalChat({room}) {
 			})
 	}
 	return (
-		<div className="sidebarChat_head" key={roomID}>
+		<div className="sidebarChat_head2" key={roomID}>
 			<div className="sidebarChat">
 				<Avatar
 					style={{

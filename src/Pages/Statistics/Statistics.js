@@ -1,10 +1,24 @@
-import React, { useEffect, useState } from "react"
+import React, {useEffect, useState} from "react"
 import Tabs from "@material-ui/core/Tabs"
 import Tab from "@material-ui/core/Tab"
 import SingleDayStats from "./SingleDayStats"
 import WhatsAppIcon from "@material-ui/icons/WhatsApp"
 import "./stats.css"
-import { Box, Button, Chip, FormControl, Icon, IconButton, InputAdornment, InputLabel, Tooltip,Switch } from "@material-ui/core"
+import {
+	Box,
+	Button,
+	Chip,
+	FormControl,
+	Icon,
+	IconButton,
+	InputAdornment,
+	InputLabel,
+	Tooltip,
+	Switch,
+	DialogActions,
+} from "@material-ui/core"
+import EditIcon from "@material-ui/icons/Edit"
+import DeleteIcon from "@material-ui/icons/Delete"
 import Dialog from "@material-ui/core/Dialog"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
@@ -17,9 +31,11 @@ import momentTZ from "moment-timezone"
 import useDocumentTitle from "../../Components/useDocumentTitle"
 import Snackbar from "@material-ui/core/Snackbar"
 import Alert from "@material-ui/lab/Alert"
-import { getTimeZones } from "../../Services/Services"
-import { editCustomer } from './../../Services/Services';
-
+import {getTimeZones} from "../../Services/Services"
+import {editCustomer} from "./../../Services/Services"
+import {Link} from "react-router-dom"
+import Axios from "axios"
+import {useConfirm} from "material-ui-confirm"
 
 let days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
 
@@ -35,7 +51,7 @@ const copyToClipboard = (text) => {
 }
 
 function TabPanel(props) {
-	const { children, value, index, ...other } = props
+	const {children, value, index, ...other} = props
 
 	return (
 		<div
@@ -51,15 +67,15 @@ function TabPanel(props) {
 }
 
 function pageRefresh() {
-	window.location.reload();
+	window.location.reload()
 }
 
 function Statistics() {
 	useDocumentTitle("Statistics")
-	let initialValue = days.indexOf(momentTZ(new Date()).tz("Asia/Kolkata").format("dddd").toUpperCase())
-	const [value, setValue] = useState(
-		initialValue
+	let initialValue = days.indexOf(
+		momentTZ(new Date()).tz("Asia/Kolkata").format("dddd").toUpperCase()
 	)
+	const [value, setValue] = useState(initialValue)
 	const [dialogOpen, setDialogOpen] = useState(false)
 	const [dialogData, setDialogData] = useState({})
 	const [successOpen, setSuccessOpen] = React.useState(false)
@@ -69,22 +85,24 @@ function Statistics() {
 	const [timeZoneLookup, setTimeZoneLookup] = useState({})
 
 	useEffect(() => {
-		getTimeZones().then((result) => {
-			return (result.data.result)
-		}).then((data) => {
-			console.log("getTimeZones data")
-			console.log(data)
+		getTimeZones()
+			.then((result) => {
+				return result.data.result
+			})
+			.then((data) => {
+				console.log("getTimeZones data")
+				console.log(data)
 
-			var dynamicLookup = {};
-			if (data) {
-				data.map((timeZoneObj) => {
-					dynamicLookup[timeZoneObj.id] = timeZoneObj.timeZoneName
-				})
-			}
-			console.log("getTimeZones dynamicLookup")
-			console.log(dynamicLookup)
-			setTimeZoneLookup(dynamicLookup);
-		})
+				var dynamicLookup = {}
+				if (data) {
+					data.map((timeZoneObj) => {
+						dynamicLookup[timeZoneObj.id] = timeZoneObj.timeZoneName
+					})
+				}
+				console.log("getTimeZones dynamicLookup")
+				console.log(dynamicLookup)
+				setTimeZoneLookup(dynamicLookup)
+			})
 	}, [])
 
 	const handleSuccessClose = (event, reason) => {
@@ -118,6 +136,44 @@ function Statistics() {
 		}
 	}
 
+	const toggleNewOldButton = async (rowData) => {
+		try {
+			await editCustomer({
+				autoDemo: !rowData?.autoDemo,
+				_id: rowData._id,
+			})
+			setDialogData((prev) => {
+				let index = rowData.tableData.id
+				let prevData = {...prev}
+				prevData.students[index] = {
+					...rowData,
+					autoDemo: !rowData?.autoDemo,
+				}
+				return prevData
+			})
+		} catch (error) {
+			console.log(error)
+		}
+	}
+	const confirm = useConfirm()
+	const deleteSchedule = async (id) => {
+		setRefresh(false)
+		try {
+			confirm({
+				description: "Do you Really want to Delete!",
+				confirmationText: "Yes! delete",
+			})
+				.then(async () => {
+					await Axios.get(`${process.env.REACT_APP_API_KEY}/schedule/delete/${id}`)
+					// getAllSchedulesData()
+					setDialogOpen(false)
+					setRefresh(true)
+				})
+				.catch(() => {})
+		} catch (error) {
+			console.log(error.response)
+		}
+	}
 
 	return (
 		<div>
@@ -125,7 +181,7 @@ function Statistics() {
 				open={successOpen}
 				autoHideDuration={6000}
 				onClose={handleSuccessClose}
-				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+				anchorOrigin={{vertical: "bottom", horizontal: "center"}}
 			>
 				<Alert variant="filled" onClose={handleSuccessClose} severity={alertColor}>
 					{alert}
@@ -173,8 +229,9 @@ function Statistics() {
 										<IconButton
 											onClick={() =>
 												window.open(
-													`https://api.whatsapp.com/send?phone=${dialogData.teacher &&
-													dialogData.teacher.Phone_number.split("+")[1].split(" ").join("")
+													`https://api.whatsapp.com/send?phone=${
+														dialogData.teacher &&
+														dialogData.teacher.Phone_number.split("+")[1].split(" ").join("")
 													}`
 												)
 											}
@@ -208,27 +265,51 @@ function Statistics() {
 									/>
 								),
 							},
+
+							{
+								title: "New/Old",
+								width: "1%",
+								align: "center",
+								editable: "never",
+								cellStyle: {whiteSpace: "nowrap"},
+								headerStyle: {whiteSpace: "nowrap"},
+								field: "autoDemo",
+								render: (rowData) => (
+									<Switch
+										onChange={() => toggleNewOldButton(rowData)}
+										checked={rowData?.autoDemo}
+										name="autoDemo"
+										inputProps={{"aria-label": "secondary checkbox"}}
+									/>
+								),
+							},
+
 							{
 								field: "isStudentJoined",
 								title: "Present",
 								type: "boolean",
 								render: (rowData) =>
 									rowData.isStudentJoined ? (
-										<CheckCircleIcon style={{ color: "green" }} />
+										<CheckCircleIcon style={{color: "green"}} />
 									) : (
-										<CancelIcon style={{ color: "red" }} />
+										<CancelIcon style={{color: "red"}} />
 									),
 							},
 							{
 								field: "autoDemo",
 								title: "Customer Type",
 								type: "boolean",
-								render: (rowData) =>
-									rowData.autoDemo ? (
-										<Chip label="New" size="small" color="primary" />
-									) : (
-										<Chip label="Old" size="small" color="secondary" />
-									),
+								render: (rowData) => {
+									return (
+										<>
+											{rowData.autoDemo ? (
+												<Chip label="New" size="small" color="primary" />
+											) : (
+												<Chip label="Old" size="small" color="secondary" />
+											)}
+										</>
+									)
+								},
 							},
 							{
 								field: "firstName",
@@ -247,12 +328,15 @@ function Statistics() {
 								width: "1%",
 								cellStyle: {whiteSpace: "nowrap"},
 								headerStyle: {whiteSpace: "nowrap"},
-								render: (rowData) => rowData.autoDemo && rowData.paidTill ? momentTZ(rowData.paidTill).format("MMM DD, YYYY") : rowData.numberOfClassesBought
+								render: (rowData) =>
+									rowData.autoDemo && rowData.paidTill
+										? momentTZ(rowData.paidTill).format("MMM DD, YYYY")
+										: rowData.numberOfClassesBought,
 							},
 							{
 								title: "Time Zone",
 								field: "timeZoneId",
-								lookup: timeZoneLookup
+								lookup: timeZoneLookup,
 							},
 							{
 								field: "email",
@@ -264,14 +348,17 @@ function Statistics() {
 								title: "WhatsaApp Number",
 								tooltip: "Sort by WhatsApp Number",
 								render: (rowData) => (
-									<div style={{ display: "flex", alignItems: "center" }}>
+									<div style={{display: "flex", alignItems: "center"}}>
 										<Tooltip title={`Message ${rowData.firstName} on Whatsapp`}>
 											<IconButton
 												onClick={() =>
 													window.open(
-														`https://api.whatsapp.com/send?phone=${rowData.whatsAppnumber.indexOf("+") !== -1
-															? rowData.whatsAppnumber.split("+")[1].split(" ").join("")
-															: rowData.countryCode ? rowData.countryCode + rowData.whatsAppnumber.split(" ").join("") : rowData.whatsAppnumber.split(" ").join("")
+														`https://api.whatsapp.com/send?phone=${
+															rowData.whatsAppnumber.indexOf("+") !== -1
+																? rowData.whatsAppnumber.split("+")[1].split(" ").join("")
+																: rowData.countryCode
+																? rowData.countryCode + rowData.whatsAppnumber.split(" ").join("")
+																: rowData.whatsAppnumber.split(" ").join("")
 														}`
 													)
 												}
@@ -290,6 +377,25 @@ function Statistics() {
 						}}
 					/>
 				</DialogContent>
+
+				<DialogActions>
+					<Button onClick={() => setDialogOpen(false)} variant="outlined" color="primary">
+						Cancel
+					</Button>
+					<Link style={{textDecoration: "none"}} to={`/edit-schedule/${dialogData._id}`}>
+						<Button variant="outlined" color="primary" startIcon={<EditIcon />}>
+							Edit
+						</Button>
+					</Link>
+					<Button
+						onClick={() => deleteSchedule(dialogData._id)}
+						variant="outlined"
+						color="secondary"
+						startIcon={<DeleteIcon />}
+					>
+						Delete
+					</Button>
+				</DialogActions>
 			</Dialog>
 			<Tabs
 				value={value}
@@ -315,8 +421,8 @@ function Statistics() {
 					marginLeft: 24,
 					marginRight: 24,
 					marginTop: 10,
-					color: 'white',
-					float: 'right'
+					color: "white",
+					float: "right",
 				}}
 			>
 				Refresh
@@ -329,7 +435,7 @@ function Statistics() {
 						day={day}
 						setDialogOpen={setDialogOpen}
 						setDialogData={setDialogData}
-						alertSetStates={{ setAlert, setAlertColor, setRefresh, setSuccessOpen }}
+						alertSetStates={{setAlert, setAlertColor, setRefresh, setSuccessOpen}}
 						value={value}
 						isToday={value === initialValue}
 					/>

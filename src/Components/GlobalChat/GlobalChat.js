@@ -106,7 +106,7 @@ const GlobalChat = () => {
 								{rooms
 									.filter((room) => room.username.toLowerCase().includes(searchValue))
 									.map((room) => (
-										<div onClick={() => handelRoom(room)} key={room.roomID}>
+										<div style={{width: "100%"}} onClick={() => handelRoom(room)} key={room.roomID}>
 											<SingleGlobalChat room={room} />
 										</div>
 									))}
