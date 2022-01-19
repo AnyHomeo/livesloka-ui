@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from "react"
 import MaterialTable, {MTableBodyRow} from "material-table"
 import MuiAlert from "@material-ui/lab/Alert"
@@ -8,6 +7,7 @@ import {Autocomplete} from "@material-ui/lab"
 import useWindowDimensions from "./useWindowDimensions"
 import {isAutheticated} from "../auth"
 import {firebase} from "../Firebase"
+import Permissions from "./Permissions"
 
 const DropdownEditor = ({onChange, value}) => {
 	const [arr, setArr] = useState(value)
@@ -42,7 +42,13 @@ const DropdownEditor = ({onChange, value}) => {
 			)}
 			renderTags={(value, getTagProps) =>
 				value.map((option, index) => (
-					<Chip variant="outlined" color="primary" size="small" label={option.subjectName} {...getTagProps({index})} />
+					<Chip
+						variant="outlined"
+						color="primary"
+						size="small"
+						label={option.subjectName}
+						{...getTagProps({index})}
+					/>
 				))
 			}
 		/>
@@ -70,6 +76,8 @@ const MaterialTableAddFields = ({
 	categoryLookup,
 	subjectLookup,
 	currencies,
+	permissions,
+	roles,
 }) => {
 	const [column, setColumn] = useState([])
 	const [data, setData] = useState([])
@@ -79,14 +87,14 @@ const MaterialTableAddFields = ({
 	const [response, setResponse] = useState("")
 	const {height} = useWindowDimensions()
 	const [imageLoading, setImageLoading] = useState(false)
-	const [refresh, setRefresh] = useState(false);
+	const [refresh, setRefresh] = useState(false)
 
 	useEffect(() => {
 		getData(name).then((response) => {
 			setData(response.data.result)
 			setLoading(false)
 		})
-	}, [refresh])
+	}, [refresh, name])
 
 	const handleFileUpload = async (e, props) => {
 		setImageLoading(true)
@@ -115,12 +123,35 @@ const MaterialTableAddFields = ({
 		if (data.length) {
 			let lengths = data.map((item) => Object.keys(item).length)
 			let v = Object.keys(data[lengths.indexOf(Math.max(...lengths))]).map((key) => {
-				if(key ==="rewards"){
+				if (key === "role") {
+					return {
+						title: "Role",
+						field: key,
+						lookup: roles,
+					}
+				}
+				if (key === "permissions") {
+					return {
+						title: "Permissions",
+						type: "string",
+						field: "permissions",
+						editable: "never",
+						render: (rowData) => (
+							<Permissions
+								allPermissions={permissions}
+								availablePermissions={rowData.permissions}
+								roleId={rowData._id}
+								setRoles={setData}
+							/>
+						),
+					}
+				}
+				if (key === "rewards") {
 					return {
 						title: "Rewards",
 						type: "numeric",
 						field: "rewards",
-					}	
+					}
 				}
 				if (key === "subjects") {
 					return {
@@ -129,7 +160,13 @@ const MaterialTableAddFields = ({
 						render: (rowData) =>
 							rowData[key] &&
 							rowData[key].map((subject) => (
-									<Chip variant="default" color="primary" size="small" key={subject._id} label={subject.subjectName} />
+								<Chip
+									variant="default"
+									color="primary"
+									size="small"
+									key={subject._id}
+									label={subject.subjectName}
+								/>
 							)),
 						editComponent: (props) => {
 							return <DropdownEditor {...props} value={props?.rowData?.subjects || []} />
@@ -244,7 +281,7 @@ const MaterialTableAddFields = ({
 						title: humanReadable(key),
 						field: key,
 						lookup: {3: "Admin", 4: "Sales", 5: "Customer Support"},
-						editable: !(isAutheticated().roleId == 3) ? "never" : undefined,
+						editable: !(parseInt(isAutheticated().roleId) === 3) ? "never" : undefined,
 					}
 				} else if (key === "teacherImageLink") {
 					return {
@@ -294,7 +331,7 @@ const MaterialTableAddFields = ({
 			})
 			setColumn(v)
 		}
-	}, [lookup, categoryLookup, data, subjectLookup])
+	}, [lookup, categoryLookup, data, subjectLookup, name, status, currencies, permissions])
 
 	const handleClose = (event, reason) => {
 		if (reason === "clickaway") {
@@ -341,7 +378,7 @@ const MaterialTableAddFields = ({
 							.then((fetchedData) => {
 								if (fetchedData.data.status === "ok") {
 									setSuccess(true)
-									setRefresh(prev => !prev)
+									setRefresh((prev) => !prev)
 									setResponse(fetchedData.data.message)
 									setOpen(true)
 									setLoading(false)
@@ -364,8 +401,7 @@ const MaterialTableAddFields = ({
 
 						return editField(`Update ${name}`, newData).then((fetchedData) => {
 							if (fetchedData.data.status === "OK") {
-								
-								setRefresh(prev => !prev)
+								setRefresh((prev) => !prev)
 								setSuccess(true)
 								setResponse(fetchedData.data.message)
 								setOpen(true)

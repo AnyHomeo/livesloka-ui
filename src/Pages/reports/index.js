@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Container, Grid, makeStyles } from "@material-ui/core";
 import Page from "../Page";
 import Budget from "./Budget";
-import LatestOrders from "./LatestOrders";
 import TasksProgress from "./TasksProgress";
 import TotalCustomers from "./TotalCustomers";
 import TotalProfit from "./TotalProfit";

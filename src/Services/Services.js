@@ -230,3 +230,5 @@ export const getOptionsOfATeacher = (teacherId) => Axios.get(`${API.main}/option
 export const getOptionsByCustomer = (customerId) => Axios.get(`${API.main}/options/customer/${customerId}`)
 export const updateOptions = (optionsId,updatedData) => Axios.put(`${API.main}/options/${optionsId}`,updatedData)
 export const getCustomerRewards = (user) => Axios.get(`${API.main}/rewards/user/${user}?redeems=1`)
+export const getAllPermissionStrings = () => Axios.get(`${API.main}/roles/permissions`)
+export const patchPermission = (roleId,permission) => Axios.patch(`${API.main}/roles/${roleId}/permissions`,{permission})

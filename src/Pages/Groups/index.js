@@ -1,4 +1,4 @@
-import React, {useEffect} from "react"
+import React from "react"
 import Group from "./Group/Group"
 import GroupSidebar from "./Group/GroupSidebar"
 import {useParams} from "react-router"
