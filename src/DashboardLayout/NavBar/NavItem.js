@@ -29,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
   active: {
     color: theme.palette.primary.main,
     "& $title": {
-      // fontWeight: theme.typography.fontWeightMedium,
       fontWeight: "bold",
     },
     "& $icon": {
@@ -39,13 +38,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NavItem = ({ className, href, icon: Icon, title, ...rest }) => {
+const NavItem = ({ className, href, icon: Icon, title,onClick, ...rest }) => {
   const classes = useStyles();
 
   return (
     <ListItem
       className={clsx(classes.item, className)}
       disableGutters
+      onClick={onClick}
       {...rest}
     >
       <Button
