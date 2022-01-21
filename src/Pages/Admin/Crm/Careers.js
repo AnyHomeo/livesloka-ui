@@ -48,6 +48,42 @@ function Careers() {
 					title: "Phone no.",
 				},
 				{
+					field: "dob",
+					title: "DOB",
+					type:"date"
+				},
+				{
+					field: "awards",
+					title: "Awards",
+				},
+				{
+					field: "certifications",
+					title: "Certifications",
+				},
+				{
+					field: "experience",
+					title: "Experience",
+					type: "numeric",
+				},
+				{
+					field: "languages",
+					title: "Languages",
+				},
+				{
+					field: "qualifications",
+					title: "Qualifications",
+				},
+				{
+					field: "isPan",
+					title: "Pan card available",
+					type:"boolean"
+				},
+				{
+					field: "isWifi",
+					title: "Wifi Available",
+					type:"boolean"
+				},
+				{
 					field: "resumeLink",
 					title: "Resume",
 					render: (row) =>
