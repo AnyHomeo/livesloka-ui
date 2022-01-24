@@ -223,7 +223,7 @@ function Statistics() {
 								id="teacher-whatsapp"
 								label="Teacher Details"
 								value={dialogData.teacher && dialogData.teacher.TeacherName}
-								fullWidth
+								fullWidth 
 								endAdornment={
 									<InputAdornment position="end">
 										<IconButton

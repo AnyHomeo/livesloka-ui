@@ -25,7 +25,6 @@ import Snackbar from "@material-ui/core/Snackbar"
 import Alert from "@material-ui/lab/Alert"
 import Axios from "axios"
 import AvailableTimeSlotChip from "../../../Components/AvailableTimeSlotChip"
-import {getData} from "../../../Services/Services"
 import "date-fns"
 import DateFnsUtils from "@date-io/date-fns"
 import {MuiPickersUtilsProvider, KeyboardDatePicker} from "@material-ui/pickers"
@@ -33,6 +32,7 @@ import {EditorState, convertToRaw} from "draft-js"
 import draftToHtml from "draftjs-to-html"
 import {firebase} from "../../../Firebase"
 import useDocumentTitle from "../../../Components/useDocumentTitle"
+import { useParams } from 'react-router-dom'
 
 let days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
 
@@ -56,16 +56,17 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const AvailableMeetingSchedule = ({match}) => {
+const AvailableMeetingSchedule = () => {
 	useDocumentTitle("Meeting Schedule")
 	const classes = useStyles()
+	const params = useParams()
 
 	const [selectedDate, setSelectedDate] = React.useState(new Date())
 	const handleDateChange = (date) => {
 		setSelectedDate(date)
 	}
 	const [personName, setPersonName] = useState([])
-	const [teacher, setInputTeacher] = useState(match.params.teacher)
+	const [teacher, setInputTeacher] = useState(params.teacher)
 	const [successOpen, setSuccessOpen] = React.useState(false)
 	const [demo, setDemo] = useState(false)
 	const [radioday, setRadioday] = useState("")
@@ -322,7 +323,7 @@ const AvailableMeetingSchedule = ({match}) => {
 	}
 
 	useEffect(() => {
-		setTimeSlotState(match.params.slot.split(","))
+		setTimeSlotState(params.slot.split(","))
 	}, [])
 
 	useEffect(() => {

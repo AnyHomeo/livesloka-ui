@@ -104,6 +104,9 @@ function Careers() {
 				margin: 20,
 				padding: 20,
 			}}
+			options={{
+				filtering:true
+			}}
 			data={applications}
 			title="Applications"
 		/>
