@@ -48,19 +48,27 @@ const BulkUploadCertificate = ({open, setOpen, category, getBackData}) => {
 	const [certificateTitle, setCertificateTitle] = useState("")
 	const {getRootProps, getInputProps} = useDropzone({
 		multiple: true,
-		accept: "image/*",
 		onDrop: (acceptedFiles) => {
 			setFiles((prevState) => [...prevState, ...acceptedFiles])
 		},
 	})
 
-	const thumbs = files.map((file) => (
-		<div style={thumb} key={file.name}>
-			<div style={thumbInner}>
-				<img src={URL.createObjectURL(file)} style={img} />
-			</div>
-		</div>
-	))
+	const thumbs = files.map((file) => {
+		if (file?.type === "application/pdf") {
+			return (
+				<div style={thumb} key={file.name}>
+					<p style={{wordBreak: "break-word"}}>{file?.path}</p>
+				</div>
+			)
+		} else
+			return (
+				<div style={thumb} key={file.name}>
+					<div style={thumbInner}>
+						<img src={URL.createObjectURL(file)} style={img} />
+					</div>
+				</div>
+			)
+	})
 	useEffect(
 		() => () => {
 			// Make sure to revoke the data uris to avoid memory leaks
@@ -69,6 +77,7 @@ const BulkUploadCertificate = ({open, setOpen, category, getBackData}) => {
 		[files]
 	)
 
+	console.log(files)
 	const onBulkUpload = async () => {
 		if (files.length > 0) {
 			setLoading(true)
