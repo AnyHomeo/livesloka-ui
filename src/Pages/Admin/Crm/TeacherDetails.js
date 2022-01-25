@@ -1,42 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import { getData } from "../../../Services/Services";
 import MaterialTableAddFields from "../../../Components/MaterialTableAddFields";
 import TeacherDetailsTableMobile from "./MobileViews/TeacherDetailsTableMobile";
 import useWindowDimensions from "../../../Components/useWindowDimensions";
 import useDocumentTitle from "../../../Components/useDocumentTitle";
 
-const useStyles = makeStyles((theme) => ({
-  saveButton: {
-    marginTop: "1.5rem",
-    marginBottom: "2rem",
-  },
-  Startdate: {
-    marginRight: "10px",
-  },
-  Starttime: {
-    marginRight: "10px",
-  },
-  chips: {
-    display: "flex",
-    flexWrap: "wrap",
-  },
-  chip: {
-    margin: 2,
-  },
-}));
-
 export default function TeacherDetails() {
   useDocumentTitle("Teacher Details");
-  const classes = useStyles();
-  //states
+
+  const item = "Teacher"
+
   const [lookup, setLookup] = useState({});
   const [categoryLookup, setCategoryLookup] = useState({});
-  const [item, setitem] = useState("Teacher");
   const [teachersdata, setTeachersdata] = useState();
   const [categoryData, setCategoryData] = useState();
   const [statusData, setStatusData] = useState();
-  const [subjectsLookup, setSubjectsLookup] = useState({})
+  const [subjectsLookup, setSubjectsLookup] = useState({});
+  const [selectedSubject, setSelectedSubject] = useState('');
+
   useEffect(() => {
     getData("Status").then((data) => {
       let dummyLookup = {};
@@ -78,7 +59,9 @@ export default function TeacherDetails() {
       if (res.status === 200) {
         setTeachersdata(res.data);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -91,6 +74,8 @@ export default function TeacherDetails() {
           lookup={lookup}
           categoryLookup={categoryLookup}
           subjectLookup={subjectsLookup}
+          selectedSubject={selectedSubject}
+          setSelectedSubject={setSelectedSubject}
         />
       ) : (
         <>

@@ -1461,6 +1461,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 						addRowPosition: "first",
 						maxBodyHeight: height - 220,
 						exportButton: true,
+						filtering:true,
 						rowStyle: (rowData) => {
 							return {
 								backgroundColor: rowData.isRedeemedCustomer ? "#eee" : "#fff",

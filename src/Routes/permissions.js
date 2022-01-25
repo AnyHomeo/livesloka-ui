@@ -1,7 +1,4 @@
 import CustomerData from "../Pages/Admin/Crm/CustomerData"
-import Invoice from "../Pages/invoice/Invoice"
-import Generator from "../Pages/invoice/Generator"
-import Invoices from "../Pages/invoice/Invoices"
 import Attedance from "../Pages/Admin/Crm/Attedance"
 import CustomTabs from "../Components/CustomTabs"
 import MeetingScheduler from "../Pages/Admin/Crm/MeetingScheduler"
@@ -62,7 +59,7 @@ const adminRoutes = [
 	{ permission:"Teachers Salary", path: "/teacher-salary", exact: true, component: TeacherSalary},
 	{ permission:"Add Fields", path: "/add-fields", exact: true, component: CustomTabs},
 	{ permission:"Attendance", path: "/attendance", exact: true, component: Attedance},
-	{ permission:"Customer Data", path: "/summercamps", exact: true, component: SummerCampsCustomerTable},
+	{ permission:"Summer Camp Data", path: "/summercamps", exact: true, component: SummerCampsCustomerTable},
 	{ permission:"Attendance", path: "/edit/attendance/:scheduleId/:date", exact: true, component: EditAttendance},
 	{ permission:"Teachers Data", path: "/teacherDetails", exact: true, component: TeacherDetails},
 	{ permission:"Teachers Data", path: "/teacher", exact: true, component: NewTeacherDetails},
