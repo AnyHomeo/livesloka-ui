@@ -56,17 +56,23 @@ const BulkUploadCertificate = ({open, setOpen, category, getBackData}) => {
 	const thumbs = files.map((file) => {
 		if (file?.type === "application/pdf") {
 			return (
-				<div style={thumb} key={file.name}>
-					<p style={{wordBreak: "break-word"}}>{file?.path}</p>
-				</div>
+				<>
+					<ul key={file.name}>
+						<li>
+							<p style={{wordBreak: "break-word"}}>{file?.path}</p>
+						</li>
+					</ul>
+				</>
 			)
 		} else
 			return (
-				<div style={thumb} key={file.name}>
-					<div style={thumbInner}>
-						<img src={URL.createObjectURL(file)} style={img} />
+				<aside style={thumbsContainer}>
+					<div style={thumb} key={file.name}>
+						<div style={thumbInner}>
+							<img src={URL.createObjectURL(file)} style={img} />
+						</div>
 					</div>
-				</div>
+				</aside>
 			)
 	})
 	useEffect(
@@ -170,9 +176,10 @@ const BulkUploadCertificate = ({open, setOpen, category, getBackData}) => {
 						<input {...getInputProps()} />
 						<p>Drag 'n' drop some files here, or click to select files</p>
 					</div>
-					<aside style={thumbsContainer}>{thumbs}</aside>
 				</section>
 
+				<div style={{marginTop: 10, marginBottom: 10, marginLeft: 20}}>{thumbs}</div>
+				<p style={{marginBottom: 10}}>{files.length} files selected</p>
 				<Button disabled={loading} variant="contained" color="primary" onClick={onBulkUpload}>
 					{loading ? (
 						<CircularProgress style={{color: "white", height: 30, width: 30}} />
