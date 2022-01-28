@@ -5,8 +5,8 @@ import Axios from "axios"
 import moment from "moment"
 import razorpay from "../../Images/razorpay.svg"
 import paypal from "../../Images/paypal.svg"
+import TransactionTablenew from "./TransactionsTablenew"
 const TransactionsTable = ({date}) => {
-	console.log(date)
 	const [column, setColumn] = useState([])
 	const [data, setData] = useState([])
 	const [loading, setLoading] = useState(true)
@@ -64,8 +64,15 @@ const TransactionsTable = ({date}) => {
 				}}
 				title={`Table`}
 				columns={column}
-				isLoading={loading}
+				// isLoading={loading}
 				data={data}
+				detailPanel={(rowData) => {
+					return (
+						<div style={{padding: 20}}>
+							<TransactionTablenew id={rowData.id} />
+						</div>
+					)
+				}}
 			/>
 		</>
 	)
