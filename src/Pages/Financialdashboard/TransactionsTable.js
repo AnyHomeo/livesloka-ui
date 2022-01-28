@@ -60,7 +60,7 @@ const TransactionsTable = ({date}) => {
 			<MaterialTable
 				options={{
 					search: true,
-					pageSizeOptions: [5, 20, 30, 40, 50, data.length],
+					pageSizeOptions: [20, 5, 30, 40, 50, data.length],
 				}}
 				title={`Table`}
 				columns={column}

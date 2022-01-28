@@ -189,7 +189,12 @@ const adminRoutes = [
 		component: CategorizeVideo,
 	},
 	{permission: "Accounts", path: "/accountant/invoice", exact: true, component: InvoicePages},
-	{permission: "Accounts", path: "/accountant/finance", exact: true, component: FinancialPage},
+	{
+		permission: "Financial Dashboard",
+		path: "/accountant/finance",
+		exact: true,
+		component: FinancialPage,
+	},
 ]
 
 export default adminRoutes
