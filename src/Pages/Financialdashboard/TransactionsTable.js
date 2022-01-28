@@ -34,17 +34,17 @@ const TransactionsTable = ({date}) => {
 					title: "Amount",
 					field: "amount",
 				},
-				{
-					title: "Payment mode",
-					field: "mode",
-					render: (rowData) => {
-						if (rowData.mode === "PAYPAL") {
-							return <img src={paypal} style={{height: 80, width: 80}} alt="" />
-						} else {
-							return <img src={razorpay} style={{height: 80, width: 80}} alt="" />
-						}
-					},
-				},
+				// {
+				// 	title: "Payment mode",
+				// 	field: "mode",
+				// 	render: (rowData) => {
+				// 		if (rowData.mode === "PAYPAL") {
+				// 			return <img src={paypal} style={{height: 80, width: 80}} alt="" />
+				// 		} else {
+				// 			return <img src={razorpay} style={{height: 80, width: 80}} alt="" />
+				// 		}
+				// 	},
+				// },
 				{
 					title: "Date",
 					field: "date",
@@ -68,7 +68,7 @@ const TransactionsTable = ({date}) => {
 				data={data}
 				detailPanel={(rowData) => {
 					return (
-						<div style={{padding: 20}}>
+						<div style={{padding: 20, backgroundColor: "#f1f2f6"}}>
 							<TransactionTablenew id={rowData.id} />
 						</div>
 					)

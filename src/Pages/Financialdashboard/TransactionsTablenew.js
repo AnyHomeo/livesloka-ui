@@ -46,7 +46,7 @@ export default function TransactionTablenew({id}) {
 	}
 
 	return (
-		<TableContainer component={Paper}>
+		<TableContainer style={{backgroundColor: "#f1f2f6"}} component={Paper}>
 			{loading && <LinearProgress />}
 
 			<Table className={classes.table} aria-label="caption table">
