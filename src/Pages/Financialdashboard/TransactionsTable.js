@@ -69,7 +69,7 @@ const TransactionsTable = ({date}) => {
 				detailPanel={(rowData) => {
 					return (
 						<div style={{padding: 20, backgroundColor: "#f1f2f6"}}>
-							<TransactionTablenew id={rowData.id} />
+							<TransactionTablenew id={rowData.id} type={rowData.mode} />
 						</div>
 					)
 				}}

@@ -205,7 +205,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
 
 		{
 			href: "/accountant/finance",
-			icon: Film,
+			icon: BarChart,
 			title: "Financial Dashboard",
 			permission: "Financial Dashboard",
 		},

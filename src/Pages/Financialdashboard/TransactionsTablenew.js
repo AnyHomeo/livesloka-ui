@@ -28,7 +28,7 @@ const rows = [
 	createData("Eclair", 262, 16.0, 24, 6.0),
 ]
 
-export default function TransactionTablenew({id}) {
+export default function TransactionTablenew({id, type}) {
 	const classes = useStyles()
 	const [open, setOpen] = useState(false)
 	const [loading, setLoading] = useState(true)
@@ -55,7 +55,7 @@ export default function TransactionTablenew({id}) {
 						<TableCell>More Info</TableCell>
 						<TableCell>Invoice no</TableCell>
 						<TableCell align="right">Customer name</TableCell>
-						<TableCell align="right">Amount (USD)</TableCell>
+						<TableCell align="right">Amount {type === "PAYPAL" ? "(USD)" : "(INR)"}</TableCell>
 						<TableCell align="right">Transaction Fee</TableCell>
 						<TableCell align="right">Date</TableCell>
 					</TableRow>
