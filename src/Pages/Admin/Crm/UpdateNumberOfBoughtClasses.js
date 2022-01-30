@@ -5,13 +5,15 @@ import {Alert, Autocomplete} from "@material-ui/lab"
 import {Button, TextField} from "@material-ui/core"
 import {updateBoughtClasses} from "./../../../Services/Services"
 import useDocumentTitle from "../../../Components/useDocumentTitle"
+import { useParams } from "react-router-dom"
 
-function UpdateNumberOfBoughtClasses(props) {
+function UpdateNumberOfBoughtClasses() {
 	useDocumentTitle("Classes Paid")
 	const [selectedCustomer, setSelectedCustomer] = useState({})
 	const [allCustomers, setAllCustomers] = useState([])
 	const [comment, setComment] = useState("")
 	const [success, setSuccess] = useState(undefined)
+	const params = useParams()
 
 	const updateBoughtClassesData = () => {
 		if (comment) {
@@ -41,9 +43,9 @@ function UpdateNumberOfBoughtClasses(props) {
 		getAllCustomers("firstName,lastName,numberOfClassesBought")
 			.then((data) => {
 				setAllCustomers(data.data.result)
-				if (props.match && props.match.params && props.match.params.id) {
+				if (params && params.id) {
 					setSelectedCustomer(
-						data.data.result.filter((student) => student._id === props.match.params.id)[0]
+						data.data.result.filter((student) => student._id === params.id)[0]
 					)
 				}
 			})

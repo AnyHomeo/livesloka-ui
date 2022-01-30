@@ -1,11 +1,6 @@
 import React, {useState, useEffect} from "react"
-import {withStyles} from "@material-ui/core/styles"
-import {green} from "@material-ui/core/colors"
-import FormGroup from "@material-ui/core/FormGroup"
-import FormControlLabel from "@material-ui/core/FormControlLabel"
-import Checkbox from "@material-ui/core/Checkbox"
-import {Button, Card, FormLabel, Radio, RadioGroup} from "@material-ui/core"
-import {Redirect} from "react-router-dom"
+import {Button, Card} from "@material-ui/core"
+import {Redirect, useParams} from "react-router-dom"
 import {
 	getScheduleAndDateAttendance,
 	getStudentList,
@@ -32,7 +27,6 @@ const BooleanRadioBox = ({value, onChange, label}) => {
 				width: width > 700 ? "500px" : "90%",
 				margin: "0 auto",
 				padding: "3px 0",
-				flexDirection: "row",
 				marginBottom: 3,
 				flexDirection: width > 700 ? "row" : "column",
 			}}
@@ -40,7 +34,6 @@ const BooleanRadioBox = ({value, onChange, label}) => {
 			<Card
 				style={{
 					height: 47,
-					width: "110%",
 					marginTop: -10,
 					marginRight: 20,
 					display: "flex",
@@ -136,23 +129,10 @@ const BooleanRadioBox = ({value, onChange, label}) => {
 	)
 }
 
-const GreenCheckbox = withStyles({
-	root: {
-		color: green[400],
-		"&$checked": {
-			color: green[600],
-		},
-	},
-	checked: {},
-})((props) => <Checkbox color="default" {...props} />)
 
-const EditAttendance = ({match}) => {
+const EditAttendance = () => {
 	useDocumentTitle("Edit Attendance")
-	const [alignment, setAlignment] = React.useState("left")
 
-	const handleAlignment = (event, newAlignment) => {
-		setAlignment(newAlignment)
-	}
 
 	const [studentNameLists, setStudentNameLists] = useState([])
 	const [studentAttendance, setStudentAttendance] = useState([])
@@ -160,6 +140,7 @@ const EditAttendance = ({match}) => {
 	const [absentees, setAbsentees] = useState([])
 	const [requestedStudents, setRequestedStudents] = useState([])
 	const [requestedPaidStudents, setRequestedPaidStudents] = useState([])
+	const params = useParams()
 
 	useEffect(() => {
 		setAbsentees((prev) => {
@@ -182,10 +163,10 @@ const EditAttendance = ({match}) => {
 	}, [])
 
 	const studentListNAttendance = async () => {
-		const {data} = await getStudentList(match.params.scheduleId)
+		const {data} = await getStudentList(params.scheduleId)
 		setStudentNameLists(data.result.students)
 
-		const res = await getScheduleAndDateAttendance(match.params.scheduleId, match.params.date)
+		const res = await getScheduleAndDateAttendance(params.scheduleId, params.date)
 		setStudentAttendance(res.data?.result?.customers ? res.data?.result?.customers : [])
 		setRequestedStudents(
 			res.data?.result?.requestedStudents ? res?.data?.result?.requestedStudents : []
@@ -211,8 +192,8 @@ const EditAttendance = ({match}) => {
 	const postAttendance = async () => {
 		try {
 			const formData = {
-				date: match.params.date,
-				scheduleId: match.params.scheduleId,
+				date: params.date,
+				scheduleId: params.scheduleId,
 				customers: studentAttendance,
 				requestedStudents,
 				requestedPaidStudents,
@@ -266,7 +247,7 @@ const EditAttendance = ({match}) => {
 				Edit Students Attendance
 			</h2>
 			<div style={{textAlign: "center"}}>
-				<h2 style={{fontSize: "20px", marginBottom: 20}}>{match.params.date}</h2>
+				<h2 style={{fontSize: "20px", marginBottom: 20}}>{params.date}</h2>
 
 				{typeof studentNameLists === "object" &&
 					studentNameLists.map((student) => (
