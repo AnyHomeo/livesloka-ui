@@ -62,67 +62,67 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			href: width <= 550 ? "/customer-data-mobile" : "/customer-data",
 			icon: FileText,
 			title: "Customer Data",
-			permission: "Customer Data"
+			permission: "Customer Data",
 		},
 		{
 			href: "/summercamps",
 			icon: Sun,
 			title: "Summer Camp Data",
-			permission: "Customer Data"
+			permission: "Customer Data",
 		},
 		{
 			href: "/add-fields",
 			icon: Edit,
 			title: "Add Fields",
-			permission: "Add Fields"
+			permission: "Add Fields",
 		},
 		{
 			href: "/attendance",
 			icon: Trello,
 			title: "Attendance",
-			permission: "Attendance"
+			permission: "Attendance",
 		},
 		{
 			href: "/scheduler",
 			icon: UserIcon,
 			title: "Timetable",
-			permission: "Timetable"
+			permission: "Timetable",
 		},
 		{
 			href: "/meeting-scheduler",
 			icon: SettingsIcon,
 			title: "Scheduler",
-			permission: "Timetable"
+			permission: "Timetable",
 		},
 		{
 			href: "/leaves",
 			icon: UserMinus,
 			title: "Leaves",
-			permission: "Leaves"
+			permission: "Leaves",
 		},
 		{
 			href: "/reset/password",
 			icon: LockIcon,
 			title: "Reset Password",
-			permission: "Reset Password"
+			permission: "Reset Password",
 		},
 		{
 			href: "/zoom-dashboard",
 			icon: Video,
 			title: "Zoom Dashboard",
-			permission: "Zoom Dashboard"
+			permission: "Zoom Dashboard",
 		},
 		{
 			href: "/teacherDetails",
 			icon: Trello,
 			title: "Teachers Data",
-			permission: "Teachers Data"
+			permission: "Teachers Data",
 		},
 		{
 			href: "/teacher-salary",
 			icon: BarChart2,
 			title: "Teachers Salary",
-			permission: "Teachers Salary"
+			permission: "Teachers Salary",
 		},
 		{
 			href: "/statistics",
@@ -134,7 +134,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			href: "/dashboard",
 			icon: DollarSign,
 			title: "Financial Dashboard",
-			permission: "Financial Dashboard"
+			permission: "Financial Dashboard",
 		},
 		{
 			href: "/room",
@@ -153,7 +153,6 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			icon: DollarSign,
 			title: "Payments",
 			permission: "Payments",
-
 		},
 		{
 			href: "/update/classes",
@@ -189,19 +188,26 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			href: "/options",
 			icon: AlignJustify,
 			title: "Options",
-			permission: "Options"
+			permission: "Options",
 		},
 		{
 			href: "/products",
 			icon: DollarSign,
 			title: "Paypal & Stripe",
-			permission: "Paypal & Stripe"
+			permission: "Paypal & Stripe",
 		},
 		{
 			href: "/video-folders",
 			icon: Film,
 			title: "Video Manager",
 			permission: "Video Manager",
+		},
+
+		{
+			href: "/accountant/finance",
+			icon: BarChart,
+			title: "Financial Dashboard",
+			permission: "Financial Dashboard",
 		},
 	]
 

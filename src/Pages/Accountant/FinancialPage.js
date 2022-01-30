@@ -1,20 +1,17 @@
 import React, {useState, useEffect} from "react"
-import {Button, Container, Grid, makeStyles, Menu, MenuItem, TextField} from "@material-ui/core"
-import PriceCard from "./PriceCard"
+import {Button, Container, Grid, makeStyles, Menu, MenuItem} from "@material-ui/core"
 import axios from "axios"
 import Page from "../Page"
 import {Filter} from "react-feather"
-import Paypalchart from "./Paypalchart"
 import moment from "moment"
-import Autocomplete from "@material-ui/lab/Autocomplete"
 import Lottie from "react-lottie"
 import loadingAnimation from "../../Images/loading.json"
 import useDocumentTitle from "../../Components/useDocumentTitle"
 import useWindowDimensions from "../../Components/useWindowDimensions"
-import Expensestable from "./Expensestable"
-import Teachersalariesfinancial from "./Teachersalariesfinancial"
-import TransactionsTable from "./TransactionsTable"
-import TransactionTablenew from "./TransactionsTablenew"
+import TransactionsTable from "../Financialdashboard/TransactionsTable"
+import Expensestable from "../Financialdashboard/Expensestable"
+import PriceCard from "../Financialdashboard/PriceCard"
+import Teachersalariesfinancial from "../Financialdashboard/Teachersalariesfinancial"
 const useStyles = makeStyles((theme) => ({
 	root: {
 		backgroundColor: theme.palette.background.dark,
@@ -50,7 +47,7 @@ const defaultOptions = {
 	},
 }
 
-const FinancialDashboard = () => {
+const FinancialPage = () => {
 	useDocumentTitle("Financial Dashboard")
 
 	const {width} = useWindowDimensions()
@@ -77,13 +74,6 @@ const FinancialDashboard = () => {
 	}, [])
 
 	const classes = useStyles()
-	const MonthArr = [
-		{title: "July 2021", month: "2021-07"},
-		{title: "June 2021", month: "2021-06"},
-		{title: "May 2021", month: "2021-05"},
-		{title: "April 2021", month: "2021-04"},
-		{title: "March 2021", month: "2021-03"},
-	]
 
 	const fetchDataByDate = (date) => {
 		fetchData(date)
@@ -171,6 +161,26 @@ const FinancialDashboard = () => {
 		gradient: "linear-gradient( 135deg, #81FBB8 10%, #28C76F 100%)",
 	}
 
+	const generateMonths = () => {
+		var dateStart = moment("2022-1-1")
+		var dateEnd = moment()
+
+		var timeValues = []
+
+		while (dateEnd > dateStart || dateStart.format("M") === dateEnd.format("M")) {
+			let obj = {
+				title: dateStart.format("MMM YYYY"),
+				month: dateStart.format("YYYY-MM"),
+			}
+			timeValues.push(obj)
+			dateStart.add(1, "month")
+		}
+
+		return timeValues
+	}
+
+	const MonthArr = generateMonths()
+
 	if (loading) {
 		return <Lottie options={defaultOptions} height={400} width={400} />
 	}
@@ -218,35 +228,8 @@ const FinancialDashboard = () => {
 						<PriceCard data={Profit} size={width < 700 ? true : false} />
 					</Grid>
 
-					<Grid item xs={12}>
-						<div className={classes.dash}>
-							<div>
-								<p className={classes.dashboardText}>Chart</p>
-							</div>
-
-							<div>
-								<Autocomplete
-									// style={{maxWidth: 200}}
-									multiple
-									getOptionSelected={(p, v) => p.month === v.month}
-									options={MonthArr}
-									value={selectedMonth}
-									onChange={handleMonthChange}
-									getOptionLabel={(option) => option.title}
-									defaultValue={[MonthArr[0]]}
-									Month
-									freeSolo
-									renderInput={(params) => (
-										<TextField {...params} variant="outlined" label="Month" placeholder="Month" />
-									)}
-								/>
-							</div>
-						</div>
-						<Paypalchart chartdata={datasets} />
-					</Grid>
-
 					{showTransactions && (
-						<Grid item xs={12} style={{marginTop: 80}}>
+						<Grid item xs={12} style={{marginTop: 20}}>
 							<div>
 								<p className={classes.dashboardText} style={{marginBottom: 30}}>
 									Net amount
@@ -260,7 +243,7 @@ const FinancialDashboard = () => {
 					)}
 
 					{showSalaries && (
-						<Grid item xs={12} style={{marginTop: 80}}>
+						<Grid item xs={12} style={{marginTop: 20}}>
 							<div>
 								<p className={classes.dashboardText} style={{marginBottom: 30}}>
 									Teacher Salaries
@@ -272,7 +255,7 @@ const FinancialDashboard = () => {
 					)}
 
 					{showExpenses && (
-						<Grid item xs={12} style={{marginTop: 80}}>
+						<Grid item xs={12} style={{marginTop: 20}}>
 							<div>
 								<p className={classes.dashboardText} style={{marginBottom: 30}}>
 									Expenses
@@ -306,4 +289,4 @@ const FinancialDashboard = () => {
 	)
 }
 
-export default FinancialDashboard
+export default FinancialPage

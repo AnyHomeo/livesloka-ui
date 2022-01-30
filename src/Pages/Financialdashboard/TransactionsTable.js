@@ -5,8 +5,8 @@ import Axios from "axios"
 import moment from "moment"
 import razorpay from "../../Images/razorpay.svg"
 import paypal from "../../Images/paypal.svg"
+import TransactionTablenew from "./TransactionsTablenew"
 const TransactionsTable = ({date}) => {
-	console.log(date)
 	const [column, setColumn] = useState([])
 	const [data, setData] = useState([])
 	const [loading, setLoading] = useState(true)
@@ -34,17 +34,17 @@ const TransactionsTable = ({date}) => {
 					title: "Amount",
 					field: "amount",
 				},
-				{
-					title: "Payment mode",
-					field: "mode",
-					render: (rowData) => {
-						if (rowData.mode === "PAYPAL") {
-							return <img src={paypal} style={{height: 80, width: 80}} alt="" />
-						} else {
-							return <img src={razorpay} style={{height: 80, width: 80}} alt="" />
-						}
-					},
-				},
+				// {
+				// 	title: "Payment mode",
+				// 	field: "mode",
+				// 	render: (rowData) => {
+				// 		if (rowData.mode === "PAYPAL") {
+				// 			return <img src={paypal} style={{height: 80, width: 80}} alt="" />
+				// 		} else {
+				// 			return <img src={razorpay} style={{height: 80, width: 80}} alt="" />
+				// 		}
+				// 	},
+				// },
 				{
 					title: "Date",
 					field: "date",
@@ -60,12 +60,19 @@ const TransactionsTable = ({date}) => {
 			<MaterialTable
 				options={{
 					search: true,
-					pageSizeOptions: [5, 20, 30, 40, 50, data.length],
+					pageSizeOptions: [20, 5, 30, 40, 50, data.length],
 				}}
 				title={`Table`}
 				columns={column}
-				isLoading={loading}
+				// isLoading={loading}
 				data={data}
+				detailPanel={(rowData) => {
+					return (
+						<div style={{padding: 20, backgroundColor: "#f1f2f6"}}>
+							<TransactionTablenew id={rowData.id} type={rowData.mode} />
+						</div>
+					)
+				}}
 			/>
 		</>
 	)
