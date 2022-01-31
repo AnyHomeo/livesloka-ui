@@ -2,8 +2,8 @@
 import React, {useState, useEffect} from "react"
 import MaterialTable from "material-table"
 import MuiAlert from "@material-ui/lab/Alert"
-import {Snackbar} from "@material-ui/core"
-
+import {IconButton, Snackbar} from "@material-ui/core"
+import GetAppIcon from "@material-ui/icons/GetApp"
 import Axios from "axios"
 import useWindowDimensions from "../../Components/useWindowDimensions"
 import moment from "moment"
@@ -35,6 +35,27 @@ const Expensestable = ({date}) => {
 
 		setLoading(false)
 	}
+
+	function download(url, filename) {
+		fetch(url)
+			.then((response) => response.blob())
+			.then((blob) => {
+				const link = document.createElement("a")
+				link.href = URL.createObjectURL(blob)
+				link.download = filename
+				link.click()
+			})
+			.catch(console.error)
+	}
+
+	function getFileExtension(dataurl) {
+		let patternFileExtension = /\.([0-9a-z]+)(?:[\?#]|$)/i
+
+		let fileExtension = dataurl.match(patternFileExtension)
+
+		return fileExtension[1]
+	}
+
 	useEffect(() => {
 		if (data.length) {
 			let v = [
@@ -51,9 +72,33 @@ const Expensestable = ({date}) => {
 					field: "amount",
 				},
 				{
+					title: "Dollar Amount",
+					field: "dollarAmount",
+				},
+				{
+					title: "Indian Amount",
+					field: "indianAmount",
+				},
+				{
 					title: "Date",
 					field: "date",
 					render: (rowData) => moment(rowData.createdAt).format("MMMM Do YYYY"),
+				},
+				{
+					title: "Attachment",
+					field: "attachment",
+					render: (rowData) => (
+						<IconButton>
+							<GetAppIcon
+								onClick={() =>
+									download(
+										rowData.attachment,
+										`Live Sloka Invoice.${getFileExtension(rowData.attachment)}`
+									)
+								}
+							/>
+						</IconButton>
+					),
 				},
 			]
 			setColumn(v)

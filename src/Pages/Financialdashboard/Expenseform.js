@@ -16,6 +16,8 @@ import DateFnsUtils from "@date-io/date-fns"
 import Snackbar from "@material-ui/core/Snackbar"
 import MuiAlert from "@material-ui/lab/Alert"
 import {useHistory} from "react-router-dom"
+import {firebase} from "../../Firebase"
+
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />
 }
@@ -54,6 +56,8 @@ const Expenseform = () => {
 	const [name, setName] = useState("")
 	const [description, setDescription] = useState("")
 	const [amount, setAmount] = useState("")
+	const [dollarAmount, setDollarAmount] = useState("")
+	const [indianAmount, setIndianAmount] = useState("")
 	const [loading, setLoading] = useState(false)
 	const [alertData, setAlertData] = useState()
 	const handleSnackBarClose = (event, reason) => {
@@ -66,11 +70,25 @@ const Expenseform = () => {
 	const postExpense = async (e) => {
 		setLoading(true)
 		e.preventDefault()
+
+		let url = ""
+
+		if (invoiceAttachment && invoiceAttachment.length > 0 === true) {
+			let storageRef = firebase
+				.storage()
+				.ref(`${invoiceAttachment[0].type}/${invoiceAttachment[0].name}`)
+			await storageRef.put(invoiceAttachment[0])
+			url = await storageRef.getDownloadURL()
+		}
+
 		const formData = {
 			name,
 			description,
 			amount,
 			date: selectedDate,
+			dollarAmount,
+			indianAmount,
+			attachment: url,
 		}
 
 		const data = await axios.post(`${process.env.REACT_APP_API_KEY}/admin/add/expenses`, formData)
@@ -116,6 +134,19 @@ const Expenseform = () => {
 					label="Expense Amount"
 					variant="outlined"
 				/>
+				<TextField
+					className={classes.formField}
+					onChange={(e) => setDollarAmount(e.target.value)}
+					label="Dollar Amount"
+					variant="outlined"
+				/>
+				<TextField
+					className={classes.formField}
+					onChange={(e) => setIndianAmount(e.target.value)}
+					label="Indian Amount"
+					variant="outlined"
+				/>
+
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
 					<DatePicker
 						className={classes.formField}
@@ -135,27 +166,35 @@ const Expenseform = () => {
 				>
 					<div
 						style={{
-							height: "250px",
 							backgroundColor: "#F5F5F5",
 							display: "flex",
 							justifyContent: "center",
 							alignItems: "center",
 							flexDirection: "column",
+							marginTop: 20,
 						}}
 					>
+						{console.log(invoiceAttachment)}
 						{
 							// eslint-disable-next-line
 							invoiceAttachment && invoiceAttachment.length > 0 === true ? (
-								<img
-									src={URL.createObjectURL(invoiceAttachment[0])}
-									alt=""
-									style={{
-										height: "100%",
-										width: 275,
-										objectFit: "cover",
-										marginTop: 10,
-									}}
-								/>
+								<>
+									{invoiceAttachment[0].type === "application/pdf" ? (
+										<p style={{marginTop: 15}}>{invoiceAttachment[0].name}</p>
+									) : (
+										<img
+											src={URL.createObjectURL(invoiceAttachment[0])}
+											alt=""
+											style={{
+												height: "100%",
+												width: 275,
+												objectFit: "cover",
+												marginTop: 10,
+												height: "250px",
+											}}
+										/>
+									)}
+								</>
 							) : (
 								<>
 									<IconButton variant="contained" component="label">
@@ -168,14 +207,12 @@ const Expenseform = () => {
 											class="fa fa-camera"
 										></i>
 										<input
-											multiple
-											accept="image/x-png,image/jpeg"
 											onChange={(e) => setInvoiceAttachment(e.target.files)}
 											type="file"
 											hidden
 										/>
 									</IconButton>
-									<p style={{color: "#C4C4C4", fontWeight: "bold"}}>Choose an Image</p>
+									<p style={{color: "#C4C4C4", fontWeight: "bold"}}>Choose attachment</p>
 								</>
 							)
 						}
