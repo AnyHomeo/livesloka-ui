@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from "react"
+import React, {useState, useEffect, useMemo} from "react"
 import {makeStyles} from "@material-ui/core/styles"
 import Tabs from "@material-ui/core/Tabs"
 import Tab from "@material-ui/core/Tab"
 import Box from "@material-ui/core/Box"
 import MaterialTableAddFields from "./MaterialTableAddFields"
-import {getData} from "../Services/Services"
+import {getAllPermissionStrings, getData} from "../Services/Services"
 import useDocumentTitle from "./useDocumentTitle"
 import AddFieldsHolder from "../Pages/Admin/Crm/MobileViews/AddFieldsHolder"
 import useWindowDimensions from "./useWindowDimensions"
@@ -55,19 +55,24 @@ const CustomTabs = () => {
 	const [value, setValue] = useState(0)
 	const [lookup, setLookup] = useState({})
 	const [categoryLookup, setCategoryLookup] = useState({})
+	const [permissions, setPermissions] = useState([])
 
-	const tabs = [
-		"Class",
-		"Time Zone",
-		"Subject",
-		"Zoom Account",
-		"Class Status",
-		"Currency",
-		"Status",
-		"Country",
-		"Agent",
-		"Category",
-	]
+	const tabs = useMemo(
+		() => [
+			"Class",
+			"Time Zone",
+			"Subject",
+			"Zoom Account",
+			"Class Status",
+			"Currency",
+			"Status",
+			"Country",
+			"Agent",
+			"Category",
+			"Roles",
+		],
+		[]
+	)
 
 	const status = [
 		"classesStatus",
@@ -88,8 +93,9 @@ const CustomTabs = () => {
 	}
 
 	const [statusMobile, setStatusMobile] = useState()
-	const [catogeryMob, setcatogeryMob] = useState()
+	const [catogeryMob] = useState()
 	const [currencies, setCurrencies] = useState({})
+	const [rolesLookup, setRolesLookup] = useState({})
 
 	useEffect(() => {
 		getData("Status").then((data) => {
@@ -110,15 +116,40 @@ const CustomTabs = () => {
 				)
 			})
 		}
-		if(value === 1){
-			getData("Currency").then(currencies => {
-				setCurrencies(currencies.data.result.reduce((obj, item, i) => {
-					obj[item._id] = item.currencyName
-					return obj
-				}, {}))
+		if (tabs[value] === "Time Zone") {
+			getData("Currency").then((currencies) => {
+				setCurrencies(
+					currencies.data.result.reduce((obj, item, i) => {
+						obj[item._id] = item.currencyName
+						return obj
+					}, {})
+				)
 			})
 		}
-	}, [value])
+		if (tabs[value] === "Roles") {
+			getAllPermissionStrings()
+				.then((data) => {
+					setPermissions(data.data.result)
+				})
+				.catch((err) => {
+					console.log(err)
+				})
+		}
+		if(tabs[value] === "Agent") {
+			getData("Roles")
+			.then((data) => {
+				setRolesLookup(
+					data.data.result.reduce((lookup, role, i) => {
+						lookup[role._id] = role.name
+						return lookup
+					}, {})
+				)
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+		}
+	}, [value, tabs])
 	const {width} = useWindowDimensions()
 
 	return (
@@ -145,6 +176,8 @@ const CustomTabs = () => {
 							lookup={lookup}
 							categoryLookup={categoryLookup}
 							currencies={currencies}
+							permissions={permissions}
+							roles={rolesLookup}
 						/>
 					) : (
 						<AddFieldsHolder

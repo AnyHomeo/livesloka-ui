@@ -14,6 +14,11 @@ exports.services = {
 		"Update Class": "/admin/update/classes",
 		"Delete Class": "/admin/delete/classes",
 
+		Roles: "/admin/get/Roles",
+		"Add Roles": "/admin/add/Roles",
+		"Update Roles": "/admin/update/Roles",
+		"Delete Roles": "/admin/delete/Roles",
+
 		Subject: "/admin/get/Subject",
 		"Add Subject": "/admin/add/Subject",
 		"Update Subject": "/admin/update/Subject",

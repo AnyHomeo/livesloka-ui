@@ -37,6 +37,7 @@ const AddCertificateModal = ({
 	useEffect(() => {
 		getStudents()
 	}, [])
+
 	useEffect(() => {
 		if (updateCertificateData) {
 			setName(updateCertificateData.name)

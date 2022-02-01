@@ -8,8 +8,8 @@ import {useSnackbar} from "notistack"
 import Global from "../Components/GlobalChat"
 import {Chat} from "@material-ui/icons"
 var audio = new Audio(require("./notification.mp3"))
-
 const socket = io(process.env.REACT_APP_CMS_API_KEY)
+
 const useStyles = makeStyles((theme) => ({
 	root: {
 		backgroundColor: theme.palette.background.dark,
@@ -40,7 +40,6 @@ const DashboardLayout = ({children}) => {
 	const {enqueueSnackbar} = useSnackbar()
 	const classes = useStyles()
 	const [isMobileNavOpen, setMobileNavOpen] = useState(false)
-
 	const [rightChatOpen, setRightChatOpen] = useState(true)
 
 	useEffect(() => {
@@ -48,7 +47,7 @@ const DashboardLayout = ({children}) => {
 			enqueueSnackbar(`${name} Just Registered Successfully!`, {variant: "success"})
 			audio.play()
 		})
-	}, [])
+	}, [enqueueSnackbar])
 
 	return (
 		<div className={classes.root}>

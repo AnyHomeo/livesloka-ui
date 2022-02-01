@@ -1,8 +1,7 @@
-import React, {useEffect, useState} from "react"
-import {Link as RouterLink, useLocation} from "react-router-dom"
+import React from "react"
+import {Link as RouterLink} from "react-router-dom"
 import PropTypes from "prop-types"
 import {Avatar, Box, Divider, Drawer, List, Typography, makeStyles} from "@material-ui/core"
-import {isAutheticated} from "../../auth"
 import {
 	Lock as LockIcon,
 	Settings as SettingsIcon,
@@ -21,11 +20,11 @@ import {
 	MessageCircle,
 	AlignJustify,
 	Film,
-	Activity,
 } from "react-feather"
 import NavItem from "./NavItem"
 import useWindowDimensions from "../../Components/useWindowDimensions"
 import AccountBalanceOutlinedIcon from "@material-ui/icons/AccountBalanceOutlined"
+import {isAutheticated} from "../../auth"
 
 const useStyles = makeStyles(() => ({
 	mobileDrawer: {
@@ -62,305 +61,193 @@ const NavBar = ({onMobileClose, openMobile}) => {
 		{
 			href: width <= 550 ? "/customer-data-mobile" : "/customer-data",
 			icon: FileText,
-			title: "Customers Data",
+			title: "Customer Data",
+			permission: "Customer Data",
 		},
 		{
 			href: "/summercamps",
 			icon: Sun,
 			title: "Summer Camp Data",
+			permission: "Customer Data",
 		},
 		{
 			href: "/add-fields",
 			icon: Edit,
 			title: "Add Fields",
+			permission: "Add Fields",
 		},
 		{
 			href: "/attendance",
 			icon: Trello,
 			title: "Attendance",
+			permission: "Attendance",
 		},
 		{
 			href: "/scheduler",
 			icon: UserIcon,
 			title: "Timetable",
+			permission: "Timetable",
 		},
 		{
 			href: "/meeting-scheduler",
 			icon: SettingsIcon,
 			title: "Scheduler",
+			permission: "Timetable",
 		},
 		{
 			href: "/leaves",
 			icon: UserMinus,
 			title: "Leaves",
+			permission: "Leaves",
 		},
 		{
 			href: "/reset/password",
 			icon: LockIcon,
 			title: "Reset Password",
+			permission: "Reset Password",
 		},
 		{
 			href: "/zoom-dashboard",
 			icon: Video,
 			title: "Zoom Dashboard",
+			permission: "Zoom Dashboard",
 		},
 		{
 			href: "/teacherDetails",
 			icon: Trello,
 			title: "Teachers Data",
+			permission: "Teachers Data",
 		},
 		{
 			href: "/teacher-salary",
 			icon: BarChart2,
 			title: "Teachers Salary",
+			permission: "Teachers Salary",
 		},
 		{
 			href: "/statistics",
 			icon: BarChart,
 			title: "Statistics",
+			permission: "Statistics",
 		},
 		{
 			href: "/dashboard",
 			icon: DollarSign,
 			title: "Financial Dashboard",
+			permission: "Financial Dashboard",
 		},
 		{
 			href: "/room",
 			icon: MessageCircle,
 			title: "Rooms",
+			permission: "Messages",
 		},
 		{
 			href: "/nonroom",
 			icon: MessageCircle,
 			title: "Non Rooms",
+			permission: "Messages",
 		},
 		{
 			href: "/payments",
 			icon: DollarSign,
 			title: "Payments",
+			permission: "Payments",
 		},
 		{
 			href: "/update/classes",
 			icon: UserCheck,
 			title: "Update Classes Paid",
+			permission: "Update Classes Paid",
 		},
 		{
 			href: "/inclass",
 			icon: Users,
 			title: "Demo/Inclass Students",
+			permission: "Demo/Inclass Students",
 		},
 		{
 			href: "/careers",
 			icon: Trello,
 			title: "Careers Applications",
+			permission: "Careers Applications",
 		},
 		{
 			href: "/notifications",
 			icon: MessageCircle,
-			title: "Broadcast a Notification",
+			title: "Broadcast Notifications",
+			permission: "Broadcast Notifications",
 		},
 		{
 			href: "/financial",
 			icon: AccountBalanceOutlinedIcon,
-			title: "Financial",
+			title: "Financial Dashboard",
+			permission: "Financial Dashboard",
 		},
 		{
 			href: "/options",
 			icon: AlignJustify,
 			title: "Options",
+			permission: "Options",
 		},
 		{
 			href: "/products",
 			icon: DollarSign,
 			title: "Paypal & Stripe",
+			permission: "Paypal & Stripe",
 		},
 		{
 			href: "/video-folders",
 			icon: Film,
 			title: "Video Manager",
+			permission: "Video Manager",
 		},
-		// {
-		// 	href: "/subscription-data",
-		// 	icon: Activity,
-		// 	title: "Subscription Transactions",
-		// },
-	]
 
-	const SalesTeam = [
 		{
-			href: width <= 550 ? "/customer-data-mobile" : "/customer-data",
-			icon: FileText,
-			title: "Customers Data",
-		},
-		{
-			href: "/meeting-scheduler",
-			icon: SettingsIcon,
-			title: "Scheduler",
-		},
-		{
-			href: "/scheduler",
-			icon: UserIcon,
-			title: "Timetable",
-		},
-		{
-			href: "/payments",
-			icon: DollarSign,
-			title: "Payments",
-		},
-		{
-			href: "/room",
-			icon: DollarSign,
-			title: "Rooms",
-		},
-		{
-			href: "/nonroom",
-			icon: DollarSign,
-			title: "Non Rooms",
-		},
-		{
-			href: "/statistics",
+			href: "/accountant/finance",
 			icon: BarChart,
-			title: "Statistics",
-		},
-		{
-			href: "/reset/password",
-			icon: LockIcon,
-			title: "Reset Password",
-		},
-		{
-			href: "/teacher",
-			icon: Trello,
-			title: "Teacher Data",
-		},
-	]
-
-	const CustomerSupport = [
-		{
-			href: width <= 550 ? "/customer-data-mobile" : "/customer-data",
-			icon: FileText,
-			title: "Customers Data",
-		},
-		{
-			href: "/attendance",
-			icon: Trello,
-			title: "Attendance",
-		},
-		{
-			href: "/meeting-scheduler",
-			icon: SettingsIcon,
-			title: "Scheduler",
-		},
-		{
-			href: "/scheduler",
-			icon: UserIcon,
-			title: "Timetable",
-		},
-		{
-			href: "/room",
-			icon: MessageCircle,
-			title: "Rooms",
-		},
-		{
-			href: "/nonroom",
-			icon: MessageCircle,
-			title: "Non Rooms",
-		},
-
-		{
-			href: "/reset/password",
-			icon: LockIcon,
-			title: "Reset Password",
-		},
-
-		{
-			href: "/statistics",
-			icon: BarChart,
-			title: "Statistics",
-		},
-
-		{
-			href: "/scheduler",
-			icon: UserIcon,
-			title: "Timetable",
-		},
-
-		{
-			href: "/payments",
-			icon: DollarSign,
-			title: "Payments",
-		},
-		{
-			href: "/leaves",
-			icon: UserMinus,
-			title: "Leaves",
-		},
-		{
-			href: "/teacher",
-			icon: Trello,
-			title: "Teacher Data",
+			title: "Financial Dashboard",
+			permission: "Financial Dashboard",
 		},
 	]
 
 	const classes = useStyles()
-	const location = useLocation()
-	const [userDetails, setUserDetails] = useState()
-	useEffect(() => {
-		if (openMobile && onMobileClose) {
-			onMobileClose()
-		}
-	}, [location.pathname])
+	const user = isAutheticated()
 
-	useEffect(() => {
-		getUserDetails()
-	}, [])
+	console.log(user)
 
-	const [roleID, setRoleID] = useState()
-
-	useEffect(() => {
-		setAuth()
-	}, [])
-
-	const setAuth = () => {
-		if (isAutheticated().roleId) {
-			setRoleID(isAutheticated().roleId)
-		}
-	}
-
-	const getUserDetails = () => {
-		const data = isAutheticated()
-		setUserDetails(data)
-	}
 	const content = (
 		<Box height="100%" display="flex" flexDirection="column" className="backgroundimage">
 			<Box alignItems="center" display="flex" flexDirection="column" p={2}>
 				<Avatar className={classes.avatar} component={RouterLink} to="/dashboard">
 					<Typography color="textSecondary" variant="body2" className={classes.iconName}>
-						{userDetails && userDetails.username[0]}
+						{user.AgentName[0]}
 					</Typography>
 				</Avatar>
 				<Typography className={classes.name} color="textPrimary" variant="h5">
-					{userDetails && userDetails.username}
+					{user.AgentName}
 				</Typography>
 				<Typography color="textSecondary" variant="body2" className={classes.name}>
-					Admin
+					{user?.role?.name}
 				</Typography>
 			</Box>
 			<Divider />
 			<Box p={2}>
 				<List>
-					{roleID && roleID === 3
-						? items.map((item) => (
-								<NavItem href={item.href} key={item.title} title={item.title} icon={item.icon} />
-						  ))
-						: roleID && roleID === 4
-						? SalesTeam.map((item) => (
-								<NavItem href={item.href} key={item.title} title={item.title} icon={item.icon} />
-						  ))
-						: roleID && roleID === 5
-						? CustomerSupport.map((item) => (
-								<NavItem href={item.href} key={item.title} title={item.title} icon={item.icon} />
-						  ))
-						: ""}
+					{items.reduce((navItems, item) => {
+						if (user?.role?.permissions?.includes(item.permission)) {
+							navItems.push(
+								<NavItem
+									href={item.href}
+									key={item.title}
+									onClick={onMobileClose}
+									title={item.title}
+									icon={item.icon}
+								/>
+							)
+						}
+						return navItems
+					}, [])}
 				</List>
 			</Box>
 			<Box flexGrow={1} />

@@ -1,6 +1,6 @@
 import {Card, Chip, IconButton, Tooltip} from "@material-ui/core"
 import React, {useEffect, useRef, useState} from "react"
-import {UserCheck, UserMinus, Video, UserX} from "react-feather"
+import {UserCheck, UserMinus, Video, UserX, Flag} from "react-feather"
 import LoopIcon from "@material-ui/icons/Loop"
 import {useConfirm} from "material-ui-confirm"
 import {updateSchedulesOfAdminToday, updateZoomLinkToNewOne} from "../../Services/Services"
@@ -8,6 +8,7 @@ import DoneIcon from "@material-ui/icons/Done"
 import Checkbox from "@material-ui/core/Checkbox"
 import {isAutheticated} from "../../auth"
 import io from "socket.io-client"
+import moment from "moment"
 const socket = io(process.env.REACT_APP_API_KEY)
 function SingleRow({
 	setDialogOpen,
@@ -88,6 +89,7 @@ function SingleRow({
 	const scheduleLeavesGen = (id) => {
 		return scheduleLeaves && scheduleLeaves[time]?.includes(id)
 	}
+
 	return (
 		<div
 			className="single-row-container"
@@ -128,7 +130,34 @@ function SingleRow({
 								cursor: "pointer",
 							}}
 						>
-					<div className="new-old-customer" >{singleData.students.some((student) => student.autoDemo) ? "N" : "O"}</div>
+							<div className="new-old-customer">
+								{singleData.students.some((student) => student.autoDemo) ? "N" : "O"}
+							</div>
+
+							<div className="new-old-customer2">
+								{singleData?.students?.some(
+									(rowData) =>
+										rowData.numberOfClassesBought <= 0 ||
+										(rowData.autoDemo &&
+											moment(rowData.paidTill).diff(moment(new Date()), "days") <= 0)
+								) ? (
+									<div
+										style={{
+											backgroundColor: "#e74c3c",
+											borderRadius: "50%",
+											display: "flex",
+											justifyContent: "center",
+											alignItems: "center",
+											height: 20,
+											width: 20,
+										}}
+									>
+										<Flag style={{color: "white", height: 15, width: 15}} />
+									</div>
+								) : (
+									""
+								)}
+							</div>
 
 							<div
 								className="teacher-name"
@@ -310,7 +339,7 @@ function SingleRow({
 											top: "-1%",
 											transform: "translateX(-50%)",
 											left: "50%",
-											height: 40,
+											height: 16,
 											width: "100%",
 											borderRadius: 20,
 											backgroundColor: "#3867d6",

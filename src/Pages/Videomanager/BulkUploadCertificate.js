@@ -48,19 +48,33 @@ const BulkUploadCertificate = ({open, setOpen, category, getBackData}) => {
 	const [certificateTitle, setCertificateTitle] = useState("")
 	const {getRootProps, getInputProps} = useDropzone({
 		multiple: true,
-		accept: "image/*",
 		onDrop: (acceptedFiles) => {
 			setFiles((prevState) => [...prevState, ...acceptedFiles])
 		},
 	})
 
-	const thumbs = files.map((file) => (
-		<div style={thumb} key={file.name}>
-			<div style={thumbInner}>
-				<img src={URL.createObjectURL(file)} style={img} />
-			</div>
-		</div>
-	))
+	const thumbs = files.map((file) => {
+		if (file?.type === "application/pdf") {
+			return (
+				<>
+					<ul key={file.name}>
+						<li>
+							<p style={{wordBreak: "break-word"}}>{file?.path}</p>
+						</li>
+					</ul>
+				</>
+			)
+		} else
+			return (
+				<aside style={thumbsContainer}>
+					<div style={thumb} key={file.name}>
+						<div style={thumbInner}>
+							<img src={URL.createObjectURL(file)} style={img} />
+						</div>
+					</div>
+				</aside>
+			)
+	})
 	useEffect(
 		() => () => {
 			// Make sure to revoke the data uris to avoid memory leaks
@@ -69,6 +83,7 @@ const BulkUploadCertificate = ({open, setOpen, category, getBackData}) => {
 		[files]
 	)
 
+	console.log(files)
 	const onBulkUpload = async () => {
 		if (files.length > 0) {
 			setLoading(true)
@@ -161,9 +176,10 @@ const BulkUploadCertificate = ({open, setOpen, category, getBackData}) => {
 						<input {...getInputProps()} />
 						<p>Drag 'n' drop some files here, or click to select files</p>
 					</div>
-					<aside style={thumbsContainer}>{thumbs}</aside>
 				</section>
 
+				<div style={{marginTop: 10, marginBottom: 10, marginLeft: 20}}>{thumbs}</div>
+				<p style={{marginBottom: 10}}>{files.length} files selected</p>
 				<Button disabled={loading} variant="contained" color="primary" onClick={onBulkUpload}>
 					{loading ? (
 						<CircularProgress style={{color: "white", height: 30, width: 30}} />

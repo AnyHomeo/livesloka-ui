@@ -1,6 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from "react"
-import MaterialTable, {MTableBodyRow} from "material-table"
+import MaterialTable, {MTableBodyRow, MTableToolbar} from "material-table"
 import MuiAlert from "@material-ui/lab/Alert"
 import {getData, addInField, editField, deleteField} from "../Services/Services"
 import {Button, Chip, Snackbar, TextField} from "@material-ui/core"
@@ -8,6 +7,8 @@ import {Autocomplete} from "@material-ui/lab"
 import useWindowDimensions from "./useWindowDimensions"
 import {isAutheticated} from "../auth"
 import {firebase} from "../Firebase"
+import Permissions from "./Permissions"
+import WhatsApp from "@material-ui/icons/WhatsApp"
 
 const DropdownEditor = ({onChange, value}) => {
 	const [arr, setArr] = useState(value)
@@ -42,7 +43,13 @@ const DropdownEditor = ({onChange, value}) => {
 			)}
 			renderTags={(value, getTagProps) =>
 				value.map((option, index) => (
-					<Chip variant="outlined" color="primary" size="small" label={option.subjectName} {...getTagProps({index})} />
+					<Chip
+						variant="outlined"
+						color="primary"
+						size="small"
+						label={option.subjectName}
+						{...getTagProps({index})}
+					/>
 				))
 			}
 		/>
@@ -70,8 +77,12 @@ const MaterialTableAddFields = ({
 	categoryLookup,
 	subjectLookup,
 	currencies,
+	permissions,
+	roles,
+	setSelectedSubject,
+	selectedSubject,
 }) => {
-	const [column, setColumn] = useState([])
+	const [columns, setColumns] = useState([])
 	const [data, setData] = useState([])
 	const [loading, setLoading] = useState(true)
 	const [open, setOpen] = useState(false)
@@ -79,14 +90,18 @@ const MaterialTableAddFields = ({
 	const [response, setResponse] = useState("")
 	const {height} = useWindowDimensions()
 	const [imageLoading, setImageLoading] = useState(false)
-	const [refresh, setRefresh] = useState(false);
+	const [refresh, setRefresh] = useState(false)
 
 	useEffect(() => {
 		getData(name).then((response) => {
-			setData(response.data.result)
+			setData(
+				selectedSubject
+					? response.data.result.filter((data) => data.subject === selectedSubject)
+					: response.data.result
+			)
 			setLoading(false)
 		})
-	}, [refresh])
+	}, [refresh, name, selectedSubject])
 
 	const handleFileUpload = async (e, props) => {
 		setImageLoading(true)
@@ -114,187 +129,228 @@ const MaterialTableAddFields = ({
 	useEffect(() => {
 		if (data.length) {
 			let lengths = data.map((item) => Object.keys(item).length)
-			let v = Object.keys(data[lengths.indexOf(Math.max(...lengths))]).map((key) => {
-				if(key ==="rewards"){
-					return {
-						title: "Rewards",
-						type: "numeric",
-						field: "rewards",
-					}	
-				}
-				if (key === "subjects") {
-					return {
-						title: humanReadable(key),
-						field: key,
-						render: (rowData) =>
-							rowData[key] &&
-							rowData[key].map((subject) => (
-									<Chip variant="default" color="primary" size="small" key={subject._id} label={subject.subjectName} />
-							)),
-						editComponent: (props) => {
-							return <DropdownEditor {...props} value={props?.rowData?.subjects || []} />
-						},
+			let keys = Object.keys(data[lengths.indexOf(Math.max(...lengths))])
+			if (name === "Teacher") {
+				keys = [
+					"demoPriority",
+					"TeacherName",
+					"subject",
+					"Commission_Amount_One",
+					"Commission_Amount_Many",
+					...keys,
+				]
+			}
+			setColumns(
+				keys.map((key) => {
+					if (key === "role") {
+						return {
+							title: "Role",
+							field: key,
+							lookup: roles,
+						}
 					}
-				}
-				if (key === "isNotAvailableInBooking") {
-					return {
-						title: "Disable in Booking",
-						type: "boolean",
-						field: "isNotAvailableInBooking",
+					if (key === "permissions") {
+						return {
+							title: "Permissions",
+							type: "string",
+							field: "permissions",
+							editable: "never",
+							render: (rowData) => (
+								<Permissions
+									allPermissions={permissions}
+									availablePermissions={rowData.permissions}
+									roleId={rowData._id}
+									setRoles={setData}
+								/>
+							),
+						}
 					}
-				}
-				if (name === "Time Zone" && key === "currency") {
-					return {
-						title: "Currency",
-						lookup: currencies,
-						field: "currency",
+					if (key === "rewards") {
+						return {
+							title: "Rewards",
+							type: "numeric",
+							field: "rewards",
+						}
 					}
-				}
-				if (name === "Agent" && key === "needToFinalizeSalaries") {
-					return {
-						title: "Need to Finalize Salaries",
-						type: "boolean",
-						field: "needToFinalizeSalaries",
+					if (key === "subjects") {
+						return {
+							title: humanReadable(key),
+							field: key,
+							render: (rowData) =>
+								rowData[key] &&
+								rowData[key].map((subject) => (
+									<Chip
+										variant="default"
+										color="primary"
+										size="small"
+										key={subject._id}
+										label={subject.subjectName}
+									/>
+								)),
+							editComponent: (props) => {
+								return <DropdownEditor {...props} value={props?.rowData?.subjects || []} />
+							},
+						}
 					}
-				}
-				if (name === "Teacher" && key === "isDemoIncludedInSalaries") {
-					return {
-						title: "Include Demo Classes in Salaries",
-						type: "boolean",
-						field: "isDemoIncludedInSalaries",
+					if (key === "isNotAvailableInBooking") {
+						return {
+							title: "Disable in Booking",
+							type: "boolean",
+							field: "isNotAvailableInBooking",
+						}
 					}
-				}
-				if (name === "Time Zone" && key === "timeZonePriority") {
-					return {
-						title: "Show in Auto Booking",
-						field: key,
-						type: "boolean",
+					if (name === "Time Zone" && key === "currency") {
+						return {
+							title: "Currency",
+							lookup: currencies,
+							field: "currency",
+						}
 					}
-				}
-				if (name === "Subject" && key === "category") {
-					return {
-						title: "Category",
-						field: key,
-						lookup: categoryLookup,
+					if (name === "Agent" && key === "needToFinalizeSalaries") {
+						return {
+							title: "Need to Finalize Salaries",
+							type: "boolean",
+							field: "needToFinalizeSalaries",
+						}
 					}
-				}
-				if (name === "Teacher" && key === "category") {
-					return {
-						title: "Category",
-						field: key,
-						lookup: categoryLookup,
+					if (name === "Teacher" && key === "isDemoIncludedInSalaries") {
+						return {
+							title: "Include Demo Classes in Salaries",
+							type: "boolean",
+							field: "isDemoIncludedInSalaries",
+						}
 					}
-				}
-				if (name === "Teacher" && key === "subject") {
-					return {
-						title: "Subject",
-						field: key,
-						lookup: subjectLookup,
+					if (name === "Time Zone" && key === "timeZonePriority") {
+						return {
+							title: "Show in Auto Booking",
+							field: key,
+							type: "boolean",
+						}
 					}
-				}
-				if (
-					key === "zoomJwt" ||
-					key === "zoomSecret" ||
-					key === "zoomApi" ||
-					key === "summerCampDescription" ||
-					key === "summerCampImageLink"
-				) {
-					return {
-						title: humanReadable(key),
-						field: key,
-						render: (rowData) => (
-							<span>
-								{rowData[key] ? rowData[key].slice(0, 6) + "...." + rowData[key].slice(-10) : ""}
-							</span>
-						),
+					if (name === "Subject" && key === "category") {
+						return {
+							title: "Category",
+							field: key,
+							lookup: categoryLookup,
+						}
 					}
-				}
-				if (
-					key === "timeSlots" ||
-					key === "id" ||
-					key === "_id" ||
-					key === "statusId" ||
-					key === "tableData"
-				) {
-					return {title: humanReadable(key), field: key, hidden: true}
-				} else if (key === "TeacherSubjectsId") {
-					return {
-						title: humanReadable(key),
-						field: key,
-						render: (rowData) =>
-							rowData[key] &&
-							rowData[key].map((subject) => (
-								<Chip variant="outlined" key={subject._id} label={subject.className} />
-							)),
-						editComponent: (props) => (
-							<DropdownEditor {...props} value={[{_id: "2345455", className: "CLASS OLD"}]} />
-						),
+					if (name === "Teacher" && key === "category") {
+						return {
+							title: "Category",
+							field: key,
+							lookup: categoryLookup,
+						}
 					}
-				} else if (key === status) {
-					return {title: humanReadable(key), field: key, lookup}
-				} else if (key === "amount") {
-					return {
-						title: humanReadable(key),
-						field: key,
-						type: "numeric",
-						align: "left",
+					if (name === "Teacher" && key === "subject") {
+						return {
+							title: "Subject",
+							field: key,
+							lookup: subjectLookup,
+						}
 					}
-				} else if (key === "AgentRole") {
-					return {
-						title: humanReadable(key),
-						field: key,
-						lookup: {3: "Admin", 4: "Sales", 5: "Customer Support"},
-						editable: !(isAutheticated().roleId == 3) ? "never" : undefined,
-					}
-				} else if (key === "teacherImageLink") {
-					return {
-						title: humanReadable(key),
-						field: key,
-						type: "string",
-						cellStyle: {whiteSpace: "nowrap"},
-						headerStyle: {whiteSpace: "nowrap"},
-						render: (rowData) => {
-							return (
+					if (
+						key === "zoomJwt" ||
+						key === "zoomSecret" ||
+						key === "zoomApi" ||
+						key === "summerCampDescription" ||
+						key === "summerCampImageLink"
+					) {
+						return {
+							title: humanReadable(key),
+							field: key,
+							render: (rowData) => (
 								<span>
-									{rowData[key] === "" ? null : (
-										<img style={{height: 50, width: 50}} src={rowData[key]} alt="" />
-									)}
+									{rowData[key] ? rowData[key].slice(0, 6) + "...." + rowData[key].slice(-10) : ""}
 								</span>
-							)
-						},
-						editComponent: (props) => (
-							<input
-								type="file"
-								onChange={(e) => handleFileUpload(e, props)}
-								style={{width: "200px"}}
-							/>
-						),
+							),
+						}
 					}
-				} else if (key === "color") {
-					return {
-						title: humanReadable(key),
-						field: key,
-						type: "file",
-						cellStyle: {whiteSpace: "nowrap"},
-						headerStyle: {whiteSpace: "nowrap"},
-						render: (rowData) => {
-							return (
-								<span>
-									<Button
-										variant="contained"
-										style={{background: rowData[key], height: 28, width: 100, marginLeft: 10}}
-									></Button>
-								</span>
-							)
-						},
+					if (
+						key === "timeSlots" ||
+						key === "id" ||
+						key === "_id" ||
+						key === "statusId" ||
+						key === "tableData"
+					) {
+						return {title: humanReadable(key), field: key, hidden: true}
+					} else if (key === "TeacherSubjectsId") {
+						return {
+							title: humanReadable(key),
+							field: key,
+							render: (rowData) =>
+								rowData[key] &&
+								rowData[key].map((subject) => (
+									<Chip variant="outlined" key={subject._id} label={subject.className} />
+								)),
+							editComponent: (props) => (
+								<DropdownEditor {...props} value={[{_id: "2345455", className: "CLASS OLD"}]} />
+							),
+						}
+					} else if (key === status) {
+						return {title: humanReadable(key), field: key, lookup}
+					} else if (key === "amount") {
+						return {
+							title: humanReadable(key),
+							field: key,
+							type: "numeric",
+							align: "left",
+						}
+					} else if (key === "AgentRole") {
+						return {
+							title: humanReadable(key),
+							field: key,
+							lookup: {3: "Admin", 4: "Sales", 5: "Customer Support"},
+							editable: !(parseInt(isAutheticated().roleId) === 3) ? "never" : undefined,
+						}
+					} else if (key === "teacherImageLink") {
+						return {
+							title: humanReadable(key),
+							field: key,
+							type: "string",
+							cellStyle: {whiteSpace: "nowrap"},
+							headerStyle: {whiteSpace: "nowrap"},
+							render: (rowData) => {
+								return (
+									<span>
+										{rowData[key] === "" ? null : (
+											<img style={{height: 50, width: 50}} src={rowData[key]} alt="" />
+										)}
+									</span>
+								)
+							},
+							editComponent: (props) => (
+								<input
+									type="file"
+									onChange={(e) => handleFileUpload(e, props)}
+									style={{width: "200px"}}
+								/>
+							),
+						}
+					} else if (key === "color") {
+						return {
+							title: humanReadable(key),
+							field: key,
+							type: "file",
+							cellStyle: {whiteSpace: "nowrap"},
+							headerStyle: {whiteSpace: "nowrap"},
+							render: (rowData) => {
+								return (
+									<span>
+										<Button
+											variant="contained"
+											style={{background: rowData[key], height: 28, width: 100, marginLeft: 10}}
+										></Button>
+									</span>
+								)
+							},
+						}
+					} else {
+						return {title: humanReadable(key), field: key}
 					}
-				} else {
-					return {title: humanReadable(key), field: key}
-				}
-			})
-			setColumn(v)
+				})
+			)
 		}
-	}, [lookup, categoryLookup, data, subjectLookup])
+	}, [lookup, categoryLookup, data, subjectLookup, name, status, currencies, permissions, roles])
 
 	const handleClose = (event, reason) => {
 		if (reason === "clickaway") {
@@ -312,26 +368,64 @@ const MaterialTableAddFields = ({
 			</Snackbar>
 			<MaterialTable
 				title={`${name} Table`}
-				columns={column}
+				columns={columns}
 				isLoading={loading || imageLoading}
 				options={{
 					paging: false,
-					maxBodyHeight: height - 230,
+					maxBodyHeight: height - 180,
 					addRowPosition: "first",
-					actionsColumnIndex: -1,
+					actionsColumnIndex: 0,
 					exporting: true,
-					grouping: name === "Teacher",
 				}}
 				components={{
 					Row: (props) => (
 						<MTableBodyRow
 							{...props}
 							onDoubleClick={(e) => {
-								props.actions[1]().onClick(e, props.data)
+								props.actions[name === "Teacher" ? 2 : 1]().onClick(e, props.data)
 							}}
 						/>
 					),
+					Toolbar: (props) => (
+						<div>
+							<MTableToolbar {...props} />
+							{name === "Teacher" ? (
+								<div style={{display: "flex", gap: 5, padding: "0 10px"}}>
+									{Object.keys(subjectLookup).map((subjectId) => (
+										<Chip
+											label={subjectLookup[subjectId]}
+											size="small"
+											variant={selectedSubject === subjectId ? "default" : "outlined"}
+											color="secondary"
+											onClick={() => setSelectedSubject(prev => prev === subjectId ? "" : subjectId)}
+											style={{marginRight: 5, cursor: "pointer"}}
+										/>
+									))}
+								</div>
+							) : (
+								""
+							)}
+						</div>
+					),
 				}}
+				actions={
+					name === "Teacher"
+						? [
+								{
+									icon: () => <WhatsApp />,
+									tooltip: "Open teachet whatsapp",
+									onClick: (event, data) => {
+										window.open(
+											`https://api.whatsapp.com/send?phone=${data?.Phone_number?.replace(
+												"+",
+												""
+											).replace(" ", "")}`
+										)
+									},
+								},
+						  ]
+						: []
+				}
 				data={data}
 				editable={{
 					isDeleteHidden: (rowData) => (rowData && rowData.statusId) || data.length === 1,
@@ -341,7 +435,7 @@ const MaterialTableAddFields = ({
 							.then((fetchedData) => {
 								if (fetchedData.data.status === "ok") {
 									setSuccess(true)
-									setRefresh(prev => !prev)
+									setRefresh((prev) => !prev)
 									setResponse(fetchedData.data.message)
 									setOpen(true)
 									setLoading(false)
@@ -356,7 +450,7 @@ const MaterialTableAddFields = ({
 								console.error(e, e.response)
 							})
 					},
-					onRowUpdate: (newData, oldData) => {
+					onRowUpdate: (newData) => {
 						if (name === "Teacher") {
 							newData.isDemoIncludedInSalaries = !!newData.isDemoIncludedInSalaries
 							newData.isNotAvailableInBooking = !!newData.isNotAvailableInBooking
@@ -364,8 +458,7 @@ const MaterialTableAddFields = ({
 
 						return editField(`Update ${name}`, newData).then((fetchedData) => {
 							if (fetchedData.data.status === "OK") {
-								
-								setRefresh(prev => !prev)
+								setRefresh((prev) => !prev)
 								setSuccess(true)
 								setResponse(fetchedData.data.message)
 								setOpen(true)

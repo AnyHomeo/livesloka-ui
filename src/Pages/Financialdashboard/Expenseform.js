@@ -1,4 +1,12 @@
-import {Button, CircularProgress, Container, makeStyles, TextField} from "@material-ui/core"
+import {
+	Button,
+	CircularProgress,
+	Container,
+	FormControl,
+	IconButton,
+	makeStyles,
+	TextField,
+} from "@material-ui/core"
 import React from "react"
 import {useState} from "react"
 import axios from "axios"
@@ -42,6 +50,7 @@ const Expenseform = () => {
 	const [selectedDate, handleDateChange] = useState(new Date())
 	const [snackBarOpen, setSnackBarOpen] = useState(false)
 
+	const [invoiceAttachment, setInvoiceAttachment] = useState()
 	const [name, setName] = useState("")
 	const [description, setDescription] = useState("")
 	const [amount, setAmount] = useState("")
@@ -117,6 +126,72 @@ const Expenseform = () => {
 						inputVariant="outlined"
 					/>
 				</MuiPickersUtilsProvider>
+
+				<FormControl
+					variant="outlined"
+					style={{
+						width: "100%",
+					}}
+				>
+					<div
+						style={{
+							height: "250px",
+							backgroundColor: "#F5F5F5",
+							display: "flex",
+							justifyContent: "center",
+							alignItems: "center",
+							flexDirection: "column",
+						}}
+					>
+						{
+							// eslint-disable-next-line
+							invoiceAttachment && invoiceAttachment.length > 0 === true ? (
+								<img
+									src={URL.createObjectURL(invoiceAttachment[0])}
+									alt=""
+									style={{
+										height: "100%",
+										width: 275,
+										objectFit: "cover",
+										marginTop: 10,
+									}}
+								/>
+							) : (
+								<>
+									<IconButton variant="contained" component="label">
+										<i
+											style={{
+												color: "#C4C4C4",
+												fontSize: 30,
+												marginBottom: 5,
+											}}
+											class="fa fa-camera"
+										></i>
+										<input
+											multiple
+											accept="image/x-png,image/jpeg"
+											onChange={(e) => setInvoiceAttachment(e.target.files)}
+											type="file"
+											hidden
+										/>
+									</IconButton>
+									<p style={{color: "#C4C4C4", fontWeight: "bold"}}>Choose an Image</p>
+								</>
+							)
+						}
+					</div>
+					<p
+						style={{
+							color: "red",
+							marginBottom: 20,
+							cursor: "pointer",
+							marginTop: 20,
+						}}
+						onClick={() => setInvoiceAttachment()}
+					>
+						<i className="fas fa-times-circle"></i> Delete Image
+					</p>
+				</FormControl>
 
 				{loading ? (
 					<div

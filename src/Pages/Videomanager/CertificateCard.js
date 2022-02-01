@@ -73,7 +73,7 @@ const CertificateCard = ({
 					srcset=""
 				/>
 			) : (
-				<object width="100%" height="400" data={item.image} type="application/pdf"></object>
+				<object width="100%" height="150" data={item.image} type="application/pdf"></object>
 			)}
 
 			<div

@@ -18,17 +18,6 @@ const InvoicePages = () => {
 	])
 	return (
 		<div>
-			{/* <MaterialTable
-				title="Manage Invoices"
-				columns={columnData}
-				data={data}
-				options={{
-					search: true,
-					exportButton: true,
-					editable: true,
-				}}
-			/> */}
-
 			<MaterialTable
 				title="Invoice Management"
 				columns={columnData}

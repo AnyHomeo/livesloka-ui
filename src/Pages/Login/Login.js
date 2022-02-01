@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import MuiAlert from "@material-ui/lab/Alert";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { login } from "../../Services/Services";
 import { Redirect } from "react-router-dom";
 import { authenticate, isAutheticated } from "../../auth/index";
@@ -118,6 +118,7 @@ const Login = () => {
     setUser({ ...user, isLoading: true, errors: false });
     login(userId, password)
       .then((data) => {
+        console.log(data)
         localStorage.setItem(
           "roleID",
           data.data.result.token && data.data.result.roleId

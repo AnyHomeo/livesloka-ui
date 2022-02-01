@@ -1,0 +1,11 @@
+.row-style {
+	background-color: #f1f2f6;
+	padding: 15px;
+	border: solid white 5px;
+	border-radius: 15px;
+	height: 60px;
+	width: 600px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
