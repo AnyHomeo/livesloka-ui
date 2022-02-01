@@ -59,6 +59,7 @@ const ChatRoom = () => {
 	const [value, setValue] = useState(1)
 	const [isClosed, SetIsClosed] = useState(false)
 
+	const [isBot, setIsBot] = useState(true)
 	const [time, setTime] = React.useState(5)
 	const [responses, setResponses] = React.useState(null)
 	const handleChangeSeconds = (event) => {
@@ -94,11 +95,12 @@ const ChatRoom = () => {
 			.get(`${process.env.REACT_APP_API_KEY}/getNonChatConfig`)
 			.then(({data}) => {
 				if (data[0]) {
-					const {show, time, responseMessages} = data[0]
+					const {show, time, responseMessages, bot} = data[0]
 					console.log(data)
 
 					setTime(time)
 					SetIsClosed(show)
+					setIsBot(bot)
 					setResponses(
 						responseMessages.map((el) => ({id: Math.floor(Math.random() * 10000), text: el}))
 					)
@@ -124,6 +126,23 @@ const ChatRoom = () => {
 		socket.emit("toggleNonChatBot", {show: event.target.checked}, (error) => {
 			if (error) alert(error)
 		})
+	}
+	const handelBot = async (event) => {
+		setIsBot(event.target.checked)
+		axios
+			.post(`${process.env.REACT_APP_API_KEY}/updateShowBot`, {
+				bot: event.target.checked,
+			})
+			.then(({data}) => {
+				console.log(data)
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+
+		// socket.emit("toggleNonChatBot", {show: event.target.checked}, (error) => {
+		// 	if (error) alert(error)
+		// })
 	}
 	return (
 		<div className="app">
@@ -188,6 +207,15 @@ const ChatRoom = () => {
 									<FormControlLabel
 										control={<Switch checked={isClosed} onChange={handelClosed} />}
 										label={`${isClosed ? "Chat Opened" : "Chat Hidden"}`}
+									/>
+								</CardContent>
+							</Card>
+
+							<Card className={classes.card}>
+								<CardContent className={classes.cardContent}>
+									<FormControlLabel
+										control={<Switch checked={isBot} onChange={handelBot} />}
+										label={`${isBot ? "Chat Bot Enabled" : "Chat Bot Disabled"}`}
 									/>
 								</CardContent>
 							</Card>

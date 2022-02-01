@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from "react"
-import {Avatar, Button, Chip, IconButton} from "@material-ui/core"
+import {Avatar, Button, Chip, IconButton, Tooltip} from "@material-ui/core"
 import SendIcon from "@material-ui/icons/Send"
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon"
 import Picker from "emoji-picker-react"
@@ -87,7 +87,6 @@ function MainGlobalChat({roomID}) {
 					typing: false,
 					message: "",
 				})
-
 				setMessages((prevState) => {
 					const oldState = [...prevState]
 					oldState.push({
@@ -340,19 +339,21 @@ function MainGlobalChat({roomID}) {
 							let resp = el.split("~")
 							let message = resp.length > 1 ? resp[1] : resp[0]
 							return (
-								<Chip
-									label={resp[0]}
-									key={idx}
-									variant="outlined"
-									onClick={() => {
-										// handelSendMessage(message)
-										setMessage(message)
-									}}
-									style={{
-										maxWidth: "300px",
-										cursor: "pointer",
-									}}
-								/>
+								<Tooltip title={message} placement="top">
+									<Chip
+										label={resp[0]}
+										key={idx}
+										variant="outlined"
+										onClick={() => {
+											// handelSendMessage(message)
+											setMessage(message)
+										}}
+										style={{
+											maxWidth: "300px",
+											cursor: "pointer",
+										}}
+									/>
+								</Tooltip>
 							)
 						})}
 					</div>
