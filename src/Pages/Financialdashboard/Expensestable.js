@@ -5,7 +5,6 @@ import MuiAlert from "@material-ui/lab/Alert"
 import {Snackbar} from "@material-ui/core"
 
 import Axios from "axios"
-import useWindowDimensions from "../../Components/useWindowDimensions"
 import moment from "moment"
 
 function Alert(props) {
@@ -19,8 +18,6 @@ const Expensestable = ({date}) => {
 	const [open, setOpen] = useState(false)
 	const [success, setSuccess] = useState(false)
 	const [response, setResponse] = useState("")
-	const {height} = useWindowDimensions()
-	const [imageLoading, setImageLoading] = useState(false)
 
 	useEffect(() => {
 		fetchData()
@@ -85,7 +82,7 @@ const Expensestable = ({date}) => {
 			<MaterialTable
 				title={`Table`}
 				columns={column}
-				isLoading={loading || imageLoading}
+				isLoading={loading}
 				options={{
 					search: true,
 					pageSizeOptions: [5, 20, 30, 40, 50, data.length],

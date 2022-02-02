@@ -1,15 +1,12 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from "react"
 import MaterialTable from "material-table"
 import Axios from "axios"
 import moment from "moment"
-import razorpay from "../../Images/razorpay.svg"
-import paypal from "../../Images/paypal.svg"
 import TransactionTablenew from "./TransactionsTablenew"
 const TransactionsTable = ({date}) => {
 	const [column, setColumn] = useState([])
 	const [data, setData] = useState([])
-	const [loading, setLoading] = useState(true)
+	const [, setLoading] = useState(true)
 
 	useEffect(() => {
 		fetchData()
