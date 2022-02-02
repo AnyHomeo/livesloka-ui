@@ -29,9 +29,9 @@ const useStyles = makeStyles({
 })
 
 const AssignChats = React.memo(() => {
-	console.log("logged assign Chats")
 	const classes = useStyles()
 	const history = useHistory()
+	const userId = isAutheticated().userId
 
 	// const [chats, setChats] = useState([])
 	const [nonChats, setNonChats] = useState([])
@@ -51,6 +51,12 @@ const AssignChats = React.memo(() => {
 			console.log("user pinged")
 			userping.play()
 		})
+		socket.on("non-user-pinged", ({roomID}) => {
+			console.log("user pinged")
+			userping.play()
+		})
+		socket.emit("login", {userId})
+		console.log(userId)
 	}, [])
 	useEffect(() => {
 		axios.get(`${process.env.REACT_APP_API_KEY}/nonassignedchats`).then(({data}) => {
