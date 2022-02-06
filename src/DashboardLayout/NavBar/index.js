@@ -202,17 +202,16 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			title: "Video Manager",
 			permission: "Video Manager",
 		},
-
-		{
-			href: "/accountant/finance",
-			icon: BarChart,
-			title: "Financial Dashboard",
-			permission: "Financial Dashboard",
-		},
 		{
 			href: "/accountant/invoice",
 			icon: FileText,
 			title: "GST Data",
+			permission: "Accounts",
+		},
+		{
+			href: "/accountant/finance",
+			icon: BarChart,
+			title: "Accountant Dashboard",
 			permission: "Accounts",
 		},
 	]
