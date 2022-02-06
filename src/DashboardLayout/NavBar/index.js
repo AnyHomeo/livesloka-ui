@@ -213,7 +213,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			href: "/accountant/invoice",
 			icon: FileText,
 			title: "GST Data",
-			permission: "Financial Dashboard",
+			permission: "Accounts",
 		},
 	]
 

@@ -190,7 +190,7 @@ const adminRoutes = [
 	},
 	{permission: "Accounts", path: "/accountant/invoice", exact: true, component: InvoicePages},
 	{
-		permission: "Financial Dashboard",
+		permission: "Accounts",
 		path: "/accountant/finance",
 		exact: true,
 		component: FinancialPage,
