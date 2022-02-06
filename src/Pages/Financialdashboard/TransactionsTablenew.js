@@ -16,17 +16,10 @@ const useStyles = makeStyles({
 	table: {
 		minWidth: 650,
 	},
+	boldRow: {
+		fontWeight: "bold",
+	},
 })
-
-function createData(name, calories, fat, carbs, protein) {
-	return {name, calories, fat, carbs, protein}
-}
-
-const rows = [
-	createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-	createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-	createData("Eclair", 262, 16.0, 24, 6.0),
-]
 
 export default function TransactionTablenew({id, type}) {
 	const classes = useStyles()
@@ -86,6 +79,19 @@ export default function TransactionTablenew({id, type}) {
 								</TableCell>
 							</TableRow>
 						))}
+					<TableRow className={classes.boldRow}>
+						<TableCell component="th" scope="row"></TableCell>
+
+						<TableCell component="th" scope="row"></TableCell>
+						<TableCell align="right"> </TableCell>
+						<TableCell align="right">
+							Total: {data?.reduce((total, row) => total + (row.taxableValue ?? 0), 0)}
+						</TableCell>
+						<TableCell align="right">
+							Total Fee: {data?.reduce((total, row) => total + (row.transactionFee ?? 0), 0)}
+						</TableCell>
+						<TableCell align="right"></TableCell>
+					</TableRow>
 				</TableBody>
 			</Table>
 
