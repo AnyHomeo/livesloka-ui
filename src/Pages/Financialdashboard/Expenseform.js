@@ -17,7 +17,7 @@ import Snackbar from "@material-ui/core/Snackbar"
 import MuiAlert from "@material-ui/lab/Alert"
 import {useHistory} from "react-router-dom"
 import {firebase} from "../../Firebase"
-
+import {Paperclip} from "react-feather"
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />
 }
@@ -58,6 +58,7 @@ const Expenseform = () => {
 	const [amount, setAmount] = useState("")
 	const [dollarAmount, setDollarAmount] = useState("")
 	const [indianAmount, setIndianAmount] = useState("")
+	const [gtsAmount, setGtsAmount] = useState("")
 	const [loading, setLoading] = useState(false)
 	const [alertData, setAlertData] = useState()
 	const handleSnackBarClose = (event, reason) => {
@@ -84,11 +85,11 @@ const Expenseform = () => {
 		const formData = {
 			name,
 			description,
-			amount,
 			date: selectedDate,
 			dollarAmount,
 			indianAmount,
 			attachment: url,
+			gst: gtsAmount,
 		}
 
 		const data = await axios.post(`${process.env.REACT_APP_API_KEY}/admin/add/expenses`, formData)
@@ -130,12 +131,6 @@ const Expenseform = () => {
 				/>
 				<TextField
 					className={classes.formField}
-					onChange={(e) => setAmount(e.target.value)}
-					label="Expense Amount"
-					variant="outlined"
-				/>
-				<TextField
-					className={classes.formField}
 					onChange={(e) => setDollarAmount(e.target.value)}
 					label="Dollar Amount"
 					variant="outlined"
@@ -144,6 +139,12 @@ const Expenseform = () => {
 					className={classes.formField}
 					onChange={(e) => setIndianAmount(e.target.value)}
 					label="Indian Amount"
+					variant="outlined"
+				/>
+				<TextField
+					className={classes.formField}
+					onChange={(e) => setGtsAmount(e.target.value)}
+					label="GST"
 					variant="outlined"
 				/>
 
@@ -174,13 +175,25 @@ const Expenseform = () => {
 							marginTop: 20,
 						}}
 					>
-						{console.log(invoiceAttachment)}
 						{
 							// eslint-disable-next-line
 							invoiceAttachment && invoiceAttachment.length > 0 === true ? (
 								<>
 									{invoiceAttachment[0].type === "application/pdf" ? (
-										<p style={{marginTop: 15}}>{invoiceAttachment[0].name}</p>
+										<div style={{display: "flex", alignItems: "center"}}>
+											<p style={{marginTop: 15}}>{invoiceAttachment[0].name}</p>
+											{/* <p
+												style={{
+													color: "red",
+													cursor: "pointer",
+													marginTop: 15,
+													marginLeft: 10,
+												}}
+												onClick={() => setInvoiceAttachment()}
+											>
+												<i className="fas fa-times-circle"></i>
+											</p> */}
+										</div>
 									) : (
 										<img
 											src={URL.createObjectURL(invoiceAttachment[0])}
@@ -198,14 +211,7 @@ const Expenseform = () => {
 							) : (
 								<>
 									<IconButton variant="contained" component="label">
-										<i
-											style={{
-												color: "#C4C4C4",
-												fontSize: 30,
-												marginBottom: 5,
-											}}
-											class="fa fa-camera"
-										></i>
+										<Paperclip />
 										<input
 											onChange={(e) => setInvoiceAttachment(e.target.files)}
 											type="file"
@@ -217,17 +223,20 @@ const Expenseform = () => {
 							)
 						}
 					</div>
-					<p
-						style={{
-							color: "red",
-							marginBottom: 20,
-							cursor: "pointer",
-							marginTop: 20,
-						}}
-						onClick={() => setInvoiceAttachment()}
-					>
-						<i className="fas fa-times-circle"></i> Delete Image
-					</p>
+
+					{invoiceAttachment && invoiceAttachment.length > 0 === true ? (
+						<p
+							style={{
+								color: "red",
+								marginBottom: 20,
+								cursor: "pointer",
+								marginTop: 20,
+							}}
+							onClick={() => setInvoiceAttachment()}
+						>
+							<i className="fas fa-times-circle"></i> Delete Attachment
+						</p>
+					) : null}
 				</FormControl>
 
 				{loading ? (

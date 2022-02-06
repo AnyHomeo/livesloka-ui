@@ -68,16 +68,16 @@ const Expensestable = ({date}) => {
 					field: "description",
 				},
 				{
-					title: "Amount",
-					field: "amount",
-				},
-				{
 					title: "Dollar Amount",
 					field: "dollarAmount",
 				},
 				{
 					title: "Indian Amount",
 					field: "indianAmount",
+				},
+				{
+					title: "GST",
+					field: "gst",
 				},
 				{
 					title: "Date",
@@ -88,16 +88,11 @@ const Expensestable = ({date}) => {
 					title: "Attachment",
 					field: "attachment",
 					render: (rowData) => (
-						<IconButton>
-							<GetAppIcon
-								onClick={() =>
-									download(
-										rowData.attachment,
-										`Live Sloka Invoice.${getFileExtension(rowData.attachment)}`
-									)
-								}
-							/>
-						</IconButton>
+						<a href={rowData.attachment} target="_blank">
+							<IconButton>
+								<GetAppIcon />
+							</IconButton>
+						</a>
 					),
 				},
 			]

@@ -209,6 +209,12 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			title: "Financial Dashboard",
 			permission: "Financial Dashboard",
 		},
+		{
+			href: "/accountant/invoice",
+			icon: FileText,
+			title: "GST Data",
+			permission: "Financial Dashboard",
+		},
 	]
 
 	const classes = useStyles()
