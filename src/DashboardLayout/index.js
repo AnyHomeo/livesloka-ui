@@ -59,11 +59,11 @@ const DashboardLayout = ({children}) => {
 					<div className={classes.content}>{children}</div>
 				</div>
 			</div>
-			{rightChatOpen ? (
+			{/* {rightChatOpen ? (
 				<Global rightChatOpen={rightChatOpen} setRightChatOpen={setRightChatOpen} />
 			) : (
 				<BotButton setRightChatOpen={setRightChatOpen} />
-			)}
+			)} */}
 		</div>
 	)
 }

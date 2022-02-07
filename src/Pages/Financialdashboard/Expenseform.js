@@ -87,7 +87,7 @@ const Expenseform = () => {
 			description,
 			date: selectedDate,
 			dollarAmount,
-			indianAmount,
+			amount: indianAmount,
 			attachment: url,
 			gst: gtsAmount,
 		}

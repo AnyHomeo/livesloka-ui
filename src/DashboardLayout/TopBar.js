@@ -605,41 +605,42 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 					</Dialog>
 				</div>
 
-				<div
-					style={{
-						display: "flex",
-						justifyContent: "space-evenly",
-						alignItems: "center",
-						width: "100%",
-					}}
-				>
-					{isAutheticated().roleId === 3 && (
-						<>
-							<Link
-								to="/room"
-								style={{color: `${newUser ? "red" : "white"}`}}
-								onClick={() => {
-									setNewUser(false)
-									users = []
-									setChatCount(0)
-								}}
-							>
-								<Badge badgeContent={chatCount} color="error">
-									<ChatIcon />
-								</Badge>
-							</Link>
-							<Link
-								to="/room"
-								style={{
-									color: "#fff",
-								}}
-							>
-								<Badge badgeContent={last24Hrs} color="primary">
-									<HistoryIcon />
-								</Badge>
-							</Link>
+				{isAutheticated() && isAutheticated().AgentDesc === "Accountants" ? null : (
+					<div
+						style={{
+							display: "flex",
+							justifyContent: "space-evenly",
+							alignItems: "center",
+							width: "100%",
+						}}
+					>
+						{isAutheticated().roleId === 3 && (
+							<>
+								<Link
+									to="/room"
+									style={{color: `${newUser ? "red" : "white"}`}}
+									onClick={() => {
+										setNewUser(false)
+										users = []
+										setChatCount(0)
+									}}
+								>
+									<Badge badgeContent={chatCount} color="error">
+										<ChatIcon />
+									</Badge>
+								</Link>
+								<Link
+									to="/room"
+									style={{
+										color: "#fff",
+									}}
+								>
+									<Badge badgeContent={last24Hrs} color="primary">
+										<HistoryIcon />
+									</Badge>
+								</Link>
 
-							{/* <Link
+								{/* <Link
 								to="/nonroom"
 								style={{
 									color: "#fff",
@@ -649,19 +650,21 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 									<Replay />
 								</Badge>
 							</Link> */}
-						</>
-					)}
-					<AssignChats />
-					<a
-						href="/login"
-						onClick={() => logout(() => console.log("logout successful"))}
-						style={{color: "white"}}
-					>
-						<IconButton color="inherit">
-							<InputIcon />
-						</IconButton>
-					</a>
-				</div>
+							</>
+						)}
+						<AssignChats />
+					</div>
+				)}
+
+				<a
+					href="/login"
+					onClick={() => logout(() => console.log("logout successful"))}
+					style={{color: "white"}}
+				>
+					<IconButton color="inherit">
+						<InputIcon />
+					</IconButton>
+				</a>
 			</Toolbar>
 		</AppBar>
 	)

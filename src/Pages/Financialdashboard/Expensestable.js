@@ -70,7 +70,7 @@ const Expensestable = ({date}) => {
 				},
 				{
 					title: "Indian Amount",
-					field: "indianAmount",
+					field: "amount",
 				},
 				{
 					title: "GST",

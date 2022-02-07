@@ -58,7 +58,7 @@ const FinancialPage = () => {
 	const [showSalaries, setShowSalaries] = useState(false)
 	const [PaypalChartData, setPaypalChartData] = useState()
 	const [selectedMonth, setSelectedMonth] = useState()
-	const [selectedDate, setSelectedDate] = useState(moment().format("YYYY-MM"))
+	const [selectedDate, setSelectedDate] = useState(moment().subtract(1, "months").format("YYYY-MM"))
 	const [showTransactions, setShowTransactions] = useState(false)
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget)
@@ -84,7 +84,7 @@ const FinancialPage = () => {
 	const fetchData = async (date) => {
 		setLoading(true)
 		if (date === undefined) {
-			date = moment().format("YYYY-MM")
+			date = moment().subtract(1, "months").format("YYYY-MM")
 		}
 		const data = await axios.get(
 			`${process.env.REACT_APP_API_KEY}/transactions/cards?month=${date}`
@@ -190,7 +190,7 @@ const FinancialPage = () => {
 			<Container maxWidth={false}>
 				<div className={classes.dash}>
 					<div>
-						<p className={classes.dashboardText}>Dashboard</p>
+						<p className={classes.dashboardText}> {moment(selectedDate).format("MMM")} Dashboard</p>
 					</div>
 
 					<div>

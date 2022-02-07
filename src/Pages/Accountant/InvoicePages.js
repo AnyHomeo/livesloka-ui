@@ -37,7 +37,7 @@ const InvoicePages = () => {
 
 	const [monthArr] = useState(generateMonths())
 	const [anchorEl, setAnchorEl] = useState(null)
-	const [selectedDate, setSelectedDate] = useState(moment().format("YYYY-MM"))
+	const [selectedDate, setSelectedDate] = useState(moment().subtract(1, "months").format("YYYY-MM"))
 	const [loading, setLoading] = useState(false)
 	const [enableFilter, setEnableFilter] = useState(false)
 	const columnData2 = [
@@ -119,29 +119,29 @@ const InvoicePages = () => {
 		{
 			title: "Exchange",
 			field: "exchangeRate",
-			render: (rowData) => parseInt(rowData?.exchangeRate).toFixed(2),
+			render: (rowData) => rowData?.exchangeRate,
 		},
 		{
 			title: "Received",
 			field: "recieved",
-			render: (rowData) => parseInt(rowData?.recieved).toFixed(2),
+			render: (rowData) => rowData?.recieved,
 		},
 		{
 			title: "Turnover",
 			field: "turnover",
-			render: (rowData) => parseInt(rowData?.turnover)?.toFixed(2),
+			render: (rowData) => rowData?.turnover,
 		},
 		// {title: "Difference", field: "difference"},
 		{
 			title: "PayPal Fee",
 			field: "feeInInr",
-			render: (rowData) => parseInt(rowData?.feeInInr)?.toFixed(2),
+			render: (rowData) => rowData?.feeInInr,
 		},
 		// {title: "Fx Loss", field: "fxLoss"},
 		{
 			title: "Recieved",
 			field: "recieved",
-			render: (rowData) => parseInt(rowData?.recieved)?.toFixed(2),
+			render: (rowData) => rowData?.recieved,
 		},
 	]
 
@@ -155,7 +155,7 @@ const InvoicePages = () => {
 		setLoading(true)
 		let month, year
 		if (date === undefined) {
-			month = moment().format("MM")
+			month = moment().subtract(1, "months").format("MM")
 			year = moment().format("YYYY")
 		} else {
 			month = moment(date).format("MM")
@@ -195,7 +195,7 @@ const InvoicePages = () => {
 						exportButton: true,
 						editable: true,
 						filtering: enableFilter,
-						pageSize: 20,
+						paging: false,
 
 						headerStyle: {
 							backgroundColor: "#f1f2f6",
