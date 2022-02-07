@@ -3,20 +3,9 @@ import Axios from "axios"
 import MaterialTable from "material-table"
 import moment from "moment"
 import React, {useEffect, useState} from "react"
-import {DollarSign, Filter, Settings} from "react-feather"
+import {DollarSign, Filter} from "react-feather"
 
 const InvoicePages = () => {
-	// const useStyles = makeStyles((theme) => ({
-	// 	root: {
-	// 		"& .MuiDataGrid-row:nth-child(odd)": {
-	// 			backgroundColor:
-	// 				theme.palette.mode === "light"
-	// 					? theme.palette.secondary[300]
-	// 					: theme.palette.secondary[900],
-	// 		},
-	// 	},
-	// }))
-
 	const generateMonths = () => {
 		var dateStart = moment("2022-1-1")
 		var dateEnd = moment()
@@ -40,16 +29,20 @@ const InvoicePages = () => {
 	const [selectedDate, setSelectedDate] = useState(moment().subtract(1, "months").format("YYYY-MM"))
 	const [loading, setLoading] = useState(false)
 	const [enableFilter, setEnableFilter] = useState(false)
-	const columnData2 = [
+	const columnData = [
 		{
 			title: "Invoice no",
 			field: "id",
-			render: (rowData) => <p style={{color: "#3867d6", fontWeight: "bold"}}>{rowData.id}</p>,
+			render: (rowData) => (
+				<p style={{color: "#3867d6", fontWeight: "bold", minWidth: 130}}>{rowData.id}</p>
+			),
 		},
 		{
 			title: "Date",
 			field: "paymentDate",
-			render: (rowData) => moment(rowData?.paymentDate).format("MMM Do YY"),
+			render: (rowData) => (
+				<div style={{minWidth: 80}}> {moment(rowData?.paymentDate).format("MMM Do YY")} </div>
+			),
 		},
 		{title: "Name", field: "customer.person"},
 		{
@@ -107,6 +100,11 @@ const InvoicePages = () => {
 			),
 		},
 		{
+			title: "Fee(INR)",
+			field: "feeInInr",
+			render: (rowData) => rowData?.feeInInr,
+		},
+		{
 			title: "Net",
 			field: "net",
 			render: (rowData) => (
@@ -115,11 +113,21 @@ const InvoicePages = () => {
 				</p>
 			),
 		},
-		// {title: "Balance", field: "balance"},
 		{
-			title: "Exchange",
+			title: "Payment Rate",
 			field: "exchangeRate",
+			toolTip:'hello',
 			render: (rowData) => rowData?.exchangeRate,
+		},
+		{
+			title: "Deposit Rate",
+			field: "depositExchangeRate",
+			render: (rowData) => rowData?.depositExchangeRate,
+		},
+		{
+			title: "Rate Difference",
+			field: "exchangeRateDifference",
+			render: (rowData) => rowData?.exchangeRateDifference,
 		},
 		{
 			title: "Received",
@@ -131,18 +139,6 @@ const InvoicePages = () => {
 			field: "turnover",
 			render: (rowData) => rowData?.turnover,
 		},
-		// {title: "Difference", field: "difference"},
-		{
-			title: "PayPal Fee",
-			field: "feeInInr",
-			render: (rowData) => rowData?.feeInInr,
-		},
-		// {title: "Fx Loss", field: "fxLoss"},
-		{
-			title: "Recieved",
-			field: "recieved",
-			render: (rowData) => rowData?.recieved,
-		},
 	]
 
 	useEffect(() => {
@@ -150,7 +146,6 @@ const InvoicePages = () => {
 	}, [])
 
 	const [data, setData] = useState([])
-	const [data2, setData2] = useState([])
 	const fetchData = async (date) => {
 		setLoading(true)
 		let month, year
@@ -187,7 +182,7 @@ const InvoicePages = () => {
 			<div style={{padding: 20}}>
 				<MaterialTable
 					title={<p style={{fontSize: 20}}>GST Data</p>}
-					columns={columnData2}
+					columns={columnData}
 					isLoading={loading}
 					data={data}
 					options={{
@@ -196,13 +191,12 @@ const InvoicePages = () => {
 						editable: true,
 						filtering: enableFilter,
 						paging: false,
-
+						exportFileName: "GST data",
 						headerStyle: {
 							backgroundColor: "#f1f2f6",
-							// boxShadow: "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
 						},
 
-						rowStyle: (rowData, index) => {
+						rowStyle: (_, index) => {
 							return {
 								backgroundColor: index % 2 ? "aliceblue" : "white",
 								borderBottom: "3px solid white",
