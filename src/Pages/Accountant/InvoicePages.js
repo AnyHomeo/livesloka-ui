@@ -29,16 +29,20 @@ const InvoicePages = () => {
 	const [selectedDate, setSelectedDate] = useState(moment().subtract(1, "months").format("YYYY-MM"))
 	const [loading, setLoading] = useState(false)
 	const [enableFilter, setEnableFilter] = useState(false)
-	const columnData2 = [
+	const columnData = [
 		{
 			title: "Invoice no",
 			field: "id",
-			render: (rowData) => <p style={{color: "#3867d6", fontWeight: "bold"}}>{rowData.id}</p>,
+			render: (rowData) => (
+				<p style={{color: "#3867d6", fontWeight: "bold", minWidth: 130}}>{rowData.id}</p>
+			),
 		},
 		{
 			title: "Date",
 			field: "paymentDate",
-			render: (rowData) => moment(rowData?.paymentDate).format("MMM Do YY"),
+			render: (rowData) => (
+				<div style={{minWidth: 80}}> {moment(rowData?.paymentDate).format("MMM Do YY")} </div>
+			),
 		},
 		{title: "Name", field: "customer.person"},
 		{
@@ -96,6 +100,11 @@ const InvoicePages = () => {
 			),
 		},
 		{
+			title: "Fee(INR)",
+			field: "feeInInr",
+			render: (rowData) => rowData?.feeInInr,
+		},
+		{
 			title: "Net",
 			field: "net",
 			render: (rowData) => (
@@ -105,9 +114,20 @@ const InvoicePages = () => {
 			),
 		},
 		{
-			title: "Exchange",
+			title: "Payment Rate",
 			field: "exchangeRate",
+			toolTip:'hello',
 			render: (rowData) => rowData?.exchangeRate,
+		},
+		{
+			title: "Deposit Rate",
+			field: "depositExchangeRate",
+			render: (rowData) => rowData?.depositExchangeRate,
+		},
+		{
+			title: "Rate Difference",
+			field: "exchangeRateDifference",
+			render: (rowData) => rowData?.exchangeRateDifference,
 		},
 		{
 			title: "Received",
@@ -118,12 +138,6 @@ const InvoicePages = () => {
 			title: "Turnover",
 			field: "turnover",
 			render: (rowData) => rowData?.turnover,
-		},
-		{title: "Difference", field: "difference"},
-		{
-			title: "PayPal Fee",
-			field: "feeInInr",
-			render: (rowData) => rowData?.feeInInr,
 		},
 	]
 
@@ -168,7 +182,7 @@ const InvoicePages = () => {
 			<div style={{padding: 20}}>
 				<MaterialTable
 					title={<p style={{fontSize: 20}}>GST Data</p>}
-					columns={columnData2}
+					columns={columnData}
 					isLoading={loading}
 					data={data}
 					options={{
@@ -177,13 +191,12 @@ const InvoicePages = () => {
 						editable: true,
 						filtering: enableFilter,
 						paging: false,
-
+						exportFileName: "GST data",
 						headerStyle: {
 							backgroundColor: "#f1f2f6",
-							// boxShadow: "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
 						},
 
-						rowStyle: (rowData, index) => {
+						rowStyle: (_, index) => {
 							return {
 								backgroundColor: index % 2 ? "aliceblue" : "white",
 								borderBottom: "3px solid white",
