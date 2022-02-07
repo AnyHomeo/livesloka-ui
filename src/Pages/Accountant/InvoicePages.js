@@ -3,20 +3,9 @@ import Axios from "axios"
 import MaterialTable from "material-table"
 import moment from "moment"
 import React, {useEffect, useState} from "react"
-import {DollarSign, Filter, Settings} from "react-feather"
+import {DollarSign, Filter} from "react-feather"
 
 const InvoicePages = () => {
-	// const useStyles = makeStyles((theme) => ({
-	// 	root: {
-	// 		"& .MuiDataGrid-row:nth-child(odd)": {
-	// 			backgroundColor:
-	// 				theme.palette.mode === "light"
-	// 					? theme.palette.secondary[300]
-	// 					: theme.palette.secondary[900],
-	// 		},
-	// 	},
-	// }))
-
 	const generateMonths = () => {
 		var dateStart = moment("2022-1-1")
 		var dateEnd = moment()
@@ -115,7 +104,6 @@ const InvoicePages = () => {
 				</p>
 			),
 		},
-		// {title: "Balance", field: "balance"},
 		{
 			title: "Exchange",
 			field: "exchangeRate",
@@ -131,17 +119,11 @@ const InvoicePages = () => {
 			field: "turnover",
 			render: (rowData) => rowData?.turnover,
 		},
-		// {title: "Difference", field: "difference"},
+		{title: "Difference", field: "difference"},
 		{
 			title: "PayPal Fee",
 			field: "feeInInr",
 			render: (rowData) => rowData?.feeInInr,
-		},
-		// {title: "Fx Loss", field: "fxLoss"},
-		{
-			title: "Recieved",
-			field: "recieved",
-			render: (rowData) => rowData?.recieved,
 		},
 	]
 
@@ -150,7 +132,6 @@ const InvoicePages = () => {
 	}, [])
 
 	const [data, setData] = useState([])
-	const [data2, setData2] = useState([])
 	const fetchData = async (date) => {
 		setLoading(true)
 		let month, year
