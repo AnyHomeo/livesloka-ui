@@ -90,6 +90,47 @@ function SingleRow({
 		return scheduleLeaves && scheduleLeaves[time]?.includes(id)
 	}
 
+	const renderFlag = (student) => {
+		if (student.some((rowData) => rowData.autoDemo)) {
+			if (
+				student.some((rowData) => moment(rowData.paidTill).diff(moment(new Date()), "days") <= 0)
+			) {
+				return (
+					<div
+						style={{
+							backgroundColor: "#e74c3c",
+							borderRadius: "50%",
+							display: "flex",
+							justifyContent: "center",
+							alignItems: "center",
+							height: 20,
+							width: 20,
+						}}
+					>
+						<Flag style={{color: "white", height: 15, width: 15}} />
+					</div>
+				)
+			}
+		} else if (student.some((rowData) => rowData.numberOfClassesBought <= 0)) {
+			return (
+				<div
+					style={{
+						backgroundColor: "#e74c3c",
+						borderRadius: "50%",
+						display: "flex",
+						justifyContent: "center",
+						alignItems: "center",
+						height: 20,
+						width: 20,
+					}}
+				>
+					<Flag style={{color: "white", height: 15, width: 15}} />
+				</div>
+			)
+		} else {
+			return null
+		}
+	}
 	return (
 		<div
 			className="single-row-container"
@@ -135,6 +176,39 @@ function SingleRow({
 							</div>
 
 							<div className="new-old-customer2">
+								{singleData?.students?.map((rowData) => {
+									if (rowData.autoDemo) {
+										console.log(
+											"NEW",
+											singleData?.teacher?.TeacherName,
+											moment(rowData.paidTill).diff(moment(new Date()), "days"),
+											moment(rowData.paidTill).diff(moment(new Date()), "days") <= 0
+										)
+										console.log(
+											"OLD",
+											singleData?.teacher?.TeacherName,
+											rowData.numberOfClassesBought,
+											rowData.numberOfClassesBought <= 0
+										)
+										if (moment(rowData.paidTill).diff(moment(new Date()), "days") <= 0) {
+											return null
+										}
+									} else if (rowData.numberOfClassesBought <= 0) {
+										console.log(
+											"OLD",
+											singleData?.teacher?.TeacherName,
+											rowData.numberOfClassesBought,
+											rowData.numberOfClassesBought <= 0
+										)
+										return null
+									} else {
+										return null
+									}
+								})}
+							</div>
+
+							<div className="new-old-customer2">{renderFlag(singleData?.students)}</div>
+							{/* <div className="new-old-customer2">
 								{singleData?.students?.some(
 									(rowData) =>
 										rowData.numberOfClassesBought <= 0 ||
@@ -157,7 +231,7 @@ function SingleRow({
 								) : (
 									""
 								)}
-							</div>
+							</div> */}
 
 							<div
 								className="teacher-name"
