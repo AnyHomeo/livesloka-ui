@@ -68,6 +68,7 @@ function MainGlobalChat({roomID}) {
 				setRoom({
 					name: data.username,
 					admin: data.admin,
+					country: data.country,
 				})
 
 				if (allMsgs) {
@@ -230,8 +231,13 @@ function MainGlobalChat({roomID}) {
 					{" "}
 					{room.name.substr(0, 1)}
 				</Avatar>
-				<div className="chat_headerInfo">
+				<div className="chat_headerInfo" style={{position: "relative"}}>
 					<h3 className="chat-room-name">{room.name}</h3>
+					{room.country && (
+						<span style={{fontSize: "0.7rem", position: "absolute", top: 25}}>
+							{room?.country?.city}, {room?.country?.region}, {room?.country?.country_name}
+						</span>
+					)}
 					<p style={{color: "#16e35e"}}>{isTyping.typing ? "typing ..." : ""}</p>
 				</div>
 
