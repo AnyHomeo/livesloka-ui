@@ -175,38 +175,6 @@ function SingleRow({
 								{singleData.students.some((student) => student.autoDemo) ? "N" : "O"}
 							</div>
 
-							<div className="new-old-customer2">
-								{singleData?.students?.map((rowData) => {
-									if (rowData.autoDemo) {
-										console.log(
-											"NEW",
-											singleData?.teacher?.TeacherName,
-											moment(rowData.paidTill).diff(moment(new Date()), "days"),
-											moment(rowData.paidTill).diff(moment(new Date()), "days") <= 0
-										)
-										console.log(
-											"OLD",
-											singleData?.teacher?.TeacherName,
-											rowData.numberOfClassesBought,
-											rowData.numberOfClassesBought <= 0
-										)
-										if (moment(rowData.paidTill).diff(moment(new Date()), "days") <= 0) {
-											return null
-										}
-									} else if (rowData.numberOfClassesBought <= 0) {
-										console.log(
-											"OLD",
-											singleData?.teacher?.TeacherName,
-											rowData.numberOfClassesBought,
-											rowData.numberOfClassesBought <= 0
-										)
-										return null
-									} else {
-										return null
-									}
-								})}
-							</div>
-
 							<div className="new-old-customer2">{renderFlag(singleData?.students)}</div>
 							{/* <div className="new-old-customer2">
 								{singleData?.students?.some(
