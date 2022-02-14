@@ -91,27 +91,13 @@ function SingleRow({
 	}
 
 	const renderFlag = (student) => {
-		if (student.some((rowData) => rowData.autoDemo)) {
-			if (
-				student.some((rowData) => moment(rowData.paidTill).diff(moment(new Date()), "days") <= 0)
-			) {
-				return (
-					<div
-						style={{
-							backgroundColor: "#e74c3c",
-							borderRadius: "50%",
-							display: "flex",
-							justifyContent: "center",
-							alignItems: "center",
-							height: 20,
-							width: 20,
-						}}
-					>
-						<Flag style={{color: "white", height: 15, width: 15}} />
-					</div>
-				)
-			}
-		} else if (student.some((rowData) => rowData.numberOfClassesBought <= 0)) {
+		if (
+			student.every((rowData) =>
+				rowData.autoDemo
+					? moment(rowData.paidTill).diff(moment(new Date()), "days") <= 0
+					: rowData.numberOfClassesBought <= 0
+			)
+		) {
 			return (
 				<div
 					style={{
@@ -131,6 +117,8 @@ function SingleRow({
 			return null
 		}
 	}
+
+	console.log(todayData)
 	return (
 		<div
 			className="single-row-container"
@@ -156,6 +144,8 @@ function SingleRow({
 										? "#2ecc7075"
 										: singleData.demo
 										? "#f1c40fb6"
+										: singleData.isClassTemperarilyCancelled
+										? "rgb(170, 170, 170)"
 										: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
 										? "rgb(56, 103, 214, 0.5)"
 										: "#ff757562",
