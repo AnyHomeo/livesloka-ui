@@ -118,7 +118,6 @@ function SingleRow({
 		}
 	}
 
-	console.log(todayData)
 	return (
 		<div
 			className="single-row-container"
@@ -154,6 +153,8 @@ function SingleRow({
 										? "2px solid #130f40"
 										: singleData.isTeacherJoined
 										? "2px solid #56AE69"
+										: singleData.isClassTemperarilyCancelled
+										? "#bdc3c7"
 										: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
 										? "2px solid #3867d6"
 										: "2px solid #d63031",
