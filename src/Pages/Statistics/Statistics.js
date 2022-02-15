@@ -16,6 +16,8 @@ import {
 	Tooltip,
 	Switch,
 	DialogActions,
+	FormControlLabel,
+	CircularProgress,
 } from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
@@ -31,7 +33,7 @@ import momentTZ from "moment-timezone"
 import useDocumentTitle from "../../Components/useDocumentTitle"
 import Snackbar from "@material-ui/core/Snackbar"
 import Alert from "@material-ui/lab/Alert"
-import {getTimeZones} from "../../Services/Services"
+import {getTimeZones, updateScheduleDangerously} from "../../Services/Services"
 import {editCustomer} from "./../../Services/Services"
 import {Link} from "react-router-dom"
 import Axios from "axios"
@@ -83,7 +85,7 @@ function Statistics() {
 	const [alertColor, setAlertColor] = useState("")
 	const [refresh, setRefresh] = useState(false)
 	const [timeZoneLookup, setTimeZoneLookup] = useState({})
-
+	const [loading, setLoading] = useState(false)
 	useEffect(() => {
 		getTimeZones()
 			.then((result) => {
@@ -175,6 +177,30 @@ function Statistics() {
 		}
 	}
 
+	const toggleisClassTemperarilyCancelled = async (id) => {
+		setRefresh(false)
+		setLoading(true)
+		try {
+			const data = await updateScheduleDangerously(dialogData._id, {
+				isClassTemperarilyCancelled: !dialogData.isClassTemperarilyCancelled,
+			})
+
+			if (data.status === 200) {
+				setDialogData((prev) => {
+					let prevData = {...prev}
+					prevData.isClassTemperarilyCancelled = !dialogData.isClassTemperarilyCancelled
+					return prevData
+				})
+
+				setRefresh(true)
+				setLoading(false)
+			}
+		} catch (error) {
+			setLoading(false)
+		}
+	}
+
+	console.log(dialogData.isClassTemperarilyCancelled)
 	return (
 		<div>
 			<Snackbar
@@ -223,7 +249,7 @@ function Statistics() {
 								id="teacher-whatsapp"
 								label="Teacher Details"
 								value={dialogData.teacher && dialogData.teacher.TeacherName}
-								fullWidth 
+								fullWidth
 								endAdornment={
 									<InputAdornment position="end">
 										<IconButton
@@ -377,8 +403,25 @@ function Statistics() {
 						}}
 					/>
 				</DialogContent>
-
+				{console.log(dialogData)}
 				<DialogActions>
+					<FormControl variant="outlined">
+						{loading ? (
+							<CircularProgress style={{height: 30, width: 30, marginLeft: -50}} />
+						) : (
+							<FormControlLabel
+								control={
+									<Switch
+										checked={dialogData.isClassTemperarilyCancelled}
+										onChange={toggleisClassTemperarilyCancelled}
+										name="cancelClass"
+									/>
+								}
+								label="Enable to Cancel the Class"
+							/>
+						)}
+					</FormControl>
+
 					<Button onClick={() => setDialogOpen(false)} variant="outlined" color="primary">
 						Cancel
 					</Button>

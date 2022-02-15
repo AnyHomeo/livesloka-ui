@@ -180,6 +180,7 @@ function Scheduler() {
 	const [selectedSlots, setSelectedSlots] = useState([])
 	const [refresh, setRefresh] = useState(false)
 	const [loading, setLoading] = useState(false)
+	const [toggleLoading, setToggleLoading] = useState(false)
 	const [toggleShiftScheduleMode, setToggleShiftScheduleMode] = useState(false)
 	const [options, setOptions] = useState({})
 	const [timeZones, setTimeZones] = useState([])
@@ -423,30 +424,37 @@ function Scheduler() {
 										/>
 									</FormControl>
 									<FormControl variant="outlined">
-										<FormControlLabel
-											control={
-												<Switch
-													checked={selectedSchedule.isClassTemperarilyCancelled}
-													onChange={() => {
-														updateScheduleDangerously(selectedSchedule._id, {
-															isClassTemperarilyCancelled:
-																!selectedSchedule.isClassTemperarilyCancelled,
-														})
-															.then((response) => {
-																getAllSchedulesData()
+										{toggleLoading ? (
+											<CircularProgress style={{height: 30, width: 30}} />
+										) : (
+											<FormControlLabel
+												control={
+													<Switch
+														checked={selectedSchedule.isClassTemperarilyCancelled}
+														onChange={() => {
+															setToggleLoading(true)
+															updateScheduleDangerously(selectedSchedule._id, {
+																isClassTemperarilyCancelled:
+																	!selectedSchedule.isClassTemperarilyCancelled,
 															})
-															.catch((error) => {
-																console.log(error)
-																setSuccess(false)
-																setResponse("Something went wrong")
-																setSnackBarOpen(true)
-															})
-													}}
-													name="cancelClass"
-												/>
-											}
-											label="Enable to Cancel the Class"
-										/>
+																.then((response) => {
+																	getAllSchedulesData()
+																	setToggleLoading(false)
+																})
+																.catch((error) => {
+																	console.log(error)
+																	setSuccess(false)
+																	setResponse("Something went wrong")
+																	setSnackBarOpen(true)
+																	setToggleLoading(false)
+																})
+														}}
+														name="cancelClass"
+													/>
+												}
+												label="Enable to Cancel the Class"
+											/>
+										)}
 									</FormControl>
 								</div>
 								<MaterialTable

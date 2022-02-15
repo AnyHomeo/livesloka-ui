@@ -168,14 +168,6 @@ function SingleRow({
 
 							<div className="new-old-customer2">{renderFlag(singleData?.students)}</div>
 
-							{singleData?.students?.every((rowData) =>
-								console.log(
-									singleData?.teacher?.TeacherName,
-									moment(rowData.paidTill).diff(moment(new Date()), "days") + 1,
-									moment(rowData.paidTill).format("MMM DD, YYYY"),
-									moment(rowData.paidTill).diff(moment(new Date()), "days") <= 0 + 1
-								)
-							)}
 							{/* <div className="new-old-customer2">
 								{singleData?.students?.some(
 									(rowData) =>
