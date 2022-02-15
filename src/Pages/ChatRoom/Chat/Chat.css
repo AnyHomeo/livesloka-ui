@@ -57,6 +57,9 @@
 	background-color: white;
 	width: fit-content;
 	border-top-left-radius: 0;
+	position: relative;
+	overflow-wrap: break-word;
+	white-space: pre-wrap;
 }
 
 .chat_name {
