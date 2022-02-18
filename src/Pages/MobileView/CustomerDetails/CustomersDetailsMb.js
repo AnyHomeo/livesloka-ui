@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react"
+import React, {useState, useEffect, useMemo} from "react"
 
 import {
 	TextField,
@@ -20,7 +20,9 @@ import StudentHistoryTable from "../../Admin/Crm/StudentsHistoryTable"
 import Axios from "axios"
 import useDocumentTitle from "../../../Components/useDocumentTitle"
 import {useLocation} from "react-router-dom"
-const useStyles = makeStyles((theme) => ({
+import { retrieveMeetingLink } from "../../../Services/utils"
+
+const useStyles = makeStyles(() => ({
 	textLable: {
 		marginBottom: "10px",
 		marginTop: "10px",
@@ -70,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
 		marginLeft: 5,
 	},
 }))
-const CustomersDetailsMb = ({location}) => {
+const CustomersDetailsMb = () => {
 	useDocumentTitle("Customer Info")
 	const {state : { data }} = useLocation()
 
@@ -86,34 +88,11 @@ const CustomersDetailsMb = ({location}) => {
 	const [subjectDropdown, setSubjectDropdown] = useState()
 	const [countryDropdown, setCountryDropdown] = useState()
 
-	const [customersEditData, setCustomersEditData] = useState({
-		age: data.age,
-		classId: data.classId,
-		classStatusId: data.classStatusId,
-		countryId: data.countryId,
-		email: data.email,
-		firstName: data.firstName,
-		gender: data.gender,
-		lastName: data.lastName,
-		noOfClasses: data.noOfClasses,
-		numberOfClassesBought: data.numberOfClassesBought,
-		numberOfStudents: data.numberOfStudents,
-		proposedAmount: data.proposedAmount,
-		proposedCurrencyId: data.proposedCurrencyId,
-		subjectId: data.subjectId,
-		timeZoneId: data.timeZoneId,
-		updatedAt: data.updatedAt,
-		whatsAppnumber: data.whatsAppnumber,
-		meetingLink: data.meetingLink,
-		scheduleDescription: data.scheduleDescription,
-		categoryId: data.categoryId,
-		teacherId: data.teacherId,
-		isJoinButtonEnabledByAdmin: data.isJoinButtonEnabledByAdmin,
-		agentId: data.agentId,
-		_id: data._id,
-		requestedSubjects: data.requestedSubjects,
-		createdAt: data.createdAt,
-	})
+	const [customersEditData, setCustomersEditData] = useState({})
+
+	useEffect(() => {
+		setCustomersEditData(data)
+	},[data])
 
 	const fetchDropDown = async (name) => {
 		try {
@@ -213,6 +192,9 @@ const CustomersDetailsMb = ({location}) => {
 		}
 	}
 
+	const meetingLink = useMemo(() => {
+		return  retrieveMeetingLink(customersEditData)
+	},[customersEditData]) 
 	return (
 		<div
 			style={{
@@ -931,7 +913,6 @@ const CustomersDetailsMb = ({location}) => {
 									fullWidth
 									variant="outlined"
 									disabled={disableEditButton}
-									// onChange={handleChange}
 									value={customersEditData.proposedCurrencyId}
 									name="proposedCurrencyId"
 									onChange={handleDropDownChange}
@@ -1097,7 +1078,7 @@ const CustomersDetailsMb = ({location}) => {
 					</Card>{" "}
 					<Card className={classes.card2}>
 						{disableEditButton ? (
-							<p className={classes.subText}>{customersEditData.meetingLink}</p>
+							<p className={classes.subText}>{meetingLink}</p>
 						) : (
 							<TextField
 								label="Meeting Link"
@@ -1105,7 +1086,7 @@ const CustomersDetailsMb = ({location}) => {
 								fullWidth
 								name="meetingLink"
 								onChange={handleFormValueChange}
-								value={customersEditData.meetingLink}
+								value={meetingLink}
 								InputProps={{
 									readOnly: true,
 								}}
@@ -1115,7 +1096,7 @@ const CustomersDetailsMb = ({location}) => {
 					<IconButton
 						style={{marginTop: -15}}
 						onClick={() => {
-							copyToClipboard(customersEditData.meetingLink)
+							copyToClipboard(meetingLink)
 						}}
 					>
 						<FileCopyIcon />

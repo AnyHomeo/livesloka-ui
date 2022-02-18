@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react"
+import React, {useState, useEffect, useCallback} from "react"
 import {
 	Button,
 	TextField,
@@ -13,29 +13,24 @@ import {
 	Select,
 	InputLabel,
 	MenuItem,
-	Tooltip,
-	IconButton,
 	Container,
 } from "@material-ui/core/"
 import SaveIcon from "@material-ui/icons/Save"
 import {makeStyles} from "@material-ui/core/styles"
 import Autocomplete from "@material-ui/lab/Autocomplete"
 import moment from "moment"
-import Snackbar from "@material-ui/core/Snackbar"
-import Alert from "@material-ui/lab/Alert"
 import Axios from "axios"
 import AvailableTimeSlotChip from "../../../Components/AvailableTimeSlotChip"
-import {getData} from "../../../Services/Services"
+import {useSnackbar} from "notistack"
+
 import "date-fns"
 import DateFnsUtils from "@date-io/date-fns"
 import {MuiPickersUtilsProvider, KeyboardDatePicker} from "@material-ui/pickers"
-import {Editor} from "react-draft-wysiwyg"
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
-import {EditorState, convertToRaw} from "draft-js"
-import draftToHtml from "draftjs-to-html"
-import htmlToDraft from "html-to-draftjs"
-import {firebase} from "../../../Firebase"
 import useDocumentTitle from "../../../Components/useDocumentTitle"
+import {createSchedule} from "../../../Services/Services"
+import {useParams} from "react-router-dom"
+import { showError } from "../../../Services/utils"
 
 let days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
 
@@ -62,6 +57,8 @@ const useStyles = makeStyles((theme) => ({
 const MeetingScheduler = () => {
 	useDocumentTitle("Meeting Scheduler")
 	const classes = useStyles()
+	const {enqueueSnackbar} = useSnackbar()
+	const params = useParams()
 
 	const [selectedDate, setSelectedDate] = React.useState(new Date())
 
@@ -70,77 +67,81 @@ const MeetingScheduler = () => {
 	}
 
 	const [personName, setPersonName] = useState([])
-	const [teacher, setInputTeacher] = useState("")
-	const [successOpen, setSuccessOpen] = React.useState(false)
 	const [demo, setDemo] = useState(false)
 	const [radioday, setRadioday] = useState("")
-	const [teacherName, setTeacherName] = useState([])
+	const [teachers, setTeachers] = useState([])
 	const [studentName, setStudentName] = useState([])
 	const [availableTimeSlots, setAvailableTimeSlots] = useState([])
 	const [timeSlotState, setTimeSlotState] = useState([])
-	const [zoomLink, setZoomLink] = useState("")
-	const [zoomAccounts, setZoomAccounts] = useState([])
-	const [teacherNameFullObject, setTeacherNameFullObject] = useState({
+	const [selectedTeacher, setSelectedTeacher] = useState({
 		id: "",
 		TeacherName: "",
 	})
 	const [studentNamesFullObject, setStudentNamesFullObject] = useState([])
-	const [alert, setAlert] = useState("")
-	const [alertColor, setAlertColor] = useState("")
 	const [loading, setLoading] = useState(false)
 	const [subjectNames, setSubjectNames] = useState("")
 	const [subjectNameId, setSubjectNameId] = useState("")
 	const [className, setClassName] = useState("")
 	const [oneToOne, setOneToOne] = useState(true)
-	const [isZoomMeeting, setIsZoomMeeting] = useState(true)
-	const [isSummerCampClass, setIsSummerCampClass] = useState(false)
-	const [summerCampAmount, setSummerCampAmount] = useState(0)
-	const [summerCampTitle, setSummerCampTitle] = useState("")
-	const [summerCampDescription, setSummerCampDescription] = useState("")
-	const [summerCampSchedule, setSummerCampSchedule] = useState(EditorState.createEmpty())
-	const [summerCampImage, setSummerCampImage] = useState("")
-	const [summerCampStudentsLimit, setSummerCampStudentsLimit] = useState("")
-	const [summerCampClassNumberOfDays, setSummerCampClassNumberOfDays] = useState(0)
+
 
 	const handleDayChange = (event) => {
 		setRadioday(event.target.value)
 	}
 
-	const handleSuccessClose = (event, reason) => {
-		if (reason === "clickaway") {
-			return
+	const getTimeSlots = useCallback(async (teacher, makeSlotsEmpty) => {
+		if (teacher) {
+			const timeSlotsData = await Axios.get(
+				`${process.env.REACT_APP_API_KEY}/teacher/available/${teacher}?day=MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY`
+			)
+			setAvailableTimeSlots(timeSlotsData.data.result)
+			if (makeSlotsEmpty) {
+				setTimeSlotState([])
+			}
 		}
-		setSuccessOpen(false)
-	}
-
-	const getTimeSlots = async () => {
-		const timeSlotsData = await Axios.get(
-			`${process.env.REACT_APP_API_KEY}/teacher/available/${teacher}?day=MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY`
-		)
-		setAvailableTimeSlots(timeSlotsData.data.result)
-	}
-
-	// Serice calls
-	useEffect(() => {
-		getTeachers()
-		getStudents()
-		getZoomAccounts()
-		getSubjectNames()
 	}, [])
 
 	useEffect(() => {
-		if (teacher) {
-			getTimeSlots()
-			setTimeSlotState([])
+		if(params.slot){
+			setTimeSlotState(params.slot.split(","))
 		}
-	}, [teacher])
+	}, [params.slot])
+
+	useEffect(() => {
+		if (params.teacher && teachers.length) {
+			getTimeSlots(params.teacher, false)
+			setSelectedTeacher(teachers[teachers.findIndex((teacher) => teacher.id === params.teacher)])
+		}
+	}, [params.teacher, getTimeSlots, teachers])
+
+	const setInitialState = useCallback(() => {
+		setDemo(false)
+		setOneToOne("")
+		setPersonName("")
+		setPersonName("")
+		setSubjectNameId("")
+		setLoading(false)
+		setSelectedTeacher({})
+		setStudentNamesFullObject([])
+		setRadioday("")
+		setClassName("")
+		setTimeSlotState([])
+		setAvailableTimeSlots([])
+	}, [])
+
+	// Service calls
+	useEffect(() => {
+		getTeachers()
+		getStudents()
+		getSubjectNames()
+	}, [])
 
 	// Get teachers
 	const getTeachers = async () => {
 		const teacherNames = await Axios.get(
 			`${process.env.REACT_APP_API_KEY}/teacher?params=id,TeacherName`
 		)
-		setTeacherName(teacherNames.data.result)
+		setTeachers(teacherNames.data.result)
 	}
 
 	// Get Students
@@ -152,25 +153,21 @@ const MeetingScheduler = () => {
 		setStudentName(studentNames.data.result)
 	}
 
-	const getZoomAccounts = async () => {
-		getData("Zoom Account")
-			.then((data) => {
-				setZoomAccounts(data.data.result)
-			})
-			.catch((err) => {
-				console.log(err)
-			})
-	}
-
 	const getSubjectNames = async () => {
 		const subjectName = await Axios.get(`${process.env.REACT_APP_API_KEY}/admin/get/Subject`)
 		setSubjectNames(subjectName.data.result)
 	}
 
+
+
 	const submitForm = async (e) => {
 		setLoading(true)
 		e.preventDefault()
 		let formData = {}
+		if (!selectedTeacher)
+			return enqueueSnackbar("Please Select a teacher", {
+				variant: "error",
+			})
 
 		days.forEach((day) => {
 			formData[day.toLowerCase()] = timeSlotState
@@ -178,220 +175,69 @@ const MeetingScheduler = () => {
 				.map((slot) => slot.split("!@#$%^&*($%^")[0])
 		})
 
-		let newZoomLink = undefined
-		let newZoomJwt = undefined
-		let getZoomLink = undefined
 		try {
-			if (isZoomMeeting) {
-				getZoomLink = await Axios.post(
-					`${process.env.REACT_APP_API_KEY}/link/getzoomlink`,
-					timeSlotState.map(slot => slot.split("!@#$%^&*($%^")[0])
-				)
-				newZoomLink = getZoomLink.data.result.link
-				newZoomJwt = getZoomLink.data.result.id
+			formData = {
+				...formData,
+				teacher: selectedTeacher.id,
+				students: personName,
+				demo: demo,
+				OneToOne: oneToOne,
+				OneToMany: !oneToOne,
+				subject: subjectNameId,
+				startDate: moment(selectedDate).format(),
+				className
 			}
-			if (!teacher) {
-				setAlertColor("error")
-				setSuccessOpen(true)
-				setAlert("Please Select a Teacher")
-				setLoading(false)
-				return
-			}
-			let url = summerCampImage
-			if (isSummerCampClass && summerCampImage) {
-				let storageRef = firebase
-					.storage()
-					.ref(`${summerCampImage[0].type}/${summerCampImage[0].name}`)
-				await storageRef.put(summerCampImage[0])
-				url = await storageRef.getDownloadURL()
-				if (!isZoomMeeting || (getZoomLink && getZoomLink.status === 200)) {
-					formData = {
-						...formData,
-						meetingLink: newZoomLink,
-						meetingAccount: newZoomJwt,
-						teacher: teacher,
-						students: personName,
-						demo: demo,
-						OneToOne: oneToOne,
-						OneToMany: !oneToOne,
-						subject: subjectNameId,
-						startDate: moment(selectedDate).format("DD-MM-YYYY"),
-						classname: className,
-						Jwtid: newZoomJwt,
-						timeSlotState,
-						isZoomMeeting,
-						isSummerCampClass,
-						summerCampAmount,
-						summerCampTitle,
-						summerCampDescription,
-						summerCampSchedule: draftToHtml(convertToRaw(summerCampSchedule.getCurrentContent())),
-						summerCampImage: url,
-						summerCampStudentsLimit,
-						summerCampClassNumberOfDays,
-					}
 
-					try {
-						const res = await Axios.post(`${process.env.REACT_APP_API_KEY}/schedule`, formData)
-						setDemo(false)
-						setOneToOne("")
-						setPersonName("")
-						setZoomLink("")
-						setPersonName("")
-						setSubjectNameId("")
-						setSuccessOpen(true)
-						setAlert(res.data.message)
-						setAlertColor("success")
-						setLoading(false)
-						setTeacherNameFullObject({})
-						setStudentNamesFullObject([])
-						setRadioday("")
-						setClassName("")
-						setTimeSlotState([])
-						setAvailableTimeSlots([])
-						setSummerCampAmount(0)
-						setSummerCampDescription("")
-						setSummerCampSchedule("")
-						setSummerCampImage("")
-						setSummerCampTitle("")
-						setSummerCampStudentsLimit(0)
-						setSummerCampClassNumberOfDays(0)
-					} catch (error) {
-						console.error(error.response)
-						if (error.response) {
-							setSuccessOpen(true)
-							setAlert(error.response.data.error)
-							setAlertColor("error")
-							setLoading(false)
-						}
-					}
-				} else {
-					setSuccessOpen(true)
-					setAlert("Error in generating Meeting Link!")
-					setAlertColor("error")
-					setLoading(false)
-				}
-			} else {
-				if (!isZoomMeeting || (getZoomLink && getZoomLink.status === 200)) {
-					formData = {
-						...formData,
-						meetingLink: newZoomLink,
-						meetingAccount: newZoomJwt,
-						teacher: teacher,
-						students: personName,
-						demo: demo,
-						OneToOne: oneToOne,
-						OneToMany: !oneToOne,
-						subject: subjectNameId,
-						startDate: moment(selectedDate).format("DD-MM-YYYY"),
-						classname: className,
-						Jwtid: newZoomJwt,
-						timeSlotState,
-						isZoomMeeting,
-						isSummerCampClass,
-						summerCampAmount,
-						summerCampTitle,
-						summerCampDescription,
-						summerCampSchedule: draftToHtml(convertToRaw(summerCampSchedule.getCurrentContent())),
-						summerCampImage: url,
-						summerCampStudentsLimit,
-						summerCampClassNumberOfDays,
-					}
-
-					try {
-						const res = await Axios.post(`${process.env.REACT_APP_API_KEY}/schedule`, formData)
-						setDemo(false)
-						setOneToOne("")
-						setPersonName("")
-						setZoomLink("")
-						setPersonName("")
-						setSubjectNameId("")
-						setSuccessOpen(true)
-						setAlert(res.data.message)
-						setAlertColor("success")
-						setLoading(false)
-						setTeacherNameFullObject({})
-						setStudentNamesFullObject([])
-						setRadioday("")
-						setClassName("")
-						setTimeSlotState([])
-						setAvailableTimeSlots([])
-						setSummerCampAmount(0)
-						setSummerCampDescription("")
-						setSummerCampSchedule("")
-						setSummerCampImage("")
-						setSummerCampTitle("")
-						setSummerCampStudentsLimit(0)
-						setSummerCampClassNumberOfDays(0)
-					} catch (error) {
-						console.error(error.response)
-						if (error.response) {
-							setSuccessOpen(true)
-							setAlert(error.response.data.error)
-							setAlertColor("error")
-							setLoading(false)
-						}
-					}
-				} else {
-					setSuccessOpen(true)
-					setAlert("Error in generating Meeting Link!")
-					setAlertColor("error")
-					setLoading(false)
-				}
+			try {
+				let createScheduleResponse = await createSchedule(formData)
+				setInitialState()
+				return enqueueSnackbar(createScheduleResponse.data.message, {
+					variant: "success",
+				})
+			} catch (error) {
+				showError(error,enqueueSnackbar)
 			}
 		} catch (error) {
-			console.log(error.response)
-			setSuccessOpen(true)
-			setAlert(error.response.data.message)
-			setAlertColor("error")
-			setLoading(false)
+			return showError(error, enqueueSnackbar)
 		}
 	}
 
-	useEffect(() => {
-		classNameGenerator()
-	}, [teacherNameFullObject, studentNamesFullObject, subjectNameId])
+	const classNameGenerator = useCallback(() => {
+		let selectedSubject = subjectNames
+			? subjectNames[subjectNames.findIndex((sub) => sub._id === subjectNameId)]
+			: ""
 
-	const classNameGenerator = () => {
-		let selectedSub = subjectNames && subjectNames.filter((sub) => sub._id === subjectNameId)
-
-		let names =
-			studentNamesFullObject &&
-			studentNamesFullObject.map((item, i) => {
-				if (item.age) {
-					return `${item.firstName} ${item.age}Y (${item.lastName})${
-						studentNamesFullObject.length - 1 === i ? "" : ","
-					} `
-				} else {
-					return `${item.firstName} (${item.lastName})${
-						studentNamesFullObject.length - 1 === i ? "" : ","
-					} `
-				}
-			})
+		let names = studentNamesFullObject
+			? studentNamesFullObject.map((item, i) => {
+					if (item.age) {
+						return `${item.firstName} ${item.age}Y (${item.lastName})${
+							studentNamesFullObject.length - 1 === i ? "" : ","
+						} `
+					} else {
+						return `${item.firstName} (${item.lastName})${
+							studentNamesFullObject.length - 1 === i ? "" : ","
+						} `
+					}
+			  })
+			: []
 
 		let nameString = names.join(" ")
 
 		let name =
-			`${nameString} ${selectedSub[0]?.subjectName}- ${teacherNameFullObject.TeacherName}`.replace(
+			`${nameString} ${selectedSubject?.[0]?.subjectName}- ${selectedTeacher.TeacherName}`.replace(
 				undefined,
 				""
 			)
 
 		setClassName(name)
-	}
+	}, [studentNamesFullObject, subjectNameId, subjectNames, selectedTeacher.TeacherName])
+
+	useEffect(() => {
+		classNameGenerator()
+	}, [classNameGenerator])
 
 	return (
 		<>
-			<Snackbar
-				open={successOpen}
-				autoHideDuration={6000}
-				onClose={handleSuccessClose}
-				anchorOrigin={{vertical: "bottom", horizontal: "left"}}
-			>
-				<Alert onClose={handleSuccessClose} severity={alertColor}>
-					{alert}
-				</Alert>
-			</Snackbar>
-
 			<Container>
 				<form onSubmit={submitForm}>
 					<h1
@@ -403,15 +249,17 @@ const MeetingScheduler = () => {
 					<Grid container style={{width: "100%"}}>
 						<Grid item xs={false} md={4} />
 						<Grid item xs={12} md={4}>
-							{teacherName.length ? (
+							{teachers.length ? (
 								<Autocomplete
 									style={{width: "100%", margin: "0 auto"}}
-									options={teacherName}
-									value={teacherNameFullObject}
+									options={teachers}
+									value={selectedTeacher}
 									getOptionLabel={(option) => option.TeacherName}
 									onChange={(event, value) => {
-										value && setInputTeacher(value.id)
-										value && setTeacherNameFullObject(value)
+										if (value) {
+											setSelectedTeacher(value)
+											getTimeSlots(value.id, true)
+										}
 									}}
 									renderInput={(params) => (
 										<TextField
@@ -609,197 +457,6 @@ const MeetingScheduler = () => {
 								}
 								label="DEMO"
 							/>
-							<FormControlLabel
-								style={{marginTop: "20px"}}
-								control={
-									<Checkbox
-										checked={isSummerCampClass}
-										onChange={(event) => setIsSummerCampClass(event.target.checked)}
-										name="Demo"
-										color="primary"
-									/>
-								}
-								label="Summer Camp Class"
-							/>
-							{isSummerCampClass ? (
-								<>
-									<div
-										style={{
-											maxWidth: "450px",
-											minWidth: "300px",
-											marginTop: "10px",
-										}}
-									>
-										<FormControl
-											variant="outlined"
-											style={{
-												width: "100%",
-											}}
-										>
-											<TextField
-												fullWidth
-												style={{
-													margin: "10px 0",
-												}}
-												type={"number"}
-												id="outlined-basic"
-												label="Summer Camp Class Amount"
-												variant="outlined"
-												value={summerCampAmount}
-												onChange={(e) => setSummerCampAmount(e.target.value)}
-											/>
-										</FormControl>
-										<FormControl
-											variant="outlined"
-											style={{
-												width: "100%",
-											}}
-										>
-											<TextField
-												fullWidth
-												style={{
-													margin: "10px 0",
-												}}
-												type={"number"}
-												id="outlined-basic"
-												label="Summer Camp Class Students Limit"
-												variant="outlined"
-												value={summerCampStudentsLimit}
-												onChange={(e) => setSummerCampStudentsLimit(e.target.value)}
-											/>
-										</FormControl>
-										<FormControl
-											variant="outlined"
-											style={{
-												width: "100%",
-											}}
-										>
-											<TextField
-												fullWidth
-												style={{
-													margin: "10px 0",
-												}}
-												type={"number"}
-												id="outlined-basic"
-												label="Summer Camp Days"
-												variant="outlined"
-												value={summerCampClassNumberOfDays}
-												onChange={(e) => setSummerCampClassNumberOfDays(e.target.value)}
-											/>
-										</FormControl>
-										<TextField
-											style={{
-												margin: "10px 0",
-											}}
-											id="title"
-											fullWidth
-											label="Summer Camp Class Title"
-											value={summerCampTitle}
-											onChange={(e) => setSummerCampTitle(e.target.value)}
-											multiline
-											rows={4}
-											variant="outlined"
-										/>
-										<TextField
-											style={{
-												margin: "10px 0",
-											}}
-											id="desc"
-											fullWidth
-											label="Summer Camp Class Description"
-											value={summerCampDescription}
-											onChange={(e) => setSummerCampDescription(e.target.value)}
-											multiline
-											rows={8}
-											variant="outlined"
-										/>
-
-										<FormControl
-											variant="outlined"
-											style={{
-												width: "100%",
-											}}
-										>
-											<div
-												style={{
-													height: "250px",
-													backgroundColor: "#F5F5F5",
-													display: "flex",
-													justifyContent: "center",
-													alignItems: "center",
-													flexDirection: "column",
-												}}
-											>
-												{
-													// eslint-disable-next-line
-													summerCampImage && summerCampImage.length > 0 === true ? (
-														<img
-															src={URL.createObjectURL(summerCampImage[0])}
-															alt=""
-															style={{
-																height: "100%",
-																width: "100%",
-																objectFit: "cover",
-															}}
-														/>
-													) : (
-														<>
-															<IconButton variant="contained" component="label">
-																<i
-																	style={{
-																		color: "#C4C4C4",
-																		fontSize: 30,
-																		marginBottom: 5,
-																	}}
-																	class="fa fa-camera"
-																></i>
-																<input
-																	multiple
-																	accept="image/x-png,image/jpeg"
-																	onChange={(e) => setSummerCampImage(e.target.files)}
-																	type="file"
-																	hidden
-																/>
-															</IconButton>
-															<p style={{color: "#C4C4C4", fontWeight: "bold"}}>Choose an Image</p>
-														</>
-													)
-												}
-											</div>
-											<p
-												style={{
-													color: "red",
-													marginBottom: 20,
-													cursor: "pointer",
-													marginTop: 20,
-												}}
-												onClick={() => setSummerCampImage()}
-											>
-												<i className="fas fa-times-circle"></i> Delete Image
-											</p>
-										</FormControl>
-									</div>
-
-									<div
-										style={{
-											width: "90vw",
-											minHeight: "400px",
-											margin: "auto",
-											border: "2px solid grey",
-											borderRadius: "5px",
-										}}
-									>
-										<Editor
-											editorState={summerCampSchedule}
-											onEditorStateChange={(e) => {
-												setSummerCampSchedule(e)
-											}}
-										/>
-									</div>
-								</>
-							) : (
-								""
-							)}
 						</div>
 						<div className={classes.saveButton}>
 							{loading ? (

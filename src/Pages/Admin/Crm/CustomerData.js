@@ -453,10 +453,6 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					selected: settings.includes("scheduleDescription"),
 					name: "scheduleDescription",
 				},
-				meetingLink: {
-					selected: settings.includes("meetingLink"),
-					name: "Meeting Link",
-				},
 				phone: {selected: settings.includes("phone"), name: "Phone No"},
 				studyMaterialSent: {
 					selected: settings.includes("studyMaterialSent"),
@@ -1012,30 +1008,6 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					hidden: !columnFilters["categoryId"].selected,
 				},
 				{
-					title: "Meeting Link",
-					field: "meetingLink",
-					hidden: !columnFilters["meetingLink"].selected,
-					render: (rowData) => (
-						<>
-							{rowData.meetingLink ? (
-								<div style={{display: "flex", alignItems: "center"}}>
-									<Tooltip title={`Copy to Clipboard`}>
-										<FileCopyOutlinedIcon
-											style={{
-												marginRight: "10px",
-											}}
-											onClick={() => copyToClipboard(rowData.meetingLink)}
-										/>
-									</Tooltip>
-									{rowData.meetingLink}
-								</div>
-							) : (
-								<span />
-							)}
-						</>
-					),
-				},
-				{
 					title: "Phone",
 					field: "phone",
 					width: "1%",
@@ -1542,7 +1514,6 @@ const CrmDetails = ({isSummerCampStudents}) => {
 									proposedAmount: undefined,
 									paidTill: undefined,
 									scheduleDescription: undefined,
-									meetingLink: undefined,
 								})
 								materialTable.dataManager.changeRowEditing()
 								materialTable.setState({

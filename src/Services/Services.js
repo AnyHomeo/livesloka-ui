@@ -232,3 +232,4 @@ export const updateOptions = (optionsId,updatedData) => Axios.put(`${API.main}/o
 export const getCustomerRewards = (user) => Axios.get(`${API.main}/rewards/user/${user}?redeems=1`)
 export const getAllPermissionStrings = () => Axios.get(`${API.main}/roles/permissions`)
 export const patchPermission = (roleId,permission) => Axios.patch(`${API.main}/roles/${roleId}/permissions`,{permission})
+export const createSchedule = (formData) => Axios.post(`${process.env.REACT_APP_API_KEY}/schedule`, formData)
