@@ -286,9 +286,9 @@ export default function ZoomAccountDashboard() {
 												}}
 											>
 												{times.map((time, j) => {
-													let filteredArray = schedulesOfTheDay[schedule].schedules.filter(
+													let filteredArray = schedulesOfTheDay?.[schedule]?.schedules.filter(
 														(scheduleFromArr) =>
-															scheduleFromArr.slots.includes(`${day.toUpperCase()}-${time}`)
+															scheduleFromArr?.slots?.includes(`${day.toUpperCase()}-${time}`)
 													)
 													return (
 														<div

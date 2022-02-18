@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useEffect, useMemo, useState} from "react"
 import Tabs from "@material-ui/core/Tabs"
 import Tab from "@material-ui/core/Tab"
 import SingleDayStats from "./SingleDayStats"
@@ -36,6 +36,7 @@ import {editCustomer} from "./../../Services/Services"
 import {Link} from "react-router-dom"
 import Axios from "axios"
 import {useConfirm} from "material-ui-confirm"
+import {retrieveMeetingLink} from "../../Services/utils"
 
 let days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
 
@@ -72,6 +73,7 @@ function pageRefresh() {
 
 function Statistics() {
 	useDocumentTitle("Statistics")
+	const confirm = useConfirm()
 	let initialValue = days.indexOf(
 		momentTZ(new Date()).tz("Asia/Kolkata").format("dddd").toUpperCase()
 	)
@@ -95,7 +97,7 @@ function Statistics() {
 
 				var dynamicLookup = {}
 				if (data) {
-					data.map((timeZoneObj) => {
+					data.forEach((timeZoneObj) => {
 						dynamicLookup[timeZoneObj.id] = timeZoneObj.timeZoneName
 					})
 				}
@@ -155,7 +157,6 @@ function Statistics() {
 			console.log(error)
 		}
 	}
-	const confirm = useConfirm()
 	const deleteSchedule = async (id) => {
 		setRefresh(false)
 		try {
@@ -174,6 +175,11 @@ function Statistics() {
 			console.log(error.response)
 		}
 	}
+
+	const meetingLink = useMemo(
+		() => retrieveMeetingLink(dialogData),
+		[dialogData]
+	)
 
 	return (
 		<div>
@@ -205,11 +211,11 @@ function Statistics() {
 							<OutlinedInput
 								id="Meeting-Link"
 								label="Meeting Link"
-								value={dialogData.meetingLink}
+								value={meetingLink}
 								fullWidth
 								endAdornment={
 									<InputAdornment position="end">
-										<IconButton onClick={() => copyToClipboard(dialogData.meetingLink)} edge="end">
+										<IconButton onClick={() => copyToClipboard(meetingLink)} edge="end">
 											<FileCopyIcon />
 										</IconButton>
 									</InputAdornment>
@@ -223,7 +229,7 @@ function Statistics() {
 								id="teacher-whatsapp"
 								label="Teacher Details"
 								value={dialogData.teacher && dialogData.teacher.TeacherName}
-								fullWidth 
+								fullWidth
 								endAdornment={
 									<InputAdornment position="end">
 										<IconButton

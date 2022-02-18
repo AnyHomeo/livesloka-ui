@@ -1,8 +1,9 @@
 import { Card, Grid } from "@material-ui/core";
 import Axios from "axios";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { getSlotFromTime } from "../../../Services/getSlotFromTime";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,58 +63,7 @@ const StatisticsCards = () => {
   const classes = useStyles();
   const [statisticsData, setStatisticsData] = useState();
 
-  useEffect(() => {
-    getStatistics();
-  }, []);
-
-  const getSlotFromTime = (date) => {
-    let daysarr = [
-      "SUNDAY",
-      "MONDAY",
-      "TUESDAY",
-      "WEDNESDAY",
-      "THURSDAY",
-      "FRIDAY",
-      "SATURDAY",
-    ];
-    let newDate = new Date(date);
-    let dayToday = newDate.getDay();
-    let hoursRightNow = newDate.getHours();
-    let minutesRightNow = newDate.getMinutes();
-    let secondsRightNow = newDate.getSeconds();
-    let isAm = hoursRightNow < 12;
-    hoursRightNow = !isAm ? hoursRightNow - 12 : hoursRightNow;
-    let is30 = minutesRightNow > 30;
-    let secondsLeft =
-      (is30 ? 59 - minutesRightNow : 29 - minutesRightNow) * 60 +
-      (60 - secondsRightNow);
-    if ((hoursRightNow === 11) & is30) {
-      return {
-        slot: `${daysarr[dayToday]}-11:30 ${isAm ? "AM" : "PM"}-12:00 ${
-          !isAm ? "AM" : "PM"
-        }`,
-        secondsLeft,
-      };
-    } else if (hoursRightNow === 12 && is30) {
-      return {
-        slot: `${daysarr[dayToday]}-12:30 ${isAm ? "AM" : "PM"}-01:00 ${
-          isAm ? "AM" : "PM"
-        }`,
-        secondsLeft,
-      };
-    } else {
-      return {
-        slot: `${daysarr[dayToday]}-${hoursRightNow}${is30 ? ":30" : ":00"} ${
-          isAm ? "AM" : "PM"
-        }-${is30 ? hoursRightNow + 1 : hoursRightNow}${is30 ? ":00" : ":30"} ${
-          isAm ? "AM" : "PM"
-        }`,
-        secondsLeft,
-      };
-    }
-  };
-
-  const getStatistics = async () => {
+  const getStatistics = useCallback(async () => {
     try {
       let date = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Kolkata",
@@ -123,12 +73,17 @@ const StatisticsCards = () => {
       const res = await Axios.get(
         `${process.env.REACT_APP_API_KEY}/customer/class/dashboard?date=${formattedDate}&slot=${slot}`
       );
-
+  
       setStatisticsData(res && res.data);
     } catch (error) {
       console.log(error);
     }
-  };
+  },[])
+
+  useEffect(() => {
+    getStatistics();
+  }, [getStatistics]);
+
   return (
     <div>
       {statisticsData && (

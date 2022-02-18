@@ -21,7 +21,6 @@ import AddNewCustomer from "../Pages/MobileView/CustomerDetails/AddNewCustomer"
 import LeavesTabs from "./../Pages/Leaves/LeavesTabs"
 import PaymentsPage from "../Pages/reports/PaymentsPage"
 import UpdateNumberOfBoughtClasses from "./../Pages/Admin/Crm/UpdateNumberOfBoughtClasses"
-import AvailableMeetingSchedule from "../Pages/Admin/Crm/AvailableMeetingSchedule"
 import Stats from "../Pages/Statistics/Statistics"
 import SummerCampsCustomerTable from "../Pages/Admin/Crm/SummerCampsCustomerTable"
 import DemoAndInclassStudents from "../Components/DemoAndInclassStudents"
@@ -42,7 +41,7 @@ import CategorizeVideo from "../Pages/Videomanager/CategorizeVideo"
 import UpdateNumberOfBoughtRewards from "../Pages/Admin/Crm/UpdateNumberOfRewards"
 import InvoicePages from "../Pages/Accountant/InvoicePages"
 import FinancialPage from "../Pages/Accountant/FinancialPage"
-
+ 
 const adminRoutes = [
 	{permission: "Financial Dashboard", path: "/dashboard", exact: true, component: Dashboard},
 	{
@@ -124,7 +123,7 @@ const adminRoutes = [
 		permission: "Scheduler",
 		path: "/availabe-scheduler/:slot/:teacher",
 		exact: true,
-		component: AvailableMeetingSchedule,
+		component: MeetingScheduler,
 	},
 	{permission: "Attendance", path: "/attendance/class", exact: true, component: AttedanceByClass},
 	{permission: "Payments", path: "/payments", exact: true, component: PaymentsPage},
