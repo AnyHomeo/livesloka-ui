@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useCallback, useEffect, useState} from "react"
 import hours from "../../Services/hours.json"
 import times from "../../Services/times.json"
 import SingleRow from "./SingleRow"
@@ -71,6 +71,7 @@ function SingleDayStats({
 	const [schedulesAssignedToMe, setSchedulesAssignedToMe] = useState([])
 	const [otherSchedules, setOtherSchedules] = useState({})
 	const [allAgents, setAllAgents] = useState({})
+	const [teacherLeaves, setTeacherLeaves] = useState([])
 
 	let todayDay = moment().get("day")
 	let daysToAddToday = value >= todayDay ? value - todayDay : 7 - (todayDay - value)
@@ -148,7 +149,7 @@ function SingleDayStats({
 				console.log(err)
 			})
 		getTodayLeaves(moment().add(daysToAddToday, "day").format("YYYY-MM-DD"))
-			.then((data) => {
+			.then((data) => {  
 				setLeaves(data.data.result)
 			})
 			.catch((err) => {
@@ -183,13 +184,7 @@ function SingleDayStats({
 				console.log(err)
 			})
 	}, [])
-
-	useEffect(() => {
-		getTeacherLeaves()
-	}, [])
-
-	const [teacherLeaves, setTeacherLeaves] = useState([])
-	const getTeacherLeaves = async () => {
+	const getTeacherLeaves = useCallback(async () => {
 		try {
 			const data = await Axios.get(
 				`${process.env.REACT_APP_API_KEY}/teacher-leaves/single-day/${moment()
@@ -200,16 +195,17 @@ function SingleDayStats({
 		} catch (error) {
 			console.log(error)
 		}
-	}
+	},[value])
 
 	useEffect(() => {
-		arrayOfTeacherIds()
-	}, [teacherLeaves])
+		getTeacherLeaves()
+	}, [getTeacherLeaves])
+
 
 	const [teacherIds, setTeacherIds] = useState()
 
 	const [scheduleLeaves, setscheduleLeaves] = useState()
-	const arrayOfTeacherIds = () => {
+	const arrayOfTeacherIds = useCallback(() => {
 		let arrofObj = {}
 		let ids = []
 		teacherLeaves &&
@@ -229,7 +225,11 @@ function SingleDayStats({
 				}
 			})
 		setscheduleLeaves(arrofObj)
-	}
+	},[teacherLeaves])
+
+	useEffect(() => {
+		arrayOfTeacherIds()
+	}, [arrayOfTeacherIds])
 
 	return (
 		<section className="statistics-container">

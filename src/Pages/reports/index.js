@@ -37,9 +37,7 @@ const Dashboard = () => {
   const [dailyDataLine, setDailyDataLine] = useState();
 
   const getAllTransactions = async () => {
-    let amount = 0;
-    let failedtransactions = 0;
-    let successtransactions = 0;
+
     const data = await axios.get(
       `${process.env.REACT_APP_API_KEY}/payment/get/alltransactions/`
     );

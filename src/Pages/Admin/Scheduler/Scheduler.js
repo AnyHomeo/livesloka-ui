@@ -44,107 +44,10 @@ import MaterialTable from "material-table"
 import WhatsAppIcon from "@material-ui/icons/WhatsApp"
 import OutlinedInput from "@material-ui/core/OutlinedInput"
 import {getData} from "./../../../Services/Services"
+import hours from "../../../Services/hours.json"
+import times from "../../../Services/times.json"
+import {retrieveMeetingLink} from "../../../Services/utils"
 
-const times = [
-	"12:00 AM-12:30 AM",
-	"12:30 AM-01:00 AM",
-	"01:00 AM-01:30 AM",
-	"01:30 AM-02:00 AM",
-	"02:00 AM-02:30 AM",
-	"02:30 AM-03:00 AM",
-	"03:00 AM-03:30 AM",
-	"03:30 AM-04:00 AM",
-	"04:00 AM-04:30 AM",
-	"04:30 AM-05:00 AM",
-	"05:00 AM-05:30 AM",
-	"05:30 AM-06:00 AM",
-	"06:00 AM-06:30 AM",
-	"06:30 AM-07:00 AM",
-	"07:00 AM-07:30 AM",
-	"07:30 AM-08:00 AM",
-	"08:00 AM-08:30 AM",
-	"08:30 AM-09:00 AM",
-	"09:00 AM-09:30 AM",
-	"09:30 AM-10:00 AM",
-	"10:00 AM-10:30 AM",
-	"10:30 AM-11:00 AM",
-	"11:00 AM-11:30 AM",
-	"11:30 AM-12:00 PM",
-	"12:00 PM-12:30 PM",
-	"12:30 PM-01:00 PM",
-	"01:00 PM-01:30 PM",
-	"01:30 PM-02:00 PM",
-	"02:00 PM-02:30 PM",
-	"02:30 PM-03:00 PM",
-	"03:00 PM-03:30 PM",
-	"03:30 PM-04:00 PM",
-	"04:00 PM-04:30 PM",
-	"04:30 PM-05:00 PM",
-	"05:00 PM-05:30 PM",
-	"05:30 PM-06:00 PM",
-	"06:00 PM-06:30 PM",
-	"06:30 PM-07:00 PM",
-	"07:00 PM-07:30 PM",
-	"07:30 PM-08:00 PM",
-	"08:00 PM-08:30 PM",
-	"08:30 PM-09:00 PM",
-	"09:00 PM-09:30 PM",
-	"09:30 PM-10:00 PM",
-	"10:00 PM-10:30 PM",
-	"10:30 PM-11:00 PM",
-	"11:00 PM-11:30 PM",
-	"11:30 PM-12:00 AM",
-]
-const hours = [
-	"12:00 AM",
-	"12:30 AM",
-	"01:00 AM",
-	"01:30 AM",
-	"02:00 AM",
-	"02:20 AM",
-	"03:00 AM",
-	"03:30 AM",
-	"04:00 AM",
-	"04:30 AM",
-	"05:00 AM",
-	"05:30 AM",
-	"06:00 AM",
-	"06:30 AM",
-	"07:00 AM",
-	"07:30 AM",
-	"08:00 AM",
-	"08:30 AM",
-	"09:00 AM",
-	"09:30 AM",
-	"10:00 AM",
-	"10:30 AM",
-	"11:00 AM",
-	"11:30 AM",
-	"12:00 PM",
-	"12:30 PM",
-	"01:00 PM",
-	"01:30 PM",
-	"02:00 PM",
-	"02:30 PM",
-	"03:00 PM",
-	"03:30 PM",
-	"04:00 PM",
-	"04:30 PM",
-	"05:00 PM",
-	"05:30 PM",
-	"06:00 PM",
-	"06:30 PM",
-	"07:00 PM",
-	"07:30 PM",
-	"08:00 PM",
-	"08:30 PM",
-	"09:00 PM",
-	"09:30 PM",
-	"10:00 PM",
-	"10:30 PM",
-	"11:00 PM",
-	"11:30 PM",
-]
 const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
 const copyToClipboard = () => {
@@ -202,7 +105,7 @@ function Scheduler() {
 				setTimeZones(response.data.result)
 			})
 			.catch((err) => {
-				console.log(err)
+				console.error(err)
 			})
 	}, [])
 
@@ -219,7 +122,7 @@ function Scheduler() {
 				})
 				.catch(() => {})
 		} catch (error) {
-			console.log(error.response)
+			console.error(error.response)
 		}
 	}
 
@@ -230,13 +133,6 @@ function Scheduler() {
 		setSnackBarOpen(false)
 	}
 
-	const gotoZoomLink = (id, link) => {
-		let newLink = link.split("/")
-		window.open(
-			`https://livekumonmeeting.netlify.app/meeting/${id}/${newLink[4].split("?")[0]}`,
-			"_blank"
-		)
-	}
 	const addOrRemoveAvailableSlot = (slot) => {
 		if (!categorizedData[category][teacher].availableSlots.includes(slot)) {
 			addAvailableTimeSlot(teacherId, slot)
@@ -252,7 +148,7 @@ function Scheduler() {
 						},
 					}))
 				})
-				.catch((err) => console.log(err))
+				.catch((err) => console.error(err))
 		} else {
 			deleteAvailableTimeSlot(teacherId, slot)
 				.then((data) => {
@@ -266,13 +162,12 @@ function Scheduler() {
 					})
 				})
 				.catch((err) => {
-					console.log(err)
+					console.error(err)
 				})
 		}
 	}
 
 	const createGroup = (schedule) => {
-		console.log(schedule)
 		if (!schedule.group) {
 			confirm({
 				title: "Create Group",
@@ -326,12 +221,11 @@ function Scheduler() {
 								const {slots} = schedule
 								Object.keys(slots).forEach((day) => {
 									let slot = slots[day]
-									console.log(slot)
 									slot.forEach((slot) => {
 										if (!acc[slot]) {
-											acc[slot] = [customer.firstName]
+											acc[slot] = [customer?.firstName]
 										} else {
-											acc[slot].push(customer.firstName)
+											acc[slot].push(customer?.firstName)
 										}
 									})
 								})
@@ -342,7 +236,7 @@ function Scheduler() {
 					)
 				})
 				.catch((err) => {
-					console.log(err)
+					console.error(err)
 				})
 		}
 	}, [teacherId])
@@ -356,7 +250,10 @@ function Scheduler() {
 		[timeZones]
 	)
 
-	console.log(timeZoneLookup)
+	const meetingLink = useMemo(
+		() =>  retrieveMeetingLink(selectedSchedule),
+		[selectedSchedule]
+	)
 
 	return (
 		<>
@@ -408,14 +305,11 @@ function Scheduler() {
 										<OutlinedInput
 											id="Meeting-Link"
 											label="Meeting Link"
-											value={selectedSchedule.meetingLink}
+											value={meetingLink}
 											fullWidth
 											endAdornment={
 												<InputAdornment position="end">
-													<IconButton
-														onClick={() => copyToClipboard(selectedSchedule.meetingLink)}
-														edge="end"
-													>
+													<IconButton onClick={() => copyToClipboard(meetingLink)} edge="end">
 														<FileCopyOutlined />
 													</IconButton>
 												</InputAdornment>
@@ -574,7 +468,7 @@ function Scheduler() {
 																setSnackBarOpen(true)
 															})
 															.catch((error) => {
-																console.log(error)
+																console.error(error)
 																setSuccess(false)
 																setResponse(response.data.message)
 																setSnackBarOpen(true)
@@ -615,9 +509,7 @@ function Scheduler() {
 					</Button>
 
 					<Button
-						onClick={() =>
-							gotoZoomLink(selectedSchedule.meetingAccount, selectedSchedule.meetingLink)
-						}
+						onClick={() => window.open(meetingLink)}
 						variant="outlined"
 						style={{backgroundColor: "#2ecc71", color: "white"}}
 						startIcon={<AdjustIcon />}
