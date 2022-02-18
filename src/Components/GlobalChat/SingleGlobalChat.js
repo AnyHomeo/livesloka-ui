@@ -41,6 +41,7 @@ function SingleGlobalChat({room}) {
 				setShowAB((res) => !res)
 			})
 	}
+	console.log(room)
 	return (
 		<div className="sidebarChat_head2" key={roomID}>
 			<div className="sidebarChat">
@@ -51,8 +52,13 @@ function SingleGlobalChat({room}) {
 				>
 					{username.substr(0, 1)}
 				</Avatar>
-				<div className="sidebarChat_info">
+				<div className="sidebarChat_info" style={{position: "relative"}}>
 					{room.ping ? <p style={{fontWeight: 700}}>{username} 💬</p> : <p>{username}</p>}
+					{room.country && (
+						<span style={{fontSize: "0.7rem", position: "absolute", top: 42}}>
+							{room?.country?.city}, {room?.country?.region}, {room?.country?.country_name}
+						</span>
+					)}
 					<p style={{fontSize: 12, display: "flex", alignItems: "center"}}>
 						{lastMessage(room)} {messageSeen === false ? <Replay fontSize="small"></Replay> : null}
 					</p>

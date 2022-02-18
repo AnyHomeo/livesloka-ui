@@ -41,7 +41,8 @@ import CategorizeVideo from "../Pages/Videomanager/CategorizeVideo"
 import UpdateNumberOfBoughtRewards from "../Pages/Admin/Crm/UpdateNumberOfRewards"
 import InvoicePages from "../Pages/Accountant/InvoicePages"
 import FinancialPage from "../Pages/Accountant/FinancialPage"
- 
+import TeacherReporting from "../Pages/TeacherFeedback/TeacherReporting"
+
 const adminRoutes = [
 	{permission: "Financial Dashboard", path: "/dashboard", exact: true, component: Dashboard},
 	{
@@ -193,6 +194,12 @@ const adminRoutes = [
 		path: "/accountant/finance",
 		exact: true,
 		component: FinancialPage,
+	},
+	{
+		permission: "Financial Dashboard",
+		path: "/teacher/reporting",
+		exact: true,
+		component: TeacherReporting,
 	},
 ]
 

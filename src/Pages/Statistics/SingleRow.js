@@ -90,6 +90,35 @@ function SingleRow({
 		return scheduleLeaves && scheduleLeaves[time]?.includes(id)
 	}
 
+	const renderFlag = (student) => {
+		if (
+			student.every((rowData) =>
+				rowData.autoDemo
+					? moment(rowData.paidTill).diff(moment(new Date()), "days") <= 0
+					: rowData.numberOfClassesBought <= 0
+			)
+		) {
+			return (
+				<div
+					style={{
+						backgroundColor: "#e74c3c",
+						borderRadius: "50%",
+						display: "flex",
+						justifyContent: "center",
+						alignItems: "center",
+						height: 20,
+						width: 20,
+					}}
+				>
+					<Flag style={{color: "white", height: 15, width: 15}} />
+				</div>
+			)
+		} else {
+			return null
+		}
+	}
+
+	console.log(todayData)
 	return (
 		<div
 			className="single-row-container"
@@ -115,6 +144,8 @@ function SingleRow({
 										? "#2ecc7075"
 										: singleData.demo
 										? "#f1c40fb6"
+										: singleData.isClassTemperarilyCancelled
+										? "rgb(170, 170, 170)"
 										: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
 										? "rgb(56, 103, 214, 0.5)"
 										: "#ff757562",
@@ -134,7 +165,8 @@ function SingleRow({
 								{singleData.students.some((student) => student.autoDemo) ? "N" : "O"}
 							</div>
 
-							<div className="new-old-customer2">
+							<div className="new-old-customer2">{renderFlag(singleData?.students)}</div>
+							{/* <div className="new-old-customer2">
 								{singleData?.students?.some(
 									(rowData) =>
 										rowData.numberOfClassesBought <= 0 ||
@@ -157,7 +189,7 @@ function SingleRow({
 								) : (
 									""
 								)}
-							</div>
+							</div> */}
 
 							<div
 								className="teacher-name"
