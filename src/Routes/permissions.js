@@ -197,7 +197,7 @@ const adminRoutes = [
 		component: FinancialPage,
 	},
 	{
-		permission: "Financial Dashboard",
+		permission: "Video Manager",
 		path: "/teacher/reporting",
 		exact: true,
 		component: TeacherReporting,
