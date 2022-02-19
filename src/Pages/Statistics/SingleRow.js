@@ -9,6 +9,9 @@ import Checkbox from "@material-ui/core/Checkbox"
 import {isAutheticated} from "../../auth"
 import io from "socket.io-client"
 import moment from "moment"
+import {useSnackbar} from "notistack"
+import { retrieveMeetingLink } from "../../Services/utils"
+
 const socket = io(process.env.REACT_APP_API_KEY)
 function SingleRow({
 	setDialogOpen,
@@ -30,7 +33,8 @@ function SingleRow({
 }) {
 	const divRef = useRef(null)
 	const confirm = useConfirm()
-	const {setAlert, setAlertColor, setRefresh, setSuccessOpen} = alertSetStates
+	const {enqueueSnackbar} = useSnackbar()
+	const {setRefresh} = alertSetStates
 
 	useEffect(() => {
 		if (divRef.current) {
@@ -70,15 +74,15 @@ function SingleRow({
 				updateZoomLinkToNewOne(id)
 					.then((data) => {
 						setRefresh((prev) => !prev)
-						setAlert(data.data.message)
-						setAlertColor("success")
-						setSuccessOpen(true)
+						enqueueSnackbar(data?.data?.message || "Meeting link updated successfully", {
+							variant: "success",
+						})
 					})
 					.catch((err) => {
 						console.log(err)
-						setAlert(err.response.data.error)
-						setAlertColor("warning")
-						setSuccessOpen(true)
+						enqueueSnackbar(err?.response?.data?.error || "Something went wrong", {
+							variant: "error",
+						})
 					})
 			})
 			.catch((err) => {
@@ -167,31 +171,6 @@ function SingleRow({
 							</div>
 
 							<div className="new-old-customer2">{renderFlag(singleData?.students)}</div>
-
-							{/* <div className="new-old-customer2">
-								{singleData?.students?.some(
-									(rowData) =>
-										rowData.numberOfClassesBought <= 0 ||
-										(rowData.autoDemo &&
-											moment(rowData.paidTill).diff(moment(new Date()), "days") <= 0)
-								) ? (
-									<div
-										style={{
-											backgroundColor: "#e74c3c",
-											borderRadius: "50%",
-											display: "flex",
-											justifyContent: "center",
-											alignItems: "center",
-											height: 20,
-											width: 20,
-										}}
-									>
-										<Flag style={{color: "white", height: 15, width: 15}} />
-									</div>
-								) : (
-									""
-								)}
-							</div> */}
 
 							<div
 								className="teacher-name"
@@ -286,7 +265,7 @@ function SingleRow({
 									</IconButton>
 								</Tooltip>
 								<Tooltip title="Join Zoom">
-									<IconButton onClick={() => window.open(singleData.meetingLink)} size="small">
+									<IconButton onClick={() => window.open(retrieveMeetingLink(singleData))} size="small">
 										<Video style={{height: 18, width: 18, color: "#0984e3"}} />
 									</IconButton>
 								</Tooltip>
