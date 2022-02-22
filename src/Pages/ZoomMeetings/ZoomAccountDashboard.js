@@ -134,13 +134,13 @@ export default function ZoomAccountDashboard() {
 	const handleChange = (_, newValue) => {
 		setValue(newValue)
 	}
-	const [schedulesOfTheDay, setSchedulesOfTheDay] = useState({})
+	const [accounts, setAccounts] = useState([])
 
 	useEffect(() => {
 		getSchedulesByDayForZoomAccountDashboard(allDays[value])
 			.then((data) => {
 				console.log(data.data.result)
-				setSchedulesOfTheDay(data.data.result)
+				setAccounts(data.data.result)
 			})
 			.catch((err) => {
 				console.log(err)
@@ -149,14 +149,12 @@ export default function ZoomAccountDashboard() {
 
 	const toggleZoomAccount = (id, isDisabled) => async () => {
 		try {
-			 await editField("Update Zoom Account", {_id: id, isDisabled})
-			setSchedulesOfTheDay((prev) => {
-				let prevData = {...prev}
-				Object.keys(prevData).forEach((key) => {
-					if (prevData[key]._id === id) {
-						prevData[key].isDisabled = isDisabled
-					}
-				})
+			await editField("Update Zoom Account", {_id: id, isDisabled})
+			setAccounts((prev) => {
+				let prevData = [...prev]
+				let zoomAccountIndex = prevData.findIndex((account) => account._id === id)
+				prevData[zoomAccountIndex] = {...prevData[zoomAccountIndex], isDisabled}
+
 				return prevData
 			})
 		} catch (error) {
@@ -164,19 +162,18 @@ export default function ZoomAccountDashboard() {
 		}
 	}
 
-	let accountNames = useMemo(() => {
+	let sortedAccounts = useMemo(() => {
 		let enabledAccounts = []
 		let disabledAccounts = []
-		let accounts = Object.keys(schedulesOfTheDay)
 		accounts.forEach((account) => {
-			if (schedulesOfTheDay[account].isDisabled) {
+			if (account.isDisabled) {
 				disabledAccounts.push(account)
 			} else {
 				enabledAccounts.push(account)
 			}
 		})
 		return [...enabledAccounts, ...disabledAccounts]
-	}, [schedulesOfTheDay])
+	}, [accounts])
 
 	return (
 		<div className={classes.root}>
@@ -245,7 +242,7 @@ export default function ZoomAccountDashboard() {
 									flexWrap: "nowrap",
 								}}
 							>
-								{accountNames.map((schedule, i) => (
+								{sortedAccounts.map((account, i) => (
 									<>
 										<div
 											style={{
@@ -260,7 +257,7 @@ export default function ZoomAccountDashboard() {
 													height: "80px",
 													textAlign: "center",
 													padding: "15px 0",
-													backgroundColor: schedulesOfTheDay[schedule].color || "#EAF0F1",
+													backgroundColor: account.color || "#EAF0F1",
 													color: "white",
 													borderLeft: "1px solid #fff",
 													boxShadow:
@@ -269,14 +266,11 @@ export default function ZoomAccountDashboard() {
 											>
 												{" "}
 												{width < 700
-													? schedule.toUpperCase().slice(0, 3) + "..."
-													: schedule.toUpperCase()}
+													? account?.ZoomAccountName?.slice(0, 3) + "..."
+													: account?.ZoomAccountName}
 												<Switch
-													checked={!schedulesOfTheDay[schedule].isDisabled}
-													onChange={toggleZoomAccount(
-														schedulesOfTheDay[schedule]._id,
-														!schedulesOfTheDay[schedule].isDisabled
-													)}
+													checked={!account.isDisabled}
+													onChange={toggleZoomAccount(account._id, !account.isDisabled)}
 												/>
 											</div>
 											<div
@@ -286,16 +280,11 @@ export default function ZoomAccountDashboard() {
 												}}
 											>
 												{times.map((time, j) => {
-													let filteredArray = schedulesOfTheDay?.[schedule]?.schedules.filter(
-														(scheduleFromArr) =>
-															scheduleFromArr?.slots?.includes(`${day.toUpperCase()}-${time}`)
-													)
+													let schedules = account?.timeSlots[`${day.toUpperCase()}-${time}`]
 													return (
 														<div
 															style={{
-																backgroundColor: filteredArray.length
-																	? schedulesOfTheDay[schedule].color
-																	: "white",
+																backgroundColor: schedules ? account?.color : "white",
 																height: "80px",
 																width: "100%",
 																color: "white",
@@ -309,11 +298,7 @@ export default function ZoomAccountDashboard() {
 																borderBottom: j % 2 !== 0 ? "1px solid rgba(0,0,0,0.5)" : "",
 															}}
 														>
-															{filteredArray.map((schedule, i) =>
-																i !== filteredArray.length - 1
-																	? ` ${schedule.className} || `
-																	: ` ${schedule.className}`
-															)}
+															{schedules && schedules.length ? schedules.map((schedule) => schedule.className).join(" || ") : ""}
 														</div>
 													)
 												})}
