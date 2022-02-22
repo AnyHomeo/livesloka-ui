@@ -22,6 +22,7 @@ import LeavesTabs from "./../Pages/Leaves/LeavesTabs"
 import PaymentsPage from "../Pages/reports/PaymentsPage"
 import UpdateNumberOfBoughtClasses from "./../Pages/Admin/Crm/UpdateNumberOfBoughtClasses"
 import Stats from "../Pages/Statistics/Statistics"
+import StatsMobile from "../Pages/StatisticsMobile/Statistics"
 import SummerCampsCustomerTable from "../Pages/Admin/Crm/SummerCampsCustomerTable"
 import DemoAndInclassStudents from "../Components/DemoAndInclassStudents"
 import Careers from "../Pages/Admin/Crm/Careers"
@@ -96,6 +97,7 @@ const adminRoutes = [
 		component: CustomersDetailsMb,
 	},
 	{permission: "Statistics", path: "/statistics", exact: true, component: Stats},
+	{permission: "Statistics", path: "/statistics/mobile", exact: true, component: StatsMobile},
 	{
 		permission: "Customer Data",
 		path: "/add-customer-mobile",
