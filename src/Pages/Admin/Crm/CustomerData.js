@@ -26,10 +26,7 @@ import MuiAlert from "@material-ui/lab/Alert"
 import Autocomplete from "@material-ui/lab/Autocomplete"
 import Tooltip from "@material-ui/core/Tooltip"
 import {
-	AppBar,
-	Toolbar,
 	IconButton,
-	Typography,
 	Slide,
 	TextField,
 	Snackbar,
@@ -38,10 +35,8 @@ import {
 	Card,
 	Grid,
 	DialogContent,
-	DialogTitle,
 } from "@material-ui/core"
 import EqualizerIcon from "@material-ui/icons/Equalizer"
-import CloseIcon from "@material-ui/icons/Close"
 import Comments from "./Comments"
 import "date-fns"
 import TableChartOutlinedIcon from "@material-ui/icons/TableChartOutlined"
@@ -264,9 +259,9 @@ const CrmDetails = ({isSummerCampStudents}) => {
 
 	const [historyOpen, setHistoryOpen] = useState(false)
 	const [historySelectedId, setHistorySelectedId] = useState("")
-	const [open, setOpen] = useState(false)
+	const [isCommentsOpen, setIsCommentsOpen] = useState(false)
 	const [name, setName] = useState("")
-	const [id, setId] = useState("")
+	const [commentsCustomerId, setCommentsCustomerId] = useState("")
 	const [loading, setLoading] = useState(true)
 	const [columns, setColumns] = useState([])
 	const [data, setData] = useState([])
@@ -1139,9 +1134,9 @@ const CrmDetails = ({isSummerCampStudents}) => {
 				open={moreOptionOpen}
 				setOpen={setMoreOptionOpen}
 				data={moreOptionSelectedData}
-				commentModalOpen={setOpen}
+				commentModalOpen={setIsCommentsOpen}
 				setNameComment={setName}
-				setIdComment={setId}
+				setIdComment={setCommentsCustomerId}
 				materialTableRef={materialTableRef}
 				setInitialFormData={setInitialFormData}
 			/>
@@ -1433,7 +1428,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 						addRowPosition: "first",
 						maxBodyHeight: height - 220,
 						exportButton: true,
-						filtering:true,
+						filtering: true,
 						rowStyle: (rowData) => {
 							return {
 								backgroundColor: rowData.isRedeemedCustomer ? "#eee" : "#fff",
@@ -1639,34 +1634,12 @@ const CrmDetails = ({isSummerCampStudents}) => {
 				/>
 			</div>
 
-			<Dialog
-				open={open}
-				fullWidth
-				maxWidth={"md"}
-				onClose={() => setOpen(false)}
-				aria-labelledby="form-dialog-title"
-				TransitionComponent={Transition}
-			>
-				<AppBar className={classes.appBar}>
-					<Toolbar>
-						<IconButton
-							edge="start"
-							color="inherit"
-							onClick={() => setOpen(false)}
-							aria-label="close"
-						>
-							<CloseIcon />
-						</IconButton>
-						<Typography variant="h6" className={classes.title}>
-							See all {name}'s Comments here
-						</Typography>
-						<Button autoFocus color="inherit" onClick={() => setOpen(false)}>
-							Cancel
-						</Button>
-					</Toolbar>
-				</AppBar>
-				<Comments id={id} name={name} />
-			</Dialog>
+			<Comments
+				commentsCustomerId={commentsCustomerId}
+				name={name}
+				isCommentsOpen={isCommentsOpen}
+				setIsCommentsOpen={setIsCommentsOpen}
+			/>
 
 			{historyStudentData && (
 				<Dialog
@@ -1684,7 +1657,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 				</Dialog>
 			)}
 
-			<Dialog
+			{/* <Dialog
 				open={!!rewardsModalOpen}
 				onClose={() => setRewardsModalOpen(undefined)}
 				aria-labelledby="rewards-modal"
@@ -1704,19 +1677,10 @@ const CrmDetails = ({isSummerCampStudents}) => {
 						<X />
 					</IconButton>
 				</div>
-
-				{/* <DialogTitle>
-					<div style={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
-						<div>Rewards</div>
-						<IconButton onClick={() => setRewardsModalOpen(undefined)}>
-							<X />
-						</IconButton>
-					</div>
-				</DialogTitle> */}
 				<DialogContent>
 					<RewardsTable customerId={rewardsModalOpen} redeems={rewards} />
 				</DialogContent>
-			</Dialog>
+			</Dialog> */}
 		</>
 	)
 }
