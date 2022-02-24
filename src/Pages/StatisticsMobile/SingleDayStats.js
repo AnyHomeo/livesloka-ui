@@ -235,7 +235,6 @@ function SingleDayStats({
 	}
 
 	const createObject = (data) => {
-		console.log("Hello")
 		let obj = {}
 
 		times.forEach((time, i) => {
@@ -262,33 +261,50 @@ function SingleDayStats({
 					return (
 						<Grid key={i} item sx={12} style={{width: "100%"}}>
 							<div className="hour">
-								<Card className="hourCard" style={{margin: 5, width: "100%", height: 60}}>
-									<Clock />
-									{`${item.split(" ")[0]} ${item.split(" ")[1].split("-")[0]}`}
+								<Card
+									// className="hourCard"
+									style={{
+										// margin: 5,
+										width: "100%",
+										height: "auto",
+										display: "flex",
+										flexDirection: "column",
+										marginTop: 10,
+										borderRadius: "0px !important",
+										border: "1px solid rgb(9, 132, 227)",
+										// margin: 10,
+										boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
+									}}
+								>
+									{/* <Clock style={{marginRight: 5, height: 20, height: 20}} />{" "} */}
+									<Card style={{backgroundColor: "rgb(9, 132, 227)"}}>
+										<p style={{textAlign: "center", padding: 5, color: "white"}}>{`${
+											item.split(" ")[0]
+										} ${item.split(" ")[1].split("-")[0]}`}</p>
+									</Card>
+									{todayData[item].data.map((singleData, i) => (
+										<SingleRow
+											key={i}
+											setDialogData={setDialogData}
+											day={day}
+											selectedSlot={selectedSlot}
+											// time={`${day}-${time}`}
+											// prevTime={i !== 0 ? `${day}-${times[i - 1]}` : ""}
+											singleData={singleData}
+											setDialogOpen={setDialogOpen}
+											leaves={leaves}
+											alertSetStates={alertSetStates}
+											schedulesAssignedToMe={schedulesAssignedToMe}
+											setSchedulesAssignedToMe={setSchedulesAssignedToMe}
+											otherSchedules={otherSchedules}
+											allAgents={allAgents}
+											teacherIds={teacherIds}
+											isToday={isToday}
+											scheduleLeaves={scheduleLeaves}
+										/>
+									))}
 								</Card>
 							</div>
-
-							{todayData[item].data.map((singleData, i) => (
-								<SingleRow
-									key={i}
-									setDialogData={setDialogData}
-									day={day}
-									selectedSlot={selectedSlot}
-									// time={`${day}-${time}`}
-									// prevTime={i !== 0 ? `${day}-${times[i - 1]}` : ""}
-									singleData={singleData}
-									setDialogOpen={setDialogOpen}
-									leaves={leaves}
-									alertSetStates={alertSetStates}
-									schedulesAssignedToMe={schedulesAssignedToMe}
-									setSchedulesAssignedToMe={setSchedulesAssignedToMe}
-									otherSchedules={otherSchedules}
-									allAgents={allAgents}
-									teacherIds={teacherIds}
-									isToday={isToday}
-									scheduleLeaves={scheduleLeaves}
-								/>
-							))}
 						</Grid>
 					)
 				})}

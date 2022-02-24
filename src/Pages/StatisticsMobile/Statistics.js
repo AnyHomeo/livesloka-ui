@@ -64,7 +64,7 @@ function TabPanel(props) {
 			aria-labelledby={`scrollable-auto-tab-${index}`}
 			{...other}
 		>
-			{value === index && <Box p={3}>{children}</Box>}
+			{value === index && <Box style={{padding: 5}}>{children}</Box>}
 		</div>
 	)
 }
@@ -406,7 +406,6 @@ function Statistics() {
 						}}
 					/>
 				</DialogContent>
-				{console.log(dialogData)}
 				<DialogActions>
 					<FormControl variant="outlined">
 						{loading ? (
@@ -453,11 +452,11 @@ function Statistics() {
 				aria-label="Statistics Page Tabs"
 			>
 				{days.map((day) => (
-					<Tab key={day} label={day} />
+					<Tab key={day} label={`${day[0]}${day[1]}${day[2]}`} />
 				))}
 			</Tabs>
 
-			<Button
+			{/* <Button
 				variant="contained"
 				color="primary"
 				size="small"
@@ -472,10 +471,10 @@ function Statistics() {
 				}}
 			>
 				Refresh
-			</Button>
+			</Button> */}
 
 			{days.map((day, i) => (
-				<TabPanel key={day} value={value} index={i}>
+				<TabPanel key={day} value={value} index={i} style={{padding: 0}}>
 					<SingleDayStats
 						refresh={refresh}
 						day={day}
