@@ -30,7 +30,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
 import useDocumentTitle from "../../../Components/useDocumentTitle"
 import {createSchedule} from "../../../Services/Services"
 import {useParams} from "react-router-dom"
-import { showError } from "../../../Services/utils"
+import {showError} from "../../../Services/utils"
 
 let days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
 
@@ -68,7 +68,7 @@ const MeetingScheduler = () => {
 
 	const [personName, setPersonName] = useState([])
 	const [demo, setDemo] = useState(false)
-	const [radioday, setRadioday] = useState("")
+	const [radioday, setRadioday] = useState("MONDAY")
 	const [teachers, setTeachers] = useState([])
 	const [studentName, setStudentName] = useState([])
 	const [availableTimeSlots, setAvailableTimeSlots] = useState([])
@@ -83,7 +83,6 @@ const MeetingScheduler = () => {
 	const [subjectNameId, setSubjectNameId] = useState("")
 	const [className, setClassName] = useState("")
 	const [oneToOne, setOneToOne] = useState(true)
-
 
 	const handleDayChange = (event) => {
 		setRadioday(event.target.value)
@@ -102,7 +101,7 @@ const MeetingScheduler = () => {
 	}, [])
 
 	useEffect(() => {
-		if(params.slot){
+		if (params.slot) {
 			setTimeSlotState(params.slot.split(","))
 		}
 	}, [params.slot])
@@ -158,8 +157,6 @@ const MeetingScheduler = () => {
 		setSubjectNames(subjectName.data.result)
 	}
 
-
-
 	const submitForm = async (e) => {
 		setLoading(true)
 		e.preventDefault()
@@ -185,7 +182,7 @@ const MeetingScheduler = () => {
 				OneToMany: !oneToOne,
 				subject: subjectNameId,
 				startDate: moment(selectedDate).format(),
-				className
+				className,
 			}
 
 			try {
@@ -195,7 +192,7 @@ const MeetingScheduler = () => {
 					variant: "success",
 				})
 			} catch (error) {
-				showError(error,enqueueSnackbar)
+				showError(error, enqueueSnackbar)
 			}
 		} catch (error) {
 			return showError(error, enqueueSnackbar)
