@@ -39,7 +39,9 @@ import {Link} from "react-router-dom"
 import Axios from "axios"
 import {useConfirm} from "material-ui-confirm"
 import {retrieveMeetingLink} from "../../Services/utils"
-
+import StatisticsMobile from "./StatisticsMobile"
+import {Smartphone} from "react-feather"
+import {useHistory} from "react-router-dom"
 let days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
 
 const copyToClipboard = (text) => {
@@ -74,6 +76,7 @@ function pageRefresh() {
 }
 
 function Statistics() {
+	const history = useHistory()
 	useDocumentTitle("Statistics")
 	const confirm = useConfirm()
 	let initialValue = days.indexOf(
@@ -120,16 +123,17 @@ function Statistics() {
 		setValue(newValue)
 	}
 
-	const toggleJoinButton = async (rowData) => {
+	const toggleJoinButton = async (rowData, i) => {
+		console.log(rowData)
 		try {
 			await editCustomer({
 				isJoinButtonEnabledByAdmin: !rowData.isJoinButtonEnabledByAdmin,
 				_id: rowData._id,
 			})
 			setDialogData((prev) => {
-				let index = rowData.tableData.id
+				// let index = rowData.tableData.id
 				let prevData = {...prev}
-				prevData.students[index] = {
+				prevData.students[i] = {
 					...rowData,
 					isJoinButtonEnabledByAdmin: !rowData.isJoinButtonEnabledByAdmin,
 				}
@@ -140,16 +144,16 @@ function Statistics() {
 		}
 	}
 
-	const toggleNewOldButton = async (rowData) => {
+	const toggleNewOldButton = async (rowData, i) => {
 		try {
 			await editCustomer({
 				autoDemo: !rowData?.autoDemo,
 				_id: rowData._id,
 			})
 			setDialogData((prev) => {
-				let index = rowData.tableData.id
+				// let index = rowData.tableData.id
 				let prevData = {...prev}
-				prevData.students[index] = {
+				prevData.students[i] = {
 					...rowData,
 					autoDemo: !rowData?.autoDemo,
 				}
@@ -200,8 +204,6 @@ function Statistics() {
 			setLoading(false)
 		}
 	}
-
-	console.log(dialogData.isClassTemperarilyCancelled)
 	const meetingLink = useMemo(() => retrieveMeetingLink(dialogData), [dialogData])
 
 	return (
@@ -225,13 +227,14 @@ function Statistics() {
 				maxWidth={"md"}
 			>
 				<DialogTitle id="alert-dialog-title">
-					<h2>Schedule Details</h2>
+					<h2 style={{fontSize: 18}}>Schedule Details</h2>
 				</DialogTitle>
 				<DialogContent>
 					<div className="info-wrapper">
 						<FormControl variant="outlined">
 							<InputLabel htmlFor="Meeting-Link">Meeting Link</InputLabel>
 							<OutlinedInput
+								style={{height: 40, fontSize: 14}}
 								id="Meeting-Link"
 								label="Meeting Link"
 								value={meetingLink}
@@ -249,6 +252,7 @@ function Statistics() {
 						<FormControl variant="outlined">
 							<InputLabel htmlFor="teacher-whatsapp">Teacher Details</InputLabel>
 							<OutlinedInput
+								style={{height: 40, fontSize: 14}}
 								id="teacher-whatsapp"
 								label="Teacher Details"
 								value={dialogData.teacher && dialogData.teacher.TeacherName}
@@ -274,142 +278,17 @@ function Statistics() {
 							/>
 						</FormControl>
 					</div>
-					<MaterialTable
-						title="Student Details"
-						columns={[
-							{
-								title: "Join",
-								width: "1%",
-								align: "center",
-								editable: "never",
-								cellStyle: {whiteSpace: "nowrap"},
-								headerStyle: {whiteSpace: "nowrap"},
-								field: "isJoinButtonEnabledByAdmin",
-								render: (rowData) => (
-									<Switch
-										onChange={() => toggleJoinButton(rowData)}
-										checked={rowData.isJoinButtonEnabledByAdmin}
-										name="isJoinButtonEnabledByAdmin"
-										inputProps={{"aria-label": "secondary checkbox"}}
-									/>
-								),
-							},
 
-							{
-								title: "New/Old",
-								width: "1%",
-								align: "center",
-								editable: "never",
-								cellStyle: {whiteSpace: "nowrap"},
-								headerStyle: {whiteSpace: "nowrap"},
-								field: "autoDemo",
-								render: (rowData) => (
-									<Switch
-										onChange={() => toggleNewOldButton(rowData)}
-										checked={rowData?.autoDemo}
-										name="autoDemo"
-										inputProps={{"aria-label": "secondary checkbox"}}
-									/>
-								),
-							},
-
-							{
-								field: "isStudentJoined",
-								title: "Present",
-								type: "boolean",
-								render: (rowData) =>
-									rowData.isStudentJoined ? (
-										<CheckCircleIcon style={{color: "green"}} />
-									) : (
-										<CancelIcon style={{color: "red"}} />
-									),
-							},
-							{
-								field: "autoDemo",
-								title: "Customer Type",
-								type: "boolean",
-								render: (rowData) => {
-									return (
-										<>
-											{rowData.autoDemo ? (
-												<Chip label="New" size="small" color="primary" />
-											) : (
-												<Chip label="Old" size="small" color="secondary" />
-											)}
-										</>
-									)
-								},
-							},
-							{
-								field: "firstName",
-								title: "Student",
-								tooltip: "Sort by First Name",
-							},
-							{
-								field: "lastName",
-								title: "Parent",
-								tooltip: "Sort by Last Name",
-							},
-							{
-								field: "numberOfClassesBought",
-								title: "Classes Left / Due Date",
-								tooltip: "Sort by Classes Left",
-								width: "1%",
-								cellStyle: {whiteSpace: "nowrap"},
-								headerStyle: {whiteSpace: "nowrap"},
-								render: (rowData) =>
-									rowData.autoDemo && rowData.paidTill
-										? momentTZ(rowData.paidTill).format("MMM DD, YYYY")
-										: rowData.numberOfClassesBought,
-							},
-							{
-								title: "Time Zone",
-								field: "timeZoneId",
-								lookup: timeZoneLookup,
-							},
-							{
-								field: "email",
-								title: "User Id",
-								tooltip: "Sort by Email",
-							},
-							{
-								field: "whatsAppnumber",
-								title: "WhatsaApp Number",
-								tooltip: "Sort by WhatsApp Number",
-								render: (rowData) => (
-									<div style={{display: "flex", alignItems: "center"}}>
-										<Tooltip title={`Message ${rowData.firstName} on Whatsapp`}>
-											<IconButton
-												onClick={() =>
-													window.open(
-														`https://api.whatsapp.com/send?phone=${
-															rowData.whatsAppnumber.indexOf("+") !== -1
-																? rowData.whatsAppnumber.split("+")[1].split(" ").join("")
-																: rowData.countryCode
-																? rowData.countryCode + rowData.whatsAppnumber.split(" ").join("")
-																: rowData.whatsAppnumber.split(" ").join("")
-														}`
-													)
-												}
-											>
-												<WhatsAppIcon />
-											</IconButton>
-										</Tooltip>
-										{rowData.countryCode} {rowData.whatsAppnumber}
-									</div>
-								),
-							},
-						]}
+					<StatisticsMobile
 						data={dialogData.students}
-						options={{
-							paging: false,
-						}}
+						timeZoneLookup={timeZoneLookup}
+						toggleNewOldButton={toggleNewOldButton}
+						toggleJoinButton={toggleJoinButton}
 					/>
-				</DialogContent>
-				<DialogActions>
-					<FormControl variant="outlined">
+
+					<FormControl style={{marginTop: 10}} variant="outlined">
 						{loading ? (
-							<CircularProgress style={{height: 30, width: 30, marginLeft: -50}} />
+							<CircularProgress style={{height: 30, width: 30}} />
 						) : (
 							<FormControlLabel
 								control={
@@ -423,7 +302,8 @@ function Statistics() {
 							/>
 						)}
 					</FormControl>
-
+				</DialogContent>
+				<DialogActions>
 					<Button onClick={() => setDialogOpen(false)} variant="outlined" color="primary">
 						Cancel
 					</Button>
@@ -456,22 +336,19 @@ function Statistics() {
 				))}
 			</Tabs>
 
-			{/* <Button
+			<IconButton
+				onClick={() => history.push("/statistics")}
 				variant="contained"
 				color="primary"
 				size="small"
-				onClick={pageRefresh}
-				endIcon={<Icon>refresh</Icon>}
 				style={{
-					marginLeft: 24,
-					marginRight: 24,
 					marginTop: 10,
-					color: "white",
+					marginRight: 20,
 					float: "right",
 				}}
 			>
-				Refresh
-			</Button> */}
+				<Smartphone style={{color: "black"}} />
+			</IconButton>
 
 			{days.map((day, i) => (
 				<TabPanel key={day} value={value} index={i} style={{padding: 0}}>

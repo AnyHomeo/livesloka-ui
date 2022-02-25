@@ -147,7 +147,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			permission: "Teachers Salary",
 		},
 		{
-			href: "/statistics",
+			href: width <= 550 ? "/statistics/mobile" : "/statistics",
 			icon: BarChart,
 			title: "Statistics",
 			permission: "Statistics",
@@ -240,7 +240,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
 
 	const Support = [
 		{
-			href: "/statistics",
+			href: width <= 550 ? "/statistics/mobile" : "/statistics",
 			icon: BarChart,
 			title: "Statistics",
 			permission: "Statistics",

@@ -39,7 +39,8 @@ import {Link} from "react-router-dom"
 import Axios from "axios"
 import {useConfirm} from "material-ui-confirm"
 import {retrieveMeetingLink} from "../../Services/utils"
-
+import {Smartphone} from "react-feather"
+import {useHistory} from "react-router-dom"
 let days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
 
 const copyToClipboard = (text) => {
@@ -74,6 +75,7 @@ function pageRefresh() {
 }
 
 function Statistics() {
+	const history = useHistory()
 	useDocumentTitle("Statistics")
 	const confirm = useConfirm()
 	let initialValue = days.indexOf(
@@ -202,10 +204,7 @@ function Statistics() {
 	}
 
 	console.log(dialogData.isClassTemperarilyCancelled)
-	const meetingLink = useMemo(
-		() => retrieveMeetingLink(dialogData),
-		[dialogData]
-	)
+	const meetingLink = useMemo(() => retrieveMeetingLink(dialogData), [dialogData])
 
 	return (
 		<div>
@@ -477,6 +476,18 @@ function Statistics() {
 				Refresh
 			</Button>
 
+			<IconButton
+				onClick={() => history.push("/statistics/mobile")}
+				variant="contained"
+				color="primary"
+				size="small"
+				style={{
+					marginTop: 10,
+					float: "right",
+				}}
+			>
+				<Smartphone style={{color: "black"}} />
+			</IconButton>
 			{days.map((day, i) => (
 				<TabPanel key={day} value={value} index={i}>
 					<SingleDayStats

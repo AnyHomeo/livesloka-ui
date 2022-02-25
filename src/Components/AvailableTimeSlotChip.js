@@ -65,6 +65,13 @@ export default function AvailableTimeSlotChip({
 		})
 	}
 
+	const labelGenerator = (label) => {
+		// console.log(label.split(" ")[0].split("-"[1]))
+		// console.log("SATURDAY-05:30 AM-06:00 AM".split(" ")[0].split("-"[1]))
+
+		return `${label.split(" ")[0].split("-")[1]} ${label.split(" ")[2]} `
+	}
+
 	return (
 		<div>
 			<FormControl variant="outlined" className={classes.formControl}>
@@ -144,9 +151,9 @@ export default function AvailableTimeSlotChip({
 											? "white"
 											: "black",
 									}}
-									label={
+									label={labelGenerator(
 										timeSlots ? valueFinder(item) : labelFinder(item) + " - " + valueFinder(item)
-									}
+									)}
 									clickable
 									color="primary"
 									onClick={() =>
