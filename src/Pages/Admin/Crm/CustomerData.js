@@ -508,6 +508,23 @@ const CrmDetails = ({isSummerCampStudents}) => {
 		}
 	}
 
+	const toggleField = useCallback(async (rowData, edit) => {
+		try {
+			await editCustomer(edit)
+			setData((prev) => {
+				let index = rowData.tableData.id
+				let prevData = [...prev]
+				prevData[index] = {
+					...rowData,
+					...edit,
+				}
+				return prevData
+			})
+		} catch (error) {
+			console.log(error)
+		}
+	}, [])
+
 	//load all dropdowns
 	useEffect(() => {
 		setClassDropdown(fetchDropDown(0))
@@ -545,7 +562,12 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					field: "isJoinButtonEnabledByAdmin",
 					render: (rowData) => (
 						<Switch
-							onChange={() => toggleJoinButton(rowData)}
+							onChange={() =>
+								toggleField(rowData, {
+									isJoinButtonEnabledByAdmin: !rowData.isJoinButtonEnabledByAdmin,
+									_id: rowData._id,
+								})
+							}
 							checked={rowData.isJoinButtonEnabledByAdmin}
 							name="isJoinButtonEnabledByAdmin"
 							inputProps={{"aria-label": "secondary checkbox"}}
@@ -562,9 +584,36 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					field: "isSubscription",
 					render: (rowData) => (
 						<Switch
-							onChange={() => toggleSubscription(rowData)}
+							onChange={() =>
+								toggleField(rowData, {
+									isSubscription: !rowData.isSubscription,
+									_id: rowData._id,
+								})
+							}
 							checked={!!rowData.isSubscription}
 							name="isSubscription"
+							inputProps={{"aria-label": "secondary checkbox"}}
+						/>
+					),
+				},
+				{
+					title: "New",
+					width: "1%",
+					align: "center",
+					editable: "never",
+					cellStyle: {whiteSpace: "nowrap"},
+					headerStyle: {whiteSpace: "nowrap"},
+					field: "autoDemo",
+					render: (rowData) => (
+						<Switch
+							onChange={() =>
+								toggleField(rowData, {
+									autoDemo: !rowData.autoDemo,
+									_id: rowData._id,
+								})
+							}
+							checked={!!rowData.autoDemo}
+							name="autoDemo"
 							inputProps={{"aria-label": "secondary checkbox"}}
 						/>
 					),

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useCallback, useEffect, useState} from "react"
 import {makeStyles} from "@material-ui/core/styles"
 import Box from "@material-ui/core/Box"
 import Collapse from "@material-ui/core/Collapse"
@@ -13,12 +13,13 @@ import Typography from "@material-ui/core/Typography"
 import Paper from "@material-ui/core/Paper"
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown"
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp"
-import Axios from "axios"
+import {useSnackbar} from "notistack"
 import moment from "moment"
 import {capitalize, CircularProgress, Grid, Tooltip} from "@material-ui/core"
-import {Copy, Trash, User} from "react-feather"
+import {Copy, RefreshCcw, Trash, User} from "react-feather"
 import {useConfirm} from "material-ui-confirm"
 import styles from "./style.module.scss"
+import {deleteOptions, getOptions, retryScheduleWithOptions} from "../../Services/Services"
 
 let days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
 
@@ -39,19 +40,11 @@ const copyToClipboard = (text) => {
 	textField.remove()
 }
 
-function createData(studentName, teacherName, createdAt, history, id) {
-	return {
-		studentName,
-		teacherName,
-		createdAt,
-		history,
-		id,
-	}
-}
+const Row = ({row, getBackData}) => {
+	console.log(row)
 
-function Row(props) {
-	const {row, getBackData} = props
 	const confirm = useConfirm()
+	const {enqueueSnackbar} = useSnackbar()
 
 	const [open, setOpen] = React.useState(false)
 	const classes = useRowStyles()
@@ -64,20 +57,32 @@ function Row(props) {
 				title: "Do you really want to delete?",
 				confirmationText: "Yes!, Delete",
 			})
-				.then(async () => {
-					const data = await Axios.delete(`${process.env.REACT_APP_API_KEY}/options/${id}`)
-					setLoading(false)
-					if (data.status === 200) {
-						getBackData(true)
-					}
-				})
-				.catch(() => {
-					setLoading(false)
-				})
+			await deleteOptions(id)
+			setLoading(false)
+			getBackData(true)
+			enqueueSnackbar("Deleted option successfully")
 		} catch (error) {
 			console.log(error)
+			setLoading(false)
+			enqueueSnackbar(error?.response?.data?.message || "Failed deleting option")
 		}
 	}
+
+	const onRetrySchedule = async (id) => {
+		try {
+			await confirm({
+				title: "Do you really want to manually schedule from options?",
+				confirmationText: "Yes!",
+			})
+			await retryScheduleWithOptions(id)
+			getBackData(true)
+			enqueueSnackbar("Scheduled class successfully")
+		} catch (error) {
+			console.log(error)
+			enqueueSnackbar(error?.response?.data?.message || "Failed to schedule class")
+		}
+	}
+
 	return (
 		<React.Fragment>
 			<TableRow className={classes.root}>
@@ -92,12 +97,23 @@ function Row(props) {
 				<TableCell align="right">{row.teacherName}</TableCell>
 				<TableCell align="right">{moment(row.createdAt).format("MMMM Do YYYY")}</TableCell>
 				<TableCell align="right">
-					<IconButton onClick={() => copyToClipboard(`https://mylivesloka.com/options/${row.id}`)} >
-						<Copy />
-					</IconButton>
-					<IconButton onClick={() => onDeleteRow(row.id)} disabled={loading}>
-						{loading ? <CircularProgress style={{height: 30, width: 30}} /> : <Trash />}
-					</IconButton>
+					<Tooltip title="Copy options link">
+						<IconButton
+							onClick={() => copyToClipboard(`https://mylivesloka.com/options/${row.id}`)}
+						>
+							<Copy />
+						</IconButton>
+					</Tooltip>
+					{/* <Tooltip title="Retry scheduling the options">
+						<IconButton onClick={() => onRetrySchedule(row.id)}>
+							<RefreshCcw />
+						</IconButton>
+					</Tooltip> */}
+					<Tooltip title="Delete options">
+						<IconButton onClick={() => onDeleteRow(row.id)} disabled={loading}>
+							{loading ? <CircularProgress style={{height: 30, width: 30}} /> : <Trash />}
+						</IconButton>
+					</Tooltip>
 				</TableCell>
 			</TableRow>
 			<TableRow>
@@ -110,7 +126,14 @@ function Row(props) {
 							<Grid container spacing={2}>
 								{row.history[0].map((item, i) => (
 									<Grid item sm={12} md={4} lg={3}>
-										<div className={styles.option}>
+										<div
+											className={styles.option}
+											style={
+												item._id === row.selectedSlotId
+													? {border: "2px solid green", borderRadius: 5}
+													: {}
+											}
+										>
 											{days.map((day, i) =>
 												item[day.toLowerCase()] ? (
 													<div>
@@ -136,7 +159,14 @@ function Row(props) {
 										}, {})
 									return (
 										<Grid item sm={12} md={4} lg={3}>
-											<div className={styles.option}>
+											<div
+												className={styles.option}
+												style={
+													item._id === row.selectedSlotId
+														? {border: "2px solid green", borderRadius: 5}
+														: {}
+												}
+											>
 												{days.map((day, i) =>
 													slots[day] ? (
 														<div>
@@ -167,36 +197,32 @@ function Row(props) {
 export default function Optionstable({refresh}) {
 	const [rows, setRows] = useState([])
 
-	useEffect(() => {
-		fetchTableData()
-	}, [refresh])
-
-	const getBackData = (flag) => {
-		if (flag) {
-			fetchTableData()
-		}
-	}
-	const fetchTableData = async () => {
-		let tempArr = []
+	const fetchOptions = useCallback(async () => {
 		try {
-			const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/options`)
-
-			data &&
-				data.data.result.forEach((item) => {
-					let history = [item.options, item.schedules]
-					let test = createData(
-						item?.customer?.firstName || "Deleted User",
-						item?.teacherData?.TeacherName || "Deleted Teacher",
-						item?.createdAt,
-						history,
-						item._id
-					)
-					tempArr.push(test)
-				})
+			const optionsResponse = await getOptions()
+			setRows(
+				optionsResponse?.data?.result?.map((option) => ({
+					...option,
+					studentName: option?.customer?.firstName || "Deleted User",
+					teacherName: option?.teacherData?.TeacherName || "Deleted Teacher",
+					createdAt: option?.createdAt,
+					history: [option.options, option.schedules],
+					id: option._id,
+				}))
+			)
 		} catch (error) {
 			console.log(error)
 		}
-		setRows(tempArr)
+	}, [])
+
+	useEffect(() => {
+		fetchOptions()
+	}, [refresh, fetchOptions])
+
+	const getBackData = (flag) => {
+		if (flag) {
+			fetchOptions()
+		}
 	}
 
 	return (
