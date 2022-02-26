@@ -65,6 +65,10 @@ export default function AvailableTimeSlotChip({
 		})
 	}
 
+	const labelGenerator = (label) => {
+		return `${label.split(" ")[0].split("-")[1]} ${label.split(" ")[2]} `
+	}
+
 	return (
 		<div>
 			<FormControl variant="outlined" className={classes.formControl}>
@@ -127,7 +131,8 @@ export default function AvailableTimeSlotChip({
 					{data &&
 						data.map((item) => {
 							return (
-								<Chip
+								<>
+									{/* <Chip
 									key={
 										timeSlots ? valueFinder(item) : labelFinder(item) + " - " + valueFinder(item)
 									}
@@ -144,9 +149,9 @@ export default function AvailableTimeSlotChip({
 											? "white"
 											: "black",
 									}}
-									label={
+									label={labelGenerator(
 										timeSlots ? valueFinder(item) : labelFinder(item) + " - " + valueFinder(item)
-									}
+									)}
 									clickable
 									color="primary"
 									onClick={() =>
@@ -156,7 +161,23 @@ export default function AvailableTimeSlotChip({
 									}
 									// deleteIcon={<DoneIcon />}
 									variant="outlined"
-								/>
+								/> */}
+
+									<Chip
+										key={labelFinder(item)}
+										style={{
+											margin: 5,
+											backgroundColor: state.includes(labelFinder(item)) ? "#3867d6" : "white",
+											color: state.includes(labelFinder(item)) ? "white" : "black",
+										}}
+										label={labelGenerator(labelFinder(item))}
+										clickable
+										color="primary"
+										onClick={() => handleChipChange(labelFinder(item))}
+										// deleteIcon={<DoneIcon />}
+										variant="outlined"
+									/>
+								</>
 							)
 						})}
 				</Grid>

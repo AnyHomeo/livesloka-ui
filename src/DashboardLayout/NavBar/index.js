@@ -41,6 +41,13 @@ import ExpandLess from "@material-ui/icons/ExpandLess"
 import ExpandMore from "@material-ui/icons/ExpandMore"
 import ContactSupportOutlinedIcon from "@material-ui/icons/ContactSupportOutlined"
 import {useState} from "react"
+import support from "../../Images/Navicons/support.png"
+import EventsPng from "../../Images/Navicons/events.png"
+import FinancePng from "../../Images/Navicons/finance.png"
+import management from "../../Images/Navicons/management.png"
+import ReportsPng from "../../Images/Navicons/reports.png"
+import SalesPng from "../../Images/Navicons/sales.png"
+import teacherPng from "../../Images/Navicons/teacher.png"
 const useStyles = makeStyles(() => ({
 	mobileDrawer: {
 		width: 256,
@@ -140,7 +147,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			permission: "Teachers Salary",
 		},
 		{
-			href: "/statistics",
+			href: width <= 550 ? "/statistics/mobile" : "/statistics",
 			icon: BarChart,
 			title: "Statistics",
 			permission: "Statistics",
@@ -233,7 +240,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
 
 	const Support = [
 		{
-			href: "/statistics",
+			href: width <= 550 ? "/statistics/mobile" : "/statistics",
 			icon: BarChart,
 			title: "Statistics",
 			permission: "Statistics",
@@ -454,7 +461,12 @@ const NavBar = ({onMobileClose, openMobile}) => {
 						}}
 						onClick={() => handleClick("Support")}
 					>
-						<ContactSupportOutlinedIcon style={{height: 20, width: 20, marginRight: 10}} />
+						<img
+							src={support}
+							style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
+							alt=""
+						/>
+						{/* <ContactSupportOutlinedIcon style={{height: 20, width: 20, marginRight: 10}} /> */}
 						<ListItemText primary="Support" />
 						{supportOpen ? <ExpandLess /> : <ExpandMore />}
 					</ListItem>
@@ -487,7 +499,11 @@ const NavBar = ({onMobileClose, openMobile}) => {
 						}}
 						onClick={() => handleClick("Management")}
 					>
-						<EventNoteOutlinedIcon style={{height: 20, width: 20, marginRight: 10}} />
+						<img
+							src={management}
+							style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
+							alt=""
+						/>
 						<ListItemText primary="Management" />
 						{managementOpen ? <ExpandLess /> : <ExpandMore />}
 					</ListItem>
@@ -520,7 +536,11 @@ const NavBar = ({onMobileClose, openMobile}) => {
 						}}
 						onClick={() => handleClick("sales")}
 					>
-						<EventNoteOutlinedIcon style={{height: 20, width: 20, marginRight: 10}} />
+						<img
+							src={SalesPng}
+							style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
+							alt=""
+						/>
 						<ListItemText primary="Sales" />
 						{sales ? <ExpandLess /> : <ExpandMore />}
 					</ListItem>
@@ -553,7 +573,11 @@ const NavBar = ({onMobileClose, openMobile}) => {
 						}}
 						onClick={() => handleClick("finance")}
 					>
-						<EventNoteOutlinedIcon style={{height: 20, width: 20, marginRight: 10}} />
+						<img
+							src={FinancePng}
+							style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
+							alt=""
+						/>
 						<ListItemText primary="Finance" />
 						{finance ? <ExpandLess /> : <ExpandMore />}
 					</ListItem>
@@ -586,7 +610,11 @@ const NavBar = ({onMobileClose, openMobile}) => {
 						}}
 						onClick={() => handleClick("teachers")}
 					>
-						<EventNoteOutlinedIcon style={{height: 20, width: 20, marginRight: 10}} />
+						<img
+							src={teacherPng}
+							style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
+							alt=""
+						/>
 						<ListItemText primary="Teachers" />
 						{teachers ? <ExpandLess /> : <ExpandMore />}
 					</ListItem>
@@ -619,7 +647,11 @@ const NavBar = ({onMobileClose, openMobile}) => {
 						}}
 						onClick={() => handleClick("events")}
 					>
-						<EventNoteOutlinedIcon style={{height: 20, width: 20, marginRight: 10}} />
+						<img
+							src={EventsPng}
+							style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
+							alt=""
+						/>
 						<ListItemText primary="Events" />
 						{events ? <ExpandLess /> : <ExpandMore />}
 					</ListItem>
@@ -652,7 +684,11 @@ const NavBar = ({onMobileClose, openMobile}) => {
 						}}
 						onClick={() => handleClick("reports")}
 					>
-						<EventNoteOutlinedIcon style={{height: 20, width: 20, marginRight: 10}} />
+						<img
+							src={ReportsPng}
+							style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
+							alt=""
+						/>
 						<ListItemText primary="Reports" />
 						{reports ? <ExpandLess /> : <ExpandMore />}
 					</ListItem>

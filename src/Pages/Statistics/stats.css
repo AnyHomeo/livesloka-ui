@@ -112,7 +112,7 @@
 	flex-direction: column;
 	background-color: #0985e3be !important;
 	color: white !important;
-	border-radius: 10px !important;
+	border-radius: 10px;
 	box-shadow: none !important;
 }
 
