@@ -199,13 +199,12 @@ export const getDemoCustomers = () =>
 export const getTeacherSlotsForOptions = (id) =>
 	Axios.get(`${API.main}/options/teacher/slots/${id}`)
 
-export const postOptions = (formData) =>
-	Axios.post(`${process.env.REACT_APP_API_KEY}/options`, formData)
+export const postOptions = (formData) => Axios.post(`${API.main}/options`, formData)
 
 export const getTimeZones = () => Axios.get(`${API.main}/admin/get/timeZone`)
 
 export const createPaypalAndStripeProducts = (data) =>
-	Axios.post(`${process.env.REACT_APP_API_KEY}/subscriptions/create/product`, data)
+	Axios.post(`${API.main}/subscriptions/create/product`, data)
 
 export const getAllSubscriptionProducts = () => Axios.get(`${API.main}/products`)
 export const addSubscriptionProduct = (data) => Axios.post(`${API.main}/products`, data)
@@ -230,5 +229,7 @@ export const getCustomerRewards = (user) => Axios.get(`${API.main}/rewards/user/
 export const getAllPermissionStrings = () => Axios.get(`${API.main}/roles/permissions`)
 export const patchPermission = (roleId, permission) =>
 	Axios.patch(`${API.main}/roles/${roleId}/permissions`, {permission})
-export const createSchedule = (formData) =>
-	Axios.post(`${process.env.REACT_APP_API_KEY}/schedule`, formData)
+export const createSchedule = (formData) => Axios.post(`${API.main}/schedule`, formData)
+export const getOptions = () => Axios.get(`${API.main}/options`)
+export const retryScheduleWithOptions = (id) => Axios.patch(`${API.main}/options/manual/${id}`)
+export const deleteOptions = (id) => Axios.delete(`${process.env.REACT_APP_API_KEY}/options/${id}`)
