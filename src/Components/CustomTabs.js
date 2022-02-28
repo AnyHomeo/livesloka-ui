@@ -70,6 +70,7 @@ const CustomTabs = () => {
 			"Agent",
 			"Category",
 			"Roles",
+			"Customer Message Templates",
 		],
 		[]
 	)
@@ -86,6 +87,7 @@ const CustomTabs = () => {
 		"TeacherStatus",
 		"AgentStatus",
 		"categoryStatus",
+		"",
 	]
 
 	const handleChange = (event, newValue) => {
@@ -135,19 +137,19 @@ const CustomTabs = () => {
 					console.log(err)
 				})
 		}
-		if(tabs[value] === "Agent") {
+		if (tabs[value] === "Agent") {
 			getData("Roles")
-			.then((data) => {
-				setRolesLookup(
-					data.data.result.reduce((lookup, role, i) => {
-						lookup[role._id] = role.name
-						return lookup
-					}, {})
-				)
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+				.then((data) => {
+					setRolesLookup(
+						data.data.result.reduce((lookup, role, i) => {
+							lookup[role._id] = role.name
+							return lookup
+						}, {})
+					)
+				})
+				.catch((err) => {
+					console.log(err)
+				})
 		}
 	}, [value, tabs])
 	const {width} = useWindowDimensions()
