@@ -20,7 +20,9 @@ import StudentHistoryTable from "../../Admin/Crm/StudentsHistoryTable"
 import Axios from "axios"
 import useDocumentTitle from "../../../Components/useDocumentTitle"
 import {useLocation} from "react-router-dom"
-import { retrieveMeetingLink } from "../../../Services/utils"
+import {retrieveMeetingLink} from "../../../Services/utils"
+import {DatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers"
+import DateFnsUtils from "@date-io/date-fns"
 
 const useStyles = makeStyles(() => ({
 	textLable: {
@@ -74,7 +76,9 @@ const useStyles = makeStyles(() => ({
 }))
 const CustomersDetailsMb = () => {
 	useDocumentTitle("Customer Info")
-	const {state : { data }} = useLocation()
+	const {
+		state: {data},
+	} = useLocation()
 
 	const classes = useStyles()
 
@@ -92,7 +96,7 @@ const CustomersDetailsMb = () => {
 
 	useEffect(() => {
 		setCustomersEditData(data)
-	},[data])
+	}, [data])
 
 	const fetchDropDown = async (name) => {
 		try {
@@ -193,8 +197,10 @@ const CustomersDetailsMb = () => {
 	}
 
 	const meetingLink = useMemo(() => {
-		return  retrieveMeetingLink(customersEditData)
-	},[customersEditData]) 
+		return retrieveMeetingLink(customersEditData)
+	}, [customersEditData])
+
+	console.log(customersEditData)
 	return (
 		<div
 			style={{
@@ -554,6 +560,44 @@ const CustomersDetailsMb = () => {
 									readOnly: disableEditButton,
 								}}
 							/>
+						)}
+					</Card>
+					<IconButton
+						style={{marginTop: -15}}
+						onClick={() => {
+							copyToClipboard(customersEditData.gender)
+						}}
+					>
+						<FileCopyIcon />
+					</IconButton>
+				</div>
+
+				<div style={{display: "flex", flexDirection: "row"}}>
+					<Card className={classes.card1}>
+						<p className={classes.subText}>Due Date: </p>
+					</Card>
+
+					<Card className={classes.card2}>
+						{disableEditButton ? (
+							<p className={classes.subText1}>
+								{customersEditData.paidTill
+									? moment(customersEditData.paidTill).format("MMM DD, yyyy")
+									: ""}
+							</p>
+						) : (
+							<MuiPickersUtilsProvider utils={DateFnsUtils}>
+								<DatePicker
+									label="Basic example"
+									value={customersEditData.paidTill}
+									onChange={(e) => {
+										setCustomersEditData({
+											...customersEditData,
+											["paidTill"]: e,
+										})
+									}}
+									animateYearScrolling
+								/>
+							</MuiPickersUtilsProvider>
 						)}
 					</Card>
 					<IconButton
