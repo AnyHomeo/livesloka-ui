@@ -8,7 +8,7 @@ exports.services = {
 		"Add Customer Message Templates": "/admin/add/CustomerMessageTemplates",
 		"Update Customer Message Templates": "/admin/update/CustomerMessageTemplates",
 		"Delete Customer Message Templates": "/admin/delete/CustomerMessageTemplates",
-
+  
 		"Time Zone": "/admin/get/timeZone",
 		"Add Time Zone": "/admin/add/timeZone",
 		"Update Time Zone": "/admin/update/timeZone",

@@ -354,6 +354,7 @@ const MaterialTableAddFields = ({
 				isLoading={loading || imageLoading}
 				options={{
 					paging: false,
+					padding:20,
 					maxBodyHeight: height - 180,
 					addRowPosition: "first",
 					actionsColumnIndex: 0,
