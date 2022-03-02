@@ -40,7 +40,7 @@ import Axios from "axios"
 import {useConfirm} from "material-ui-confirm"
 import {retrieveMeetingLink} from "../../Services/utils"
 import StatisticsMobile from "./StatisticsMobile"
-import {Smartphone} from "react-feather"
+import {Smartphone, Video} from "react-feather"
 import {useHistory} from "react-router-dom"
 let days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
 
@@ -229,56 +229,40 @@ function Statistics() {
 				<DialogTitle id="alert-dialog-title">
 					<h2 style={{fontSize: 18}}>Schedule Details</h2>
 				</DialogTitle>
-				<DialogContent>
-					<div className="info-wrapper">
-						<FormControl variant="outlined">
-							<InputLabel htmlFor="Meeting-Link">Meeting Link</InputLabel>
-							<OutlinedInput
-								style={{height: 40, fontSize: 14}}
-								id="Meeting-Link"
-								label="Meeting Link"
-								value={meetingLink}
-								fullWidth
-								endAdornment={
-									<InputAdornment position="end">
-										<IconButton onClick={() => copyToClipboard(meetingLink)} edge="end">
-											<FileCopyIcon />
-										</IconButton>
-									</InputAdornment>
-								}
-								labelWidth={70}
-							/>
-						</FormControl>
-						<FormControl variant="outlined">
-							<InputLabel htmlFor="teacher-whatsapp">Teacher Details</InputLabel>
-							<OutlinedInput
-								style={{height: 40, fontSize: 14}}
-								id="teacher-whatsapp"
-								label="Teacher Details"
-								value={dialogData.teacher && dialogData.teacher.TeacherName}
-								fullWidth
-								endAdornment={
-									<InputAdornment position="end">
-										<IconButton
-											onClick={() =>
-												window.open(
-													`https://api.whatsapp.com/send?phone=${
-														dialogData.teacher &&
-														dialogData.teacher.Phone_number.split("+")[1].split(" ").join("")
-													}`
-												)
-											}
-											edge="end"
-										>
-											<WhatsAppIcon />
-										</IconButton>
-									</InputAdornment>
-								}
-								labelWidth={70}
-							/>
-						</FormControl>
-					</div>
 
+				<div
+					style={{
+						display: "flex",
+						marginTop: 10,
+						marginBottom: 10,
+						justifyContent: "space-between",
+						paddingLeft: 20,
+						paddingRight: 20,
+					}}
+				>
+					<InputAdornment position="end">
+						<IconButton onClick={() => copyToClipboard(meetingLink)} edge="end">
+							<Video />
+						</IconButton>
+					</InputAdornment>
+					<InputAdornment position="end">
+						<p>{dialogData.teacher && dialogData.teacher.TeacherName}</p>
+						<IconButton
+							onClick={() =>
+								window.open(
+									`https://api.whatsapp.com/send?phone=${
+										dialogData.teacher &&
+										dialogData.teacher.Phone_number.split("+")[1].split(" ").join("")
+									}`
+								)
+							}
+							edge="end"
+						>
+							<WhatsAppIcon />
+						</IconButton>
+					</InputAdornment>
+				</div>
+				<DialogContent>
 					<StatisticsMobile
 						data={dialogData.students}
 						timeZoneLookup={timeZoneLookup}

@@ -149,7 +149,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
 		{
 			href: width <= 550 ? "/statistics/mobile" : "/statistics",
 			icon: BarChart,
-			title: "Statistics",
+			title: "Live Dashboard",
 			permission: "Statistics",
 		},
 		{
@@ -242,21 +242,16 @@ const NavBar = ({onMobileClose, openMobile}) => {
 		{
 			href: width <= 550 ? "/statistics/mobile" : "/statistics",
 			icon: BarChart,
-			title: "Statistics",
+			title: "Live Dashboard",
 			permission: "Statistics",
 		},
 		{
 			href: "/room",
 			icon: MessageCircle,
-			title: "Rooms",
+			title: "Support Chat",
 			permission: "Messages",
 		},
-		{
-			href: "/nonroom",
-			icon: MessageCircle,
-			title: "Non Rooms",
-			permission: "Messages",
-		},
+
 		{
 			href: "/zoom-dashboard",
 			icon: Video,
@@ -318,9 +313,15 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			permission: "Customer Data",
 		},
 		{
+			href: "/nonroom",
+			icon: MessageCircle,
+			title: "Non Rooms",
+			permission: "Messages",
+		},
+		{
 			href: "/options",
 			icon: AlignJustify,
-			title: "Options",
+			title: "Payment link",
 			permission: "Options",
 		},
 		{
@@ -338,7 +339,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
 		{
 			href: "/products",
 			icon: DollarSign,
-			title: "Paypal & Stripe",
+			title: "Payment Plans",
 			permission: "Paypal & Stripe",
 		},
 	]
