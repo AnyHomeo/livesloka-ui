@@ -3,6 +3,7 @@ import Attedance from "../Pages/Admin/Crm/Attedance"
 import CustomTabs from "../Components/CustomTabs"
 import MeetingScheduler from "../Pages/Admin/Crm/MeetingScheduler"
 import Scheduler from "../Pages/Admin/Scheduler/Scheduler"
+import SchedulerMobile from "../Pages/Admin/SchedulerMobile/Scheduler"
 import FinancialAnalytics from "../Pages/Analytics/FinancialAnalytics"
 import TeacherDetails from "../Pages/Admin/Crm/TeacherDetails"
 import NewTeacherDetails from "../Pages/Admin/Crm/NewTeacherData"
@@ -43,6 +44,7 @@ import UpdateNumberOfBoughtRewards from "../Pages/Admin/Crm/UpdateNumberOfReward
 import InvoicePages from "../Pages/Accountant/InvoicePages"
 import FinancialPage from "../Pages/Accountant/FinancialPage"
 import TeacherReporting from "../Pages/TeacherFeedback/TeacherReporting"
+import HistoricCurrency from "../Pages/HistoricCurrency/HistoricCurrency"
 
 const adminRoutes = [
 	{permission: "Financial Dashboard", path: "/dashboard", exact: true, component: Dashboard},
@@ -132,6 +134,8 @@ const adminRoutes = [
 	{permission: "Payments", path: "/payments", exact: true, component: PaymentsPage},
 	{permission: "Careers Applications", path: "/careers", exact: true, component: Careers},
 	{permission: "Scheduler", path: "/scheduler", exact: true, component: Scheduler},
+	{permission: "Scheduler", path: "/scheduler/mobile", exact: true, component: SchedulerMobile},
+	{permission: "Scheduler", path: "/historic-currency", exact: true, component: HistoricCurrency},
 	{permission: "Leaves", path: "/leaves", exact: true, component: LeavesTabs},
 	{permission: "Messages", path: "/Messages", exact: true, component: NotificationSettings},
 	{
