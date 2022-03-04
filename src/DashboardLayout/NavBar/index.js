@@ -369,6 +369,12 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			title: "Accountant Dashboard",
 			permission: "Accounts",
 		},
+		{
+			href: "/historic-currency",
+			icon: BarChart2,
+			title: "Currency History",
+			permission: "Accounts",
+		},
 	]
 
 	const Teacher = [

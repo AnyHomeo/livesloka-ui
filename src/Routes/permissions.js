@@ -135,7 +135,7 @@ const adminRoutes = [
 	{permission: "Careers Applications", path: "/careers", exact: true, component: Careers},
 	{permission: "Scheduler", path: "/scheduler", exact: true, component: Scheduler},
 	{permission: "Scheduler", path: "/scheduler/mobile", exact: true, component: SchedulerMobile},
-	{permission: "Scheduler", path: "/historic-currency", exact: true, component: HistoricCurrency},
+	{permission: "Accounts", path: "/historic-currency", exact: true, component: HistoricCurrency},
 	{permission: "Leaves", path: "/leaves", exact: true, component: LeavesTabs},
 	{permission: "Messages", path: "/Messages", exact: true, component: NotificationSettings},
 	{
