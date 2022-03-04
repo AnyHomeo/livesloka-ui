@@ -19,7 +19,7 @@ function Routes() {
 				<Route path="/password-reset" exact component={PasswordReset} />
 				<Route path="/404" exact component={NotFoundView} />
 				<SnackbarProvider
-					maxSnack={3}
+					maxSnack={10}
 					anchorOrigin={{
 						vertical: "top",
 						horizontal: "right",

@@ -354,6 +354,7 @@ const MaterialTableAddFields = ({
 				isLoading={loading || imageLoading}
 				options={{
 					paging: false,
+					padding:20,
 					maxBodyHeight: height - 180,
 					addRowPosition: "first",
 					actionsColumnIndex: 0,
@@ -434,7 +435,7 @@ const MaterialTableAddFields = ({
 
 						return editField(`Update ${name}`, newData).then((fetchedData) => {
 							setRefresh((prev) => !prev)
-							enqueueSnackbar(fetchedData.data.message, {variant: "success"})
+							enqueueSnackbar("Updated successfully", {variant: "success"})
 						})
 					},
 					onRowDelete: (oldData) =>
@@ -444,7 +445,7 @@ const MaterialTableAddFields = ({
 								const index = oldData.tableData.id
 								dataDelete.splice(index, 1)
 								setData([...dataDelete])
-								enqueueSnackbar(fetchedData.data.message, {variant: "success"})
+								enqueueSnackbar("Deleted successfully", {variant: "success"})
 							})
 							.catch((err) => {
 								console.error(err, err.response)

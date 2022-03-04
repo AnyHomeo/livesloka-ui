@@ -70,7 +70,7 @@ const CustomTabs = () => {
 			"Agent",
 			"Category",
 			"Roles",
-			"Customer Message Templates",
+			"Comments",
 		],
 		[]
 	)
