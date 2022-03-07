@@ -39,8 +39,9 @@ import {Link} from "react-router-dom"
 import Axios from "axios"
 import {useConfirm} from "material-ui-confirm"
 import {retrieveMeetingLink} from "../../Services/utils"
-import {Smartphone} from "react-feather"
+import {DollarSign, MessageCircle, Smartphone} from "react-feather"
 import {useHistory} from "react-router-dom"
+import Comments from "../Admin/Crm/Comments"
 let days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
 
 const copyToClipboard = (text) => {
@@ -90,6 +91,9 @@ function Statistics() {
 	const [refresh, setRefresh] = useState(false)
 	const [timeZoneLookup, setTimeZoneLookup] = useState({})
 	const [loading, setLoading] = useState(false)
+	const [selectedCustomerId, setSelectedCustomerId] = useState("")
+	const [selectedCustomerName, setSelectedCustomerName] = useState("")
+	const [isCommentsOpen, setIsCommentsOpen] = useState(false)
 	useEffect(() => {
 		getTimeZones()
 			.then((result) => {
@@ -406,9 +410,25 @@ function Statistics() {
 						options={{
 							paging: false,
 						}}
+						actions={[
+							(rowData) => ({
+								icon: () => <MessageCircle />,
+								tooltip: "Add Comment",
+								onClick: (event, rowData) => {
+									setSelectedCustomerId(rowData._id)
+									setSelectedCustomerName(rowData.firstName)
+									setIsCommentsOpen(true)
+								},
+							}),
+						]}
 					/>
 				</DialogContent>
-				{console.log(dialogData)}
+				<Comments
+					commentsCustomerId={selectedCustomerId}
+					name={selectedCustomerName}
+					isCommentsOpen={isCommentsOpen}
+					setIsCommentsOpen={setIsCommentsOpen}
+				/>
 				<DialogActions>
 					<FormControl variant="outlined">
 						{loading ? (

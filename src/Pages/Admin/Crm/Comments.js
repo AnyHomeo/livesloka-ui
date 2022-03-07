@@ -21,7 +21,6 @@ const Comments = ({commentsCustomerId, name, isCommentsOpen, setIsCommentsOpen})
 	const [refreshData, setRefreshData] = useState([])
 	const fetchData = useCallback(async () => {
 		let {data} = await getComments(commentsCustomerId)
-		console.log(data.result)
 		setComments(
 			data.result.map((comment) => ({
 				message: comment?.message?._id,
@@ -46,7 +45,7 @@ const Comments = ({commentsCustomerId, name, isCommentsOpen, setIsCommentsOpen})
 	}, [])
 
 	useEffect(() => {
-		getData("Customer Message Templates").then((data) => {
+		getData("Comments").then((data) => {
 			setMessageTemplates(data?.data?.result || [])
 		})
 	}, [])
@@ -61,11 +60,6 @@ const Comments = ({commentsCustomerId, name, isCommentsOpen, setIsCommentsOpen})
 					return acc
 				}, {}),
 			},
-			// {
-			// 	title: "Agent",
-			// 	field: "createdBy.AgentName",
-			// 	editable: "never",
-			// },
 			{
 				title: "Time stamp",
 				field: "timeStamp",
