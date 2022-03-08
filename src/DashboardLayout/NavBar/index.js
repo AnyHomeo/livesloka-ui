@@ -373,7 +373,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			href: "/historic-currency",
 			icon: BarChart2,
 			title: "Currency History",
-			permission: "Accounts",
+			permission: "Currency-History",
 		},
 	]
 
@@ -444,7 +444,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			<Box alignItems="center" display="flex" flexDirection="column" p={2}>
 				<Avatar className={classes.avatar} component={RouterLink} to="/dashboard">
 					<Typography color="textSecondary" variant="body2" className={classes.iconName}>
-						{user.AgentName[0]}
+						{user?.AgentName[0]}
 					</Typography>
 				</Avatar>
 				<Typography className={classes.name} color="textPrimary" variant="h5">
