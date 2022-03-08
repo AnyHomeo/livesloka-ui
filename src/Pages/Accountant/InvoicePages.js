@@ -44,7 +44,7 @@ const InvoicePages = () => {
 				<div style={{minWidth: 80}}> {moment(rowData?.paymentDate).format("MMM Do YY")} </div>
 			),
 		},
-		{title: "Name", field: "customer.person"},
+		{title: "Name", field: "person"},
 		{
 			title: "Currency",
 			field: "currency",
@@ -116,28 +116,22 @@ const InvoicePages = () => {
 		{
 			title: "Payment Rate",
 			field: "exchangeRate",
-			toolTip:'hello',
-			render: (rowData) => rowData?.exchangeRate,
 		},
 		{
 			title: "Deposit Rate",
 			field: "depositExchangeRate",
-			render: (rowData) => rowData?.depositExchangeRate,
 		},
 		{
 			title: "Rate Difference",
 			field: "exchangeRateDifference",
-			render: (rowData) => rowData?.exchangeRateDifference,
 		},
 		{
 			title: "Received",
 			field: "recieved",
-			render: (rowData) => rowData?.recieved,
 		},
 		{
 			title: "Turnover",
 			field: "turnover",
-			render: (rowData) => rowData?.turnover,
 		},
 	]
 
@@ -160,10 +154,20 @@ const InvoicePages = () => {
 		const data = await Axios.get(
 			`${process.env.REACT_APP_API_KEY}/invoices?month=${month}&year=${year}`
 		)
-		setData(data?.data?.result)
+		setData(
+			data?.data?.result.map((row) => ({
+				...row,
+				currency: row.paymentMethod === "Paypal" ? "$" : "₹",
+				person: row?.customer?.person,
+				customer:undefined,
+				company:undefined,
+			}))
+		)
 
 		setLoading(false)
 	}
+
+	console.table(data)
 
 	const fetchDataByDate = (date) => {
 		fetchData(date)
