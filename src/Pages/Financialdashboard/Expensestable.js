@@ -125,7 +125,7 @@ const Expensestable = ({date}) => {
 				isLoading={loading}
 				options={{
 					search: true,
-					pageSizeOptions: [5, 20, 30, 40, 50, data.length],
+					paging: false,
 				}}
 				data={data}
 				editable={{
