@@ -77,141 +77,204 @@ const StatisticsMobile = ({data, timeZoneLookup, toggleNewOldButton, toggleJoinB
 		<div style={{marginTop: 10}}>
 			{data &&
 				data.map((item, i) => (
-					<Accordion style={{marginTop: 5}}>
-						<AccordionSummary
-							classes={{content: classes.content, expanded: classes.expanded}}
-							expandIcon={<ExpandMoreIcon />}
+					<>
+						<Card
+							style={{
+								height: "auto",
+								width: "100%",
+								// borderRadius: 10,
+								margin: 1,
+								display: "flex",
+								marginTop: 3,
+								marginBottom: 3,
+								padding: 4,
+							}}
 						>
-							<p style={{marginLeft: 5, fontSize: 12}}>{item.firstName}</p>
-						</AccordionSummary>
+							<div
+								style={{
+									flex: 0.7,
+								}}
+							>
+								<div style={{padding: 3}}>
+									<p style={{fontSize: 12}}>{`${item.firstName} (${item.lastName})`}</p>
 
-						<AccordionDetails>
-							<div className={classes.cardContainer}>
-								<Card className={classes.card1}>
-									<p style={{marginLeft: 5, fontSize: 12}}>Present</p>
-								</Card>
-								<Card className={classes.card2}>
-									<p style={{marginLeft: 5, fontSize: 12}}>
-										{item.isStudentJoined ? (
-											<CheckCircleIcon style={{color: "green"}} />
-										) : (
-											<CancelIcon style={{color: "red"}} />
-										)}
-									</p>
-								</Card>
-							</div>
-
-							<div className={classes.cardContainer}>
-								<Card className={classes.card1}>
-									<p style={{marginLeft: 5, fontSize: 12}}>Customer Type</p>
-								</Card>
-								<Card className={classes.card2}>
-									<p style={{marginLeft: 5, fontSize: 12}}>{item.autoDemo ? "New" : "Old"}</p>
-								</Card>
-							</div>
-
-							<div className={classes.cardContainer}>
-								<Card className={classes.card1}>
-									<p style={{marginLeft: 5, fontSize: 12}}>Student</p>
-								</Card>
-								<Card className={classes.card2}>
-									<p style={{marginLeft: 5, fontSize: 12}}>{item.firstName}</p>
-								</Card>
-							</div>
-
-							<div className={classes.cardContainer}>
-								<Card className={classes.card1}>
-									<p style={{marginLeft: 5, fontSize: 12}}>Parent</p>
-								</Card>
-								<Card className={classes.card2}>
-									<p style={{marginLeft: 5, fontSize: 12}}>{item.lastName}</p>
-								</Card>
-							</div>
-
-							<div className={classes.cardContainer}>
-								<Card className={classes.card1}>
-									<p style={{marginLeft: 5, fontSize: 12}}>Classes Left / Due Date</p>
-								</Card>
-								<Card className={classes.card2}>
-									<p style={{marginLeft: 5, fontSize: 12}}>
-										{item.autoDemo && item.paidTill
-											? momentTZ(item.paidTill).format("MMM DD, YYYY")
-											: item.numberOfClassesBought}
-									</p>
-								</Card>
-							</div>
-							<div className={classes.cardContainer}>
-								<Card className={classes.card1}>
-									<p style={{marginLeft: 5, fontSize: 12}}>Timezone</p>
-								</Card>
-								<Card className={classes.card2}>
-									<p style={{marginLeft: 5, fontSize: 12}}>{timeZoneLookup[item.timeZoneId]}</p>
-								</Card>
-							</div>
-							<div className={classes.cardContainer}>
-								<Card className={classes.card1}>
-									<p style={{marginLeft: 5, fontSize: 12}}>User Id</p>
-								</Card>
-								<Card className={classes.card2}>
-									<p style={{marginLeft: 5, fontSize: 12}}>{item.email}</p>
-								</Card>
-							</div>
-							<div className={classes.cardContainer}>
-								<Card className={classes.card1}>
-									<p style={{marginLeft: 5, fontSize: 12}}>Whatsapp number</p>
-								</Card>
-								<Card className={classes.card2}>
 									<div style={{display: "flex", alignItems: "center"}}>
-										<Tooltip title={`Message ${item.firstName} on Whatsapp`}>
-											<IconButton
-												onClick={() =>
-													window.open(
-														`https://api.whatsapp.com/send?phone=${
-															item.whatsAppnumber.indexOf("+") !== -1
-																? item.whatsAppnumber.split("+")[1].split(" ").join("")
-																: item.countryCode
-																? item.countryCode + item.whatsAppnumber.split(" ").join("")
-																: item.whatsAppnumber.split(" ").join("")
-														}`
-													)
-												}
+										<div>
+											{item.isStudentJoined ? (
+												<div
+													style={{
+														height: 20,
+														width: 20,
+														borderRadius: "50%",
+														backgroundColor: "#27ae60",
+														display: "flex",
+														justifyContent: "center",
+														alignItems: "center",
+														marginRight: 5,
+													}}
+												>
+													<p style={{color: "white", fontSize: 12, fontWeight: "400"}}>P</p>
+												</div>
+											) : (
+												<div
+													style={{
+														height: 20,
+														width: 20,
+														borderRadius: "50%",
+														backgroundColor: "#eb4d4b",
+														display: "flex",
+														justifyContent: "center",
+														alignItems: "center",
+														marginRight: 5,
+													}}
+												>
+													<p style={{color: "white", fontSize: 12, fontWeight: "400"}}>A</p>
+												</div>
+											)}
+										</div>
+										<div>
+											{item.autoDemo ? (
+												<div
+													style={{
+														height: 20,
+														width: 20,
+														borderRadius: "50%",
+														backgroundColor: "#27ae60",
+														display: "flex",
+														justifyContent: "center",
+														alignItems: "center",
+													}}
+												>
+													<p style={{color: "white", fontSize: 12, fontWeight: "400"}}>N</p>
+												</div>
+											) : (
+												<div
+													style={{
+														height: 20,
+														width: 20,
+														borderRadius: "50%",
+														backgroundColor: "#eb4d4b",
+														display: "flex",
+														justifyContent: "center",
+														alignItems: "center",
+													}}
+												>
+													<p style={{color: "white", fontSize: 12, fontWeight: "400"}}>O</p>
+												</div>
+											)}
+										</div>
+
+										{item.autoDemo && item.paidTill ? (
+											<div
+												style={{
+													display: "flex",
+													justifyContent: "center",
+													alignItems: "center",
+													marginLeft: 5,
+												}}
 											>
-												<WhatsAppIcon style={{height: 20, width: 20}} />
-											</IconButton>
-										</Tooltip>
-										<p style={{fontSize: 12}}>
-											{item.countryCode} {item.whatsAppnumber}
-										</p>
+												<p style={{color: "black", fontSize: 12, fontWeight: "400"}}>
+													{momentTZ(item.paidTill).format("MMM DD, YYYY")}
+												</p>
+											</div>
+										) : (
+											<div
+												style={{
+													height: 20,
+													width: 20,
+													borderRadius: "50%",
+													backgroundColor: "#3867d6",
+													display: "flex",
+													justifyContent: "center",
+													alignItems: "center",
+													marginLeft: 5,
+												}}
+											>
+												<p style={{color: "white", fontSize: 12, fontWeight: "400"}}>
+													{item.numberOfClassesBought}
+												</p>
+											</div>
+										)}
 									</div>
-								</Card>
+								</div>
 							</div>
 
 							<div
-								className={classes.cardContainer}
-								style={{display: "flex", alignItems: "center"}}
+								style={{
+									display: "flex",
+									// width: 150,
+									justifyContent: "space-between",
+									alignItems: "center",
+									flex: 0.333,
+								}}
 							>
-								<p style={{fontSize: 16, flex: 0.4}}>Join</p>
-								<Switch
-									onChange={() => toggleJoinButton(item, i)}
-									checked={item.isJoinButtonEnabledByAdmin}
-									name="isJoinButtonEnabledByAdmin"
-									inputProps={{"aria-label": "secondary checkbox"}}
-								/>
+								<div
+									style={{
+										height: 30,
+										width: 30,
+										borderRadius: "50%",
+										backgroundColor: item?.isJoinButtonEnabledByAdmin ? "#3867d6" : "#20bf6b",
+										display: "flex",
+										justifyContent: "center",
+										alignItems: "center",
+									}}
+								>
+									<p
+										style={{color: "white", fontSize: 18}}
+										onClick={() => toggleJoinButton(item, i)}
+									>
+										J
+									</p>
+								</div>
+
+								<div
+									style={{
+										height: 30,
+										width: 30,
+										borderRadius: "50%",
+										backgroundColor: item?.autoDemo ? "#3867d6" : "#20bf6b",
+										display: "flex",
+										justifyContent: "center",
+										alignItems: "center",
+									}}
+								>
+									<p
+										style={{color: "white", fontSize: 14}}
+										onClick={() => toggleNewOldButton(item, i)}
+									>
+										N/O
+									</p>
+								</div>
+
+								<div
+									style={{
+										height: 30,
+										width: 30,
+										backgroundColor: "#fa8231",
+										borderRadius: "50%",
+										display: "flex",
+										justifyContent: "center",
+										alignItems: "center",
+									}}
+								>
+									<WhatsAppIcon
+										style={{color: "white", height: 20, width: 20}}
+										onClick={() =>
+											window.open(
+												`https://api.whatsapp.com/send?phone=${
+													item.whatsAppnumber.indexOf("+") !== -1
+														? item.whatsAppnumber.split("+")[1].split(" ").join("")
+														: item.countryCode
+														? item.countryCode + item.whatsAppnumber.split(" ").join("")
+														: item.whatsAppnumber.split(" ").join("")
+												}`
+											)
+										}
+									/>
+								</div>
 							</div>
-							<div
-								className={classes.cardContainer}
-								style={{display: "flex", alignItems: "center"}}
-							>
-								<p style={{fontSize: 16, flex: 0.4}}>New/Old</p>
-								<Switch
-									onChange={() => toggleNewOldButton(item, i)}
-									checked={item?.autoDemo}
-									name="autoDemo"
-									inputProps={{"aria-label": "secondary checkbox"}}
-								/>
-							</div>
-						</AccordionDetails>
-					</Accordion>
+						</Card>
+					</>
 				))}
 		</div>
 	)

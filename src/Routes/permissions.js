@@ -43,6 +43,8 @@ import UpdateNumberOfBoughtRewards from "../Pages/Admin/Crm/UpdateNumberOfReward
 import InvoicePages from "../Pages/Accountant/InvoicePages"
 import FinancialPage from "../Pages/Accountant/FinancialPage"
 import TeacherReporting from "../Pages/TeacherFeedback/TeacherReporting"
+import HistoricCurrency from "../Pages/HistoricCurrency/HistoricCurrency"
+import SchedulerCardConatiner from "../Pages/Admin/SchedulerMobile/SchedulerCardConatiner"
 
 const adminRoutes = [
 	{permission: "Financial Dashboard", path: "/dashboard", exact: true, component: Dashboard},
@@ -132,6 +134,19 @@ const adminRoutes = [
 	{permission: "Payments", path: "/payments", exact: true, component: PaymentsPage},
 	{permission: "Careers Applications", path: "/careers", exact: true, component: Careers},
 	{permission: "Scheduler", path: "/scheduler", exact: true, component: Scheduler},
+	{permission: "Scheduler", path: "/scheduler/mobile", exact: true, component: SchedulerMobile},
+	{
+		permission: "Scheduler",
+		path: "/scheduler/mobile/:id",
+		exact: true,
+		component: SchedulerCardConatiner,
+	},
+	{
+		permission: "Currency-History",
+		path: "/historic-currency",
+		exact: true,
+		component: HistoricCurrency,
+	},
 	{permission: "Leaves", path: "/leaves", exact: true, component: LeavesTabs},
 	{permission: "Messages", path: "/Messages", exact: true, component: NotificationSettings},
 	{
