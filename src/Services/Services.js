@@ -130,7 +130,7 @@ export const getComments = (customerId) =>
 	axios.get(`${API.main}/admin/comments/customer/${customerId}`)
 export const addComments = (formData) => axios.post(`${API.main}/admin/comments`, formData)
 export const updateComment = (data) => axios.patch(`${API.main}/admin/comments/${data._id}`, data)
-export const deleteComment = (data) => axios.post(`${API.main}/admin/comments/${data._id}`, data)
+export const deleteComment = (data) => axios.delete(`${API.main}/admin/comments/${data._id}`, data)
 
 export const getAllAdmins = () => axios.get(`${API.main}${API.getAllAdmins}`)
 export const getAllTeachers = () => axios.get(`${API.main}${API.getAllTeachers}`)

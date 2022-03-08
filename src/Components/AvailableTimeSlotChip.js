@@ -66,9 +66,6 @@ export default function AvailableTimeSlotChip({
 	}
 
 	const labelGenerator = (label) => {
-		// console.log(label.split(" ")[0].split("-"[1]))
-		// console.log("SATURDAY-05:30 AM-06:00 AM".split(" ")[0].split("-"[1]))
-
 		return `${label.split(" ")[0].split("-")[1]} ${label.split(" ")[2]} `
 	}
 
@@ -134,7 +131,8 @@ export default function AvailableTimeSlotChip({
 					{data &&
 						data.map((item) => {
 							return (
-								<Chip
+								<>
+									{/* <Chip
 									key={
 										timeSlots ? valueFinder(item) : labelFinder(item) + " - " + valueFinder(item)
 									}
@@ -163,7 +161,23 @@ export default function AvailableTimeSlotChip({
 									}
 									// deleteIcon={<DoneIcon />}
 									variant="outlined"
-								/>
+								/> */}
+
+									<Chip
+										key={labelFinder(item)}
+										style={{
+											margin: 5,
+											backgroundColor: state.includes(labelFinder(item)) ? "#3867d6" : "white",
+											color: state.includes(labelFinder(item)) ? "white" : "black",
+										}}
+										label={labelGenerator(labelFinder(item))}
+										clickable
+										color="primary"
+										onClick={() => handleChipChange(labelFinder(item))}
+										// deleteIcon={<DoneIcon />}
+										variant="outlined"
+									/>
+								</>
 							)
 						})}
 				</Grid>

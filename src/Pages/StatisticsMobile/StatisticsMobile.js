@@ -24,6 +24,10 @@ const useStyles = makeStyles((theme) => ({
 		flex: 1,
 		marginTop: 3,
 		marginBottom: 3,
+		justifyContent: "space-between",
+		padding: 5,
+		paddingLeft: 10,
+		paddingRight: 10,
 	},
 
 	card1: {

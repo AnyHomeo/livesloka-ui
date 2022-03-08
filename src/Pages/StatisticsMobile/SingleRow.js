@@ -525,9 +525,11 @@ function SingleRow({
 						<LoopIcon />
 					</IconButton>
 
-					<IconButton onClick={() => window.open(singleData.meetingLink)} size="small">
-						<Video style={{height: 18, width: 18, color: "#0984e3"}} />
-					</IconButton>
+					<a target="_blank" href={singleData.meetingLink}>
+						<IconButton size="small">
+							<Video style={{height: 18, width: 18, color: "#0984e3"}} />
+						</IconButton>
+					</a>
 
 					{isToday && (
 						<>

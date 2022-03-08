@@ -23,7 +23,7 @@ import AvailableTimeSlotChip from "../../../Components/AvailableTimeSlotChip"
 import "date-fns"
 import DateFnsUtils from "@date-io/date-fns"
 import {MuiPickersUtilsProvider, KeyboardDatePicker} from "@material-ui/pickers"
-import { useParams, useLocation, useHistory} from "react-router-dom"
+import {useParams, useLocation, useHistory} from "react-router-dom"
 import useDocumentTitle from "../../../Components/useDocumentTitle"
 import {useCallback} from "react"
 import {useSnackbar} from "notistack"
@@ -65,7 +65,7 @@ const EditSchedule = () => {
 	const [students, setStudents] = useState([])
 	const [teacher, setTeacher] = useState("")
 	const [demo, setDemo] = useState(false)
-	const [radioday, setRadioday] = useState("")
+	const [radioday, setRadioday] = useState("MONDAY")
 	const [teachers, setTeacherName] = useState([])
 	const [studentOptions, setStudentOptions] = useState([])
 	const [availableTimeSlots, setAvailableTimeSlots] = useState([])
@@ -211,8 +211,8 @@ const EditSchedule = () => {
 					`${process.env.REACT_APP_API_KEY}/schedule/edit/${id}`,
 					formData
 				)
-				enqueueSnackbar(res.data?.message || "Schedule edit successful!",{
-					variant: "success"
+				enqueueSnackbar(res.data?.message || "Schedule edit successful!", {
+					variant: "success",
 				})
 				setDemo(false)
 				setStudents([])
