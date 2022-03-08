@@ -1,114 +1,114 @@
-/* eslint-disable no-unused-vars */
-import React from "react";
+import React, {useCallback, useEffect, useState} from "react"
+import {getComments, updateComment, deleteComment, getData} from "../../../Services/Services"
+import MaterialTable from "material-table"
+import moment from "moment"
+import CloseIcon from "@material-ui/icons/Close"
 import {
-  getComments,
-  updateComment,
-  addComments,
-  deleteComment,
-} from "../../../Services/Services";
-import { isAutheticated } from "../../../auth";
-import MaterialTable from "material-table";
-import moment from "moment";
+	AppBar,
+	Button,
+	Dialog,
+	IconButton,
+	makeStyles,
+	Slide,
+	Toolbar,
+	Typography,
+} from "@material-ui/core"
 
-class Comments extends React.Component {
-  constructor(props) {
-    super(props);
+const Transition = React.forwardRef(function Transition(props, ref) {
+	return <Slide direction="up" ref={ref} {...props} />
+})
 
-    this.state = {
-      comments: [],
-    };
+const Comments = ({commentsCustomerId, name, isCommentsOpen, setIsCommentsOpen}) => {
+	const classes = useStyles()
+	const [comments, setComments] = useState([])
+	const [columns, setColumns] = useState([])
+	const fetchData = useCallback(async () => {
+		let {data} = await getComments(commentsCustomerId)
+		setComments(data)
+	}, [commentsCustomerId])
 
-    this.fetchData();
-  }
+	useEffect(() => {
+		fetchData()
+	}, [fetchData])
 
-  async fetchData() {
-    let { data } = await getComments(this.props.id);
+	useEffect(() => {
+		getData("Customer Message Templates").then((data) => {
+			setColumns([
+				{
+					title: "Comment",
+					field: "message.text",
+					lookup: data.data.result.reduce((acc, message) => {
+						acc[message._id] = message.text
+						return acc
+					}, {}),
+				},
+				// {
+				// 	title: "Agent",
+				// 	field: "createdBy.AgentName",
+				// 	editable: "never",
+				// },
+				{
+					title: "Created at",
+					field: "timeStamp",
+					type: "date",
+					render: (rowData) => moment(rowData.timeStamp).format("MMMM Do YYYY"),
+				},
+			])
+		})
+	}, [])
 
-    let change = (prevState) => {
-      prevState.comments = data.result;
-      return prevState;
-    };
-
-    this.setState(change);
-  }
-
-  getDate() {
-    let y = new Date();
-    return (
-      y.getDay() +
-      "-" +
-      y.getMonth() +
-      "-" +
-      y.getFullYear() +
-      " " +
-      y.getHours() +
-      ":" +
-      y.getMinutes()
-    );
-  }
-
-  render() {
-    return (
-      <MaterialTable
-        options={{
-          grouping: true,
-          pageSize: 10,
-        }}
-        data={this.state.comments}
-        title={"Comments of " + this.props.name}
-        columns={[
-          { title: "Comment", field: "comment" },
-          {
-            title: "Agent ID",
-            field: "auditUserId",
-            editable:"never"
-          },
-          {
-            title: "timeStamp",
-            field: "timeStamp",
-            editable:"never",
-            render:(rowData) => moment(rowData.timeStamp).format("MMMM Do YYYY, h:mm:ss a")
-          },
-        ]}
-        editable={{
-          onRowAdd: (newData) => {
-            return addComments({
-              comment: newData.comment,
-              commentStatus: 1,
-              customerId: this.props.id,
-              timeStamp: moment().format(),
-              auditUserId: isAutheticated().userId,
-            })
-              .then((fetchedData) => {
-                this.fetchData();
-                return fetchedData;
-              })
-              .catch((err) => {
-                return err;
-              });
-          },
-          onRowUpdate: (newData, oldData) =>
-            updateComment({...newData,timeStamp:moment().format()})
-              .then((fetchedData) => {
-                this.fetchData();
-                return fetchedData;
-              })
-              .catch((err) => {
-                return err;
-              }),
-          onRowDelete: (oldData) =>
-            deleteComment(oldData)
-              .then((fetchedData) => {
-                this.fetchData();
-                return fetchedData;
-              })
-              .catch((err) => {
-                return err;
-              }),
-        }}
-      ></MaterialTable>
-    );
-  }
+	return (
+		<Dialog
+			open={isCommentsOpen}
+			fullWidth
+			maxWidth="md"
+			onClose={() => setIsCommentsOpen(false)}
+			aria-labelledby="form-dialog-title"
+			TransitionComponent={Transition}
+		>
+			<AppBar className={classes.appBar}>
+				<Toolbar>
+					<IconButton
+						edge="start"
+						color="inherit"
+						onClick={() => setIsCommentsOpen(false)}
+						aria-label="close"
+					>
+						<CloseIcon />
+					</IconButton>
+					<Typography variant="h6" className={classes.title}>
+						See all {name}'s Comments here
+					</Typography>
+					<Button autoFocus color="inherit" onClick={() => setIsCommentsOpen(false)}>
+						Cancel
+					</Button>
+				</Toolbar>
+			</AppBar>
+			<MaterialTable
+				title={`comments of ${name}`}
+				columns={columns}
+				data={comments}
+				editable={{
+					onRowAdd: (newData) =>
+						new Promise((resolve, reject) => {
+							resolve()
+						}),
+					onRowUpdate: (newData) => {},
+					onRowDelete: (oldData) => {},
+				}}
+			/>
+		</Dialog>
+	)
 }
 
-export default Comments;
+export default Comments
+
+const useStyles = makeStyles((theme) => ({
+	appBar: {
+		position: "relative",
+	},
+	title: {
+		marginLeft: theme.spacing(2),
+		flex: 1,
+	},
+}))

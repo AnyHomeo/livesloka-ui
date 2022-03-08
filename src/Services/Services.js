@@ -125,21 +125,12 @@ export const editField = (name, data) => {
 
 export const deleteField = (name, id) => Axios.post(`${API.main}${API[name]}/${id}`)
 
-export const getComments = (id) => {
-	return axios.get(`${API.main}${API.getComment}/${id}`)
-}
-
-export const addComments = (formData) => {
-	return axios.post(`${API.main}${API.addComment}`, formData)
-}
-
-export const updateComment = (data) => {
-	return axios.post(`${API.main}${API.updateComment}`, data)
-}
-
-export const deleteComment = (data) => {
-	return axios.post(`${API.main}${API.deleteComment}`, data)
-}
+// comments of customer CRUD
+export const getComments = (customerId) =>
+	axios.get(`${API.main}/admin/comments/customer/${customerId}`)
+export const addComments = (formData) => axios.post(`${API.main}/admin/comments`, formData)
+export const updateComment = (data) => axios.patch(`${API.main}/admin/comments/${data._id}`, data)
+export const deleteComment = (data) => axios.post(`${API.main}/admin/comments/${data._id}`, data)
 
 export const getAllAdmins = () => axios.get(`${API.main}${API.getAllAdmins}`)
 export const getAllTeachers = () => axios.get(`${API.main}${API.getAllTeachers}`)
@@ -208,28 +199,37 @@ export const getDemoCustomers = () =>
 export const getTeacherSlotsForOptions = (id) =>
 	Axios.get(`${API.main}/options/teacher/slots/${id}`)
 
-export const postOptions = (formData) =>
-	Axios.post(`${process.env.REACT_APP_API_KEY}/options`, formData)
+export const postOptions = (formData) => Axios.post(`${API.main}/options`, formData)
 
 export const getTimeZones = () => Axios.get(`${API.main}/admin/get/timeZone`)
 
 export const createPaypalAndStripeProducts = (data) =>
-	Axios.post(`${process.env.REACT_APP_API_KEY}/subscriptions/create/product`, data)
+	Axios.post(`${API.main}/subscriptions/create/product`, data)
 
 export const getAllSubscriptionProducts = () => Axios.get(`${API.main}/products`)
-export const addSubscriptionProduct = (data) => Axios.post(`${API.main}/products`,data)
+export const addSubscriptionProduct = (data) => Axios.post(`${API.main}/products`, data)
 export const deleteSubscriptionProduct = (id) => Axios.delete(`${API.main}/products/${id}`)
-export const createPlans = (data) => Axios.post(`${API.main}/plans`,data)
-export const getAllPlansOfTheProduct = (productId) => Axios.get(`${API.main}/plans?productId=${productId}`)
+export const createPlans = (data) => Axios.post(`${API.main}/plans`, data)
+export const getAllPlansOfTheProduct = (productId) =>
+	Axios.get(`${API.main}/plans?productId=${productId}`)
 export const deleteSubscriptionPlan = (planId) => Axios.delete(`${API.main}/plans/${planId}`)
-export const createAChatGroupFromScheduleId = (scheduleId) => Axios.post(`${API.main}/group/schedule/${scheduleId}`)
+export const createAChatGroupFromScheduleId = (scheduleId) =>
+	Axios.post(`${API.main}/group/schedule/${scheduleId}`)
 export const getAPlan = (planId) => Axios.get(`${API.main}/plans/${planId}`)
-export const updatePlan = (formData,plan) => Axios.put(`${API.main}/plans/${plan}`,formData)
-export const getPlansByCustomer = (customer) => Axios.get(`${API.main}/plans?customerId=${customer}`)
-export const getOptionsOfATeacher = (teacherId) => Axios.get(`${API.main}/options/teacher/${teacherId}`)
-export const getOptionsByCustomer = (customerId) => Axios.get(`${API.main}/options/customer/${customerId}`)
-export const updateOptions = (optionsId,updatedData) => Axios.put(`${API.main}/options/${optionsId}`,updatedData)
+export const updatePlan = (formData, plan) => Axios.put(`${API.main}/plans/${plan}`, formData)
+export const getPlansByCustomer = (customer) =>
+	Axios.get(`${API.main}/plans?customerId=${customer}`)
+export const getOptionsOfATeacher = (teacherId) =>
+	Axios.get(`${API.main}/options/teacher/${teacherId}`)
+export const getOptionsByCustomer = (customerId) =>
+	Axios.get(`${API.main}/options/customer/${customerId}`)
+export const updateOptions = (optionsId, updatedData) =>
+	Axios.put(`${API.main}/options/${optionsId}`, updatedData)
 export const getCustomerRewards = (user) => Axios.get(`${API.main}/rewards/user/${user}?redeems=1`)
 export const getAllPermissionStrings = () => Axios.get(`${API.main}/roles/permissions`)
-export const patchPermission = (roleId,permission) => Axios.patch(`${API.main}/roles/${roleId}/permissions`,{permission})
-export const createSchedule = (formData) => Axios.post(`${process.env.REACT_APP_API_KEY}/schedule`, formData)
+export const patchPermission = (roleId, permission) =>
+	Axios.patch(`${API.main}/roles/${roleId}/permissions`, {permission})
+export const createSchedule = (formData) => Axios.post(`${API.main}/schedule`, formData)
+export const getOptions = () => Axios.get(`${API.main}/options`)
+export const retryScheduleWithOptions = (id) => Axios.patch(`${API.main}/options/manual/${id}`)
+export const deleteOptions = (id) => Axios.delete(`${process.env.REACT_APP_API_KEY}/options/${id}`)

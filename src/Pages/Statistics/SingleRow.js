@@ -96,10 +96,10 @@ function SingleRow({
 
 	const renderFlag = (student) => {
 		if (
-			student.every((rowData) =>
+			!student.every((rowData) =>
 				rowData.autoDemo
-					? moment(rowData.paidTill).diff(moment(new Date()), "days") + 1 <= 0
-					: rowData.numberOfClassesBought <= 0
+					? moment(rowData.paidTill).diff(moment(new Date()), "days") + 1 >= 0
+					: rowData.numberOfClassesBought > 0
 			)
 		) {
 			return (

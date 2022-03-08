@@ -1,14 +1,14 @@
 import React, {useState, useEffect} from "react"
 import MaterialTable, {MTableBodyRow, MTableToolbar} from "material-table"
-import MuiAlert from "@material-ui/lab/Alert"
 import {getData, addInField, editField, deleteField} from "../Services/Services"
-import {Button, Chip, Snackbar, TextField} from "@material-ui/core"
+import {Button, Chip, TextField} from "@material-ui/core"
 import {Autocomplete} from "@material-ui/lab"
 import useWindowDimensions from "./useWindowDimensions"
 import {isAutheticated} from "../auth"
 import {firebase} from "../Firebase"
 import Permissions from "./Permissions"
 import WhatsApp from "@material-ui/icons/WhatsApp"
+import {useSnackbar} from "notistack"
 
 const DropdownEditor = ({onChange, value}) => {
 	const [arr, setArr] = useState(value)
@@ -56,10 +56,6 @@ const DropdownEditor = ({onChange, value}) => {
 	)
 }
 
-function Alert(props) {
-	return <MuiAlert elevation={6} variant="filled" {...props} />
-}
-
 function humanReadable(name) {
 	var words = name.match(/[A-Za-z][^_\-A-Z]*|[0-9]+/g) || []
 
@@ -82,12 +78,10 @@ const MaterialTableAddFields = ({
 	setSelectedSubject,
 	selectedSubject,
 }) => {
+	const {enqueueSnackbar} = useSnackbar()
 	const [columns, setColumns] = useState([])
 	const [data, setData] = useState([])
 	const [loading, setLoading] = useState(true)
-	const [open, setOpen] = useState(false)
-	const [success, setSuccess] = useState(false)
-	const [response, setResponse] = useState("")
 	const {height} = useWindowDimensions()
 	const [imageLoading, setImageLoading] = useState(false)
 	const [refresh, setRefresh] = useState(false)
@@ -352,20 +346,8 @@ const MaterialTableAddFields = ({
 		}
 	}, [lookup, categoryLookup, data, subjectLookup, name, status, currencies, permissions, roles])
 
-	const handleClose = (event, reason) => {
-		if (reason === "clickaway") {
-			return
-		}
-		setOpen(false)
-	}
-
 	return (
 		<>
-			<Snackbar open={open} autoHideDuration={6000} onClose={() => handleClose()}>
-				<Alert onClose={() => handleClose()} severity={success ? "success" : "warning"}>
-					{response}
-				</Alert>
-			</Snackbar>
 			<MaterialTable
 				title={`${name} Table`}
 				columns={columns}
@@ -397,7 +379,9 @@ const MaterialTableAddFields = ({
 											size="small"
 											variant={selectedSubject === subjectId ? "default" : "outlined"}
 											color="secondary"
-											onClick={() => setSelectedSubject(prev => prev === subjectId ? "" : subjectId)}
+											onClick={() =>
+												setSelectedSubject((prev) => (prev === subjectId ? "" : subjectId))
+											}
 											style={{marginRight: 5, cursor: "pointer"}}
 										/>
 									))}
@@ -433,21 +417,13 @@ const MaterialTableAddFields = ({
 						newData.isDemoIncludedInSalaries = !!newData.isDemoIncludedInSalaries
 						return addInField(`Add ${name}`, newData)
 							.then((fetchedData) => {
-								if (fetchedData.data.status === "ok") {
-									setSuccess(true)
-									setRefresh((prev) => !prev)
-									setResponse(fetchedData.data.message)
-									setOpen(true)
-									setLoading(false)
-								} else {
-									setSuccess(false)
-									setResponse(fetchedData.data.message)
-									setOpen(true)
-									setLoading(false)
-								}
+								enqueueSnackbar(fetchedData.data.message, {variant: "success"})
+								setRefresh((prev) => !prev)
+								setLoading(false)
 							})
 							.catch((e) => {
-								console.error(e, e.response)
+								console.error(e.response)
+								enqueueSnackbar(e?.response?.data?.message, {variant: "error"})
 							})
 					},
 					onRowUpdate: (newData) => {
@@ -457,40 +433,24 @@ const MaterialTableAddFields = ({
 						}
 
 						return editField(`Update ${name}`, newData).then((fetchedData) => {
-							if (fetchedData.data.status === "OK") {
-								setRefresh((prev) => !prev)
-								setSuccess(true)
-								setResponse(fetchedData.data.message)
-								setOpen(true)
-							} else {
-								setSuccess(false)
-								setResponse(fetchedData.data.message)
-								setOpen(true)
-							}
+							setRefresh((prev) => !prev)
+							enqueueSnackbar(fetchedData.data.message, {variant: "success"})
 						})
 					},
 					onRowDelete: (oldData) =>
 						deleteField(`Delete ${name}`, oldData["id"])
 							.then((fetchedData) => {
-								if (fetchedData.data.status === "ok") {
-									const dataDelete = [...data]
-									const index = oldData.tableData.id
-									dataDelete.splice(index, 1)
-									setData([...dataDelete])
-									setSuccess(true)
-									setResponse(fetchedData.data.message)
-									setOpen(true)
-								} else {
-									setSuccess(false)
-									setResponse(fetchedData.data.message || "Something went wrong,Try again later")
-									setOpen(true)
-								}
+								const dataDelete = [...data]
+								const index = oldData.tableData.id
+								dataDelete.splice(index, 1)
+								setData([...dataDelete])
+								enqueueSnackbar(fetchedData.data.message, {variant: "success"})
 							})
 							.catch((err) => {
 								console.error(err, err.response)
-								setSuccess(false)
-								setResponse("Something went wrong,Try again later")
-								setOpen(true)
+								enqueueSnackbar(err.response.data.message || "Something went wrong!", {
+									variant: "error",
+								})
 							}),
 				}}
 			/>
