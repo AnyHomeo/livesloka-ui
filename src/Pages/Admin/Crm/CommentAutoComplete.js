@@ -19,7 +19,7 @@ export default function CommentAutoComplete({options, setOptions, addComment}) {
 				onChange={async (event, newValue) => {
 					if (newValue) {
 						if (newValue && newValue.inputValue) {
-							let newlyAddedTemplate = await addInField("Add Customer Message Templates", {
+							let newlyAddedTemplate = await addInField("Add Comments", {
 								text: newValue.inputValue,
 							})
 							setOptions((prev) => {
