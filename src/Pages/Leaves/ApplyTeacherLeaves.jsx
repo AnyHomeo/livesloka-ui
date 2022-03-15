@@ -21,7 +21,13 @@ const defaultLeaveData = {
 	reason: "",
 }
 
-const ApplyTeacherLeaves = ({isAddLeaveDialogOpen, setIsAddLeaveDialogOpen, setRefresh}) => {
+const ApplyTeacherLeaves = ({
+	isAddLeaveDialogOpen,
+	setIsAddLeaveDialogOpen,
+	setRefresh,
+	teacherId,
+	scheduleId,
+}) => {
 	const [teachers, setTeachers] = useState([])
 	const {width} = useWindowDimensions()
 	const [teacher, setTeacher] = useState({})
@@ -54,6 +60,24 @@ const ApplyTeacherLeaves = ({isAddLeaveDialogOpen, setIsAddLeaveDialogOpen, setR
 			getAllSchedulesOfTeacher(teacher.id)
 		}
 	}, [teacher, getAllSchedulesOfTeacher])
+
+	useEffect(() => {
+		if (teacherId && teachers.length) {
+			let teacherIndex = teachers.findIndex((teacher) => teacher.id === teacherId)
+			if (teacherIndex !== -1) {
+				setTeacher(teachers[teacherIndex])
+			}
+		}
+	}, [teacherId, teachers])
+
+	useEffect(() => {
+		if (scheduleId && schedulesOfTeacher.length) {
+			let scheduleIndex = schedulesOfTeacher.findIndex((schedule) => schedule._id === scheduleId)
+			if (scheduleIndex !== -1) {
+				setSchedule(schedulesOfTeacher[scheduleIndex])
+			}
+		}
+	}, [scheduleId, schedulesOfTeacher])
 
 	const applyALeave = () => {
 		let {entireDay, date, reason} = leaveData
@@ -112,6 +136,7 @@ const ApplyTeacherLeaves = ({isAddLeaveDialogOpen, setIsAddLeaveDialogOpen, setR
 					id="auto-com-1"
 					options={teachers}
 					fullWidth
+					value={teacher}
 					getOptionLabel={(option) => option.TeacherName}
 					style={{
 						margin: "10px 0",
@@ -132,6 +157,7 @@ const ApplyTeacherLeaves = ({isAddLeaveDialogOpen, setIsAddLeaveDialogOpen, setR
 						margin: "10px 0",
 						minWidth: 310,
 					}}
+					value={schedule}
 					getOptionLabel={(option) => option.className}
 					renderInput={(params) => (
 						<TextField {...params} label="Select Schedule Of the Teacher" variant="outlined" />

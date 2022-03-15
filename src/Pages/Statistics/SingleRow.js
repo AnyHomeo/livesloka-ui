@@ -1,5 +1,5 @@
 import {Card, Chip, IconButton, Tooltip} from "@material-ui/core"
-import React, {useEffect, useRef, useState} from "react"
+import React, {useEffect, useRef} from "react"
 import {UserCheck, UserMinus, Video, UserX, Flag} from "react-feather"
 import LoopIcon from "@material-ui/icons/Loop"
 import {useConfirm} from "material-ui-confirm"
@@ -10,10 +10,10 @@ import {isAutheticated} from "../../auth"
 import io from "socket.io-client"
 import moment from "moment"
 import {useSnackbar} from "notistack"
-import { retrieveMeetingLink } from "../../Services/utils"
+import {retrieveMeetingLink} from "../../Services/utils"
 
 const socket = io(process.env.REACT_APP_API_KEY)
-function SingleRow({
+const SingleRow = ({
 	setDialogOpen,
 	todayData,
 	time,
@@ -22,7 +22,6 @@ function SingleRow({
 	selectedSlot,
 	setDialogData,
 	leaves,
-	alertSetStates,
 	schedulesAssignedToMe,
 	setSchedulesAssignedToMe,
 	otherSchedules,
@@ -30,11 +29,11 @@ function SingleRow({
 	teacherIds,
 	isToday,
 	scheduleLeaves,
-}) {
+	setRefresh,
+}) => {
 	const divRef = useRef(null)
 	const confirm = useConfirm()
 	const {enqueueSnackbar} = useSnackbar()
-	const {setRefresh} = alertSetStates
 
 	useEffect(() => {
 		if (divRef.current) {
@@ -265,7 +264,10 @@ function SingleRow({
 									</IconButton>
 								</Tooltip>
 								<Tooltip title="Join Zoom">
-									<IconButton onClick={() => window.open(retrieveMeetingLink(singleData))} size="small">
+									<IconButton
+										onClick={() => window.open(retrieveMeetingLink(singleData))}
+										size="small"
+									>
 										<Video style={{height: 18, width: 18, color: "#0984e3"}} />
 									</IconButton>
 								</Tooltip>

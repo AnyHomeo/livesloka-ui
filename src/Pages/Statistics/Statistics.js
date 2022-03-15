@@ -31,17 +31,18 @@ import CancelIcon from "@material-ui/icons/Cancel"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import momentTZ from "moment-timezone"
 import useDocumentTitle from "../../Components/useDocumentTitle"
-import Snackbar from "@material-ui/core/Snackbar"
-import Alert from "@material-ui/lab/Alert"
 import {getTimeZones, updateScheduleDangerously} from "../../Services/Services"
 import {editCustomer} from "./../../Services/Services"
 import {Link} from "react-router-dom"
 import Axios from "axios"
 import {useConfirm} from "material-ui-confirm"
 import {retrieveMeetingLink} from "../../Services/utils"
-import {DollarSign, MessageCircle, Smartphone} from "react-feather"
+import {MessageCircle, Smartphone} from "react-feather"
 import {useHistory} from "react-router-dom"
 import Comments from "../Admin/Crm/Comments"
+import ApplyTeacherLeaves from "../Leaves/ApplyTeacherLeaves"
+import {useSnackbar} from "notistack"
+
 let days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
 
 const copyToClipboard = (text) => {
@@ -79,21 +80,25 @@ function Statistics() {
 	const history = useHistory()
 	useDocumentTitle("Statistics")
 	const confirm = useConfirm()
+	const {enqueueSnackbar} = useSnackbar()
 	let initialValue = days.indexOf(
 		momentTZ(new Date()).tz("Asia/Kolkata").format("dddd").toUpperCase()
 	)
 	const [value, setValue] = useState(initialValue)
 	const [dialogOpen, setDialogOpen] = useState(false)
 	const [dialogData, setDialogData] = useState({})
-	const [successOpen, setSuccessOpen] = React.useState(false)
-	const [alert, setAlert] = useState("")
-	const [alertColor, setAlertColor] = useState("")
 	const [refresh, setRefresh] = useState(false)
 	const [timeZoneLookup, setTimeZoneLookup] = useState({})
 	const [loading, setLoading] = useState(false)
 	const [selectedCustomerId, setSelectedCustomerId] = useState("")
 	const [selectedCustomerName, setSelectedCustomerName] = useState("")
 	const [isCommentsOpen, setIsCommentsOpen] = useState(false)
+	const [openLeaveDialog, setOpenLeaveDialog] = useState(false)
+	const [leaveData, setLeaveData] = useState({
+		scheduleId: "",
+		teacherId: "",
+	})
+
 	useEffect(() => {
 		getTimeZones()
 			.then((result) => {
@@ -109,18 +114,9 @@ function Statistics() {
 						dynamicLookup[timeZoneObj.id] = timeZoneObj.timeZoneName
 					})
 				}
-				console.log("getTimeZones dynamicLookup")
-				console.log(dynamicLookup)
 				setTimeZoneLookup(dynamicLookup)
 			})
 	}, [])
-
-	const handleSuccessClose = (event, reason) => {
-		if (reason === "clickaway") {
-			return
-		}
-		setSuccessOpen(false)
-	}
 
 	const handleChange = (event, newValue) => {
 		setValue(newValue)
@@ -165,6 +161,7 @@ function Statistics() {
 			console.log(error)
 		}
 	}
+
 	const deleteSchedule = async (id) => {
 		setRefresh(false)
 		try {
@@ -207,21 +204,16 @@ function Statistics() {
 		}
 	}
 
-	console.log(dialogData.isClassTemperarilyCancelled)
 	const meetingLink = useMemo(() => retrieveMeetingLink(dialogData), [dialogData])
 
 	return (
 		<div>
-			<Snackbar
-				open={successOpen}
-				autoHideDuration={6000}
-				onClose={handleSuccessClose}
-				anchorOrigin={{vertical: "bottom", horizontal: "center"}}
-			>
-				<Alert variant="filled" onClose={handleSuccessClose} severity={alertColor}>
-					{alert}
-				</Alert>
-			</Snackbar>
+			<ApplyTeacherLeaves
+				isAddLeaveDialogOpen={openLeaveDialog}
+				setIsAddLeaveDialogOpen={setOpenLeaveDialog}
+				{...leaveData}
+			/>
+
 			<Dialog
 				open={dialogOpen}
 				onClose={() => setDialogOpen(false)}
@@ -446,7 +438,21 @@ function Statistics() {
 							/>
 						)}
 					</FormControl>
-
+					<Button
+						onClick={() => {
+							setDialogOpen(false)
+							setOpenLeaveDialog(true)
+							console.log(dialogData)
+							setLeaveData({
+								scheduleId: dialogData._id,
+								teacherId: dialogData.teacher.id,
+							})
+						}}
+						variant="text"
+						color="primary"
+					>
+						Apply Leave
+					</Button>
 					<Button onClick={() => setDialogOpen(false)} variant="outlined" color="primary">
 						Cancel
 					</Button>
@@ -515,8 +521,8 @@ function Statistics() {
 						day={day}
 						setDialogOpen={setDialogOpen}
 						setDialogData={setDialogData}
-						alertSetStates={{setAlert, setAlertColor, setRefresh, setSuccessOpen}}
 						value={value}
+						setRefresh={setRefresh}
 						isToday={value === initialValue}
 					/>
 				</TabPanel>
