@@ -143,7 +143,7 @@ const ApplyTeacherLeaves = ({
 						minWidth: 310,
 					}}
 					renderInput={(params) => (
-						<TextField {...params} label="Select Teacher" variant="outlined" />
+						<TextField {...params} label="Teacher" variant="outlined" />
 					)}
 					onChange={(e, value) => {
 						setTeacher(value)
@@ -160,16 +160,19 @@ const ApplyTeacherLeaves = ({
 					value={schedule}
 					getOptionLabel={(option) => option.className}
 					renderInput={(params) => (
-						<TextField {...params} label="Select Schedule Of the Teacher" variant="outlined" />
+						<TextField {...params} label="Class" variant="outlined" />
 					)}
 					onChange={(e, value) => {
 						setSchedule(value)
 					}}
 				/>
 				<div>
+					<div style={{color: 'red', fontSize:10, paddingBottom: 10}} >
+						* This message will be displayed directly to customer
+					</div>
 					<TextField
 						id="reason"
-						label="Leave Reason"
+						label="Reason for leave"
 						variant="outlined"
 						fullWidth
 						value={leaveData.reason}
