@@ -232,4 +232,7 @@ export const patchPermission = (roleId, permission) =>
 export const createSchedule = (formData) => Axios.post(`${API.main}/schedule`, formData)
 export const getOptions = () => Axios.get(`${API.main}/options`)
 export const retryScheduleWithOptions = (id) => Axios.patch(`${API.main}/options/manual/${id}`)
-export const deleteOptions = (id) => Axios.delete(`${process.env.REACT_APP_API_KEY}/options/${id}`)
+export const deleteOptions = (id) => Axios.delete(`${API.main}/options/${id}`)
+export const getSchedulesOfTeacher = (teacherId) =>
+	Axios.get(`${API.main}/api/teachers/${teacherId}/schedules?web=noFormat`)
+export const applyTeacherLeave = (data) => Axios.post(`${API.main}/teacher-leaves`, data)
