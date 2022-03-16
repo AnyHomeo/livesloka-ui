@@ -173,6 +173,8 @@ const ApplyTeacherLeaves = ({
 					<TextField
 						id="reason"
 						label="Reason for leave"
+						multiline
+						rows={3}
 						variant="outlined"
 						fullWidth
 						value={leaveData.reason}
