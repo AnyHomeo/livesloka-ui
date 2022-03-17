@@ -286,7 +286,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			permission: "Add Fields",
 		},
 		{
-			href: "/scheduler",
+			href: width <= 550 ? "/scheduler/mobile" : "/scheduler",
 			icon: UserIcon,
 			title: "Timetable",
 			permission: "Timetable",
@@ -331,7 +331,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			permission: "Options",
 		},
 		{
-			href: "/scheduler",
+			href: width <= 550 ? "/scheduler/mobile" : "/scheduler",
 			icon: UserIcon,
 			title: "Timetable",
 			permission: "Timetable",
