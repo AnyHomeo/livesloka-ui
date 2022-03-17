@@ -149,8 +149,8 @@ const Row = ({row, getBackData}) => {
 									</Grid>
 								))}
 								{row.history[1].map((item, i) => {
-									let slots = item.scheduleDescription
-										.split("(")
+									let slots = item?.scheduleDescription
+										?.split("(")
 										.slice(1)
 										.reduce((acc, singleSlot) => {
 											let singleSlotArr = singleSlot.split("-")
@@ -168,12 +168,12 @@ const Row = ({row, getBackData}) => {
 												}
 											>
 												{days.map((day, i) =>
-													slots[day] ? (
+													slots?.[day] ? (
 														<div>
 															{capitalize(day.toLowerCase())}:{slots[day]}
 														</div>
 													) : (
-														""
+														item?.scheduleDescription
 													)
 												)}
 												<div className={styles.scheduledClass}>
