@@ -309,6 +309,48 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			title: "Zoom Dashboard",
 			permission: "Zoom Dashboard",
 		},
+		{
+			href: "/summercamps",
+			icon: Sun,
+			title: "Summer Camp Data",
+			permission: "Customer Data",
+		},
+		{
+			href: "/meeting-scheduler",
+			icon: SettingsIcon,
+			title: "Scheduler",
+			permission: "Timetable",
+		},
+		{
+			href: "/dashboard",
+			icon: DollarSign,
+			title: "Financial Dashboard",
+			permission: "Financial Dashboard",
+		},
+		{
+			href: "/update/classes",
+			icon: UserCheck,
+			title: "Update Classes Paid",
+			permission: "Update Classes Paid",
+		},
+		{
+			href: "/careers",
+			icon: Trello,
+			title: "Careers Applications",
+			permission: "Careers Applications",
+		},
+		{
+			href: "/notifications",
+			icon: MessageCircle,
+			title: "Broadcast Notifications",
+			permission: "Broadcast Notifications",
+		},
+		{
+			href: "/financial",
+			icon: AccountBalanceOutlinedIcon,
+			title: "Financial Dashboard",
+			permission: "Financial Dashboard",
+		},
 	]
 
 	const Sales = [
