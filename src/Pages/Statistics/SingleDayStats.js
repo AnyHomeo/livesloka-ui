@@ -62,7 +62,7 @@ function SingleDayStats({
 	setDialogOpen,
 	setDialogData,
 	refresh,
-	alertSetStates,
+	setRefresh,
 	isToday,
 }) {
 	const [todayData, setTodayData] = useState([])
@@ -255,7 +255,6 @@ function SingleDayStats({
 						todayData={todayData}
 						setDialogOpen={setDialogOpen}
 						leaves={leaves}
-						alertSetStates={alertSetStates}
 						schedulesAssignedToMe={schedulesAssignedToMe}
 						setSchedulesAssignedToMe={setSchedulesAssignedToMe}
 						otherSchedules={otherSchedules}
@@ -263,6 +262,7 @@ function SingleDayStats({
 						teacherIds={teacherIds}
 						isToday={isToday}
 						scheduleLeaves={scheduleLeaves}
+						setRefresh={setRefresh}
 					/>
 				))}
 			</div>

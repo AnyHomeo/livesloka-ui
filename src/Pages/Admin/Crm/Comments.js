@@ -1,15 +1,8 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react"
-import {
-	getComments,
-	updateComment,
-	deleteComment,
-	getData,
-	addComments,
-} from "../../../Services/Services"
+import {getComments, updateComment, deleteComment, addComments} from "../../../Services/Services"
 import MaterialTable from "material-table"
 import moment from "moment"
 import {Dialog, Slide} from "@material-ui/core"
-import CommentAutoComplete from "./CommentAutoComplete"
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />
@@ -17,17 +10,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const Comments = ({commentsCustomerId, name, isCommentsOpen, setIsCommentsOpen}) => {
 	const [comments, setComments] = useState([])
-	const [messageTemplates, setMessageTemplates] = useState([])
 	const [refreshData, setRefreshData] = useState([])
 	const fetchData = useCallback(async () => {
 		let {data} = await getComments(commentsCustomerId)
-		setComments(
-			data.result.map((comment) => ({
-				message: comment?.message?._id,
-				timeStamp: comment.timeStamp,
-				_id: comment._id,
-			}))
-		)
+		setComments(data.result)
 	}, [commentsCustomerId])
 
 	useEffect(() => {
@@ -35,30 +21,21 @@ const Comments = ({commentsCustomerId, name, isCommentsOpen, setIsCommentsOpen})
 	}, [fetchData, refreshData])
 
 	const onRowUpdate = useCallback(async (newData, oldData) => {
+		console.log(newData)
 		await updateComment(newData)
-		setRefreshData(prev => !prev)
+		setRefreshData((prev) => !prev)
 	}, [])
 
 	const onRowDelete = useCallback(async (rowData) => {
 		await deleteComment(rowData)
-		setRefreshData(prev => !prev)
-	}, [])
-
-	useEffect(() => {
-		getData("Comments").then((data) => {
-			setMessageTemplates(data?.data?.result || [])
-		})
+		setRefreshData((prev) => !prev)
 	}, [])
 
 	const columns = useMemo(
 		() => [
 			{
 				title: "Comment",
-				field: "message",
-				lookup: messageTemplates.reduce((acc, message) => {
-					acc[message._id] = message.text
-					return acc
-				}, {}),
+				field: "text",
 			},
 			{
 				title: "Time stamp",
@@ -67,14 +44,14 @@ const Comments = ({commentsCustomerId, name, isCommentsOpen, setIsCommentsOpen})
 				render: (rowData) => moment(rowData.timeStamp).format("MMM Do YY, h:mm A"),
 			},
 		],
-		[messageTemplates]
+		[]
 	)
 
-	const addComment = useCallback(
-		async (id) => {
-			addComments({
-				message: id,
-				timeStamp: new Date(),
+	const onRowAdd = useCallback(
+		async (newData) => {
+			console.log(newData)
+			await addComments({
+				...newData,
 				customer: commentsCustomerId,
 			})
 			setRefreshData((prev) => !prev)
@@ -91,11 +68,6 @@ const Comments = ({commentsCustomerId, name, isCommentsOpen, setIsCommentsOpen})
 			aria-labelledby="form-dialog-title"
 			TransitionComponent={Transition}
 		>
-			<CommentAutoComplete
-				options={messageTemplates}
-				setOptions={setMessageTemplates}
-				addComment={addComment}
-			/>
 			<MaterialTable
 				style={{padding: "0px 20px", margin: 20}}
 				title={`${name}'s comments`}
@@ -109,6 +81,7 @@ const Comments = ({commentsCustomerId, name, isCommentsOpen, setIsCommentsOpen})
 				editable={{
 					onRowUpdate,
 					onRowDelete,
+					onRowAdd,
 				}}
 			/>
 		</Dialog>
