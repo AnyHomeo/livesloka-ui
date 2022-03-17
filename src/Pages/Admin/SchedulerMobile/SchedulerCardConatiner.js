@@ -1,67 +1,145 @@
-import {Card} from "@material-ui/core"
-import React from "react"
+import {Button, Card, Collapse, IconButton} from "@material-ui/core"
+import React, {forwardRef, useEffect, useImperativeHandle, useRef, useState} from "react"
 import SchedulerCard from "./SchedulerCard"
-
+import {Link, useParams} from "react-router-dom"
+import Axios from "axios"
+import {ChevronDown, ChevronUp} from "react-feather"
+import moment from "moment"
 const SchedulerCardConatiner = () => {
+	const childCompRef = useRef()
+
+	const [scheduleData, setScheduleData] = useState()
+	const params = useParams()
+	useEffect(() => {
+		fetchSchedules()
+	}, [params.id])
+	const fetchSchedules = async () => {
+		try {
+			const data = await Axios.get(
+				`https://livekumon-development-services.herokuapp.com/api/teachers/${params.id}/schedules?web=1`
+			)
+
+			setScheduleData(data?.data?.result)
+			console.log(data?.data?.result)
+		} catch (error) {}
+	}
+
+	const [selectedSlots, setSelectedSlots] = useState([])
+
+	const [collapseAll, setCollapseAll] = useState(false)
+
+	const ScheduledCard = ({item, collapseAll}) => {
+		const [collapse, setCollapse] = useState(false)
+
+		useEffect(() => {
+			setCollapse(collapseAll)
+		}, [collapseAll])
+
+		useEffect(() => {
+			if (moment().format("dddd").toUpperCase() === item.day.toUpperCase()) {
+				setCollapse(true)
+			}
+		}, [item])
+		return (
+			<Card
+				style={{
+					// margin: 5,
+					width: "100%",
+					height: "auto",
+					display: "flex",
+					flexDirection: "column",
+					marginTop: 10,
+					borderRadius: "0px !important",
+					border: "1px solid rgb(9, 132, 227)",
+					// margin: 10,
+					boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
+				}}
+			>
+				<Card style={{backgroundColor: "rgb(9, 132, 227)", display: "Flex", alignItems: "center"}}>
+					<div style={{flex: 1.5, marginLeft: 50}}>
+						<p style={{textAlign: "center", padding: 5, color: "white"}}>{item.day}</p>
+					</div>
+					<div>
+						<IconButton onClick={() => setCollapse(!collapse)}>
+							{collapse ? (
+								<ChevronUp style={{color: "white"}} />
+							) : (
+								<ChevronDown style={{color: "white"}} />
+							)}
+						</IconButton>
+					</div>
+				</Card>
+				<Collapse in={collapse}>
+					{item.schedules.map((schedules) => {
+						let isAvailable
+						if (schedules.isAvailableSlot) {
+							isAvailable = true
+						} else {
+							isAvailable = false
+						}
+						return (
+							<>
+								<SchedulerCard
+									isAvailable={isAvailable}
+									schedules={schedules}
+									fetchSchedules={fetchSchedules}
+									selectedSlots={selectedSlots}
+									setSelectedSlots={setSelectedSlots}
+									teacher={scheduleData.teacher}
+								/>
+							</>
+						)
+					})}
+				</Collapse>
+			</Card>
+		)
+	}
+
 	return (
 		<div style={{margin: 5}}>
-			<Card
-				style={{
-					// margin: 5,
-					width: "100%",
-					height: "auto",
-					display: "flex",
-					flexDirection: "column",
-					marginTop: 10,
-					borderRadius: "0px !important",
-					border: "1px solid rgb(9, 132, 227)",
-					// margin: 10,
-					boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
-				}}
-			>
-				<Card style={{backgroundColor: "rgb(9, 132, 227)"}}>
-					<p style={{textAlign: "center", padding: 5, color: "white"}}>Monday</p>
-				</Card>
-				<SchedulerCard
-					time="5:30 PM"
-					className="Karthik Paypal Hindustani Music- BhagyaShree Hindi Laguage"
-					color="linear-gradient(315deg, rgb(243, 156, 18) 0%, rgb(243, 156, 18) 74%)"
-				/>
-				<SchedulerCard
-					time="6:00 PM"
-					className="BhagyaShree Hindi Laguage"
-					color="linear-gradient(315deg, rgb(243, 156, 18) 0%, rgb(243, 156, 18) 74%)"
-				/>
-			</Card>
+			<div style={{display: "flex", justifyContent: "flex-end"}}>
+				<IconButton onClick={() => setCollapseAll(!collapseAll)}>
+					{collapseAll ? <ChevronUp /> : <ChevronDown />}
+				</IconButton>
+			</div>
+			<div style={{display: "flex", justifyContent: "flex-end", marginTop: -15}}>
+				<p style={{fontSize: 12, marginRight: 5}}>{collapseAll ? "Collapse" : "Expand"}</p>
+			</div>
+			{scheduleData &&
+				scheduleData.schedules.map((item) => {
+					return <ScheduledCard item={item} collapseAll={collapseAll} />
+				})}
 
-			<Card
-				style={{
-					// margin: 5,
-					width: "100%",
-					height: "auto",
-					display: "flex",
-					flexDirection: "column",
-					marginTop: 10,
-					borderRadius: "0px !important",
-					border: "1px solid rgb(9, 132, 227)",
-					// margin: 10,
-					boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
-				}}
-			>
-				<Card style={{backgroundColor: "rgb(9, 132, 227)"}}>
-					<p style={{textAlign: "center", padding: 5, color: "white"}}>Tuesday</p>
-				</Card>
-				<SchedulerCard
-					time="1:00 PM"
-					className="This is testing class name for test"
-					color="linear-gradient(315deg, rgb(232, 65, 24) 0%, rgb(232, 65, 24) 74%)"
-				/>
-				<SchedulerCard
-					time="3:00 PM"
-					className="LOrem ipsum test class"
-					color="linear-gradient(315deg, rgb(243, 156, 18) 0%, rgb(243, 156, 18) 74%)"
-				/>
-			</Card>
+			{selectedSlots.length ? (
+				<div
+					style={{
+						position: "fixed",
+						top: "80%",
+						left: "18%",
+						trnasform: "translate(-80%, -18%)",
+						padding: 20,
+						backgroundColor: "#eee",
+						borderRadius: 20,
+						boxShadow: "rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px",
+					}}
+				>
+					<Button
+						style={{marginRight: 20}}
+						variant="outlined"
+						color="secondary"
+						onClick={() => setSelectedSlots([])}
+					>
+						Cancel
+					</Button>
+					<Link to={`/availabe-scheduler/${selectedSlots.join(",")}/${params.id}`}>
+						<Button variant="contained" color="primary">
+							Schedule
+						</Button>
+					</Link>
+				</div>
+			) : (
+				""
+			)}
 		</div>
 	)
 }

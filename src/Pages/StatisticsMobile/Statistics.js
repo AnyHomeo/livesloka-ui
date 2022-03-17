@@ -40,8 +40,10 @@ import Axios from "axios"
 import {useConfirm} from "material-ui-confirm"
 import {retrieveMeetingLink} from "../../Services/utils"
 import StatisticsMobile from "./StatisticsMobile"
-import {Smartphone, Video} from "react-feather"
+import {Copy, Smartphone, Video, XCircle} from "react-feather"
 import {useHistory} from "react-router-dom"
+import AdjustIcon from "@material-ui/icons/Adjust"
+
 let days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
 
 const copyToClipboard = (text) => {
@@ -206,6 +208,8 @@ function Statistics() {
 	}
 	const meetingLink = useMemo(() => retrieveMeetingLink(dialogData), [dialogData])
 
+	console.log(dialogData)
+
 	return (
 		<div>
 			<Snackbar
@@ -227,26 +231,9 @@ function Statistics() {
 				maxWidth={"md"}
 			>
 				<DialogTitle id="alert-dialog-title">
-					<h2 style={{fontSize: 18}}>Schedule Details</h2>
-				</DialogTitle>
+					<div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+						<h2 style={{fontSize: 15}}>{dialogData?.teacher?.TeacherName}</h2>
 
-				<div
-					style={{
-						display: "flex",
-						marginTop: 10,
-						marginBottom: 10,
-						justifyContent: "space-between",
-						paddingLeft: 20,
-						paddingRight: 20,
-					}}
-				>
-					<InputAdornment position="end">
-						<IconButton onClick={() => copyToClipboard(meetingLink)} edge="end">
-							<Video />
-						</IconButton>
-					</InputAdornment>
-					<InputAdornment position="end">
-						<p>{dialogData.teacher && dialogData.teacher.TeacherName}</p>
 						<IconButton
 							onClick={() =>
 								window.open(
@@ -260,49 +247,79 @@ function Statistics() {
 						>
 							<WhatsAppIcon />
 						</IconButton>
+					</div>
+				</DialogTitle>
+
+				<div
+					style={{
+						display: "flex",
+						marginTop: 10,
+						marginBottom: 20,
+						justifyContent: "space-between",
+						alignItems: "center",
+					}}
+				>
+					<InputAdornment position="end">
+						<div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+							<Button onClick={() => copyToClipboard(meetingLink)} edge="end">
+								<Copy />
+							</Button>
+
+							{/* <Button onClick={() => copyToClipboard(meetingLink)} edge="end">
+								<Video style={{color: "#3867d6"}} />
+							</Button> */}
+							<p style={{fontSize: 10}}>Zoom</p>
+						</div>
+					</InputAdornment>
+					<InputAdornment position="end">
+						<FormControl style={{marginTop: 10}} variant="outlined">
+							{loading ? (
+								<CircularProgress style={{height: 30, width: 30}} />
+							) : (
+								<FormControlLabel
+									control={
+										<Switch
+											checked={dialogData.isClassTemperarilyCancelled}
+											onChange={toggleisClassTemperarilyCancelled}
+											name="cancelClass"
+										/>
+									}
+								/>
+							)}
+							<p style={{fontSize: 10}}>Cancel Class</p>
+						</FormControl>
 					</InputAdornment>
 				</div>
-				<DialogContent>
+				<DialogContent style={{padding: 6}}>
 					<StatisticsMobile
 						data={dialogData.students}
 						timeZoneLookup={timeZoneLookup}
 						toggleNewOldButton={toggleNewOldButton}
 						toggleJoinButton={toggleJoinButton}
 					/>
-
-					<FormControl style={{marginTop: 10}} variant="outlined">
-						{loading ? (
-							<CircularProgress style={{height: 30, width: 30}} />
-						) : (
-							<FormControlLabel
-								control={
-									<Switch
-										checked={dialogData.isClassTemperarilyCancelled}
-										onChange={toggleisClassTemperarilyCancelled}
-										name="cancelClass"
-									/>
-								}
-								label="Enable to Cancel the Class"
-							/>
-						)}
-					</FormControl>
 				</DialogContent>
-				<DialogActions>
+				<DialogActions style={{padding: 6, justifyContent: "center"}}>
 					<Button onClick={() => setDialogOpen(false)} variant="outlined" color="primary">
-						Cancel
+						<XCircle />
 					</Button>
 					<Link style={{textDecoration: "none"}} to={`/edit-schedule/${dialogData._id}`}>
-						<Button variant="outlined" color="primary" startIcon={<EditIcon />}>
-							Edit
+						<Button variant="outlined" color="primary">
+							<EditIcon />
 						</Button>
 					</Link>
 					<Button
 						onClick={() => deleteSchedule(dialogData._id)}
 						variant="outlined"
 						color="secondary"
-						startIcon={<DeleteIcon />}
 					>
-						Delete
+						<DeleteIcon />
+					</Button>
+					<Button
+						onClick={() => window.open(meetingLink)}
+						variant="outlined"
+						style={{backgroundColor: "#2ecc71", color: "white"}}
+					>
+						<AdjustIcon />
 					</Button>
 				</DialogActions>
 			</Dialog>

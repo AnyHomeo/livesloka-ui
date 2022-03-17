@@ -252,13 +252,28 @@ function Scheduler() {
 
 	const meetingLink = useMemo(() => retrieveMeetingLink(selectedSchedule), [selectedSchedule])
 
+	useEffect(() => {
+		fetchcategorizedTeachers()
+	}, [])
+
+	const [teacherCategorizes, setTeacherCategorizes] = useState({})
+	const fetchcategorizedTeachers = async () => {
+		console.log(process.env.REACT_APP_API_KEY)
+		try {
+			const data = await Axios.get(`${process.env.REACT_APP_API_KEY}/api/teachers/categories`)
+
+			console.table(data?.data?.result)
+			setTeacherCategorizes(data?.data?.result)
+		} catch (error) {}
+	}
+
 	return (
 		<>
 			<Backdrop style={{zIndex: 5000}} open={loading}>
 				<CircularProgress color="inherit" />
 			</Backdrop>
 			<OccupancyBars
-				categorizedData={categorizedData}
+				categorizedData={teacherCategorizes}
 				setTeacher={setTeacher}
 				setTeacherId={setTeacherId}
 				setCategory={setCategory}

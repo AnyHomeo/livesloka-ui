@@ -15,7 +15,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import CancelIcon from "@material-ui/icons/Cancel"
 import momentTZ from "moment-timezone"
 import WhatsAppIcon from "@material-ui/icons/WhatsApp"
-
+import {X, Check} from "react-feather"
 const useStyles = makeStyles((theme) => ({
 	cardContainer: {
 		display: "flex",
@@ -91,12 +91,13 @@ const StatisticsMobile = ({data, timeZoneLookup, toggleNewOldButton, toggleJoinB
 								display: "flex",
 								marginTop: 3,
 								marginBottom: 3,
-								padding: 4,
+								boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
 							}}
 						>
 							<div
 								style={{
 									flex: 0.7,
+									padding: 4,
 								}}
 							>
 								<div style={{padding: 3}}>
@@ -117,7 +118,13 @@ const StatisticsMobile = ({data, timeZoneLookup, toggleNewOldButton, toggleJoinB
 														marginRight: 5,
 													}}
 												>
-													<p style={{color: "white", fontSize: 12, fontWeight: "400"}}>P</p>
+													<Check
+														style={{
+															color: "white",
+															height: 18,
+															width: 18,
+														}}
+													/>
 												</div>
 											) : (
 												<div
@@ -132,44 +139,22 @@ const StatisticsMobile = ({data, timeZoneLookup, toggleNewOldButton, toggleJoinB
 														marginRight: 5,
 													}}
 												>
-													<p style={{color: "white", fontSize: 12, fontWeight: "400"}}>A</p>
-												</div>
-											)}
-										</div>
-										<div>
-											{item.autoDemo ? (
-												<div
-													style={{
-														height: 20,
-														width: 20,
-														borderRadius: "50%",
-														backgroundColor: "#27ae60",
-														display: "flex",
-														justifyContent: "center",
-														alignItems: "center",
-													}}
-												>
-													<p style={{color: "white", fontSize: 12, fontWeight: "400"}}>N</p>
-												</div>
-											) : (
-												<div
-													style={{
-														height: 20,
-														width: 20,
-														borderRadius: "50%",
-														backgroundColor: "#eb4d4b",
-														display: "flex",
-														justifyContent: "center",
-														alignItems: "center",
-													}}
-												>
-													<p style={{color: "white", fontSize: 12, fontWeight: "400"}}>O</p>
+													<X
+														style={{
+															color: "white",
+															height: 18,
+															width: 18,
+														}}
+													/>
 												</div>
 											)}
 										</div>
 
 										{item.autoDemo && item.paidTill ? (
-											<div
+											<>
+												<Chip size="small" label={momentTZ(item.paidTill).format("MMM DD")} />
+												{/* {item.autoDemo && item.paidTill */}
+												{/* <div
 												style={{
 													display: "flex",
 													justifyContent: "center",
@@ -178,9 +163,10 @@ const StatisticsMobile = ({data, timeZoneLookup, toggleNewOldButton, toggleJoinB
 												}}
 											>
 												<p style={{color: "black", fontSize: 12, fontWeight: "400"}}>
-													{momentTZ(item.paidTill).format("MMM DD, YYYY")}
+													{momentTZ(item.paidTill).format("MMM DD")}
 												</p>
-											</div>
+											</div> */}
+											</>
 										) : (
 											<div
 												style={{
@@ -217,17 +203,18 @@ const StatisticsMobile = ({data, timeZoneLookup, toggleNewOldButton, toggleJoinB
 										height: 30,
 										width: 30,
 										borderRadius: "50%",
-										backgroundColor: item?.isJoinButtonEnabledByAdmin ? "#3867d6" : "#20bf6b",
+										backgroundColor: item?.isJoinButtonEnabledByAdmin ? "#eb4d4b" : "#20bf6b",
 										display: "flex",
 										justifyContent: "center",
 										alignItems: "center",
+										marginRight: 5,
 									}}
 								>
 									<p
 										style={{color: "white", fontSize: 18}}
 										onClick={() => toggleJoinButton(item, i)}
 									>
-										J
+										{item?.isJoinButtonEnabledByAdmin ? "J" : "CJ"}
 									</p>
 								</div>
 
@@ -236,33 +223,33 @@ const StatisticsMobile = ({data, timeZoneLookup, toggleNewOldButton, toggleJoinB
 										height: 30,
 										width: 30,
 										borderRadius: "50%",
-										backgroundColor: item?.autoDemo ? "#3867d6" : "#20bf6b",
+										backgroundColor: item?.autoDemo ? "#eb4d4b" : "#20bf6b",
 										display: "flex",
 										justifyContent: "center",
 										alignItems: "center",
+										marginRight: 5,
 									}}
 								>
 									<p
 										style={{color: "white", fontSize: 14}}
 										onClick={() => toggleNewOldButton(item, i)}
 									>
-										N/O
+										{item?.autoDemo ? "O" : "N"}
 									</p>
 								</div>
 
 								<div
 									style={{
-										height: 30,
-										width: 30,
-										backgroundColor: "#fa8231",
-										borderRadius: "50%",
+										height: "100%",
+										width: 50,
+										backgroundColor: "#ecf0f1",
 										display: "flex",
 										justifyContent: "center",
 										alignItems: "center",
 									}}
 								>
 									<WhatsAppIcon
-										style={{color: "white", height: 20, width: 20}}
+										style={{color: "#e67e22", height: 35, width: 35}}
 										onClick={() =>
 											window.open(
 												`https://api.whatsapp.com/send?phone=${
