@@ -6,7 +6,7 @@ import InputLabel from "@material-ui/core/InputLabel"
 import MenuItem from "@material-ui/core/MenuItem"
 import FormControl from "@material-ui/core/FormControl"
 import Select from "@material-ui/core/Select"
-import {Button} from "@material-ui/core/"
+import {Button, TextField} from "@material-ui/core/"
 import axios from "axios"
 import moment from "moment"
 import {useSnackbar} from "notistack"
@@ -24,11 +24,13 @@ const useStyles = makeStyles((theme) => ({
 const HistoricCurrency = () => {
 	const {enqueueSnackbar} = useSnackbar()
 
-	const [selectedDate, handleDateChange] = useState(new Date())
+	let date = new Date()
+	const [selectedDate, handleDateChange] = useState(date.setDate(date.getDate() - 1))
 	const classes = useStyles()
 
 	const [inrData, setInrData] = useState()
 	const [age, setAge] = React.useState("USD")
+	const [currencyMultiple, setCurrencyMultiple] = useState(1)
 
 	const handleChange = (event) => {
 		setAge(event.target.value)
@@ -45,6 +47,10 @@ const HistoricCurrency = () => {
 		} catch (error) {
 			enqueueSnackbar(error?.response?.data?.error, {variant: "error"})
 		}
+	}
+
+	function formatToCurrency(amount) {
+		return amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
 	}
 	return (
 		<div
@@ -77,12 +83,24 @@ const HistoricCurrency = () => {
 					<MenuItem value={"AED"}>AED</MenuItem>
 				</Select>
 			</FormControl>
+
+			<TextField
+				className={classes.formControl}
+				label="Multiple"
+				variant="outlined"
+				value={currencyMultiple}
+				onChange={(e) => setCurrencyMultiple(e.target.value)}
+			/>
+
 			<Button variant="contained" color="primary" onClick={fetchData}>
 				Get INR Value
 			</Button>
 
-			<p style={{fontSize: 40, fontWeight: "bold", marginTop: 20}}>
-				{inrData && inrData?.results?.INR}
+			<p style={{fontSize: 30, fontWeight: "bold", marginTop: 20}}>
+				{inrData &&
+					`${currencyMultiple} ${age} =  ₹${formatToCurrency(
+						currencyMultiple * inrData?.results?.INR
+					)}`}
 			</p>
 		</div>
 	)

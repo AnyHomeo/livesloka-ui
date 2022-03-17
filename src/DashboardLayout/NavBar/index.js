@@ -286,7 +286,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			permission: "Add Fields",
 		},
 		{
-			href: "/scheduler",
+			href: width <= 550 ? "/scheduler/mobile" : "/scheduler",
 			icon: UserIcon,
 			title: "Timetable",
 			permission: "Timetable",
@@ -299,6 +299,12 @@ const NavBar = ({onMobileClose, openMobile}) => {
 		},
 		{
 			href: "/zoom-dashboard",
+			icon: Video,
+			title: "Zoom Dashboard",
+			permission: "Zoom Dashboard",
+		},
+		{
+			href: "/inclass",
 			icon: Video,
 			title: "Zoom Dashboard",
 			permission: "Zoom Dashboard",
@@ -325,7 +331,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			permission: "Options",
 		},
 		{
-			href: "/scheduler",
+			href: width <= 550 ? "/scheduler/mobile" : "/scheduler",
 			icon: UserIcon,
 			title: "Timetable",
 			permission: "Timetable",
@@ -373,7 +379,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			href: "/historic-currency",
 			icon: BarChart2,
 			title: "Currency History",
-			permission: "Currency-History",
+			permission: "Currency",
 		},
 	]
 
@@ -457,265 +463,279 @@ const NavBar = ({onMobileClose, openMobile}) => {
 
 			<Divider />
 			<Box p={2}>
-				<List>
-					<ListItem
-						style={{
-							cursor: "pointer",
-							display: "flex",
-							paddingTop: 0,
-							paddingBottom: 0,
-							marginBottom: 5,
-						}}
-						onClick={() => handleClick("Support")}
-					>
-						<img
-							src={support}
-							style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
-							alt=""
-						/>
-						{/* <ContactSupportOutlinedIcon style={{height: 20, width: 20, marginRight: 10}} /> */}
-						<ListItemText primary="Support" />
-						{supportOpen ? <ExpandLess /> : <ExpandMore />}
-					</ListItem>
-					<Collapse in={supportOpen} timeout="auto" unmountOnExit style={{marginLeft: 20}}>
-						{Support.reduce((navItems, item) => {
-							if (user?.role?.permissions?.includes(item.permission)) {
-								navItems.push(
-									<NavItem
-										href={item.href}
-										key={item.title}
-										onClick={onMobileClose}
-										title={item.title}
-										icon={item.icon}
-									/>
-								)
-							}
-							return navItems
-						}, [])}
-					</Collapse>
-				</List>
+				{Support.some((item) => user?.role?.permissions?.includes(item.permission)) ? (
+					<List>
+						<ListItem
+							style={{
+								cursor: "pointer",
+								display: "flex",
+								paddingTop: 0,
+								paddingBottom: 0,
+								marginBottom: 5,
+							}}
+							onClick={() => handleClick("Support")}
+						>
+							<img
+								src={support}
+								style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
+								alt=""
+							/>
+							{/* <ContactSupportOutlinedIcon style={{height: 20, width: 20, marginRight: 10}} /> */}
+							<ListItemText primary="Support" />
+							{supportOpen ? <ExpandLess /> : <ExpandMore />}
+						</ListItem>
+						<Collapse in={supportOpen} timeout="auto" unmountOnExit style={{marginLeft: 20}}>
+							{Support.reduce((navItems, item) => {
+								if (user?.role?.permissions?.includes(item.permission)) {
+									navItems.push(
+										<NavItem
+											href={item.href}
+											key={item.title}
+											onClick={onMobileClose}
+											title={item.title}
+											icon={item.icon}
+										/>
+									)
+								}
+								return navItems
+							}, [])}
+						</Collapse>
+					</List>
+				) : null}
 
-				<List>
-					<ListItem
-						style={{
-							cursor: "pointer",
-							display: "flex",
-							paddingTop: 0,
-							paddingBottom: 0,
-							marginBottom: 5,
-						}}
-						onClick={() => handleClick("Management")}
-					>
-						<img
-							src={management}
-							style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
-							alt=""
-						/>
-						<ListItemText primary="Management" />
-						{managementOpen ? <ExpandLess /> : <ExpandMore />}
-					</ListItem>
-					<Collapse in={managementOpen} timeout="auto" unmountOnExit style={{marginLeft: 20}}>
-						{Management.reduce((navItems, item) => {
-							if (user?.role?.permissions?.includes(item.permission)) {
-								navItems.push(
-									<NavItem
-										href={item.href}
-										key={item.title}
-										onClick={onMobileClose}
-										title={item.title}
-										icon={item.icon}
-									/>
-								)
-							}
-							return navItems
-						}, [])}
-					</Collapse>
-				</List>
+				{Management.some((item) => user?.role?.permissions?.includes(item.permission)) ? (
+					<List>
+						<ListItem
+							style={{
+								cursor: "pointer",
+								display: "flex",
+								paddingTop: 0,
+								paddingBottom: 0,
+								marginBottom: 5,
+							}}
+							onClick={() => handleClick("Management")}
+						>
+							<img
+								src={management}
+								style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
+								alt=""
+							/>
+							<ListItemText primary="Management" />
+							{managementOpen ? <ExpandLess /> : <ExpandMore />}
+						</ListItem>
+						<Collapse in={managementOpen} timeout="auto" unmountOnExit style={{marginLeft: 20}}>
+							{Management.reduce((navItems, item) => {
+								if (user?.role?.permissions?.includes(item.permission)) {
+									navItems.push(
+										<NavItem
+											href={item.href}
+											key={item.title}
+											onClick={onMobileClose}
+											title={item.title}
+											icon={item.icon}
+										/>
+									)
+								}
+								return navItems
+							}, [])}
+						</Collapse>
+					</List>
+				) : null}
 
-				<List>
-					<ListItem
-						style={{
-							cursor: "pointer",
-							display: "flex",
-							paddingTop: 0,
-							paddingBottom: 0,
-							marginBottom: 5,
-						}}
-						onClick={() => handleClick("sales")}
-					>
-						<img
-							src={SalesPng}
-							style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
-							alt=""
-						/>
-						<ListItemText primary="Sales" />
-						{sales ? <ExpandLess /> : <ExpandMore />}
-					</ListItem>
-					<Collapse in={sales} timeout="auto" unmountOnExit style={{marginLeft: 20}}>
-						{Sales.reduce((navItems, item) => {
-							if (user?.role?.permissions?.includes(item.permission)) {
-								navItems.push(
-									<NavItem
-										href={item.href}
-										key={item.title}
-										onClick={onMobileClose}
-										title={item.title}
-										icon={item.icon}
-									/>
-								)
-							}
-							return navItems
-						}, [])}
-					</Collapse>
-				</List>
+				{Sales.some((item) => user?.role?.permissions?.includes(item.permission)) ? (
+					<List>
+						<ListItem
+							style={{
+								cursor: "pointer",
+								display: "flex",
+								paddingTop: 0,
+								paddingBottom: 0,
+								marginBottom: 5,
+							}}
+							onClick={() => handleClick("sales")}
+						>
+							<img
+								src={SalesPng}
+								style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
+								alt=""
+							/>
+							<ListItemText primary="Sales" />
+							{sales ? <ExpandLess /> : <ExpandMore />}
+						</ListItem>
+						<Collapse in={sales} timeout="auto" unmountOnExit style={{marginLeft: 20}}>
+							{Sales.reduce((navItems, item) => {
+								if (user?.role?.permissions?.includes(item.permission)) {
+									navItems.push(
+										<NavItem
+											href={item.href}
+											key={item.title}
+											onClick={onMobileClose}
+											title={item.title}
+											icon={item.icon}
+										/>
+									)
+								}
+								return navItems
+							}, [])}
+						</Collapse>
+					</List>
+				) : null}
 
-				<List>
-					<ListItem
-						style={{
-							cursor: "pointer",
-							display: "flex",
-							paddingTop: 0,
-							paddingBottom: 0,
-							marginBottom: 5,
-						}}
-						onClick={() => handleClick("finance")}
-					>
-						<img
-							src={FinancePng}
-							style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
-							alt=""
-						/>
-						<ListItemText primary="Finance" />
-						{finance ? <ExpandLess /> : <ExpandMore />}
-					</ListItem>
-					<Collapse in={finance} timeout="auto" unmountOnExit style={{marginLeft: 20}}>
-						{Finance.reduce((navItems, item) => {
-							if (user?.role?.permissions?.includes(item.permission)) {
-								navItems.push(
-									<NavItem
-										href={item.href}
-										key={item.title}
-										onClick={onMobileClose}
-										title={item.title}
-										icon={item.icon}
-									/>
-								)
-							}
-							return navItems
-						}, [])}
-					</Collapse>
-				</List>
+				{Finance.some((item) => user?.role?.permissions?.includes(item.permission)) ? (
+					<List>
+						<ListItem
+							style={{
+								cursor: "pointer",
+								display: "flex",
+								paddingTop: 0,
+								paddingBottom: 0,
+								marginBottom: 5,
+							}}
+							onClick={() => handleClick("finance")}
+						>
+							<img
+								src={FinancePng}
+								style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
+								alt=""
+							/>
+							<ListItemText primary="Finance" />
+							{finance ? <ExpandLess /> : <ExpandMore />}
+						</ListItem>
+						<Collapse in={finance} timeout="auto" unmountOnExit style={{marginLeft: 20}}>
+							{Finance.reduce((navItems, item) => {
+								if (user?.role?.permissions?.includes(item.permission)) {
+									navItems.push(
+										<NavItem
+											href={item.href}
+											key={item.title}
+											onClick={onMobileClose}
+											title={item.title}
+											icon={item.icon}
+										/>
+									)
+								}
+								return navItems
+							}, [])}
+						</Collapse>
+					</List>
+				) : null}
 
-				<List>
-					<ListItem
-						style={{
-							cursor: "pointer",
-							display: "flex",
-							paddingTop: 0,
-							paddingBottom: 0,
-							marginBottom: 5,
-						}}
-						onClick={() => handleClick("teachers")}
-					>
-						<img
-							src={teacherPng}
-							style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
-							alt=""
-						/>
-						<ListItemText primary="Teachers" />
-						{teachers ? <ExpandLess /> : <ExpandMore />}
-					</ListItem>
-					<Collapse in={teachers} timeout="auto" unmountOnExit style={{marginLeft: 20}}>
-						{Teacher.reduce((navItems, item) => {
-							if (user?.role?.permissions?.includes(item.permission)) {
-								navItems.push(
-									<NavItem
-										href={item.href}
-										key={item.title}
-										onClick={onMobileClose}
-										title={item.title}
-										icon={item.icon}
-									/>
-								)
-							}
-							return navItems
-						}, [])}
-					</Collapse>
-				</List>
+				{Teacher.some((item) => user?.role?.permissions?.includes(item.permission)) ? (
+					<List>
+						<ListItem
+							style={{
+								cursor: "pointer",
+								display: "flex",
+								paddingTop: 0,
+								paddingBottom: 0,
+								marginBottom: 5,
+							}}
+							onClick={() => handleClick("teachers")}
+						>
+							<img
+								src={teacherPng}
+								style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
+								alt=""
+							/>
+							<ListItemText primary="Teachers" />
+							{teachers ? <ExpandLess /> : <ExpandMore />}
+						</ListItem>
+						<Collapse in={teachers} timeout="auto" unmountOnExit style={{marginLeft: 20}}>
+							{Teacher.reduce((navItems, item) => {
+								if (user?.role?.permissions?.includes(item.permission)) {
+									navItems.push(
+										<NavItem
+											href={item.href}
+											key={item.title}
+											onClick={onMobileClose}
+											title={item.title}
+											icon={item.icon}
+										/>
+									)
+								}
+								return navItems
+							}, [])}
+						</Collapse>
+					</List>
+				) : null}
 
-				<List>
-					<ListItem
-						style={{
-							cursor: "pointer",
-							display: "flex",
-							paddingTop: 0,
-							paddingBottom: 0,
-							marginBottom: 5,
-						}}
-						onClick={() => handleClick("events")}
-					>
-						<img
-							src={EventsPng}
-							style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
-							alt=""
-						/>
-						<ListItemText primary="Events" />
-						{events ? <ExpandLess /> : <ExpandMore />}
-					</ListItem>
-					<Collapse in={events} timeout="auto" unmountOnExit style={{marginLeft: 20}}>
-						{Events.reduce((navItems, item) => {
-							if (user?.role?.permissions?.includes(item.permission)) {
-								navItems.push(
-									<NavItem
-										href={item.href}
-										key={item.title}
-										onClick={onMobileClose}
-										title={item.title}
-										icon={item.icon}
-									/>
-								)
-							}
-							return navItems
-						}, [])}
-					</Collapse>
-				</List>
+				{Events.some((item) => user?.role?.permissions?.includes(item.permission)) ? (
+					<List>
+						<ListItem
+							style={{
+								cursor: "pointer",
+								display: "flex",
+								paddingTop: 0,
+								paddingBottom: 0,
+								marginBottom: 5,
+							}}
+							onClick={() => handleClick("events")}
+						>
+							<img
+								src={EventsPng}
+								style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
+								alt=""
+							/>
+							<ListItemText primary="Events" />
+							{events ? <ExpandLess /> : <ExpandMore />}
+						</ListItem>
+						<Collapse in={events} timeout="auto" unmountOnExit style={{marginLeft: 20}}>
+							{Events.reduce((navItems, item) => {
+								if (user?.role?.permissions?.includes(item.permission)) {
+									navItems.push(
+										<NavItem
+											href={item.href}
+											key={item.title}
+											onClick={onMobileClose}
+											title={item.title}
+											icon={item.icon}
+										/>
+									)
+								}
+								return navItems
+							}, [])}
+						</Collapse>
+					</List>
+				) : null}
 
-				<List>
-					<ListItem
-						style={{
-							cursor: "pointer",
-							display: "flex",
-							paddingTop: 0,
-							paddingBottom: 0,
-							marginBottom: 5,
-						}}
-						onClick={() => handleClick("reports")}
-					>
-						<img
-							src={ReportsPng}
-							style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
-							alt=""
-						/>
-						<ListItemText primary="Reports" />
-						{reports ? <ExpandLess /> : <ExpandMore />}
-					</ListItem>
-					<Collapse in={reports} timeout="auto" unmountOnExit style={{marginLeft: 20}}>
-						{Reports.reduce((navItems, item) => {
-							if (user?.role?.permissions?.includes(item.permission)) {
-								navItems.push(
-									<NavItem
-										href={item.href}
-										key={item.title}
-										onClick={onMobileClose}
-										title={item.title}
-										icon={item.icon}
-									/>
-								)
-							}
-							return navItems
-						}, [])}
-					</Collapse>
-				</List>
+				{Reports.some((item) => user?.role?.permissions?.includes(item.permission)) ? (
+					<List>
+						<ListItem
+							style={{
+								cursor: "pointer",
+								display: "flex",
+								paddingTop: 0,
+								paddingBottom: 0,
+								marginBottom: 5,
+							}}
+							onClick={() => handleClick("reports")}
+						>
+							<img
+								src={ReportsPng}
+								style={{height: 20, width: 20, marginRight: 10, objectFit: "cover"}}
+								alt=""
+							/>
+							<ListItemText primary="Reports" />
+							{reports ? <ExpandLess /> : <ExpandMore />}
+						</ListItem>
+						<Collapse in={reports} timeout="auto" unmountOnExit style={{marginLeft: 20}}>
+							{Reports.reduce((navItems, item) => {
+								if (user?.role?.permissions?.includes(item.permission)) {
+									navItems.push(
+										<NavItem
+											href={item.href}
+											key={item.title}
+											onClick={onMobileClose}
+											title={item.title}
+											icon={item.icon}
+										/>
+									)
+								}
+								return navItems
+							}, [])}
+						</Collapse>
+					</List>
+				) : null}
 			</Box>
 			<Box flexGrow={1} />
 		</Box>

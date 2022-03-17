@@ -143,7 +143,7 @@ const adminRoutes = [
 		component: SchedulerCardConatiner,
 	},
 	{
-		permission: "Currency-History",
+		permission: "Currency",
 		path: "/historic-currency",
 		exact: true,
 		component: HistoricCurrency,
