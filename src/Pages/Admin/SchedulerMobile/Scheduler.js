@@ -8,7 +8,6 @@ import {
 	getOccupancy,
 	updateScheduleDangerously,
 	createAChatGroupFromScheduleId,
-	getOptionsOfATeacher,
 } from "../../../Services/Services"
 import {
 	Button,
@@ -17,7 +16,6 @@ import {
 	DialogContent,
 	DialogTitle,
 	FormControlLabel,
-	FormGroup,
 	IconButton,
 	InputAdornment,
 	Slide,
@@ -35,7 +33,6 @@ import DeleteIcon from "@material-ui/icons/Delete"
 import {FileCopyOutlined} from "@material-ui/icons"
 import {Link} from "react-router-dom"
 import Axios from "axios"
-import SingleBlock from "./SingleBlock"
 import MuiAlert from "@material-ui/lab/Alert"
 import {useConfirm} from "material-ui-confirm"
 import AdjustIcon from "@material-ui/icons/Adjust"
@@ -44,11 +41,7 @@ import MaterialTable from "material-table"
 import WhatsAppIcon from "@material-ui/icons/WhatsApp"
 import OutlinedInput from "@material-ui/core/OutlinedInput"
 import {getData} from "./../../../Services/Services"
-import hours from "../../../Services/hours.json"
-import times from "../../../Services/times.json"
 import {retrieveMeetingLink} from "../../../Services/utils"
-
-const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
 const copyToClipboard = () => {
 	var textField = document.getElementById("meeting-link")
@@ -74,23 +67,18 @@ function Scheduler() {
 	const [categorizedData, setCategorizedData] = useState({})
 	const [allSchedules, setAllSchedules] = useState([])
 	const confirm = useConfirm()
-	const [availableSlotsEditingMode, setAvailableSlotsEditingMode] = useState(false)
 	const [scheduleId, setScheduleId] = useState("")
 	const [selectedSchedule, setSelectedSchedule] = useState({})
 	const [snackBarOpen, setSnackBarOpen] = useState(false)
 	const [success, setSuccess] = useState(false)
 	const [response, setResponse] = useState("")
-	const [selectedSlots, setSelectedSlots] = useState([])
-	const [refresh, setRefresh] = useState(false)
 	const [loading, setLoading] = useState(false)
 	const [toggleLoading, setToggleLoading] = useState(false)
-	const [toggleShiftScheduleMode, setToggleShiftScheduleMode] = useState(false)
-	const [options, setOptions] = useState({})
 	const [timeZones, setTimeZones] = useState([])
 
 	useEffect(() => {
 		getAllSchedulesData()
-	}, [refresh])
+	}, [])
 
 	const getAllSchedulesData = () => {
 		getOccupancy().then((data) => {
@@ -133,113 +121,11 @@ function Scheduler() {
 		setSnackBarOpen(false)
 	}
 
-	const addOrRemoveAvailableSlot = (slot) => {
-		if (!categorizedData[category][teacher].availableSlots.includes(slot)) {
-			addAvailableTimeSlot(teacherId, slot)
-				.then((data) => {
-					setCategorizedData((prev) => ({
-						...prev,
-						[category]: {
-							...prev[category],
-							[teacher]: {
-								...prev[category][teacher],
-								availableSlots: [...prev[category][teacher].availableSlots, slot],
-							},
-						},
-					}))
-				})
-				.catch((err) => console.error(err))
-		} else {
-			deleteAvailableTimeSlot(teacherId, slot)
-				.then((data) => {
-					setCategorizedData((prev) => {
-						let allData = {...prev}
-						let data = [...allData[category][teacher].availableSlots]
-						let index = data.indexOf(slot)
-						data.splice(index, 1)
-						allData[category][teacher].availableSlots = data
-						return allData
-					})
-				})
-				.catch((err) => {
-					console.error(err)
-				})
-		}
-	}
-
-	const createGroup = (schedule) => {
-		if (!schedule.group) {
-			confirm({
-				title: "Create Group",
-				description: "Do you really want to create group?",
-			}).then(() => {
-				createAChatGroupFromScheduleId(schedule._id).then((data) => {
-					let groupId = data.data.result
-					setAllSchedules((prev) => {
-						let prevData = [...prev]
-						return prevData.map((prevSchedule) => {
-							if (prevSchedule._id === schedule._id) {
-								return {
-									...prevSchedule,
-									group: groupId,
-								}
-							} else {
-								return prevSchedule
-							}
-						})
-					})
-				})
-			})
-		}
-	}
-
 	useEffect(() => {
 		setSelectedSchedule(allSchedules.filter((schedule) => schedule._id === scheduleId)[0])
 	}, [scheduleId, allSchedules])
 
-	useEffect(() => {
-		if (teacherId) {
-			getOptionsOfATeacher(teacherId)
-				.then((response) => {
-					setOptions(
-						response.data.result.reduce((acc, option) => {
-							const {options, schedules, customer} = option
-							options.forEach((option) => {
-								Object.keys(option).forEach((day) => {
-									if (day !== "_id") {
-										let slot = option[day]
-										if (!acc[slot]) {
-											acc[slot] = [customer.firstName]
-										} else {
-											acc[slot].push(customer.firstName)
-										}
-									}
-								})
-							})
 
-							schedules.forEach((schedule) => {
-								const {slots} = schedule
-								Object.keys(slots).forEach((day) => {
-									let slot = slots[day]
-									slot.forEach((slot) => {
-										if (!acc[slot]) {
-											acc[slot] = [customer?.firstName]
-										} else {
-											acc[slot].push(customer?.firstName)
-										}
-									})
-								})
-							})
-
-							return acc
-						}, {})
-					)
-				})
-				.catch((err) => {
-					console.error(err)
-				})
-		}
-	}, [teacherId])
 
 	const timeZoneLookup = useMemo(
 		() =>
