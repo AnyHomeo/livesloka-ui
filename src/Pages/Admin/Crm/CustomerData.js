@@ -1,8 +1,6 @@
 import React, {useEffect, useState, useRef, useCallback} from "react"
 import MaterialTable from "material-table"
 import {makeStyles} from "@material-ui/core/styles"
-import {Link} from "react-router-dom"
-import {Edit} from "react-feather"
 import useWindowDimensions from "../../../Components/useWindowDimensions"
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined"
 import WhatsAppIcon from "@material-ui/icons/WhatsApp"
@@ -26,7 +24,6 @@ import MuiAlert from "@material-ui/lab/Alert"
 import Autocomplete from "@material-ui/lab/Autocomplete"
 import Tooltip from "@material-ui/core/Tooltip"
 import {
-	IconButton,
 	Slide,
 	TextField,
 	Snackbar,
@@ -34,7 +31,6 @@ import {
 	Switch,
 	Card,
 	Grid,
-	DialogContent,
 } from "@material-ui/core"
 import EqualizerIcon from "@material-ui/icons/Equalizer"
 import Comments from "./Comments"
@@ -49,23 +45,16 @@ import {getSettings, updateSettings} from "../../../Services/Services"
 import axios from "axios"
 import StudentHistoryTable from "./StudentsHistoryTable"
 import {useHistory} from "react-router-dom"
-import {DollarSign, Smartphone, X} from "react-feather"
+import {DollarSign, Smartphone} from "react-feather"
 import useDocumentTitle from "../../../Components/useDocumentTitle"
 import MoreModal from "./MoreModal"
 import AnalogClockTime from "../../../Components/AnalogClockTime"
-import RewardsTable from "./RewardsTable"
 import {Copy} from "react-feather"
 import {Container} from "@material-ui/core"
 import EditPlans from "./EditPlans"
+import { copyToClipboard } from "../../../Services/utils"
 
-const copyToClipboard = (text) => {
-	var textField = document.createElement("textarea")
-	textField.innerText = text
-	document.body.appendChild(textField)
-	textField.select()
-	document.execCommand("copy")
-	textField.remove()
-}
+
 
 const getSlotFromTime = (date) => {
 	let daysarr = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
@@ -299,9 +288,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 	const [moreOptionOpen, setMoreOptionOpen] = useState(false)
 	const [moreOptionSelectedData, setMoreOptionSelectedData] = useState()
 	const [analogClockOpen, setAnalogClockOpen] = useState(false)
-	const [rewardsModalOpen, setRewardsModalOpen] = useState(undefined)
 	const [plansCustomerId, setPlansCustomerId] = useState("")
-	const [rewards, setRewards] = useState([])
 
 	const Alert = (props) => <MuiAlert elevation={6} variant="filled" {...props} />
 	const fetchData = useCallback(async () => {
@@ -322,17 +309,17 @@ const CrmDetails = ({isSummerCampStudents}) => {
 		}
 	}, [isSummerCampStudents])
 
-	useEffect(() => {
-		if (rewardsModalOpen) {
-			getCustomerRewards(rewardsModalOpen)
-				.then((data) => {
-					setRewards(data.data.result.redeems)
-				})
-				.catch((error) => {
-					console.log(error)
-				})
-		}
-	}, [rewardsModalOpen])
+	// useEffect(() => {
+	// 	if (rewardsModalOpen) {
+	// 		getCustomerRewards(rewardsModalOpen)
+	// 			.then((data) => {
+	// 				setRewards(data.data.result.redeems)
+	// 			})
+	// 			.catch((error) => {
+	// 				console.log(error)
+	// 			})
+	// 	}
+	// }, [rewardsModalOpen])
 
 	//basic data loading
 	useEffect(() => {
@@ -461,52 +448,6 @@ const CrmDetails = ({isSummerCampStudents}) => {
 		})
 		fetchData()
 	}, [refresh, fetchData])
-
-	const toggleJoinButton = async (rowData) => {
-		try {
-			await editCustomer({
-				isJoinButtonEnabledByAdmin: !rowData.isJoinButtonEnabledByAdmin,
-				_id: rowData._id,
-			})
-			setData((prev) => {
-				let index = rowData.tableData.id
-				let prevData = [...prev]
-				prevData[index] = {
-					...rowData,
-					isJoinButtonEnabledByAdmin: !rowData.isJoinButtonEnabledByAdmin,
-				}
-				return prevData
-			})
-		} catch (error) {
-			console.log(error)
-			setSuccess(false)
-			setResponse("Error in toggling Join Button")
-			setSnackBarOpen(true)
-		}
-	}
-
-	const toggleSubscription = async (rowData) => {
-		try {
-			await editCustomer({
-				isSubscription: !rowData.isSubscription,
-				_id: rowData._id,
-			})
-			setData((prev) => {
-				let index = rowData.tableData.id
-				let prevData = [...prev]
-				prevData[index] = {
-					...rowData,
-					isSubscription: !rowData.isSubscription,
-				}
-				return prevData
-			})
-		} catch (error) {
-			console.log(error)
-			setSuccess(false)
-			setResponse("Error in toggling Subscription Button")
-			setSnackBarOpen(true)
-		}
-	}
 
 	const toggleField = useCallback(async (rowData, edit) => {
 		try {
@@ -747,7 +688,9 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					headerStyle: {whiteSpace: "nowrap"},
 					editable: "never",
 					render: (rowData) => (
-						<Button style={{color: "black"}} onClick={() => setRewardsModalOpen(rowData.email)}>
+						<Button style={{color: "black"}} 
+						// onClick={() => setRewardsModalOpen(rowData.email)}
+						>
 							{rowData.login ? rowData.login.rewards : undefined}
 						</Button>
 					),
@@ -1061,19 +1004,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 				},
 			])
 		}
-	}, [
-		columnFilters,
-		classDropdown,
-		timeZoneDropdown,
-		classStatusDropdown,
-		currencyDropdown,
-		countryDropdown,
-		teachersDropdown,
-		agentDropdown,
-		categoryDropdown,
-		subjectDropdown,
-		isSummerCampStudents,
-	])
+	}, [columnFilters, classDropdown, timeZoneDropdown, classStatusDropdown, currencyDropdown, countryDropdown, teachersDropdown, agentDropdown, categoryDropdown, subjectDropdown, isSummerCampStudents, toggleField])
 
 	const handleSnackBarClose = (event, reason) => {
 		if (reason === "clickaway") {

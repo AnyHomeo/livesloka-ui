@@ -134,7 +134,7 @@ const SingleRow = ({
 				<>
 					{singleData.slots[day.toLowerCase()].includes(time) &&
 					!singleData.slots[day.toLowerCase()].includes(prevTime) &&
-					!singleData.isClassTemperarilyCancelled ? (
+					singleData?.teacher?.TeacherStatus !== "2" ? (
 						<Card
 							className={
 								singleData.students.length >= 3 ? "single-card single-card-2" : "single-card"

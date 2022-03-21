@@ -344,7 +344,7 @@ function Scheduler() {
 																})
 														}}
 														name="cancelClass"
-													/>
+													/> 
 												}
 												label="Enable to Cancel the Class"
 											/>
