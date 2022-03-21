@@ -1,13 +1,9 @@
 import React, {useEffect, useMemo, useState} from "react"
 import "./scheduler.css"
 import OccupancyBars from "./OccupancyBars"
-import useWindowDimensions from "../../../Components/useWindowDimensions"
 import {
-	addAvailableTimeSlot,
-	deleteAvailableTimeSlot,
 	getOccupancy,
 	updateScheduleDangerously,
-	createAChatGroupFromScheduleId,
 } from "../../../Services/Services"
 import {
 	Button,
@@ -21,11 +17,9 @@ import {
 	Slide,
 	Switch,
 	TextField,
-	Snackbar,
 	Tooltip,
 	InputLabel,
 	FormControl,
-	Backdrop,
 	CircularProgress,
 } from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
@@ -33,7 +27,6 @@ import DeleteIcon from "@material-ui/icons/Delete"
 import {FileCopyOutlined} from "@material-ui/icons"
 import {Link} from "react-router-dom"
 import Axios from "axios"
-import MuiAlert from "@material-ui/lab/Alert"
 import {useConfirm} from "material-ui-confirm"
 import AdjustIcon from "@material-ui/icons/Adjust"
 import useDocumentTitle from "../../../Components/useDocumentTitle"
@@ -41,38 +34,21 @@ import MaterialTable from "material-table"
 import WhatsAppIcon from "@material-ui/icons/WhatsApp"
 import OutlinedInput from "@material-ui/core/OutlinedInput"
 import {getData} from "./../../../Services/Services"
-import {retrieveMeetingLink} from "../../../Services/utils"
-
-const copyToClipboard = () => {
-	var textField = document.getElementById("meeting-link")
-	textField.select()
-	document.execCommand("copy")
-}
+import {copyToClipboard, retrieveMeetingLink} from "../../../Services/utils"
+import { useSnackbar } from 'notistack'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />
 })
 
-function Alert(props) {
-	return <MuiAlert elevation={6} variant="filled" {...props} />
-}
-
 function Scheduler() {
 	useDocumentTitle("Timetable")
+	const { enqueueSnackbar } = useSnackbar()
 
-	const [teacher, setTeacher] = useState("")
-	const [teacherId, setTeacherId] = useState("")
-	const [category, setCategory] = useState("")
-	const {width} = useWindowDimensions()
-	const [categorizedData, setCategorizedData] = useState({})
 	const [allSchedules, setAllSchedules] = useState([])
 	const confirm = useConfirm()
 	const [scheduleId, setScheduleId] = useState("")
 	const [selectedSchedule, setSelectedSchedule] = useState({})
-	const [snackBarOpen, setSnackBarOpen] = useState(false)
-	const [success, setSuccess] = useState(false)
-	const [response, setResponse] = useState("")
-	const [loading, setLoading] = useState(false)
 	const [toggleLoading, setToggleLoading] = useState(false)
 	const [timeZones, setTimeZones] = useState([])
 
@@ -82,7 +58,6 @@ function Scheduler() {
 
 	const getAllSchedulesData = () => {
 		getOccupancy().then((data) => {
-			setCategorizedData(data.data.data)
 			setAllSchedules(data.data.allSchedules)
 		})
 	}
@@ -114,12 +89,6 @@ function Scheduler() {
 		}
 	}
 
-	const handleSnackBarClose = (event, reason) => {
-		if (reason === "clickaway") {
-			return
-		}
-		setSnackBarOpen(false)
-	}
 
 	useEffect(() => {
 		setSelectedSchedule(allSchedules.filter((schedule) => schedule._id === scheduleId)[0])
@@ -155,20 +124,10 @@ function Scheduler() {
 
 	return (
 		<>
-			<Backdrop style={{zIndex: 5000}} open={loading}>
-				<CircularProgress color="inherit" />
-			</Backdrop>
 			<OccupancyBars
 				categorizedData={teacherCategorizes}
-				setTeacher={setTeacher}
-				setTeacherId={setTeacherId}
-				setCategory={setCategory}
 			/>
-			<Snackbar open={snackBarOpen} autoHideDuration={6000} onClose={handleSnackBarClose}>
-				<Alert onClose={handleSnackBarClose} severity={success ? "success" : "warning"}>
-					{response}
-				</Alert>
-			</Snackbar>
+
 			<Dialog
 				open={!!scheduleId}
 				TransitionComponent={Transition}
@@ -229,15 +188,14 @@ function Scheduler() {
 																isClassTemperarilyCancelled:
 																	!selectedSchedule.isClassTemperarilyCancelled,
 															})
-																.then((response) => {
+																.then(() => {
 																	getAllSchedulesData()
+																	enqueueSnackbar('Schedule updated successfully',{ variant: 'error' })
 																	setToggleLoading(false)
 																})
 																.catch((error) => {
 																	console.log(error)
-																	setSuccess(false)
-																	setResponse("Something went wrong")
-																	setSnackBarOpen(true)
+																	enqueueSnackbar(error?.response?.data?.error || 'error updating schedule',{ variant: 'error'})
 																	setToggleLoading(false)
 																})
 														}}
@@ -361,15 +319,11 @@ function Scheduler() {
 														})
 															.then((response) => {
 																getAllSchedulesData()
-																setSuccess(true)
-																setResponse(response.data.message)
-																setSnackBarOpen(true)
+																enqueueSnackbar(response.data.message)
 															})
 															.catch((error) => {
 																console.error(error)
-																setSuccess(false)
-																setResponse(response.data.message)
-																setSnackBarOpen(true)
+																enqueueSnackbar(error?.response?.data?.message || "Something went wrong",{ variant: 'error' })
 															})
 													}}
 												>

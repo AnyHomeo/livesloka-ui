@@ -22,7 +22,7 @@ import Axios from "axios"
 import {useConfirm} from "material-ui-confirm"
 import AdjustIcon from "@material-ui/icons/Adjust"
 
-import {retrieveMeetingLink} from "../../../Services/utils"
+import {copyToClipboard, retrieveMeetingLink} from "../../../Services/utils"
 import {Copy, XCircle} from "react-feather"
 import TableCard from "./TableCard"
 import { useSnackbar } from 'notistack'
@@ -31,16 +31,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />
 })
 
-const copyToClipboard = (text) => {
-	navigator.clipboard.writeText(text).then(
-		function () {
-			console.log("Async: Copying to clipboard was successful!")
-		},
-		function (err) {
-			console.error("Async: Could not copy text: ", err)
-		}
-	)
-}
 const SchedulerModal = ({
 	open,
 	setOpen,
