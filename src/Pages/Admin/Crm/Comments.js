@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from "react"
 import {getComments, updateComment, deleteComment, addComments} from "../../../Services/Services"
 import MaterialTable from "material-table"
 import moment from "moment"
-import {Dialog, Slide} from "@material-ui/core"
+import {Dialog, Slide, TextField} from "@material-ui/core"
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />
@@ -13,6 +13,8 @@ const Comments = ({commentsCustomerId, name, isCommentsOpen, setIsCommentsOpen})
 	const [refreshData, setRefreshData] = useState([])
 	const fetchData = useCallback(async () => {
 		let {data} = await getComments(commentsCustomerId)
+
+		console.log(data)
 		setComments(data.result)
 	}, [commentsCustomerId])
 
@@ -34,14 +36,23 @@ const Comments = ({commentsCustomerId, name, isCommentsOpen, setIsCommentsOpen})
 	const columns = useMemo(
 		() => [
 			{
-				title: "Comment",
-				field: "text",
-			},
-			{
 				title: "Time stamp",
 				field: "timeStamp",
 				type: "date",
+				editable: "never",
 				render: (rowData) => moment(rowData.timeStamp).format("MMM Do YY, h:mm A"),
+			},
+			{
+				title: "Comment",
+				field: "text",
+				editComponent: (props) => (
+					<>
+						<textarea
+							style={{height: 100, width: 600}}
+							onChange={(e) => props.onChange(e.target.value)}
+						></textarea>
+					</>
+				),
 			},
 		],
 		[]
@@ -77,6 +88,7 @@ const Comments = ({commentsCustomerId, name, isCommentsOpen, setIsCommentsOpen})
 					padding: 20,
 					paging: false,
 					maxBodyHeight: 600,
+					actionsColumnIndex: -1,
 				}}
 				editable={{
 					onRowUpdate,

@@ -18,6 +18,7 @@ import {
 	DialogActions,
 	FormControlLabel,
 	CircularProgress,
+	TextField,
 } from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
@@ -77,6 +78,7 @@ function pageRefresh() {
 }
 
 function Statistics() {
+	const [searchField, setSearchField] = useState("")
 	const history = useHistory()
 	useDocumentTitle("Statistics")
 	const confirm = useConfirm()
@@ -485,6 +487,19 @@ function Statistics() {
 				))}
 			</Tabs>
 
+			<TextField
+				label="Search"
+				variant="outlined"
+				style={{
+					color: "white",
+					float: "right",
+					marginRight: 5,
+					marginTop: 5,
+				}}
+				size="small"
+				onChange={(e) => setSearchField(e.target.value)}
+			/>
+
 			<Button
 				variant="contained"
 				color="primary"
@@ -493,10 +508,11 @@ function Statistics() {
 				endIcon={<Icon>refresh</Icon>}
 				style={{
 					marginLeft: 24,
-					marginRight: 24,
-					marginTop: 10,
+					marginRight: 10,
 					color: "white",
 					float: "right",
+					height: 40,
+					marginTop: 5,
 				}}
 			>
 				Refresh
@@ -514,6 +530,7 @@ function Statistics() {
 			>
 				<Smartphone style={{color: "black"}} />
 			</IconButton>
+
 			{days.map((day, i) => (
 				<TabPanel key={day} value={value} index={i}>
 					<SingleDayStats
@@ -524,6 +541,7 @@ function Statistics() {
 						value={value}
 						setRefresh={setRefresh}
 						isToday={value === initialValue}
+						searchField={searchField}
 					/>
 				</TabPanel>
 			))}

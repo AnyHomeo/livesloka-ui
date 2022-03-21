@@ -10,12 +10,12 @@ const Global = ({rightChatOpen, setRightChatOpen}) => {
 		return null
 	}
 
-	if (
-		(isAutheticated() && isAutheticated().roleId === 3) ||
-		isAutheticated().roleId === 4 ||
-		isAutheticated().roleId === 5
-	)
-		return <ChatDrawer open={rightChatOpen} setOpen={setRightChatOpen} />
+	// if (
+	// 	(isAutheticated() && isAutheticated().roleId === 3) ||
+	// 	isAutheticated().roleId === 4 ||
+	// 	isAutheticated().roleId === 5
+	// )
+	// 	return <ChatDrawer open={rightChatOpen} setOpen={setRightChatOpen} />
 	else return null
 }
 

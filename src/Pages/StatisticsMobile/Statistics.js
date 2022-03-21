@@ -7,28 +7,20 @@ import "./stats.css"
 import {
 	Box,
 	Button,
-	Chip,
 	FormControl,
-	Icon,
 	IconButton,
 	InputAdornment,
-	InputLabel,
-	Tooltip,
 	Switch,
 	DialogActions,
 	FormControlLabel,
 	CircularProgress,
+	TextField,
 } from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
 import Dialog from "@material-ui/core/Dialog"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
-import OutlinedInput from "@material-ui/core/OutlinedInput"
-import FileCopyIcon from "@material-ui/icons/FileCopy"
-import MaterialTable from "material-table"
-import CancelIcon from "@material-ui/icons/Cancel"
-import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import momentTZ from "moment-timezone"
 import useDocumentTitle from "../../Components/useDocumentTitle"
 import Snackbar from "@material-ui/core/Snackbar"
@@ -93,6 +85,7 @@ function Statistics() {
 	const [refresh, setRefresh] = useState(false)
 	const [timeZoneLookup, setTimeZoneLookup] = useState({})
 	const [loading, setLoading] = useState(false)
+	const [searchField, setSearchField] = useState("")
 	useEffect(() => {
 		getTimeZones()
 			.then((result) => {
@@ -207,8 +200,6 @@ function Statistics() {
 		}
 	}
 	const meetingLink = useMemo(() => retrieveMeetingLink(dialogData), [dialogData])
-
-	console.log(dialogData)
 
 	return (
 		<div>
@@ -337,7 +328,7 @@ function Statistics() {
 				))}
 			</Tabs>
 
-			<IconButton
+			{/* <IconButton
 				onClick={() => history.push("/statistics")}
 				variant="contained"
 				color="primary"
@@ -349,10 +340,17 @@ function Statistics() {
 				}}
 			>
 				<Smartphone style={{color: "black"}} />
-			</IconButton>
+			</IconButton> */}
 
 			{days.map((day, i) => (
 				<TabPanel key={day} value={value} index={i} style={{padding: 0}}>
+					{/* <TextField
+						label="Search"
+						variant="outlined"
+						fullWidth
+						style={{marginTop: 10}}
+						onChange={(e) => setSearchField(e.target.value)}
+					/> */}
 					<SingleDayStats
 						refresh={refresh}
 						day={day}
@@ -361,6 +359,7 @@ function Statistics() {
 						alertSetStates={{setAlert, setAlertColor, setRefresh, setSuccessOpen}}
 						value={value}
 						isToday={value === initialValue}
+						searchField={searchField}
 					/>
 				</TabPanel>
 			))}

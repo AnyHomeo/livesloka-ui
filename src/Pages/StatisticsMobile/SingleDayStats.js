@@ -64,6 +64,7 @@ function SingleDayStats({
 	refresh,
 	alertSetStates,
 	isToday,
+	searchField,
 }) {
 	const [todayData, setTodayData] = useState([])
 	const [selectedSlot, setSelectedSlot] = useState("")
@@ -254,6 +255,8 @@ function SingleDayStats({
 
 		return obj
 	}
+
+	console.log(todayData)
 	return (
 		<section className="statistics-container">
 			<Grid container>
@@ -301,6 +304,7 @@ function SingleDayStats({
 											teacherIds={teacherIds}
 											isToday={isToday}
 											scheduleLeaves={scheduleLeaves}
+											searchField={searchField}
 										/>
 									))}
 								</Card>

@@ -118,12 +118,8 @@ const SchedulerModal = ({
 					fetchSchedules()
 				})
 				.catch(() => {})
-		} catch (error) {
-			console.error(error.response)
-		}
+		} catch (error) {}
 	}
-
-	console.log(selectedSchedule)
 	return (
 		<Dialog
 			open={open}
@@ -316,7 +312,6 @@ const SchedulerModal = ({
 															setSnackBarOpen(true)
 														})
 														.catch((error) => {
-															console.error(error)
 															setSuccess(false)
 															setResponse(response.data.message)
 															setSnackBarOpen(true)

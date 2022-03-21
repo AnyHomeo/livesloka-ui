@@ -64,6 +64,7 @@ function SingleDayStats({
 	refresh,
 	setRefresh,
 	isToday,
+	searchField,
 }) {
 	const [todayData, setTodayData] = useState([])
 	const [selectedSlot, setSelectedSlot] = useState("")
@@ -73,6 +74,7 @@ function SingleDayStats({
 	const [allAgents, setAllAgents] = useState({})
 	const [teacherLeaves, setTeacherLeaves] = useState([])
 
+	const [filteredData, setFilteredData] = useState(todayData)
 	let todayDay = moment().get("day")
 	let daysToAddToday = value >= todayDay ? value - todayDay : 7 - (todayDay - value)
 
@@ -149,7 +151,7 @@ function SingleDayStats({
 				console.log(err)
 			})
 		getTodayLeaves(moment().add(daysToAddToday, "day").format("YYYY-MM-DD"))
-			.then((data) => {  
+			.then((data) => {
 				setLeaves(data.data.result)
 			})
 			.catch((err) => {
@@ -195,12 +197,11 @@ function SingleDayStats({
 		} catch (error) {
 			console.log(error)
 		}
-	},[value])
+	}, [value])
 
 	useEffect(() => {
 		getTeacherLeaves()
 	}, [getTeacherLeaves])
-
 
 	const [teacherIds, setTeacherIds] = useState()
 
@@ -225,11 +226,39 @@ function SingleDayStats({
 				}
 			})
 		setscheduleLeaves(arrofObj)
-	},[teacherLeaves])
+	}, [teacherLeaves])
 
 	useEffect(() => {
 		arrayOfTeacherIds()
 	}, [arrayOfTeacherIds])
+
+	// console.log(todayData)
+
+	useEffect(() => {
+		handleOnChange(searchField)
+	}, [searchField, todayData])
+
+	const arraySearch = (array, keyword) => {
+		const searchTerm = keyword.toLowerCase()
+		return array.filter((value) => {
+			return value?.className?.toLowerCase().match(new RegExp(searchTerm, "g"))
+		})
+	}
+
+	const handleOnChange = async (e) => {
+		let value = e
+
+		if (value.length > 2) {
+			let search = await arraySearch(todayData, value)
+			setFilteredData(search)
+			// console.log(search)
+			// setPopulation(search)
+			// setCount(search.length)
+		} else {
+			setFilteredData(todayData)
+			// setCount(people.length)
+		}
+	}
 
 	return (
 		<section className="statistics-container">
@@ -252,7 +281,7 @@ function SingleDayStats({
 						selectedSlot={selectedSlot}
 						time={`${day}-${time}`}
 						prevTime={i !== 0 ? `${day}-${times[i - 1]}` : ""}
-						todayData={todayData}
+						todayData={filteredData}
 						setDialogOpen={setDialogOpen}
 						leaves={leaves}
 						schedulesAssignedToMe={schedulesAssignedToMe}

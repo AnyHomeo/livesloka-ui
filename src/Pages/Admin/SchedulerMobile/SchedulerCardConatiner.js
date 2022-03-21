@@ -1,12 +1,22 @@
 import {Button, Card, Collapse, IconButton} from "@material-ui/core"
-import React, {forwardRef, useEffect, useImperativeHandle, useRef, useState} from "react"
+import React, {
+	forwardRef,
+	useContext,
+	useEffect,
+	useImperativeHandle,
+	useRef,
+	useState,
+} from "react"
 import SchedulerCard from "./SchedulerCard"
 import {Link, useParams} from "react-router-dom"
 import Axios from "axios"
 import {ChevronDown, ChevronUp} from "react-feather"
 import moment from "moment"
+import GlobalContext from "../../../context/GlobalContext"
 const SchedulerCardConatiner = () => {
-	const childCompRef = useRef()
+	const globalContext = useContext(GlobalContext)
+
+	const {state} = globalContext
 
 	const [scheduleData, setScheduleData] = useState()
 	const params = useParams()
@@ -20,7 +30,6 @@ const SchedulerCardConatiner = () => {
 			)
 
 			setScheduleData(data?.data?.result)
-			console.log(data?.data?.result)
 		} catch (error) {}
 	}
 
@@ -97,17 +106,9 @@ const SchedulerCardConatiner = () => {
 
 	return (
 		<div style={{margin: 5}}>
-			<div style={{display: "flex", justifyContent: "flex-end"}}>
-				<IconButton onClick={() => setCollapseAll(!collapseAll)}>
-					{collapseAll ? <ChevronUp /> : <ChevronDown />}
-				</IconButton>
-			</div>
-			<div style={{display: "flex", justifyContent: "flex-end", marginTop: -15}}>
-				<p style={{fontSize: 12, marginRight: 5}}>{collapseAll ? "Collapse" : "Expand"}</p>
-			</div>
 			{scheduleData &&
 				scheduleData.schedules.map((item) => {
-					return <ScheduledCard item={item} collapseAll={collapseAll} />
+					return <ScheduledCard item={item} collapseAll={state.expandAll} />
 				})}
 
 			{selectedSlots.length ? (

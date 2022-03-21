@@ -98,25 +98,6 @@ const TableCard = ({data, timeZoneLookup}) => {
 							<div>
 								<div style={{padding: 5}}>
 									<p style={{fontSize: 12}}>{`${item.firstName} (${item.lastName})`}</p>
-
-									<div style={{display: "flex", alignItems: "center"}}>
-										<div
-											style={{
-												height: 20,
-												width: 20,
-												borderRadius: "50%",
-												backgroundColor: "#3867d6",
-												display: "flex",
-												justifyContent: "center",
-												alignItems: "center",
-												marginLeft: 5,
-											}}
-										>
-											<p style={{color: "white", fontSize: 12, fontWeight: "400"}}>
-												{item.numberOfClassesBought}
-											</p>
-										</div>
-									</div>
 								</div>
 							</div>
 

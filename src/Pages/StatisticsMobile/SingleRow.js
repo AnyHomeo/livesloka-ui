@@ -27,6 +27,7 @@ function SingleRow({
 	teacherIds,
 	isToday,
 	scheduleLeaves,
+	searchField,
 }) {
 	const divRef = useRef(null)
 	const confirm = useConfirm()

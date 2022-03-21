@@ -133,7 +133,8 @@ const SingleRow = ({
 			{todayData.map((singleData) => (
 				<>
 					{singleData.slots[day.toLowerCase()].includes(time) &&
-					!singleData.slots[day.toLowerCase()].includes(prevTime) && !singleData.isClassTemperarilyCancelled ? (
+					!singleData.slots[day.toLowerCase()].includes(prevTime) &&
+					!singleData.isClassTemperarilyCancelled ? (
 						<Card
 							className={
 								singleData.students.length >= 3 ? "single-card single-card-2" : "single-card"
@@ -165,10 +166,6 @@ const SingleRow = ({
 								cursor: "pointer",
 							}}
 						>
-							<div className="new-old-customer">
-								{singleData.students.some((student) => student.autoDemo) ? "N" : "O"}
-							</div>
-
 							<div className="new-old-customer2">{renderFlag(singleData?.students)}</div>
 
 							<div
@@ -379,7 +376,7 @@ const SingleRow = ({
 											top: "-1%",
 											transform: "translateX(-50%)",
 											left: "50%",
-											height: 40,
+											height: 16,
 											width: "100%",
 											borderRadius: 20,
 											backgroundColor: "#130f40",
