@@ -30,6 +30,7 @@ const SchedulerCardConatiner = () => {
 			)
 
 			setScheduleData(data?.data?.result)
+			console.log(data?.data?.result)
 		} catch (error) {}
 	}
 
