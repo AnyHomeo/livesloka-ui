@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from "react"
 import {getComments, updateComment, deleteComment, addComments} from "../../../Services/Services"
 import MaterialTable from "material-table"
 import moment from "moment"
-import {Dialog, Slide, TextField} from "@material-ui/core"
+import {Dialog, Slide} from "@material-ui/core"
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />

@@ -10,7 +10,7 @@ import {isAutheticated} from "../../auth"
 import io from "socket.io-client"
 import moment from "moment"
 import {useSnackbar} from "notistack"
-import {retrieveMeetingLink} from "../../Services/utils"
+import {isFuture, retrieveMeetingLink} from "../../Services/utils"
 
 const socket = io(process.env.REACT_APP_API_KEY)
 const SingleRow = ({
@@ -147,7 +147,7 @@ const SingleRow = ({
 										? "#2ecc7075"
 										: singleData.demo
 										? "#f1c40fb6"
-										: singleData.isClassTemperarilyCancelled
+										: singleData.cancelledTill && isFuture(singleData.cancelledTill)
 										? "rgb(170, 170, 170)"
 										: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
 										? "rgb(56, 103, 214, 0.5)"
@@ -157,7 +157,7 @@ const SingleRow = ({
 										? "2px solid #130f40"
 										: singleData.isTeacherJoined
 										? "2px solid #56AE69"
-										: singleData.isClassTemperarilyCancelled
+										: singleData.cancelledTill && isFuture(singleData.cancelledTill)
 										? "#bdc3c7"
 										: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
 										? "2px solid #3867d6"

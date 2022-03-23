@@ -1,16 +1,7 @@
-import {Card, Checkbox, IconButton, Tooltip} from "@material-ui/core"
-import {setOptions} from "highcharts"
+import {Card, Checkbox, IconButton} from "@material-ui/core"
 import React, {useState} from "react"
-import {
-	ChevronDown,
-	ChevronsDown,
-	ChevronsUp,
-	ChevronUp,
-	Send,
-	Star,
-	UserCheck,
-	MessageSquare,
-} from "react-feather"
+import {UserCheck, MessageSquare} from "react-feather"
+import {isFuture} from "../../../Services/utils"
 import SchedulerModal from "./SchedulerModal"
 const SchedulerCard = ({
 	isAvailable,
@@ -64,15 +55,7 @@ const SchedulerCard = ({
 						</div>
 
 						<p style={{fontSize: 12, textAlign: "center"}}>Available</p>
-						<div
-						// style={{
-						// 	display: "flex",
-						// 	alignItems: "center",
-						// 	paddingRight: 5,
-						// 	height: 20,
-						// 	width: 20,
-						// }}
-						>
+						<div>
 							<Checkbox
 								checked={selectedSlots.includes(schedules?.slot)}
 								onChange={() =>
@@ -103,15 +86,16 @@ const SchedulerCard = ({
 						marginTop: 1,
 						marginBottom: 1,
 						flexDirection: "column",
-						background: schedules.schedule.isClassTemperarilyCancelled
-							? "rgb(170 170 170 / 39%)"
-							: schedules.schedule?.available
-							? "#2ecc7075"
-							: schedules.schedule.isSummerCampClass
-							? "rgba(241, 196, 15, 0.619)"
-							: schedules.schedule.demo
-							? "rgb(56, 103, 214, 0.5)"
-							: "#ff757562",
+						background:
+							schedules.schedule.cancelledTill && isFuture(schedules.schedule.cancelledTill)
+								? "rgb(170 170 170 / 39%)"
+								: schedules.schedule?.available
+								? "#2ecc7075"
+								: schedules.schedule.isSummerCampClass
+								? "rgba(241, 196, 15, 0.619)"
+								: schedules.schedule.demo
+								? "rgb(56, 103, 214, 0.5)"
+								: "#ff757562",
 					}}
 				>
 					<div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
@@ -139,34 +123,6 @@ const SchedulerCard = ({
 							<IconButton size="small">
 								{schedules.schedule.group ? <UserCheck size={20} /> : <MessageSquare size={20} />}
 							</IconButton>
-
-							{/* <Tooltip>
-							<div
-								style={{
-									borderRadius: 10,
-									padding: "0px 8px",
-									backgroundColor: "#3A68D5",
-									height: 20,
-									width: 20,
-									display: "flex",
-									justifyContent: "center",
-									alignItems: "center",
-									color: "white",
-								}}
-							>
-								{schedules.schedule.students && schedules.schedule.students.length
-									? schedules.schedule.students.map((student) =>
-											student.age ? (
-												<Tooltip title={student?.firstName}>
-													<p style={{fontSize: 10}}>{student?.age}</p>
-												</Tooltip>
-											) : (
-												""
-											)
-									  )
-									: ""}
-							</div>
-						</Tooltip> */}
 						</div>
 					</div>
 				</Card>

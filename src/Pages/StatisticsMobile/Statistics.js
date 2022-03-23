@@ -4,18 +4,7 @@ import Tab from "@material-ui/core/Tab"
 import SingleDayStats from "./SingleDayStats"
 import WhatsAppIcon from "@material-ui/icons/WhatsApp"
 import "./stats.css"
-import {
-	Box,
-	Button,
-	FormControl,
-	IconButton,
-	InputAdornment,
-	Switch,
-	DialogActions,
-	FormControlLabel,
-	CircularProgress,
-	TextField,
-} from "@material-ui/core"
+import {Box, Button, IconButton, InputAdornment, DialogActions} from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
 import Dialog from "@material-ui/core/Dialog"
@@ -25,16 +14,16 @@ import momentTZ from "moment-timezone"
 import useDocumentTitle from "../../Components/useDocumentTitle"
 import Snackbar from "@material-ui/core/Snackbar"
 import Alert from "@material-ui/lab/Alert"
-import {getTimeZones, updateScheduleDangerously} from "../../Services/Services"
+import {getTimeZones} from "../../Services/Services"
 import {editCustomer} from "./../../Services/Services"
 import {Link} from "react-router-dom"
 import Axios from "axios"
 import {useConfirm} from "material-ui-confirm"
 import {retrieveMeetingLink} from "../../Services/utils"
 import StatisticsMobile from "./StatisticsMobile"
-import {Copy, Smartphone, Video, XCircle} from "react-feather"
-import {useHistory} from "react-router-dom"
+import {Copy, XCircle} from "react-feather"
 import AdjustIcon from "@material-ui/icons/Adjust"
+import ToggleCancelClass from "../../Components/ToggleCancelClass"
 
 let days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
 
@@ -65,12 +54,7 @@ function TabPanel(props) {
 	)
 }
 
-function pageRefresh() {
-	window.location.reload()
-}
-
 function Statistics() {
-	const history = useHistory()
 	useDocumentTitle("Statistics")
 	const confirm = useConfirm()
 	let initialValue = days.indexOf(
@@ -84,8 +68,7 @@ function Statistics() {
 	const [alertColor, setAlertColor] = useState("")
 	const [refresh, setRefresh] = useState(false)
 	const [timeZoneLookup, setTimeZoneLookup] = useState({})
-	const [loading, setLoading] = useState(false)
-	const [searchField, setSearchField] = useState("")
+	const [searchField, setsearchField] = useState("")
 	useEffect(() => {
 		getTimeZones()
 			.then((result) => {
@@ -177,28 +160,6 @@ function Statistics() {
 		}
 	}
 
-	const toggleisClassTemperarilyCancelled = async (id) => {
-		setRefresh(false)
-		setLoading(true)
-		try {
-			const data = await updateScheduleDangerously(dialogData._id, {
-				isClassTemperarilyCancelled: !dialogData.isClassTemperarilyCancelled,
-			})
-
-			if (data.status === 200) {
-				setDialogData((prev) => {
-					let prevData = {...prev}
-					prevData.isClassTemperarilyCancelled = !dialogData.isClassTemperarilyCancelled
-					return prevData
-				})
-
-				setRefresh(true)
-				setLoading(false)
-			}
-		} catch (error) {
-			setLoading(false)
-		}
-	}
 	const meetingLink = useMemo(() => retrieveMeetingLink(dialogData), [dialogData])
 
 	return (
@@ -255,30 +216,15 @@ function Statistics() {
 							<Button onClick={() => copyToClipboard(meetingLink)} edge="end">
 								<Copy />
 							</Button>
-
-							{/* <Button onClick={() => copyToClipboard(meetingLink)} edge="end">
-								<Video style={{color: "#3867d6"}} />
-							</Button> */}
 							<p style={{fontSize: 10}}>Zoom</p>
 						</div>
 					</InputAdornment>
 					<InputAdornment position="end">
-						<FormControl style={{marginTop: 10}} variant="outlined">
-							{loading ? (
-								<CircularProgress style={{height: 30, width: 30}} />
-							) : (
-								<FormControlLabel
-									control={
-										<Switch
-											checked={dialogData.isClassTemperarilyCancelled}
-											onChange={toggleisClassTemperarilyCancelled}
-											name="cancelClass"
-										/>
-									}
-								/>
-							)}
-							<p style={{fontSize: 10}}>Cancel Class</p>
-						</FormControl>
+						<ToggleCancelClass
+							schedule={dialogData}
+							setSchedule={setDialogData}
+							onToggleSuccess={() => setRefresh((prev) => !prev)}
+						/>
 					</InputAdornment>
 				</div>
 				<DialogContent style={{padding: 6}}>
@@ -328,29 +274,8 @@ function Statistics() {
 				))}
 			</Tabs>
 
-			{/* <IconButton
-				onClick={() => history.push("/statistics")}
-				variant="contained"
-				color="primary"
-				size="small"
-				style={{
-					marginTop: 10,
-					marginRight: 20,
-					float: "right",
-				}}
-			>
-				<Smartphone style={{color: "black"}} />
-			</IconButton> */}
-
 			{days.map((day, i) => (
 				<TabPanel key={day} value={value} index={i} style={{padding: 0}}>
-					{/* <TextField
-						label="Search"
-						variant="outlined"
-						fullWidth
-						style={{marginTop: 10}}
-						onChange={(e) => setSearchField(e.target.value)}
-					/> */}
 					<SingleDayStats
 						refresh={refresh}
 						day={day}
