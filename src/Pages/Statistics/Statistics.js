@@ -16,8 +16,6 @@ import {
 	Tooltip,
 	Switch,
 	DialogActions,
-	FormControlLabel,
-	CircularProgress,
 	TextField,
 } from "@material-ui/core"
 import Drawer from "@material-ui/core/Drawer"
@@ -34,7 +32,7 @@ import CancelIcon from "@material-ui/icons/Cancel"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import momentTZ from "moment-timezone"
 import useDocumentTitle from "../../Components/useDocumentTitle"
-import {getComments, getTimeZones, updateScheduleDangerously} from "../../Services/Services"
+import {getComments, getTimeZones} from "../../Services/Services"
 import {editCustomer} from "./../../Services/Services"
 import {Link} from "react-router-dom"
 import Axios from "axios"
@@ -44,7 +42,7 @@ import {MessageCircle, Smartphone} from "react-feather"
 import {useHistory} from "react-router-dom"
 import Comments from "../Admin/Crm/Comments"
 import ApplyTeacherLeaves from "../Leaves/ApplyTeacherLeaves"
-import {useSnackbar} from "notistack"
+import ToggleCancelClass from "../../Components/ToggleCancelClass"
 
 let days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
 
@@ -84,7 +82,6 @@ function Statistics() {
 	const history = useHistory()
 	useDocumentTitle("Statistics")
 	const confirm = useConfirm()
-	const {enqueueSnackbar} = useSnackbar()
 	let initialValue = days.indexOf(
 		momentTZ(new Date()).tz("Asia/Kolkata").format("dddd").toUpperCase()
 	)
@@ -93,7 +90,6 @@ function Statistics() {
 	const [dialogData, setDialogData] = useState({})
 	const [refresh, setRefresh] = useState(false)
 	const [timeZoneLookup, setTimeZoneLookup] = useState({})
-	const [loading, setLoading] = useState(false)
 	const [selectedCustomerId, setSelectedCustomerId] = useState("")
 	const [selectedCustomerName, setSelectedCustomerName] = useState("")
 	const [isCommentsOpen, setIsCommentsOpen] = useState(false)
@@ -182,29 +178,6 @@ function Statistics() {
 				.catch(() => {})
 		} catch (error) {
 			console.log(error.response)
-		}
-	}
-
-	const toggleisClassTemperarilyCancelled = async (id) => {
-		setRefresh(false)
-		setLoading(true)
-		try {
-			const data = await updateScheduleDangerously(dialogData._id, {
-				isClassTemperarilyCancelled: !dialogData.isClassTemperarilyCancelled,
-			})
-
-			if (data.status === 200) {
-				setDialogData((prev) => {
-					let prevData = {...prev}
-					prevData.isClassTemperarilyCancelled = !dialogData.isClassTemperarilyCancelled
-					return prevData
-				})
-
-				setRefresh(true)
-				setLoading(false)
-			}
-		} catch (error) {
-			setLoading(false)
 		}
 	}
 
@@ -452,7 +425,7 @@ function Statistics() {
 									setSelectedCustomerId(rowData._id)
 									setSelectedCustomerName(rowData.firstName)
 									setIsCommentsOpen(true)
-									setDrawerState({...drawerState, ["left"]: true})
+									setDrawerState({left: true})
 								},
 							}),
 						]}
@@ -470,22 +443,11 @@ function Statistics() {
 				</Drawer>
 
 				<DialogActions>
-					<FormControl variant="outlined">
-						{loading ? (
-							<CircularProgress style={{height: 30, width: 30, marginLeft: -50}} />
-						) : (
-							<FormControlLabel
-								control={
-									<Switch
-										checked={dialogData.isClassTemperarilyCancelled}
-										onChange={toggleisClassTemperarilyCancelled}
-										name="cancelClass"
-									/>
-								}
-								label="Enable to Cancel the Class"
-							/>
-						)}
-					</FormControl>
+					<ToggleCancelClass
+						schedule={dialogData}
+						setSchedule={setDialogData}
+						onToggleSuccess={() => setRefresh((prev) => !prev)}
+					/>
 					<Button
 						onClick={() => {
 							setDialogOpen(false)
@@ -519,6 +481,12 @@ function Statistics() {
 					</Button>
 				</DialogActions>
 			</Dialog>
+			<Comments
+				commentsCustomerId={selectedCustomerId}
+				name={selectedCustomerName}
+				isCommentsOpen={isCommentsOpen}
+				setIsCommentsOpen={setIsCommentsOpen}
+			/>
 			<Tabs
 				value={value}
 				onChange={handleChange}

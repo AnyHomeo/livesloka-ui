@@ -1,6 +1,5 @@
 import React, {useMemo, useState} from "react"
 import "./scheduler.css"
-import {updateScheduleDangerously} from "../../../Services/Services"
 import {
 	Button,
 	Dialog,
@@ -8,9 +7,6 @@ import {
 	DialogContent,
 	DialogTitle,
 	Slide,
-	Switch,
-	TextField,
-	CircularProgress,
 } from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
@@ -23,7 +19,7 @@ import AdjustIcon from "@material-ui/icons/Adjust"
 import {copyToClipboard, retrieveMeetingLink} from "../../../Services/utils"
 import {Copy, XCircle} from "react-feather"
 import TableCard from "./TableCard"
-import {useSnackbar} from "notistack"
+import ToggleCancelClass from "../../../Components/ToggleCancelClass"
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />
@@ -39,9 +35,7 @@ const SchedulerModal = ({
 }) => {
 	const confirm = useConfirm()
 	const [scheduleId, setScheduleId] = useState("")
-	const [toggleLoading, setToggleLoading] = useState(false)
 	const meetingLink = useMemo(() => retrieveMeetingLink(selectedSchedule), [selectedSchedule])
-	const {enqueueSnackbar} = useSnackbar()
 
 	const deleteSchedule = async () => {
 		try {
@@ -96,128 +90,15 @@ const SchedulerModal = ({
 					</Button>
 					<p style={{fontSize: 10}}>Zoom</p>
 				</div>
-
-				<div>
-					{selectedSchedule && (
-						<>
-							{toggleLoading ? (
-								<CircularProgress style={{height: 30, width: 30}} />
-							) : (
-								<>
-									<Switch
-										checked={selectedSchedule.isClassTemperarilyCancelled}
-										onChange={() => {
-											updateScheduleDangerously(selectedSchedule._id, {
-												isClassTemperarilyCancelled: !selectedSchedule.isClassTemperarilyCancelled,
-											})
-												.then((response) => {
-													setSelectedSchedule((prev) => {
-														let prevData = {...prev}
-														prevData.isClassTemperarilyCancelled =
-															!selectedSchedule.isClassTemperarilyCancelled
-														return prevData
-													})
-													enqueueSnackbar("Schedule updated successfully", {variant: "success"})
-													fetchSchedules()
-												})
-												.catch((error) => {
-													console.log(error)
-													enqueueSnackbar(
-														error?.response?.data?.message || "Error updating schedule",
-														{variant: "error"}
-													)
-													setToggleLoading(false)
-												})
-										}}
-										color="primary"
-										inputProps={{"aria-label": "primary checkbox"}}
-									/>
-									<p style={{fontSize: 10}}>Cancel Class</p>
-								</>
-							)}
-						</>
-					)}
-				</div>
+				<ToggleCancelClass
+					schedule={selectedSchedule}
+					setSchedule={setSelectedSchedule}
+					onToggleSuccess={fetchSchedules}
+				/>
 			</div>
 
 			<DialogContent style={{padding: 6}}>
-				{selectedSchedule && (
-					<div
-						style={{
-							width: "100%",
-						}}
-					>
-						<TableCard data={selectedSchedule.students} />
-					</div>
-				)}
-
-				<span style={{}}>
-					{selectedSchedule ? (
-						<>
-							<div
-								style={{
-									width: "100%",
-									marginTop: "5px",
-								}}
-							>
-								<div
-									style={{
-										display: "flex",
-										flexDirection: "row",
-									}}
-								>
-									{selectedSchedule.isClassTemperarilyCancelled ? (
-										<>
-											<TextField
-												id="message"
-												label="Message"
-												fullWidth
-												variant="outlined"
-												value={selectedSchedule.message}
-												onChange={(e) => {
-													e.persist()
-													setSelectedSchedule((prev) => {
-														let oldSchedule = {...prev}
-														let newSchedule = {
-															...oldSchedule,
-															message: e.target.value,
-														}
-														return newSchedule
-													})
-												}}
-											/>
-											<Button
-												variant="contained"
-												style={{marginLeft: "10px"}}
-												color="primary"
-												onClick={() => {
-													updateScheduleDangerously(selectedSchedule._id, {
-														message: selectedSchedule.message,
-													})
-														.then((response) => {
-															fetchSchedules()
-															enqueueSnackbar("Updated schedule successfully", {variant: "success"})
-														})
-														.catch((error) => {
-															console.error(error)
-															enqueueSnackbar("error updating Schedule", {variant: "error"})
-														})
-												}}
-											>
-												{" "}
-												Submit{" "}
-											</Button>
-										</>
-									) : (
-										""
-									)}
-								</div>
-							</div>
-						</>
-					) : (
-						""
-					)}
-				</span>
+				{selectedSchedule && <TableCard data={selectedSchedule.students} />}
 			</DialogContent>
 			<DialogActions
 				style={{
@@ -243,7 +124,6 @@ const SchedulerModal = ({
 							style={{width: "100%"}}
 							variant="outlined"
 							color="primary"
-							// startIcon={<EditIcon />}
 						>
 							<EditIcon />
 						</Button>
@@ -252,7 +132,6 @@ const SchedulerModal = ({
 						onClick={() => deleteSchedule()}
 						variant="outlined"
 						color="secondary"
-						// startIcon={<DeleteIcon />}
 					>
 						<DeleteIcon />
 					</Button>
@@ -261,7 +140,6 @@ const SchedulerModal = ({
 						onClick={() => window.open(meetingLink)}
 						variant="outlined"
 						style={{backgroundColor: "#2ecc71", color: "white"}}
-						// startIcon={<AdjustIcon />}
 					>
 						<AdjustIcon />
 					</Button>

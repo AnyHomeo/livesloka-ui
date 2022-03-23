@@ -1,4 +1,5 @@
 import momentTZ from "moment-timezone"
+import moment from "moment"
 import days from "./days.json"
 
 export const showError = (error, enqueueSnackbar) => {
@@ -55,3 +56,7 @@ export const copyToClipboard = (text) => {
 		}
 	)
 }
+
+export const isFuture = (date) => {
+	return moment().unix() - moment(date).unix() < 0;
+  };

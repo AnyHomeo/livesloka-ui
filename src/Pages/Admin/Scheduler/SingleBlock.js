@@ -14,12 +14,11 @@ import {getNewSlots} from "./helpers"
 import {useSnackbar} from "notistack"
 import Axios from "axios"
 import {useConfirm} from "material-ui-confirm"
-import {Avatar} from "@material-ui/core"
+import {isFuture} from "../../../Services/utils"
 
 function SingleBlock({
 	day,
 	time,
-	i,
 	j,
 	categorizedData,
 	category,
@@ -146,7 +145,7 @@ function SingleBlock({
 								? "pointer"
 								: "default",
 						background: Object.keys(schedule).length
-							? schedule.isClassTemperarilyCancelled
+							? schedule.cancelledTill && isFuture(schedule.cancelledTill)
 								? "#aaa"
 								: schedule.demo
 								? "linear-gradient(315deg, #e84118 0%, #e84118 74%)"

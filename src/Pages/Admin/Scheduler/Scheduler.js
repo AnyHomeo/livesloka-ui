@@ -6,7 +6,6 @@ import {
 	addAvailableTimeSlot,
 	deleteAvailableTimeSlot,
 	getOccupancy,
-	updateScheduleDangerously,
 	createAChatGroupFromScheduleId,
 	getOptionsOfATeacher,
 } from "../../../Services/Services"
@@ -22,8 +21,6 @@ import {
 	InputAdornment,
 	Slide,
 	Switch,
-	TextField,
-	Snackbar,
 	Tooltip,
 	InputLabel,
 	FormControl,
@@ -36,7 +33,6 @@ import {FileCopyOutlined} from "@material-ui/icons"
 import {Link} from "react-router-dom"
 import Axios from "axios"
 import SingleBlock from "./SingleBlock"
-import MuiAlert from "@material-ui/lab/Alert"
 import {useConfirm} from "material-ui-confirm"
 import AdjustIcon from "@material-ui/icons/Adjust"
 import useDocumentTitle from "../../../Components/useDocumentTitle"
@@ -46,23 +42,14 @@ import OutlinedInput from "@material-ui/core/OutlinedInput"
 import {getData} from "./../../../Services/Services"
 import hours from "../../../Services/hours.json"
 import times from "../../../Services/times.json"
-import {retrieveMeetingLink} from "../../../Services/utils"
+import {copyToClipboard, retrieveMeetingLink} from "../../../Services/utils"
+import ToggleCancelClass from "../../../Components/ToggleCancelClass"
 
 const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-
-const copyToClipboard = () => {
-	var textField = document.getElementById("meeting-link")
-	textField.select()
-	document.execCommand("copy")
-}
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />
 })
-
-function Alert(props) {
-	return <MuiAlert elevation={6} variant="filled" {...props} />
-}
 
 function Scheduler() {
 	useDocumentTitle("Timetable")
@@ -77,13 +64,9 @@ function Scheduler() {
 	const [availableSlotsEditingMode, setAvailableSlotsEditingMode] = useState(false)
 	const [scheduleId, setScheduleId] = useState("")
 	const [selectedSchedule, setSelectedSchedule] = useState({})
-	const [snackBarOpen, setSnackBarOpen] = useState(false)
-	const [success, setSuccess] = useState(false)
-	const [response, setResponse] = useState("")
 	const [selectedSlots, setSelectedSlots] = useState([])
 	const [refresh, setRefresh] = useState(false)
 	const [loading, setLoading] = useState(false)
-	const [toggleLoading, setToggleLoading] = useState(false)
 	const [toggleShiftScheduleMode, setToggleShiftScheduleMode] = useState(false)
 	const [options, setOptions] = useState({})
 	const [timeZones, setTimeZones] = useState([])
@@ -124,13 +107,6 @@ function Scheduler() {
 		} catch (error) {
 			console.error(error.response)
 		}
-	}
-
-	const handleSnackBarClose = (event, reason) => {
-		if (reason === "clickaway") {
-			return
-		}
-		setSnackBarOpen(false)
 	}
 
 	const addOrRemoveAvailableSlot = (slot) => {
@@ -250,10 +226,7 @@ function Scheduler() {
 		[timeZones]
 	)
 
-	const meetingLink = useMemo(
-		() =>  retrieveMeetingLink(selectedSchedule),
-		[selectedSchedule]
-	)
+	const meetingLink = useMemo(() => retrieveMeetingLink(selectedSchedule), [selectedSchedule])
 
 	return (
 		<>
@@ -266,11 +239,6 @@ function Scheduler() {
 				setTeacherId={setTeacherId}
 				setCategory={setCategory}
 			/>
-			<Snackbar open={snackBarOpen} autoHideDuration={6000} onClose={handleSnackBarClose}>
-				<Alert onClose={handleSnackBarClose} severity={success ? "success" : "warning"}>
-					{response}
-				</Alert>
-			</Snackbar>
 			<Dialog
 				open={!!scheduleId}
 				TransitionComponent={Transition}
@@ -317,39 +285,11 @@ function Scheduler() {
 											labelWidth={70}
 										/>
 									</FormControl>
-									<FormControl variant="outlined">
-										{toggleLoading ? (
-											<CircularProgress style={{height: 30, width: 30}} />
-										) : (
-											<FormControlLabel
-												control={
-													<Switch
-														checked={selectedSchedule.isClassTemperarilyCancelled}
-														onChange={() => {
-															setToggleLoading(true)
-															updateScheduleDangerously(selectedSchedule._id, {
-																isClassTemperarilyCancelled:
-																	!selectedSchedule.isClassTemperarilyCancelled,
-															})
-																.then((response) => {
-																	getAllSchedulesData()
-																	setToggleLoading(false)
-																})
-																.catch((error) => {
-																	console.log(error)
-																	setSuccess(false)
-																	setResponse("Something went wrong")
-																	setSnackBarOpen(true)
-																	setToggleLoading(false)
-																})
-														}}
-														name="cancelClass"
-													/> 
-												}
-												label="Enable to Cancel the Class"
-											/>
-										)}
-									</FormControl>
+									<ToggleCancelClass
+										onToggleSuccess={() => getAllSchedulesData()}
+										schedule={selectedSchedule}
+										setSchedule={setSelectedSchedule}
+									/>
 								</div>
 								<MaterialTable
 									title="Student Details"
@@ -420,70 +360,6 @@ function Scheduler() {
 										paging: false,
 									}}
 								/>
-
-								<div
-									style={{
-										width: "100%",
-										marginTop: "5px",
-									}}
-								>
-									<div
-										style={{
-											display: "flex",
-											flexDirection: "row",
-										}}
-									>
-										{selectedSchedule.isClassTemperarilyCancelled ? (
-											<>
-												<TextField
-													id="message"
-													label="Message"
-													fullWidth
-													variant="outlined"
-													value={selectedSchedule.message}
-													onChange={(e) => {
-														e.persist()
-														setSelectedSchedule((prev) => {
-															let oldSchedule = {...prev}
-															let newSchedule = {
-																...oldSchedule,
-																message: e.target.value,
-															}
-															return newSchedule
-														})
-													}}
-												/>
-												<Button
-													variant="contained"
-													style={{marginLeft: "10px"}}
-													color="primary"
-													onClick={() => {
-														updateScheduleDangerously(selectedSchedule._id, {
-															message: selectedSchedule.message,
-														})
-															.then((response) => {
-																getAllSchedulesData()
-																setSuccess(true)
-																setResponse(response.data.message)
-																setSnackBarOpen(true)
-															})
-															.catch((error) => {
-																console.error(error)
-																setSuccess(false)
-																setResponse(response.data.message)
-																setSnackBarOpen(true)
-															})
-													}}
-												>
-													{" "}
-													Submit{" "}
-												</Button>
-											</>
-										) : (
-											""
-										)}
-									</div>
-								</div>
 							</>
 						) : (
 							""

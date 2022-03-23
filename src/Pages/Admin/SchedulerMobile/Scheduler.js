@@ -1,26 +1,20 @@
 import React, {useEffect, useMemo, useState} from "react"
 import "./scheduler.css"
 import OccupancyBars from "./OccupancyBars"
-import {
-	getOccupancy,
-	updateScheduleDangerously,
-} from "../../../Services/Services"
+import {getOccupancy, updateScheduleDangerously} from "../../../Services/Services"
 import {
 	Button,
 	Dialog,
 	DialogActions,
 	DialogContent,
 	DialogTitle,
-	FormControlLabel,
 	IconButton,
 	InputAdornment,
 	Slide,
-	Switch,
 	TextField,
 	Tooltip,
 	InputLabel,
 	FormControl,
-	CircularProgress,
 } from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
@@ -34,8 +28,9 @@ import MaterialTable from "material-table"
 import WhatsAppIcon from "@material-ui/icons/WhatsApp"
 import OutlinedInput from "@material-ui/core/OutlinedInput"
 import {getData} from "./../../../Services/Services"
-import {copyToClipboard, retrieveMeetingLink} from "../../../Services/utils"
-import { useSnackbar } from 'notistack'
+import {copyToClipboard, isFuture, retrieveMeetingLink} from "../../../Services/utils"
+import {useSnackbar} from "notistack"
+import ToggleCancelClass from "../../../Components/ToggleCancelClass"
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />
@@ -43,13 +38,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 function Scheduler() {
 	useDocumentTitle("Timetable")
-	const { enqueueSnackbar } = useSnackbar()
+	const {enqueueSnackbar} = useSnackbar()
 
 	const [allSchedules, setAllSchedules] = useState([])
 	const confirm = useConfirm()
 	const [scheduleId, setScheduleId] = useState("")
 	const [selectedSchedule, setSelectedSchedule] = useState({})
-	const [toggleLoading, setToggleLoading] = useState(false)
 	const [timeZones, setTimeZones] = useState([])
 
 	useEffect(() => {
@@ -89,12 +83,9 @@ function Scheduler() {
 		}
 	}
 
-
 	useEffect(() => {
 		setSelectedSchedule(allSchedules.filter((schedule) => schedule._id === scheduleId)[0])
 	}, [scheduleId, allSchedules])
-
-
 
 	const timeZoneLookup = useMemo(
 		() =>
@@ -124,9 +115,7 @@ function Scheduler() {
 
 	return (
 		<>
-			<OccupancyBars
-				categorizedData={teacherCategorizes}
-			/>
+			<OccupancyBars categorizedData={teacherCategorizes} />
 
 			<Dialog
 				open={!!scheduleId}
@@ -174,38 +163,11 @@ function Scheduler() {
 											labelWidth={70}
 										/>
 									</FormControl>
-									<FormControl variant="outlined">
-										{toggleLoading ? (
-											<CircularProgress style={{height: 30, width: 30}} />
-										) : (
-											<FormControlLabel
-												control={
-													<Switch
-														checked={selectedSchedule.isClassTemperarilyCancelled}
-														onChange={() => {
-															setToggleLoading(true)
-															updateScheduleDangerously(selectedSchedule._id, {
-																isClassTemperarilyCancelled:
-																	!selectedSchedule.isClassTemperarilyCancelled,
-															})
-																.then(() => {
-																	getAllSchedulesData()
-																	enqueueSnackbar('Schedule updated successfully',{ variant: 'error' })
-																	setToggleLoading(false)
-																})
-																.catch((error) => {
-																	console.log(error)
-																	enqueueSnackbar(error?.response?.data?.error || 'error updating schedule',{ variant: 'error'})
-																	setToggleLoading(false)
-																})
-														}}
-														name="cancelClass"
-													/>
-												}
-												label="Enable to Cancel the Class"
-											/>
-										)}
-									</FormControl>
+									<ToggleCancelClass
+										schedule={selectedSchedule}
+										setSchedule={setSelectedSchedule}
+										onToggleSuccess={() => getAllSchedulesData()}
+									/>
 								</div>
 								<MaterialTable
 									title="Student Details"
@@ -289,7 +251,8 @@ function Scheduler() {
 											flexDirection: "row",
 										}}
 									>
-										{selectedSchedule.isClassTemperarilyCancelled ? (
+										{selectedSchedule.cancelledTill &&
+										isFuture(selectedSchedule.cancelledTill) ? (
 											<>
 												<TextField
 													id="message"
@@ -323,7 +286,10 @@ function Scheduler() {
 															})
 															.catch((error) => {
 																console.error(error)
-																enqueueSnackbar(error?.response?.data?.message || "Something went wrong",{ variant: 'error' })
+																enqueueSnackbar(
+																	error?.response?.data?.message || "Something went wrong",
+																	{variant: "error"}
+																)
 															})
 													}}
 												>
