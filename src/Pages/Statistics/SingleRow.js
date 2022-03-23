@@ -127,273 +127,285 @@ const SingleRow = ({
 			style={{
 				backgroundColor:
 					selectedSlot === time || selectedSlot === prevTime ? "rgba(56,103,214,0.5)" : undefined,
+				display: "flex",
+				height: 100,
 			}}
 		>
-			{selectedSlot === time ? <div ref={divRef} /> : ""}
-			{todayData.map((singleData) => (
-				<>
-					{singleData.slots[day.toLowerCase()].includes(time) &&
-					!singleData.slots[day.toLowerCase()].includes(prevTime) &&
-					singleData?.teacher?.TeacherStatus !== "2" ? (
-						<Card
-							className={
-								singleData.students.length >= 3 ? "single-card single-card-2" : "single-card"
-							}
-							style={{
-								backgroundColor:
-									isToday && scheduleLeavesGen(singleData.teacher && singleData.teacher._id)
-										? "rgb(48, 51, 107, 0.5)"
-										: singleData.isTeacherJoined
-										? "#2ecc7075"
-										: singleData.demo
-										? "#f1c40fb6"
-										: singleData.isClassTemperarilyCancelled
-										? "rgb(170, 170, 170)"
-										: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
-										? "rgb(56, 103, 214, 0.5)"
-										: "#ff757562",
-								border:
-									isToday && scheduleLeavesGen(singleData.teacher && singleData.teacher._id)
-										? "2px solid #130f40"
-										: singleData.isTeacherJoined
-										? "2px solid #56AE69"
-										: singleData.isClassTemperarilyCancelled
-										? "#bdc3c7"
-										: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
-										? "2px solid #3867d6"
-										: "2px solid #d63031",
-								overflow: "initial",
-								cursor: "pointer",
-							}}
-						>
-							<div className="new-old-customer2">{renderFlag(singleData?.students)}</div>
-
-							<div
-								className="teacher-name"
+			{todayData.map((singleData) => {
+				return (
+					<>
+						{singleData.slots[day.toLowerCase()].includes(time) &&
+						!singleData.slots[day.toLowerCase()].includes(prevTime) &&
+						singleData?.teacher?.TeacherStatus !== "2" ? (
+							<Card
+								className={"single-card"}
 								style={{
-									fontSize: 12,
-									width: "67%",
-									marginTop: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
-										? 10
-										: singleData.demo
-										? 10
-										: 0,
-								}}
-								onClick={() => {
-									setDialogOpen((prev) => !prev)
-									setDialogData(singleData)
+									backgroundColor:
+										isToday && scheduleLeavesGen(singleData.teacher && singleData.teacher._id)
+											? "rgb(48, 51, 107, 0.5)"
+											: singleData.isTeacherJoined
+											? "#2ecc7075"
+											: singleData.demo
+											? "#f1c40fb6"
+											: singleData.isClassTemperarilyCancelled
+											? "rgb(170, 170, 170)"
+											: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
+											? "rgb(56, 103, 214, 0.5)"
+											: "#ff757562",
+									border:
+										isToday && scheduleLeavesGen(singleData.teacher && singleData.teacher._id)
+											? "2px solid #130f40"
+											: singleData.isTeacherJoined
+											? "2px solid #56AE69"
+											: singleData.isClassTemperarilyCancelled
+											? "#bdc3c7"
+											: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
+											? "2px solid #3867d6"
+											: "2px solid #d63031",
+									overflow: "initial",
+									cursor: "pointer",
 								}}
 							>
-								{singleData.teacher && singleData.teacher.TeacherName}
-							</div>
+								<div className="new-old-customer2">{renderFlag(singleData?.students)}</div>
 
-							<div
-								className="students"
-								style={{marginLeft: 3, marginBottom: 10, cursor: "pointer"}}
-								onClick={() => {
-									setDialogOpen((prev) => !prev)
-									setDialogData(singleData)
-								}}
-							>
-								{singleData.students.map((student) => (
-									<>
-										{isToday && student.isStudentJoined ? (
-											<Tooltip title={student.firstName} key={student.firstName}>
-												<div
-													className="small-chip"
-													style={{
-														background: "#007500",
-													}}
-												>
-													<UserCheck
-														style={{
-															color: "white",
-															height: 12,
-															width: 12,
-														}}
-													/>
-												</div>
-											</Tooltip>
-										) : (
-											<Tooltip title={student.firstName} key={student.firstName}>
-												{leaves.find((leave) => leave.studentId === student._id) ? (
+								<div
+									className="students"
+									// style={{marginLeft: 3, marginBottom: 10, cursor: "pointer"}}
+									style={{marginTop: 3, cursor: "pointer"}}
+									onClick={() => {
+										setDialogOpen((prev) => !prev)
+										setDialogData(singleData)
+									}}
+								>
+									{singleData.students.map((student) => (
+										<>
+											{isToday && student.isStudentJoined ? (
+												<Tooltip title={student.firstName} key={student.firstName}>
 													<div
 														className="small-chip"
 														style={{
-															background: "black",
+															background: "#007500",
 														}}
 													>
-														<UserX
+														<UserCheck
 															style={{
 																color: "white",
 																height: 12,
 																width: 12,
-																marginLeft: 2,
+																marginTop: 1,
 															}}
 														/>
 													</div>
-												) : (
-													<div
-														className="small-chip"
-														style={{
-															background: "#b33939",
-														}}
-													>
-														<UserMinus
-															style={{
-																color: "white",
-																height: 12,
-																width: 12,
-																marginLeft: 2,
-															}}
-														/>
-													</div>
-												)}
-											</Tooltip>
-										)}
-									</>
-								))}
-							</div>
-							<div className="bottom-left-buttons">
-								<Tooltip title="Create New Zoom Link">
-									<IconButton size="small" onClick={() => resetZoomLink(singleData._id)} edge="end">
-										<LoopIcon />
-									</IconButton>
-								</Tooltip>
-								<Tooltip title="Join Zoom">
-									<IconButton
-										onClick={() => window.open(retrieveMeetingLink(singleData))}
-										size="small"
-									>
-										<Video style={{height: 18, width: 18, color: "#0984e3"}} />
-									</IconButton>
-								</Tooltip>
-								{isToday && (
-									<>
-										{Object.keys(otherSchedules)
-											.filter((agentName) => otherSchedules[agentName].includes(singleData._id))
-											.map((agentName) => (
-												<Tooltip title={"assigned to " + agentName}>
-													<IconButton size="small">
-														<div className="small-chip">
-															{agentName.split(" ").map((word) => word[0].toUpperCase())}
-														</div>
-													</IconButton>
 												</Tooltip>
-											))}
-										{!Object.keys(otherSchedules).some((agentName) =>
-											otherSchedules[agentName].includes(singleData._id)
-										) ? (
-											<Tooltip
-												title={
-													schedulesAssignedToMe && schedulesAssignedToMe.includes(singleData._id)
-														? "Assigned to you"
-														: "Assign this class"
-												}
-											>
-												<Checkbox
-													size="small"
-													checkedIcon={<DoneIcon />}
-													onChange={() => updateClassesAssignedToMe(singleData._id)}
-													checked={
-														schedulesAssignedToMe && schedulesAssignedToMe.includes(singleData._id)
-													}
-												/>
-											</Tooltip>
-										) : (
-											""
-										)}
-									</>
-								)}
-							</div>
+											) : (
+												<Tooltip title={student.firstName} key={student.firstName}>
+													{leaves.find((leave) => leave.studentId === student._id) ? (
+														<div
+															className="small-chip"
+															style={{
+																background: "black",
+															}}
+														>
+															<UserX
+																style={{
+																	color: "white",
+																	height: 12,
+																	width: 12,
+																	marginLeft: 2,
+																	marginTop: 1,
+																}}
+															/>
+														</div>
+													) : (
+														<div
+															className="small-chip"
+															style={{
+																background: "#b33939",
+															}}
+														>
+															<UserMinus
+																style={{
+																	color: "white",
+																	height: 12,
+																	width: 12,
+																	marginLeft: 2,
+																	marginTop: 1,
+																}}
+															/>
+														</div>
+													)}
+												</Tooltip>
+											)}
+										</>
+									))}
+								</div>
 
-							{singleData.demo ? (
-								<Tooltip
-									title="Demo"
-									style={{cursor: "pointer"}}
+								<div
+									className="teacher-name"
+									style={{
+										fontSize: 12,
+										width: "67%",
+										marginTop: teacherIds?.includes(singleData.teacher && singleData.teacher._id)
+											? 10
+											: singleData.demo
+											? 10
+											: 0,
+										// marginLeft: 25,
+										// marginTop: 10,
+									}}
 									onClick={() => {
 										setDialogOpen((prev) => !prev)
 										setDialogData(singleData)
 									}}
 								>
-									<Chip
-										label={
-											teacherIds?.includes(singleData.teacher && singleData.teacher._id)
-												? "Demo & Leave"
-												: "Demo"
-										}
-										style={{
-											position: "absolute",
-											top: "-1%",
-											transform: "translateX(-50%)",
-											left: "50%",
-											width: "100%",
-											borderRadius: 20,
-											height: 16,
-											backgroundColor: "#d63031",
-											color: "white",
+									{singleData.teacher && singleData.teacher.TeacherName}
+								</div>
+								<div className="bottom-left-buttons">
+									<Tooltip title="Create New Zoom Link">
+										<IconButton
+											size="small"
+											onClick={() => resetZoomLink(singleData._id)}
+											edge="end"
+										>
+											<LoopIcon />
+										</IconButton>
+									</Tooltip>
+									<Tooltip title="Join Zoom">
+										<IconButton
+											onClick={() => window.open(retrieveMeetingLink(singleData))}
+											size="small"
+										>
+											<Video style={{height: 18, width: 18, color: "#0984e3"}} />
+										</IconButton>
+									</Tooltip>
+									{isToday && (
+										<>
+											{Object.keys(otherSchedules)
+												.filter((agentName) => otherSchedules[agentName].includes(singleData._id))
+												.map((agentName) => (
+													<Tooltip title={"assigned to " + agentName}>
+														<IconButton size="small">
+															<div className="small-chip">
+																{agentName.split(" ").map((word) => word[0].toUpperCase())}
+															</div>
+														</IconButton>
+													</Tooltip>
+												))}
+											{!Object.keys(otherSchedules).some((agentName) =>
+												otherSchedules[agentName].includes(singleData._id)
+											) ? (
+												<Tooltip
+													title={
+														schedulesAssignedToMe && schedulesAssignedToMe.includes(singleData._id)
+															? "Assigned to you"
+															: "Assign this class"
+													}
+												>
+													<Checkbox
+														size="small"
+														checkedIcon={<DoneIcon />}
+														onChange={() => updateClassesAssignedToMe(singleData._id)}
+														checked={
+															schedulesAssignedToMe &&
+															schedulesAssignedToMe.includes(singleData._id)
+														}
+													/>
+												</Tooltip>
+											) : (
+												""
+											)}
+										</>
+									)}
+								</div>
+
+								{singleData.demo ? (
+									<Tooltip
+										title="Demo"
+										style={{cursor: "pointer"}}
+										onClick={() => {
+											setDialogOpen((prev) => !prev)
+											setDialogData(singleData)
 										}}
-									/>
-								</Tooltip>
-							) : teacherIds?.includes(singleData.teacher && singleData.teacher._id) ? (
-								<Tooltip
-									title="Entire day leave"
-									style={{cursor: "pointer"}}
-									onClick={() => {
-										setDialogOpen((prev) => !prev)
-										setDialogData(singleData)
-									}}
-								>
-									<Chip
-										label="Entire day leave"
-										style={{
-											position: "absolute",
-											top: "-1%",
-											transform: "translateX(-50%)",
-											left: "50%",
-											height: 16,
-											width: "100%",
-											borderRadius: 20,
-											backgroundColor: "#3867d6",
-											color: "white",
-											border: "2px solid #3867d6",
+									>
+										<Chip
+											label={
+												teacherIds?.includes(singleData.teacher && singleData.teacher._id)
+													? "Demo & Leave"
+													: "Demo"
+											}
+											style={{
+												position: "absolute",
+												top: "-1%",
+												transform: "translateX(-50%)",
+												left: "50%",
+												width: "100%",
+												borderRadius: 20,
+												height: 16,
+												backgroundColor: "#d63031",
+												color: "white",
+											}}
+										/>
+									</Tooltip>
+								) : teacherIds?.includes(singleData.teacher && singleData.teacher._id) ? (
+									<Tooltip
+										title="Entire day leave"
+										style={{cursor: "pointer"}}
+										onClick={() => {
+											setDialogOpen((prev) => !prev)
+											setDialogData(singleData)
 										}}
-									/>
-								</Tooltip>
-							) : scheduleLeavesGen(singleData.teacher && singleData.teacher._id) ? (
-								<Tooltip
-									title="Scheduled Leave"
-									style={{cursor: "pointer"}}
-									onClick={() => {
-										setDialogOpen((prev) => !prev)
-										setDialogData(singleData)
-									}}
-								>
-									<Chip
-										label="Scheduled leave"
-										style={{
-											position: "absolute",
-											top: "-1%",
-											transform: "translateX(-50%)",
-											left: "50%",
-											height: 16,
-											width: "100%",
-											borderRadius: 20,
-											backgroundColor: "#130f40",
-											color: "white",
-											border: "2px solid #130f40",
+									>
+										<Chip
+											label="Entire day leave"
+											style={{
+												position: "absolute",
+												top: "-1%",
+												transform: "translateX(-50%)",
+												left: "50%",
+												height: 16,
+												width: "100%",
+												borderRadius: 20,
+												backgroundColor: "#3867d6",
+												color: "white",
+												border: "2px solid #3867d6",
+											}}
+										/>
+									</Tooltip>
+								) : scheduleLeavesGen(singleData.teacher && singleData.teacher._id) ? (
+									<Tooltip
+										title="Scheduled Leave"
+										style={{cursor: "pointer"}}
+										onClick={() => {
+											setDialogOpen((prev) => !prev)
+											setDialogData(singleData)
 										}}
-									/>
-								</Tooltip>
-							) : (
-								""
-							)}
-						</Card>
-					) : (
-						""
-					)}
-				</>
-			))}
+									>
+										<Chip
+											label="Scheduled leave"
+											style={{
+												position: "absolute",
+												top: "-1%",
+												transform: "translateX(-50%)",
+												left: "50%",
+												height: 16,
+												width: "100%",
+												borderRadius: 20,
+												backgroundColor: "#130f40",
+												color: "white",
+												border: "2px solid #130f40",
+											}}
+										/>
+									</Tooltip>
+								) : (
+									""
+								)}
+							</Card>
+						) : (
+							""
+						)}
+					</>
+				)
+			})}
 		</div>
 	)
 }

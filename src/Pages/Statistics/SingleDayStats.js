@@ -264,7 +264,7 @@ function SingleDayStats({
 		<section className="statistics-container">
 			<div className="hours-display">
 				{hours.map((hour) => (
-					<div key={hour} className="hour">
+					<div key={hour} className="hour" style={{width: 80}}>
 						<Card className="hourCard">
 							<Clock />
 							{hour}

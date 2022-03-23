@@ -20,6 +20,8 @@ import {
 	CircularProgress,
 	TextField,
 } from "@material-ui/core"
+import Drawer from "@material-ui/core/Drawer"
+
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
 import Dialog from "@material-ui/core/Dialog"
@@ -32,7 +34,7 @@ import CancelIcon from "@material-ui/icons/Cancel"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import momentTZ from "moment-timezone"
 import useDocumentTitle from "../../Components/useDocumentTitle"
-import {getTimeZones, updateScheduleDangerously} from "../../Services/Services"
+import {getComments, getTimeZones, updateScheduleDangerously} from "../../Services/Services"
 import {editCustomer} from "./../../Services/Services"
 import {Link} from "react-router-dom"
 import Axios from "axios"
@@ -208,6 +210,32 @@ function Statistics() {
 
 	const meetingLink = useMemo(() => retrieveMeetingLink(dialogData), [dialogData])
 
+	const [drawerState, setDrawerState] = useState({
+		left: false,
+	})
+
+	const toggleDrawer = (anchor, open) => (event) => {
+		console.log("again")
+
+		setDrawerState({...drawerState, [anchor]: open})
+	}
+
+	const fetchhData = async (commentsCustomerId) => {
+		let {data} = await getComments(commentsCustomerId)
+		return data.result
+	}
+
+	const CommentRender = ({id}) => {
+		const [testing, setTesting] = useState()
+		fetchhData(id).then((data) => setTesting(data && data[0]?.text))
+
+		return (
+			<div style={{width: 200, inlineSize: "200px", overflow: "hidden"}}>
+				<p style={{fontSize: 14, wordWrap: "break-word"}}>{testing && testing}</p>
+			</div>
+		)
+	}
+
 	return (
 		<div>
 			<ApplyTeacherLeaves
@@ -278,52 +306,16 @@ function Statistics() {
 						title="Student Details"
 						columns={[
 							{
-								title: "Join",
+								title: "Comment",
 								width: "1%",
-								align: "center",
+								align: "left",
 								editable: "never",
-								cellStyle: {whiteSpace: "nowrap"},
+								cellStyle: {whiteSpace: "wrap"},
 								headerStyle: {whiteSpace: "nowrap"},
-								field: "isJoinButtonEnabledByAdmin",
-								render: (rowData) => (
-									<Switch
-										onChange={() => toggleJoinButton(rowData)}
-										checked={rowData.isJoinButtonEnabledByAdmin}
-										name="isJoinButtonEnabledByAdmin"
-										inputProps={{"aria-label": "secondary checkbox"}}
-									/>
-								),
+								field: "comment",
+								render: (rowData) => <CommentRender id={rowData._id} />,
 							},
 
-							{
-								title: "New/Old",
-								width: "1%",
-								align: "center",
-								editable: "never",
-								cellStyle: {whiteSpace: "nowrap"},
-								headerStyle: {whiteSpace: "nowrap"},
-								field: "autoDemo",
-								render: (rowData) => (
-									<Switch
-										onChange={() => toggleNewOldButton(rowData)}
-										checked={rowData?.autoDemo}
-										name="autoDemo"
-										inputProps={{"aria-label": "secondary checkbox"}}
-									/>
-								),
-							},
-
-							{
-								field: "isStudentJoined",
-								title: "Present",
-								type: "boolean",
-								render: (rowData) =>
-									rowData.isStudentJoined ? (
-										<CheckCircleIcon style={{color: "green"}} />
-									) : (
-										<CancelIcon style={{color: "red"}} />
-									),
-							},
 							{
 								field: "autoDemo",
 								title: "Customer Type",
@@ -399,6 +391,54 @@ function Statistics() {
 									</div>
 								),
 							},
+
+							{
+								title: "Join",
+								width: "1%",
+								align: "center",
+								editable: "never",
+								cellStyle: {whiteSpace: "nowrap"},
+								headerStyle: {whiteSpace: "nowrap"},
+								field: "isJoinButtonEnabledByAdmin",
+								render: (rowData) => (
+									<Switch
+										onChange={() => toggleJoinButton(rowData)}
+										checked={rowData.isJoinButtonEnabledByAdmin}
+										name="isJoinButtonEnabledByAdmin"
+										inputProps={{"aria-label": "secondary checkbox"}}
+									/>
+								),
+							},
+
+							{
+								title: "New/Old",
+								width: "1%",
+								align: "center",
+								editable: "never",
+								cellStyle: {whiteSpace: "nowrap"},
+								headerStyle: {whiteSpace: "nowrap"},
+								field: "autoDemo",
+								render: (rowData) => (
+									<Switch
+										onChange={() => toggleNewOldButton(rowData)}
+										checked={rowData?.autoDemo}
+										name="autoDemo"
+										inputProps={{"aria-label": "secondary checkbox"}}
+									/>
+								),
+							},
+
+							{
+								field: "isStudentJoined",
+								title: "Present",
+								type: "boolean",
+								render: (rowData) =>
+									rowData.isStudentJoined ? (
+										<CheckCircleIcon style={{color: "green"}} />
+									) : (
+										<CancelIcon style={{color: "red"}} />
+									),
+							},
 						]}
 						data={dialogData.students}
 						options={{
@@ -412,17 +452,23 @@ function Statistics() {
 									setSelectedCustomerId(rowData._id)
 									setSelectedCustomerName(rowData.firstName)
 									setIsCommentsOpen(true)
+									setDrawerState({...drawerState, ["left"]: true})
 								},
 							}),
 						]}
 					/>
 				</DialogContent>
-				<Comments
-					commentsCustomerId={selectedCustomerId}
-					name={selectedCustomerName}
-					isCommentsOpen={isCommentsOpen}
-					setIsCommentsOpen={setIsCommentsOpen}
-				/>
+				<Drawer anchor={"left"} open={drawerState["left"]} onClose={toggleDrawer("left", false)}>
+					<Comments
+						commentsCustomerId={selectedCustomerId}
+						name={selectedCustomerName}
+						isCommentsOpen={isCommentsOpen}
+						setIsCommentsOpen={setIsCommentsOpen}
+						drawerState={drawerState}
+						setDrawerState={setDrawerState}
+					/>
+				</Drawer>
+
 				<DialogActions>
 					<FormControl variant="outlined">
 						{loading ? (

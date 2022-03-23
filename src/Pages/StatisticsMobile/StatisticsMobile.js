@@ -9,13 +9,14 @@ import {
 	Switch,
 	Tooltip,
 } from "@material-ui/core"
-import React, {useState} from "react"
+import React, {useCallback, useEffect, useState} from "react"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import CancelIcon from "@material-ui/icons/Cancel"
 import momentTZ from "moment-timezone"
 import WhatsAppIcon from "@material-ui/icons/WhatsApp"
-import {X, Check} from "react-feather"
+import {X, Check, MessageCircle} from "react-feather"
+import {getComments} from "../../Services/Services"
 const useStyles = makeStyles((theme) => ({
 	cardContainer: {
 		display: "flex",
@@ -72,11 +73,43 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const StatisticsMobile = ({data, timeZoneLookup, toggleNewOldButton, toggleJoinButton}) => {
+const StatisticsMobile = ({
+	data,
+	timeZoneLookup,
+	toggleNewOldButton,
+	toggleJoinButton,
+	setSelectedCustomerId,
+	drawerState,
+	setDrawerState,
+}) => {
 	const [editOption, setEditOption] = useState(false)
 	const classes = useStyles()
 
-	console.log(data)
+	const [comments, setComments] = useState([])
+
+	const fetchhData = async (commentsCustomerId) => {
+		let {data} = await getComments(commentsCustomerId)
+		return data.result
+	}
+
+	// const TestingComp = (id) => {
+	// 	// console.log(id?.id)
+	// 	// let testing = await fetchhData(id)
+
+	// 	// console.log(testing)
+	// 	return id
+	// }
+
+	const CommentRender = ({id}) => {
+		const [testing, setTesting] = useState()
+		fetchhData(id).then((data) => setTesting(data && data[0]?.text))
+
+		return (
+			<>
+				<p style={{fontSize: 12}}>{testing && testing}</p>
+			</>
+		)
+	}
 	return (
 		<div style={{marginTop: 10}}>
 			{data &&
@@ -94,6 +127,7 @@ const StatisticsMobile = ({data, timeZoneLookup, toggleNewOldButton, toggleJoinB
 								boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
 							}}
 						>
+							<div></div>
 							<div
 								style={{
 									flex: 0.7,
@@ -155,17 +189,17 @@ const StatisticsMobile = ({data, timeZoneLookup, toggleNewOldButton, toggleJoinB
 												<Chip size="small" label={momentTZ(item.paidTill).format("MMM DD")} />
 												{/* {item.autoDemo && item.paidTill */}
 												{/* <div
-												style={{
-													display: "flex",
-													justifyContent: "center",
-													alignItems: "center",
-													marginLeft: 5,
-												}}
-											>
-												<p style={{color: "black", fontSize: 12, fontWeight: "400"}}>
-													{momentTZ(item.paidTill).format("MMM DD")}
-												</p>
-											</div> */}
+								style={{
+									display: "flex",
+									justifyContent: "center",
+									alignItems: "center",
+									marginLeft: 5,
+								}}
+							>
+								<p style={{color: "black", fontSize: 12, fontWeight: "400"}}>
+									{momentTZ(item.paidTill).format("MMM DD")}
+								</p>
+							</div> */}
 											</>
 										) : (
 											<div
@@ -187,6 +221,7 @@ const StatisticsMobile = ({data, timeZoneLookup, toggleNewOldButton, toggleJoinB
 										)}
 									</div>
 								</div>
+								<CommentRender id={item._id} />
 							</div>
 
 							<div
@@ -198,6 +233,24 @@ const StatisticsMobile = ({data, timeZoneLookup, toggleNewOldButton, toggleJoinB
 									flex: 0.333,
 								}}
 							>
+								<div
+									style={{
+										height: 30,
+										width: 30,
+										borderRadius: "50%",
+
+										display: "flex",
+										justifyContent: "center",
+										alignItems: "center",
+										marginRight: 5,
+									}}
+									onClick={() => {
+										setSelectedCustomerId(item._id)
+										setDrawerState({...drawerState, ["left"]: true})
+									}}
+								>
+									<MessageCircle />
+								</div>
 								<div
 									style={{
 										height: 30,

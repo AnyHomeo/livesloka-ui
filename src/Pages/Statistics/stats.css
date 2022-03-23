@@ -17,17 +17,18 @@
 }
 
 .statistics-container .stats-display {
-	width: calc(100% - 80px);
-	overflow-x: scroll;
+	/* width: calc(100% - 80px);
+	overflow-x: scroll; */
 }
 
 .statistics-container .single-row-container {
 	height: 100px;
 	display: flex;
+	width: auto;
 }
 
 .statistics-container .single-row-container .single-card {
-	min-width: 160px;
+	width: 145px !important;
 	height: calc(100% - 10px);
 	padding: 5px;
 	margin: 5px;
@@ -43,8 +44,10 @@
 .statistics-container .single-row-container .single-card .students {
 	position: absolute;
 	bottom: 0;
-	left: 0;
+	margin-bottom: 5px;
 	display: flex;
+	/* flex-direction: column; */
+	z-index: 1;
 }
 
 .statistics-container .single-row-container .teacher-name {
@@ -119,8 +122,11 @@
 .statistics-container .bottom-left-buttons {
 	position: absolute;
 	bottom: 0px;
-	right: 0px;
+	right: -3px;
+	top: 1px;
 	display: flex;
+	flex-direction: column;
+	z-index: 1;
 }
 
 .statistics-container .small-chip {
@@ -134,4 +140,5 @@
 	justify-content: center;
 	color: #fff;
 	margin-right: 2px;
+	margin-top: 2px;
 }

@@ -15,6 +15,7 @@ import {
 	FormControlLabel,
 	CircularProgress,
 	TextField,
+	Drawer,
 } from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
@@ -32,9 +33,11 @@ import Axios from "axios"
 import {useConfirm} from "material-ui-confirm"
 import {retrieveMeetingLink} from "../../Services/utils"
 import StatisticsMobile from "./StatisticsMobile"
-import {Copy, Smartphone, Video, XCircle} from "react-feather"
+import {Calendar, Copy, Smartphone, Video, XCircle} from "react-feather"
 import {useHistory} from "react-router-dom"
 import AdjustIcon from "@material-ui/icons/Adjust"
+import Comments from "../Admin/Crm/Comments"
+import ApplyTeacherLeaves from "../Leaves/ApplyTeacherLeaves"
 
 let days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
 
@@ -201,8 +204,32 @@ function Statistics() {
 	}
 	const meetingLink = useMemo(() => retrieveMeetingLink(dialogData), [dialogData])
 
+	const [selectedCustomerId, setSelectedCustomerId] = useState("")
+
+	const [drawerState, setDrawerState] = useState({
+		left: false,
+	})
+
+	const [openLeaveDialog, setOpenLeaveDialog] = useState(false)
+	const [leaveData, setLeaveData] = useState({
+		scheduleId: "",
+		teacherId: "",
+	})
+
+	const toggleDrawer = (anchor, open) => (event) => {
+		console.log("again")
+
+		setDrawerState({...drawerState, [anchor]: open})
+	}
+
 	return (
 		<div>
+			<ApplyTeacherLeaves
+				isAddLeaveDialogOpen={openLeaveDialog}
+				setIsAddLeaveDialogOpen={setOpenLeaveDialog}
+				{...leaveData}
+			/>
+
 			<Snackbar
 				open={successOpen}
 				autoHideDuration={6000}
@@ -287,31 +314,54 @@ function Statistics() {
 						timeZoneLookup={timeZoneLookup}
 						toggleNewOldButton={toggleNewOldButton}
 						toggleJoinButton={toggleJoinButton}
+						setSelectedCustomerId={setSelectedCustomerId}
+						drawerState={drawerState}
+						setDrawerState={setDrawerState}
+						commentsCustomerId={selectedCustomerId}
 					/>
 				</DialogContent>
+
+				<Drawer anchor={"left"} open={drawerState["left"]} onClose={toggleDrawer("left", false)}>
+					<Comments
+						commentsCustomerId={selectedCustomerId}
+						drawerState={drawerState}
+						setDrawerState={setDrawerState}
+					/>
+				</Drawer>
+
 				<DialogActions style={{padding: 6, justifyContent: "center"}}>
-					<Button onClick={() => setDialogOpen(false)} variant="outlined" color="primary">
+					<IconButton
+						onClick={() => {
+							setOpenLeaveDialog(true)
+							console.log(dialogData)
+							setLeaveData({
+								scheduleId: dialogData._id,
+								teacherId: dialogData.teacher.id,
+							})
+						}}
+						variant="outlined"
+						color="primary"
+					>
+						<Calendar />
+					</IconButton>
+					<IconButton onClick={() => setDialogOpen(false)} variant="outlined" color="primary">
 						<XCircle />
-					</Button>
+					</IconButton>
 					<Link style={{textDecoration: "none"}} to={`/edit-schedule/${dialogData._id}`}>
-						<Button variant="outlined" color="primary">
+						<IconButton variant="outlined" color="primary">
 							<EditIcon />
-						</Button>
+						</IconButton>
 					</Link>
-					<Button
+					<IconButton
 						onClick={() => deleteSchedule(dialogData._id)}
 						variant="outlined"
 						color="secondary"
 					>
 						<DeleteIcon />
-					</Button>
-					<Button
-						onClick={() => window.open(meetingLink)}
-						variant="outlined"
-						style={{backgroundColor: "#2ecc71", color: "white"}}
-					>
+					</IconButton>
+					<IconButton onClick={() => window.open(meetingLink)} variant="outlined">
 						<AdjustIcon />
-					</Button>
+					</IconButton>
 				</DialogActions>
 			</Dialog>
 			<Tabs
