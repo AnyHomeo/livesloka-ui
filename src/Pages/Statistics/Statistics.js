@@ -481,12 +481,6 @@ function Statistics() {
 					</Button>
 				</DialogActions>
 			</Dialog>
-			<Comments
-				commentsCustomerId={selectedCustomerId}
-				name={selectedCustomerName}
-				isCommentsOpen={isCommentsOpen}
-				setIsCommentsOpen={setIsCommentsOpen}
-			/>
 			<Tabs
 				value={value}
 				onChange={handleChange}
