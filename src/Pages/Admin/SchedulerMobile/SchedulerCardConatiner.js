@@ -1,115 +1,125 @@
 import {Button, Card, Collapse, IconButton} from "@material-ui/core"
-import React, {
-	forwardRef,
-	useContext,
-	useEffect,
-	useImperativeHandle,
-	useRef,
-	useState,
-} from "react"
+import React, {useCallback, useContext, useEffect, useState} from "react"
 import SchedulerCard from "./SchedulerCard"
 import {Link, useParams} from "react-router-dom"
 import Axios from "axios"
 import {ChevronDown, ChevronUp} from "react-feather"
 import moment from "moment"
 import GlobalContext from "../../../context/GlobalContext"
-const SchedulerCardConatiner = () => {
-	const globalContext = useContext(GlobalContext)
+import SchedulerModal from "./SchedulerModal"
 
-	const {state} = globalContext
+const ScheduleCard = ({
+	item,
+	collapseAll,
+	fetchSchedules,
+	setSelectedSlots,
+	selectedSlots,
+	setSelectedData,
+}) => {
+	const [collapse, setCollapse] = useState(false)
 
-	const [scheduleData, setScheduleData] = useState()
-	const params = useParams()
 	useEffect(() => {
-		fetchSchedules()
-	}, [params.id])
-	const fetchSchedules = async () => {
+		setCollapse(collapseAll)
+	}, [collapseAll])
+
+	useEffect(() => {
+		if (moment().format("dddd").toUpperCase() === item.day.toUpperCase()) {
+			setCollapse(true)
+		}
+	}, [item])
+	return (
+		<Card
+			style={{
+				width: "100%",
+				height: "auto",
+				display: "flex",
+				flexDirection: "column",
+				marginTop: 10,
+				borderRadius: "0px !important",
+				border: "1px solid rgb(9, 132, 227)",
+				boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
+			}}
+		>
+			<Card style={{backgroundColor: "rgb(9, 132, 227)", display: "Flex", alignItems: "center"}}>
+				<div style={{flex: 1.5, marginLeft: 50}}>
+					<p style={{textAlign: "center", padding: 5, color: "white"}}>{item.day}</p>
+				</div>
+				<div>
+					<IconButton onClick={() => setCollapse(!collapse)}>
+						{collapse ? (
+							<ChevronUp style={{color: "white"}} />
+						) : (
+							<ChevronDown style={{color: "white"}} />
+						)}
+					</IconButton>
+				</div>
+			</Card>
+			<Collapse in={collapse}>
+				{item.schedules.map((schedules) => {
+					let isAvailable
+					if (schedules.isAvailableSlot) {
+						isAvailable = true
+					} else {
+						isAvailable = false
+					}
+					return (
+						<>
+							<SchedulerCard
+								isAvailable={isAvailable}
+								schedules={schedules}
+								fetchSchedules={fetchSchedules}
+								selectedSlots={selectedSlots}
+								setSelectedSlots={setSelectedSlots}
+								setSelectedData={setSelectedData}
+							/>
+						</>
+					)
+				})}
+			</Collapse>
+		</Card>
+	)
+}
+
+const SchedulerCardConatiner = () => {
+	const {state} = useContext(GlobalContext)
+
+	const [scheduleData, setScheduleData] = useState([])
+	const params = useParams()
+
+	const fetchSchedules = useCallback(async () => {
 		try {
 			const data = await Axios.get(
-				`https://livekumon-development-services.herokuapp.com/api/teachers/${params.id}/schedules?web=1`
+				`${process.env.REACT_APP_API_KEY}/api/teachers/${params.id}/schedules?web=1`
 			)
 
 			setScheduleData(data?.data?.result)
 			console.log(data?.data?.result)
-		} catch (error) {}
-	}
+		} catch (error) {
+			console.log(error)
+		}
+	}, [params.id])
+
+	useEffect(() => {
+		fetchSchedules()
+	}, [fetchSchedules])
 
 	const [selectedSlots, setSelectedSlots] = useState([])
-
-	const [collapseAll, setCollapseAll] = useState(false)
-
-	const ScheduledCard = ({item, collapseAll}) => {
-		const [collapse, setCollapse] = useState(false)
-
-		useEffect(() => {
-			setCollapse(collapseAll)
-		}, [collapseAll])
-
-		useEffect(() => {
-			if (moment().format("dddd").toUpperCase() === item.day.toUpperCase()) {
-				setCollapse(true)
-			}
-		}, [item])
-		return (
-			<Card
-				style={{
-					// margin: 5,
-					width: "100%",
-					height: "auto",
-					display: "flex",
-					flexDirection: "column",
-					marginTop: 10,
-					borderRadius: "0px !important",
-					border: "1px solid rgb(9, 132, 227)",
-					// margin: 10,
-					boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
-				}}
-			>
-				<Card style={{backgroundColor: "rgb(9, 132, 227)", display: "Flex", alignItems: "center"}}>
-					<div style={{flex: 1.5, marginLeft: 50}}>
-						<p style={{textAlign: "center", padding: 5, color: "white"}}>{item.day}</p>
-					</div>
-					<div>
-						<IconButton onClick={() => setCollapse(!collapse)}>
-							{collapse ? (
-								<ChevronUp style={{color: "white"}} />
-							) : (
-								<ChevronDown style={{color: "white"}} />
-							)}
-						</IconButton>
-					</div>
-				</Card>
-				<Collapse in={collapse}>
-					{item.schedules.map((schedules) => {
-						let isAvailable
-						if (schedules.isAvailableSlot) {
-							isAvailable = true
-						} else {
-							isAvailable = false
-						}
-						return (
-							<>
-								<SchedulerCard
-									isAvailable={isAvailable}
-									schedules={schedules}
-									fetchSchedules={fetchSchedules}
-									selectedSlots={selectedSlots}
-									setSelectedSlots={setSelectedSlots}
-									teacher={scheduleData.teacher}
-								/>
-							</>
-						)
-					})}
-				</Collapse>
-			</Card>
-		)
-	}
+	const [selectedData, setSelectedData] = useState({})
 
 	return (
 		<div style={{margin: 5}}>
-			{scheduleData &&
+			{Object.keys(scheduleData).length &&
 				scheduleData.schedules.map((item) => {
-					return <ScheduledCard item={item} collapseAll={state.expandAll} />
+					return (
+						<ScheduleCard
+							item={item}
+							collapseAll={state.expandAll}
+							fetchSchedules={fetchSchedules}
+							selectedSlots={selectedSlots}
+							setSelectedSlots={setSelectedSlots}
+							setSelectedData={setSelectedData}
+						/>
+					)
 				})}
 
 			{selectedSlots.length ? (
@@ -142,6 +152,12 @@ const SchedulerCardConatiner = () => {
 			) : (
 				""
 			)}
+			<SchedulerModal
+				selectedSchedule={selectedData}
+				setSelectedSchedule={setSelectedData}
+				fetchSchedules={fetchSchedules}
+				teacher={scheduleData?.teacher}
+			/>
 		</div>
 	)
 }
