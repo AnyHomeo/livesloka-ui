@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from "react"
 import {getComments, updateComment, deleteComment, addComments} from "../../../Services/Services"
 import moment from "moment"
-import {Button, Card} from "@material-ui/core"
+import {Button, Card, IconButton} from "@material-ui/core"
 
 import clsx from "clsx"
 import {makeStyles} from "@material-ui/core/styles"
@@ -127,13 +127,15 @@ const Comments = ({
 							boxShadow:
 								"rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
 							padding: 0,
+							background: "linear-gradient(135deg,#6253E1,#04BEFE)",
+							display: "flex",
 						}}
 					>
 						<div
 							style={{
 								height: "auto",
 								width: "100%",
-								background: "linear-gradient(135deg,#6253E1,#04BEFE)",
+
 								color: "white",
 								padding: 10,
 							}}
@@ -146,38 +148,31 @@ const Comments = ({
 								}}
 							>
 								<Clock style={{height: 15, width: 15, marginRight: 5}} />{" "}
-								{moment(item.timeStamp).format("MMM Do YY, h:mm A")}
+								{moment(item.timeStamp).format("MMM Do YY")}
 							</p>
 							<p>{item.text}</p>
 						</div>
 
-						<div style={{display: "flex", justifyContent: "space-between", padding: 5}}>
-							<Button
-								style={{
-									height: 40,
-									width: "40%",
-									borderRadius: 10,
-									background: "linear-gradient(135deg,#40E495,#30DD8A,#2BB673)",
-								}}
+						<div
+							style={{
+								display: "flex",
+								justifyContent: "space-between",
+								padding: 5,
+								flexDirection: "column",
+							}}
+						>
+							<IconButton
 								onClick={() => {
 									setText(item.text)
 									setUpdatedComment(item)
 									setIsUpdate(true)
 								}}
 							>
-								<Edit />
-							</Button>
-							<Button
-								style={{
-									height: 40,
-									width: "40%",
-									borderRadius: 10,
-									background: "linear-gradient(135deg,#EB3941,#F15E64,#E2373f)",
-								}}
-								onClick={() => onRowDelete(item)}
-							>
-								<Trash />
-							</Button>
+								<Edit style={{color: "white"}} />
+							</IconButton>
+							<IconButton onClick={() => onRowDelete(item)}>
+								<Trash style={{color: "#EB3941"}} />
+							</IconButton>
 						</div>
 					</Card>
 				))}

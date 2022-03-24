@@ -163,11 +163,11 @@ function Scheduler() {
 											labelWidth={70}
 										/>
 									</FormControl>
-									<ToggleCancelClass
+									{/* <ToggleCancelClass
 										schedule={selectedSchedule}
 										setSchedule={setSelectedSchedule}
 										onToggleSuccess={() => getAllSchedulesData()}
-									/>
+									/> */}
 								</div>
 								<MaterialTable
 									title="Student Details"
@@ -251,8 +251,7 @@ function Scheduler() {
 											flexDirection: "row",
 										}}
 									>
-										{selectedSchedule.cancelledTill &&
-										isFuture(selectedSchedule.cancelledTill) ? (
+										{selectedSchedule.cancelledTill && isFuture(selectedSchedule.cancelledTill) ? (
 											<>
 												<TextField
 													id="message"

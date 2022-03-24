@@ -122,7 +122,7 @@
 .statistics-container .bottom-left-buttons {
 	position: absolute;
 	bottom: 0px;
-	right: -3px;
+	right: 0px;
 	top: 1px;
 	display: flex;
 	flex-direction: column;
