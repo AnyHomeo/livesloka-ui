@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react"
+import React, {useCallback, useEffect, useMemo, useState} from "react"
 import hours from "../../Services/hours.json"
 import times from "../../Services/times.json"
 import SingleRow from "./SingleRow"
@@ -13,6 +13,7 @@ import {Card} from "@material-ui/core"
 import {Clock} from "react-feather"
 import Axios from "axios"
 import moment from "moment"
+import {getDaysToAdd} from "../../Services/utils"
 const socket = io(process.env.REACT_APP_API_KEY)
 
 const getSlotFromTime = (date) => {
@@ -75,8 +76,7 @@ function SingleDayStats({
 	const [teacherLeaves, setTeacherLeaves] = useState([])
 
 	const [filteredData, setFilteredData] = useState(todayData)
-	let todayDay = moment().get("day")
-	let daysToAddToday = value >= todayDay ? value - todayDay : 7 - (todayDay - value)
+	let daysToAddToday = useMemo(() => getDaysToAdd(value), [value])
 
 	useEffect(() => {
 		socket.on("teacher-joined", ({scheduleId}) => {
@@ -164,7 +164,7 @@ function SingleDayStats({
 			})
 			setAllAgents(objectToSet)
 		})
-	}, [refresh])
+	}, [day, daysToAddToday, refresh])
 
 	useEffect(() => {
 		getEntireDayStatistics(day.toLowerCase())
@@ -232,8 +232,6 @@ function SingleDayStats({
 		arrayOfTeacherIds()
 	}, [arrayOfTeacherIds])
 
-	// console.log(todayData)
-
 	useEffect(() => {
 		handleOnChange(searchField)
 	}, [searchField, todayData])
@@ -251,12 +249,8 @@ function SingleDayStats({
 		if (value.length > 2) {
 			let search = await arraySearch(todayData, value)
 			setFilteredData(search)
-			// console.log(search)
-			// setPopulation(search)
-			// setCount(search.length)
 		} else {
 			setFilteredData(todayData)
-			// setCount(people.length)
 		}
 	}
 
