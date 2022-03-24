@@ -305,8 +305,8 @@ const NavBar = ({onMobileClose, openMobile}) => {
 		},
 		{
 			href: "/inclass",
-			icon: Video,
-			title: "Zoom Dashboard",
+			icon: UserIcon,
+			title: "In Class",
 			permission: "Zoom Dashboard",
 		},
 		{
