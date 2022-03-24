@@ -1,104 +1,22 @@
-import {
-	Accordion,
-	AccordionDetails,
-	AccordionSummary,
-	Card,
-	Chip,
-	IconButton,
-	makeStyles,
-	Switch,
-	Tooltip,
-} from "@material-ui/core"
-import React, {useCallback, useEffect, useState} from "react"
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
-import CheckCircleIcon from "@material-ui/icons/CheckCircle"
-import CancelIcon from "@material-ui/icons/Cancel"
+import {Card, Chip} from "@material-ui/core"
+import React, {useState} from "react"
 import momentTZ from "moment-timezone"
 import WhatsAppIcon from "@material-ui/icons/WhatsApp"
 import {X, Check, MessageCircle} from "react-feather"
 import {getComments} from "../../Services/Services"
-const useStyles = makeStyles((theme) => ({
-	cardContainer: {
-		display: "flex",
-		flexDirection: "row",
-		flexGrow: 1,
-		flex: 1,
-		marginTop: 3,
-		marginBottom: 3,
-		justifyContent: "space-between",
-		padding: 5,
-		paddingLeft: 10,
-		paddingRight: 10,
-	},
-
-	card1: {
-		height: 40,
-		display: "flex",
-		alignItems: "center",
-		marginBottom: 5,
-		backgroundColor: "#2980b9",
-		color: "white",
-		borderRadius: 0,
-		border: "1px solid #2980b9",
-		marginTop: -5,
-		flex: 0.4,
-	},
-
-	card2: {
-		height: 40,
-		display: "flex",
-		alignItems: "center",
-		marginBottom: 5,
-		backgroundColor: "#ecf0f1",
-		color: "black",
-		border: "1px solid #2980b9",
-		borderRadius: 0,
-		marginTop: -5,
-		flex: 0.6,
-	},
-
-	editText: {
-		height: 40,
-		display: "flex",
-		alignItems: "center",
-		marginTop: -5,
-		flex: 0.6,
-	},
-	content: {
-		"&$expanded": {
-			marginBottom: 0,
-			display: "flex",
-			justifyContent: "space-between",
-		},
-	},
-}))
 
 const StatisticsMobile = ({
 	data,
-	timeZoneLookup,
 	toggleNewOldButton,
 	toggleJoinButton,
 	setSelectedCustomerId,
 	drawerState,
 	setDrawerState,
 }) => {
-	const [editOption, setEditOption] = useState(false)
-	const classes = useStyles()
-
-	const [comments, setComments] = useState([])
-
 	const fetchhData = async (commentsCustomerId) => {
 		let {data} = await getComments(commentsCustomerId)
 		return data.result
 	}
-
-	// const TestingComp = (id) => {
-	// 	// console.log(id?.id)
-	// 	// let testing = await fetchhData(id)
-
-	// 	// console.log(testing)
-	// 	return id
-	// }
 
 	const CommentRender = ({id}) => {
 		const [testing, setTesting] = useState()
@@ -185,22 +103,7 @@ const StatisticsMobile = ({
 										</div>
 
 										{item.autoDemo && item.paidTill ? (
-											<>
-												<Chip size="small" label={momentTZ(item.paidTill).format("MMM DD")} />
-												{/* {item.autoDemo && item.paidTill */}
-												{/* <div
-								style={{
-									display: "flex",
-									justifyContent: "center",
-									alignItems: "center",
-									marginLeft: 5,
-								}}
-							>
-								<p style={{color: "black", fontSize: 12, fontWeight: "400"}}>
-									{momentTZ(item.paidTill).format("MMM DD")}
-								</p>
-							</div> */}
-											</>
+											<Chip size="small" label={momentTZ(item.paidTill).format("MMM DD")} />
 										) : (
 											<div
 												style={{
@@ -246,7 +149,7 @@ const StatisticsMobile = ({
 									}}
 									onClick={() => {
 										setSelectedCustomerId(item._id)
-										setDrawerState({...drawerState, ["left"]: true})
+										setDrawerState({...drawerState, left: true})
 									}}
 								>
 									<MessageCircle />

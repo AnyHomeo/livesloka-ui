@@ -110,7 +110,9 @@ function Scheduler() {
 
 			console.table(data?.data?.result)
 			setTeacherCategorizes(data?.data?.result)
-		} catch (error) {}
+		} catch (error) {
+			console.error(error)
+		}
 	}
 
 	return (
@@ -251,8 +253,7 @@ function Scheduler() {
 											flexDirection: "row",
 										}}
 									>
-										{selectedSchedule.cancelledTill &&
-										isFuture(selectedSchedule.cancelledTill) ? (
+										{selectedSchedule.cancelledTill && isFuture(selectedSchedule.cancelledTill) ? (
 											<>
 												<TextField
 													id="message"
