@@ -37,12 +37,13 @@ import {editCustomer} from "./../../Services/Services"
 import {Link} from "react-router-dom"
 import Axios from "axios"
 import {useConfirm} from "material-ui-confirm"
-import {retrieveMeetingLink} from "../../Services/utils"
+import {getDaysToAdd, retrieveMeetingLink} from "../../Services/utils"
 import {MessageCircle, Smartphone} from "react-feather"
 import {useHistory} from "react-router-dom"
 import Comments from "../Admin/Crm/Comments"
 import ApplyTeacherLeaves from "../Leaves/ApplyTeacherLeaves"
 import ToggleCancelClass from "../../Components/ToggleCancelClass"
+import moment from "moment"
 
 let days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
 
@@ -119,6 +120,7 @@ function Statistics() {
 	}, [])
 
 	const handleChange = (event, newValue) => {
+		console.log(newValue)
 		setValue(newValue)
 	}
 
@@ -481,7 +483,6 @@ function Statistics() {
 					</Button>
 				</DialogActions>
 			</Dialog>
-
 			<Tabs
 				value={value}
 				onChange={handleChange}
@@ -491,8 +492,18 @@ function Statistics() {
 				scrollButtons="auto"
 				aria-label="Statistics Page Tabs"
 			>
-				{days.map((day) => (
-					<Tab key={day} label={day} />
+				{days.map((day, i) => (
+					<Tab
+						key={day}
+						label={
+							<div>
+								<div style={{fontSize: 12, color: "#341f97"}}>{day}</div>
+								<div style={{fontSize: 10, color: "#341f97", textTransform: "capitalize"}}>
+									{moment().add(getDaysToAdd(i), "day").format("DD MMM")}{" "}
+								</div>
+							</div>
+						}
+					/>
 				))}
 			</Tabs>
 

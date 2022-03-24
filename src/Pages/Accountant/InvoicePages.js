@@ -5,26 +5,27 @@ import moment from "moment"
 import React, {useEffect, useState} from "react"
 import {DollarSign, Filter} from "react-feather"
 
-const InvoicePages = () => {
-	const generateMonths = () => {
-		var dateStart = moment("2022-1-1")
-		var dateEnd = moment()
+const generateMonths = () => {
+	var dateStart = moment("2021-12-01")
+	var dateEnd = moment()
 
-		var timeValues = []
+	var timeValues = []
 
-		while (dateEnd > dateStart || dateStart.format("M") === dateEnd.format("M")) {
-			let obj = {
-				title: dateStart.format("MMM YYYY"),
-				month: dateStart.format("YYYY-MM"),
-			}
-			timeValues.push(obj)
-			dateStart.add(1, "month")
+	while (dateEnd.unix() > dateStart.unix()) {
+		let obj = {
+			title: dateStart.format("MMM YYYY"),
+			month: dateStart.format("YYYY-MM"),
 		}
-
-		return timeValues
+		timeValues.push(obj)
+		dateStart.add(1, "month")
 	}
 
-	const [monthArr] = useState(generateMonths())
+	return timeValues
+}
+
+const monthArr = generateMonths()
+
+const InvoicePages = () => {
 	const [anchorEl, setAnchorEl] = useState(null)
 	const [selectedDate, setSelectedDate] = useState(moment().subtract(1, "months").format("YYYY-MM"))
 	const [loading, setLoading] = useState(false)
@@ -159,8 +160,8 @@ const InvoicePages = () => {
 				...row,
 				currency: row.paymentMethod === "Paypal" ? "$" : "₹",
 				person: row?.customer?.person,
-				customer:undefined,
-				company:undefined,
+				customer: undefined,
+				company: undefined,
 			}))
 		)
 

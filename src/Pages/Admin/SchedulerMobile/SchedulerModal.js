@@ -26,12 +26,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 })
 
 const SchedulerModal = ({
-	open,
-	setOpen,
 	selectedSchedule,
 	setSelectedSchedule,
 	fetchSchedules,
-	teacherObj,
+	teacher,
 }) => {
 	const confirm = useConfirm()
 	const [scheduleId, setScheduleId] = useState("")
@@ -53,13 +51,13 @@ const SchedulerModal = ({
 	}
 	return (
 		<Dialog
-			open={open}
+			open={Object.keys(selectedSchedule).length}
 			TransitionComponent={Transition}
 			keepMounted
-			onClose={() => setOpen(!open)}
+			onClose={() => setSelectedSchedule({})}
 			fullWidth
 		>
-			<DialogTitle id="alert-dialog-slide-title">{teacherObj.TeacherName}</DialogTitle>
+			<DialogTitle id="alert-dialog-slide-title">{teacher?.TeacherName}</DialogTitle>
 
 			<div
 				style={{
@@ -116,7 +114,7 @@ const SchedulerModal = ({
 						marginLeft: 8,
 					}}
 				>
-					<Button onClick={() => setOpen(false)} variant="outlined" color="primary">
+					<Button onClick={() => setSelectedSchedule({})} variant="outlined" color="primary">
 						<XCircle />
 					</Button>
 					<Link style={{textDecoration: "none"}} to={`/edit-schedule/${scheduleId}`}>

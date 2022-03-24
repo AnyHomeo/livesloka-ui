@@ -15,8 +15,8 @@ export const showError = (error, enqueueSnackbar) => {
 }
 
 export const retrieveMeetingLink = (schedule) => {
-	if(schedule){
-		const { meetingLink, meetingLinks } = schedule
+	if (schedule) {
+		const {meetingLink, meetingLinks} = schedule
 		const day = momentTZ().tz("Asia/Kolkata").format("dddd").toLowerCase()
 		if (typeof meetingLinks === "object") {
 			if (meetingLinks[day]?.link) {
@@ -39,10 +39,10 @@ export const retrieveMeetingLink = (schedule) => {
 				}
 			}
 		} else {
-			return meetingLink || ''
-		} 
+			return meetingLink || ""
+		}
 	} else {
-		return ''
+		return ""
 	}
 }
 
@@ -58,5 +58,10 @@ export const copyToClipboard = (text) => {
 }
 
 export const isFuture = (date) => {
-	return moment().unix() - moment(date).unix() < 0;
-  };
+	return moment().unix() - moment(date).unix() < 0
+}
+
+export const getDaysToAdd = (value) => {
+	let todayDay = moment().get("day")
+	return value >= todayDay ? value - todayDay : 7 - (todayDay - value)
+}

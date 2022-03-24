@@ -1,20 +1,16 @@
 import {Card, Checkbox, IconButton} from "@material-ui/core"
-import React, {useState} from "react"
+import React from "react"
 import {UserCheck, MessageSquare} from "react-feather"
 import {isFuture} from "../../../Services/utils"
-import SchedulerModal from "./SchedulerModal"
+
 const SchedulerCard = ({
 	isAvailable,
 	schedules,
-	fetchSchedules,
 	selectedSlots,
-	teacher,
 	setSelectedSlots,
+	setSelectedData,
 }) => {
-	const [selectedData, setSelectedData] = useState()
-	const [open, setOpen] = useState(false)
 	const onCardClick = () => {
-		setOpen(!open)
 		setSelectedData(schedules.schedule)
 	}
 
@@ -22,7 +18,6 @@ const SchedulerCard = ({
 		<div>
 			{isAvailable ? (
 				<Card
-					// onClick={onCardClick}
 					style={{
 						height: 45,
 						width: "100%",
@@ -127,15 +122,6 @@ const SchedulerCard = ({
 					</div>
 				</Card>
 			)}
-
-			<SchedulerModal
-				open={open}
-				setOpen={setOpen}
-				selectedSchedule={selectedData}
-				setSelectedSchedule={setSelectedData}
-				fetchSchedules={fetchSchedules}
-				teacherObj={teacher}
-			/>
 		</div>
 	)
 }

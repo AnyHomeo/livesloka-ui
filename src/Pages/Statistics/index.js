@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import OpenInBrowserIcon from "@material-ui/icons/OpenInBrowser";
 import { getStudentList, getUserAttendance } from "../../Services/Services";
 import MaterialTable from "material-table";
-import { Refresh, WhatsApp } from "@material-ui/icons";
+import { WhatsApp } from "@material-ui/icons";
 import BookIcon from "@material-ui/icons/Book";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -119,7 +119,7 @@ const Statistics = () => {
             (schedule) => ({
               ...schedule,
               isTeacherJoined:
-                schedule._id == scheduleId ? true : schedule.isTeacherJoined,
+                schedule._id === scheduleId ? true : schedule.isTeacherJoined,
             })
           ),
         };

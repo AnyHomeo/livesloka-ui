@@ -74,7 +74,7 @@ const ToggleCancelClass = ({onToggleSuccess, schedule, setSchedule}) => {
 		({cancelledTill, message}) =>
 			() => {
 				let doesPrevCancelledTillExists = schedule.cancelledTill && isFuture(schedule.cancelledTill)
-				updateScheduleDangerously(schedule._id, {
+				updateScheduleDangerously(schedule?._id, {
 					cancelledTill: doesPrevCancelledTillExists ? new Date() : cancelledTill,
 					message,
 				})
@@ -98,7 +98,7 @@ const ToggleCancelClass = ({onToggleSuccess, schedule, setSchedule}) => {
 						setOpenModal(false)
 					})
 			},
-		[enqueueSnackbar, onToggleSuccess, schedule._id, schedule.cancelledTill, setSchedule]
+		[enqueueSnackbar, onToggleSuccess, schedule?._id, schedule?.cancelledTill, setSchedule]
 	)
 
 	const handleDialogClose = () => {
