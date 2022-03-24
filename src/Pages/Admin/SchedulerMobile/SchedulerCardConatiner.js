@@ -1,4 +1,4 @@
-import {Button, Card, Collapse, IconButton} from "@material-ui/core"
+import {Button, Card, Collapse, IconButton, TextField} from "@material-ui/core"
 import React, {useCallback, useContext, useEffect, useState} from "react"
 import SchedulerCard from "./SchedulerCard"
 import {Link, useParams} from "react-router-dom"
@@ -81,23 +81,32 @@ const ScheduleCard = ({
 }
 
 const SchedulerCardConatiner = () => {
+	const [searchTerm, setSearchTerm] = useState("")
+
 	const {state} = useContext(GlobalContext)
 
 	const [scheduleData, setScheduleData] = useState([])
 	const params = useParams()
 
-	const fetchSchedules = useCallback(async () => {
-		try {
-			const data = await Axios.get(
-				`${process.env.REACT_APP_API_KEY}/api/teachers/${params.id}/schedules?web=1`
-			)
+	const fetchSchedules = useCallback(
+		async (testing) => {
+			let url =
+				testing === ""
+					? `${process.env.REACT_APP_API_KEY}/api/teachers/${params.id}/schedules?web=1`
+					: `${process.env.REACT_APP_API_KEY}/api/teachers/${params.id}/schedules?web=1&search=${testing}`
+			console.log(testing)
+			console.log(url)
+			try {
+				const data = await Axios.get(url)
 
-			setScheduleData(data?.data?.result)
-			console.log(data?.data?.result)
-		} catch (error) {
-			console.log(error)
-		}
-	}, [params.id])
+				setScheduleData(data?.data?.result)
+				console.log(data?.data?.result)
+			} catch (error) {
+				console.log(error)
+			}
+		},
+		[params.id]
+	)
 
 	useEffect(() => {
 		fetchSchedules()
@@ -106,8 +115,23 @@ const SchedulerCardConatiner = () => {
 	const [selectedSlots, setSelectedSlots] = useState([])
 	const [selectedData, setSelectedData] = useState({})
 
+	useEffect(() => {
+		const delayDebounceFn = setTimeout(() => {
+			fetchSchedules(searchTerm)
+			// Send Axios request here
+		}, 2000)
+
+		return () => clearTimeout(delayDebounceFn)
+	}, [searchTerm])
+
 	return (
 		<div style={{margin: 5}}>
+			<TextField
+				label="Search"
+				fullWidth
+				variant="outlined"
+				onChange={(e) => setSearchTerm(e.target.value)}
+			/>
 			{Object.keys(scheduleData).length &&
 				scheduleData.schedules.map((item) => {
 					return (

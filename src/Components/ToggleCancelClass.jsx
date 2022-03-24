@@ -110,7 +110,6 @@ const ToggleCancelClass = ({onToggleSuccess, schedule, setSchedule}) => {
 		[schedule.cancelledTill]
 	)
 
-	console.log(schedule.cancelledTill)
 
 	return (
 		<>
