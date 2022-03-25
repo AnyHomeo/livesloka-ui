@@ -35,6 +35,7 @@ import noti from "./notification.mp3"
 import AssignChats from "./AssignChats"
 import {ChevronDown, ChevronUp, Smartphone} from "react-feather"
 import GlobalContext from "../context/GlobalContext"
+import { DesktopMac } from "@material-ui/icons"
 var audio = new Audio(noti)
 
 let socket
@@ -106,7 +107,7 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 	const timezoneArr = [
 		{
 			id: 1,
-			title: "IST",
+			title: "IST", 
 			tz: "Asia/Kolkata",
 		},
 		{
@@ -124,7 +125,7 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 		{
 			id: 9,
 			title: "MST",
-			tz: "America/Mazatlan",
+			tz: "America/Boise",
 		},
 
 		{
@@ -301,32 +302,33 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 					>
 						{isAutheticated().roleId === 3 && (
 							<>
-								{location.pathname === `/scheduler/mobile/${location.pathname.split("/")[3]}` ? (
+								{location.pathname.includes('/scheduler/mobile/') ? (
+									<>
+									<IconButton size="small" onClick={() => history.push('/scheduler')} >
+									<DesktopMac style={{color:'white'}} />
+									</IconButton>
 									<IconButton onClick={() => expandAll(!state.expandAll)}>
 										{state.expandAll ? (
 											<ChevronUp
 												style={{
 													color: "white",
-													marginRight: 0,
 													float: "right",
 													height: 30,
 													width: 30,
-													marginRight: -5,
 												}}
 											/>
 										) : (
 											<ChevronDown
 												style={{
 													color: "white",
-													marginRight: 0,
 													float: "right",
 													height: 30,
 													width: 30,
-													marginRight: -5,
 												}}
 											/>
 										)}
 									</IconButton>
+									</>
 								) : null}
 
 								{location.pathname === "/statistics/mobile" ? (
