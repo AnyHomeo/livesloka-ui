@@ -1,188 +1,149 @@
-import React, {useCallback, useEffect, useState} from "react"
+import React, {useCallback, useEffect, useRef, useState} from "react"
 import {getComments, updateComment, deleteComment, addComments} from "../../../Services/Services"
 import moment from "moment"
-import {Button, Card} from "@material-ui/core"
+import {Box, Button, Card, Chip, Drawer, Fab, TextField, Tooltip} from "@material-ui/core"
 
-import clsx from "clsx"
 import {makeStyles} from "@material-ui/core/styles"
-import {Clock, Edit, Trash} from "react-feather"
+import {Edit, Trash} from "react-feather"
 
 const useStyles = makeStyles({
 	list: {
 		width: 250,
 	},
-	fullList: {
-		width: "auto",
+	textAreaWrapper: {
+		padding: 10,
+		display: "flex",
+		gap: 10,
+		flexDirection: "column",
+	},
+	commentsWrapper: {
+		display: "flex",
+		padding: 10,
+		gap: 10,
+		flexDirection: "column",
+	},
+	commentActionsWrapper: {
+		display: "flex",
+		alignItems: "center",
+		justifyContent: "flex-end",
+		gap: 10,
+		marginBottom: 5
+	},
+	timeStamp: {
+		position: "absolute",
+		left: 10,
+		top: 10,
+	},
+	card: {
+		padding: 10,
+		position: "relative"
 	},
 })
 
-const Comments = ({
-	commentsCustomerId,
-	name,
-	isCommentsOpen,
-	setIsCommentsOpen,
-	drawerState,
-	setDrawerState,
-}) => {
+const Comments = ({customerId, setCustomerId}) => {
 	const [comments, setComments] = useState([])
+	const [comment, setComment] = useState("")
+	const headingEl = useRef(null)
+	const inputEl = useRef(null)
 
-	const [text, setText] = useState("")
-	const [isUpdate, setIsUpdate] = useState(false)
-	const [updatedComment, setUpdatedComment] = useState({})
-	const [refreshData, setRefreshData] = useState([])
+	const [editingId, setEditingId] = useState("")
+	const [refresh, setRefresh] = useState(false)
+
 	const fetchData = useCallback(async () => {
-		let {data} = await getComments(commentsCustomerId)
-		console.log(commentsCustomerId)
-		console.log(data)
+		let {data} = await getComments(customerId)
 		setComments(data.result)
-	}, [commentsCustomerId])
+		setComment("")
+		setEditingId("")
+	}, [customerId])
 
 	useEffect(() => {
 		fetchData()
-	}, [fetchData, refreshData])
+	}, [fetchData, refresh])
 
-	const onRowUpdate = useCallback(async (newData, oldData) => {
-		console.log(newData)
-		await updateComment(newData)
-		setRefreshData((prev) => !prev)
-		setText("")
-		setIsUpdate(false)
-		setUpdatedComment({})
-	}, [])
+	const onCommentSubmit = useCallback(async () => {
+		if (editingId) {
+			await updateComment({_id: editingId, text: comment})
+		} else {
+			await addComments({
+				customer: customerId,
+				text: comment,
+			})
+		}
+		setRefresh((prev) => !prev)
+		setComment("")
+		setEditingId("")
+	}, [editingId, customerId, comment])
 
 	const onRowDelete = useCallback(async (rowData) => {
 		await deleteComment(rowData)
-		setRefreshData((prev) => !prev)
+		setRefresh((prev) => !prev)
 	}, [])
-
-	const onRowAdd = useCallback(
-		async (newData) => {
-			console.log(newData)
-			await addComments({
-				...newData,
-				customer: commentsCustomerId,
-			})
-			setRefreshData((prev) => !prev)
-			setText("")
-			setIsUpdate(false)
-			setUpdatedComment({})
-		},
-		[commentsCustomerId]
-	)
 
 	const classes = useStyles()
 
 	return (
-		<div
-			className={clsx(classes.list, {
-				[classes.fullList]: "left" === "top" || "left" === "bottom",
-			})}
-			role="presentation"
-		>
-			<h2 style={{textAlign: "center"}}>Comments</h2>
+		<Drawer anchor="left" open={!!customerId} onClose={() => setCustomerId("")}>
+			<div className={classes.list} role="presentation">
+				<h2 style={{textAlign: "center"}} ref={headingEl}>
+					Comments
+				</h2>
+				<div className={classes.textAreaWrapper}>
+					<TextField
+						value={comment}
+						variant="outlined"
+						multiline
+						rows={5}
+						fullWidth
+						onChange={(e) => setComment(e.target.value)}
+						inputRef={inputEl}
+						label={editingId ? "Edit Comment" : "Add comment"}
+					/>
+					<Button variant="contained" color="primary" fullWidth onClick={onCommentSubmit}>
+						Submit
+					</Button>
+				</div>
+				<Box className={classes.commentsWrapper}>
+					{comments.map((item) => (
+						<Card className={classes.card}>
+							<Tooltip title={moment(item.timeStamp).format("LLL")} placement="top-start" >
+							<Chip
+								label={moment(item.timeStamp).fromNow()}
+								size="small"
+								className={classes.timeStamp}
+							/>
+							</Tooltip>
+							
+							<div className={classes.commentActionsWrapper}>
+								<Fab
+									color="primary"
+									variant="extended"
+									size="small"
+									onClick={() => {
+										setComment(item.text)
+										setEditingId(item._id)
+										headingEl.current.scrollIntoView({
+											behavior: "smooth",
+											block: "nearest",
+											inline: "start",
+										})
 
-			<div
-				style={{
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-					flexDirection: "column",
-				}}
-			>
-				<textarea
-					style={{
-						height: 150,
-						width: "90%",
-						borderRadius: 10,
-						outline: "none",
-						padding: 10,
-						fontSize: 14,
-					}}
-					value={text}
-					onChange={(e) => setText(e.target.value)}
-				></textarea>
-
-				<Button
-					style={{marginTop: 10}}
-					variant="contained"
-					color="primary"
-					onClick={() => {
-						if (isUpdate) {
-							onRowUpdate({...updatedComment, text})
-						} else {
-							onRowAdd({text, timeStamp: new Date()})
-						}
-					}}
-				>
-					Submit
-				</Button>
-
-				{comments.map((item) => (
-					<Card
-						style={{
-							height: "auto",
-							width: "90%",
-							borderRadius: 10,
-							margin: 5,
-							boxShadow:
-								"rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
-							padding: 0,
-						}}
-					>
-						<div
-							style={{
-								height: "auto",
-								width: "100%",
-								background: "linear-gradient(135deg,#6253E1,#04BEFE)",
-								color: "white",
-								padding: 10,
-							}}
-						>
-							<p
-								style={{
-									fontSize: 14,
-									display: "flex",
-									alignItems: "center",
-								}}
-							>
-								<Clock style={{height: 15, width: 15, marginRight: 5}} />{" "}
-								{moment(item.timeStamp).format("MMM Do YY, h:mm A")}
-							</p>
+										setTimeout(() => {
+											inputEl.current.focus()
+										}, 500)
+									}}
+								>
+									<Edit size={15} />
+								</Fab>
+								<Fab onClick={() => onRowDelete(item)} variant="extended" size="small">
+									<Trash size={15} />
+								</Fab>
+							</div>
 							<p>{item.text}</p>
-						</div>
-
-						<div style={{display: "flex", justifyContent: "space-between", padding: 5}}>
-							<Button
-								style={{
-									height: 40,
-									width: "40%",
-									borderRadius: 10,
-									background: "linear-gradient(135deg,#40E495,#30DD8A,#2BB673)",
-								}}
-								onClick={() => {
-									setText(item.text)
-									setUpdatedComment(item)
-									setIsUpdate(true)
-								}}
-							>
-								<Edit />
-							</Button>
-							<Button
-								style={{
-									height: 40,
-									width: "40%",
-									borderRadius: 10,
-									background: "linear-gradient(135deg,#EB3941,#F15E64,#E2373f)",
-								}}
-								onClick={() => onRowDelete(item)}
-							>
-								<Trash />
-							</Button>
-						</div>
-					</Card>
-				))}
+						</Card>
+					))}
+				</Box>
 			</div>
-		</div>
+		</Drawer>
 	)
 }
 

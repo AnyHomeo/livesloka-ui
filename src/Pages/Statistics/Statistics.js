@@ -32,7 +32,7 @@ import CancelIcon from "@material-ui/icons/Cancel"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import momentTZ from "moment-timezone"
 import useDocumentTitle from "../../Components/useDocumentTitle"
-import {getComments, getTimeZones} from "../../Services/Services"
+import {getTimeZones} from "../../Services/Services"
 import {editCustomer} from "./../../Services/Services"
 import {Link} from "react-router-dom"
 import Axios from "axios"
@@ -74,10 +74,6 @@ function TabPanel(props) {
 	)
 }
 
-function pageRefresh() {
-	window.location.reload()
-}
-
 function Statistics() {
 	const [searchField, setSearchField] = useState("")
 	const history = useHistory()
@@ -91,9 +87,7 @@ function Statistics() {
 	const [dialogData, setDialogData] = useState({})
 	const [refresh, setRefresh] = useState(false)
 	const [timeZoneLookup, setTimeZoneLookup] = useState({})
-	const [selectedCustomerId, setSelectedCustomerId] = useState("")
-	const [selectedCustomerName, setSelectedCustomerName] = useState("")
-	const [isCommentsOpen, setIsCommentsOpen] = useState(false)
+	const [selectedCommentsCustomerId, setSelectedCommentsCustomerId] = useState("")
 	const [openLeaveDialog, setOpenLeaveDialog] = useState(false)
 	const [leaveData, setLeaveData] = useState({
 		scheduleId: "",
@@ -120,7 +114,6 @@ function Statistics() {
 	}, [])
 
 	const handleChange = (event, newValue) => {
-		console.log(newValue)
 		setValue(newValue)
 	}
 
@@ -165,51 +158,20 @@ function Statistics() {
 	}
 
 	const deleteSchedule = async (id) => {
-		setRefresh(false)
 		try {
-			confirm({
+			await confirm({
 				description: "Do you Really want to Delete!",
 				confirmationText: "Yes! delete",
 			})
-				.then(async () => {
-					await Axios.get(`${process.env.REACT_APP_API_KEY}/schedule/delete/${id}`)
-					// getAllSchedulesData()
-					setDialogOpen(false)
-					setRefresh(true)
-				})
-				.catch(() => {})
+			await Axios.get(`${process.env.REACT_APP_API_KEY}/schedule/delete/${id}`)
+			setDialogOpen(false)
+			setRefresh((prev) => !prev)
 		} catch (error) {
 			console.log(error.response)
 		}
 	}
 
 	const meetingLink = useMemo(() => retrieveMeetingLink(dialogData), [dialogData])
-
-	const [drawerState, setDrawerState] = useState({
-		left: false,
-	})
-
-	const toggleDrawer = (anchor, open) => (event) => {
-		console.log("again")
-
-		setDrawerState({...drawerState, [anchor]: open})
-	}
-
-	const fetchhData = async (commentsCustomerId) => {
-		let {data} = await getComments(commentsCustomerId)
-		return data.result
-	}
-
-	const CommentRender = ({id}) => {
-		const [testing, setTesting] = useState()
-		fetchhData(id).then((data) => setTesting(data && data[0]?.text))
-
-		return (
-			<div style={{width: 200, inlineSize: "200px", overflow: "hidden"}}>
-				<p style={{fontSize: 14, wordWrap: "break-word"}}>{testing && testing}</p>
-			</div>
-		)
-	}
 
 	return (
 		<div>
@@ -218,7 +180,10 @@ function Statistics() {
 				setIsAddLeaveDialogOpen={setOpenLeaveDialog}
 				{...leaveData}
 			/>
-
+			<Comments
+				customerId={selectedCommentsCustomerId}
+				setCustomerId={setSelectedCommentsCustomerId}
+			/>
 			<Dialog
 				open={dialogOpen}
 				onClose={() => setDialogOpen(false)}
@@ -288,24 +253,15 @@ function Statistics() {
 								cellStyle: {whiteSpace: "wrap"},
 								headerStyle: {whiteSpace: "nowrap"},
 								field: "comment",
-								render: (rowData) => <CommentRender id={rowData._id} />,
 							},
 
 							{
 								field: "autoDemo",
 								title: "Customer Type",
 								type: "boolean",
-								render: (rowData) => {
-									return (
-										<>
-											{rowData.autoDemo ? (
-												<Chip label="New" size="small" color="primary" />
-											) : (
-												<Chip label="Old" size="small" color="secondary" />
-											)}
-										</>
-									)
-								},
+								render: (rowData) => (
+									<Chip label={rowData.autoDemo ? "New" : "Old"} size="small" color="primary" />
+								),
 							},
 							{
 								field: "firstName",
@@ -424,26 +380,12 @@ function Statistics() {
 								icon: () => <MessageCircle />,
 								tooltip: "Add Comment",
 								onClick: (event, rowData) => {
-									setSelectedCustomerId(rowData._id)
-									setSelectedCustomerName(rowData.firstName)
-									setIsCommentsOpen(true)
-									setDrawerState({left: true})
+									setSelectedCommentsCustomerId(rowData._id)
 								},
 							}),
 						]}
 					/>
 				</DialogContent>
-				<Drawer anchor={"left"} open={drawerState["left"]} onClose={toggleDrawer("left", false)}>
-					<Comments
-						commentsCustomerId={selectedCustomerId}
-						name={selectedCustomerName}
-						isCommentsOpen={isCommentsOpen}
-						setIsCommentsOpen={setIsCommentsOpen}
-						drawerState={drawerState}
-						setDrawerState={setDrawerState}
-					/>
-				</Drawer>
-
 				<DialogActions>
 					<ToggleCancelClass
 						schedule={dialogData}
@@ -492,13 +434,13 @@ function Statistics() {
 				scrollButtons="auto"
 				aria-label="Statistics Page Tabs"
 			>
-				{days.map((day,i) => (
+				{days.map((day, i) => (
 					<Tab
 						key={day}
 						label={
 							<div>
-								<div style={{fontSize: 12,color: '#341f97'}}>{day}</div>
-								<div style={{fontSize: 10,color: '#341f97', textTransform: 'capitalize'}}>
+								<div style={{fontSize: 12, color: "#341f97"}}>{day}</div>
+								<div style={{fontSize: 10, color: "#341f97", textTransform: "capitalize"}}>
 									{moment().add(getDaysToAdd(i), "day").format("DD MMM")}{" "}
 								</div>
 							</div>
@@ -524,7 +466,7 @@ function Statistics() {
 				variant="contained"
 				color="primary"
 				size="small"
-				onClick={pageRefresh}
+				onClick={() => setRefresh((prev) => !prev)}
 				endIcon={<Icon>refresh</Icon>}
 				style={{
 					marginLeft: 24,
