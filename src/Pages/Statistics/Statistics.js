@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react"
+import React, {useCallback, useEffect, useMemo, useState} from "react"
 import Tabs from "@material-ui/core/Tabs"
 import Tab from "@material-ui/core/Tab"
 import SingleDayStats from "./SingleDayStats"
@@ -18,7 +18,6 @@ import {
 	DialogActions,
 	TextField,
 } from "@material-ui/core"
-import Drawer from "@material-ui/core/Drawer"
 
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
@@ -32,12 +31,12 @@ import CancelIcon from "@material-ui/icons/Cancel"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import momentTZ from "moment-timezone"
 import useDocumentTitle from "../../Components/useDocumentTitle"
-import {getTimeZones} from "../../Services/Services"
+import {getCommentsByCustomerIds, getTimeZones} from "../../Services/Services"
 import {editCustomer} from "./../../Services/Services"
 import {Link} from "react-router-dom"
 import Axios from "axios"
 import {useConfirm} from "material-ui-confirm"
-import {getDaysToAdd, retrieveMeetingLink} from "../../Services/utils"
+import {copyToClipboard, getDaysToAdd, retrieveMeetingLink} from "../../Services/utils"
 import {MessageCircle, Smartphone} from "react-feather"
 import {useHistory} from "react-router-dom"
 import Comments from "../Admin/Crm/Comments"
@@ -46,17 +45,6 @@ import ToggleCancelClass from "../../Components/ToggleCancelClass"
 import moment from "moment"
 
 let days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
-
-const copyToClipboard = (text) => {
-	navigator.clipboard.writeText(text).then(
-		function () {
-			console.log("Async: Copying to clipboard was successful!")
-		},
-		function (err) {
-			console.error("Async: Could not copy text: ", err)
-		}
-	)
-}
 
 function TabPanel(props) {
 	const {children, value, index, ...other} = props
@@ -88,6 +76,7 @@ function Statistics() {
 	const [refresh, setRefresh] = useState(false)
 	const [timeZoneLookup, setTimeZoneLookup] = useState({})
 	const [selectedCommentsCustomerId, setSelectedCommentsCustomerId] = useState("")
+	const [latestComments, setLatestComments] = useState([])
 	const [openLeaveDialog, setOpenLeaveDialog] = useState(false)
 	const [leaveData, setLeaveData] = useState({
 		scheduleId: "",
@@ -173,6 +162,24 @@ function Statistics() {
 
 	const meetingLink = useMemo(() => retrieveMeetingLink(dialogData), [dialogData])
 
+	const mapLatestComments = useCallback(async () => {
+		try {
+			if (!selectedCommentsCustomerId && Object.keys(dialogData).length) {
+				const commentsResponse = await getCommentsByCustomerIds(
+					dialogData.students.map(({_id}) => _id)
+				)
+				const {result} = commentsResponse.data
+				setLatestComments(result)
+			}
+		} catch (error) {
+			console.log(error)
+		}
+	}, [dialogData, selectedCommentsCustomerId])
+
+	useEffect(() => {
+		mapLatestComments()
+	}, [mapLatestComments])
+
 	return (
 		<div>
 			<ApplyTeacherLeaves
@@ -190,7 +197,7 @@ function Statistics() {
 				aria-labelledby="alert-dialog-title"
 				aria-describedby="alert-dialog-description"
 				fullWidth
-				maxWidth={"md"}
+				maxWidth="md"
 			>
 				<DialogTitle id="alert-dialog-title">
 					<h2>Schedule Details</h2>
@@ -253,6 +260,15 @@ function Statistics() {
 								cellStyle: {whiteSpace: "wrap"},
 								headerStyle: {whiteSpace: "nowrap"},
 								field: "comment",
+								render: (rowData) => {
+									let commentIndex = latestComments.findIndex(
+										(comment) => comment.customer === rowData._id
+									)
+									if (commentIndex > -1) {
+										let comment = latestComments[commentIndex]
+										return comment.text
+									}
+								},
 							},
 
 							{

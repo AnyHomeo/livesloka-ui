@@ -236,3 +236,5 @@ export const deleteOptions = (id) => Axios.delete(`${API.main}/options/${id}`)
 export const getSchedulesOfTeacher = (teacherId) =>
 	Axios.get(`${API.main}/api/teachers/${teacherId}/schedules?web=noFormat`)
 export const applyTeacherLeave = (data) => Axios.post(`${API.main}/teacher-leaves`, data)
+export const getCommentsByCustomerIds = (customerIds) =>
+	Axios.get(`${API.main}/admin/comments?customers=${customerIds.join(",")}`)

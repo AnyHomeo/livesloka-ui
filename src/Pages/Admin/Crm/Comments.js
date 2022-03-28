@@ -5,6 +5,7 @@ import {Box, Button, Card, Chip, Drawer, Fab, TextField, Tooltip} from "@materia
 
 import {makeStyles} from "@material-ui/core/styles"
 import {Edit, Trash} from "react-feather"
+import {useConfirm} from "material-ui-confirm"
 
 const useStyles = makeStyles({
 	list: {
@@ -27,7 +28,7 @@ const useStyles = makeStyles({
 		alignItems: "center",
 		justifyContent: "flex-end",
 		gap: 10,
-		marginBottom: 5
+		marginBottom: 5,
 	},
 	timeStamp: {
 		position: "absolute",
@@ -36,7 +37,7 @@ const useStyles = makeStyles({
 	},
 	card: {
 		padding: 10,
-		position: "relative"
+		position: "relative",
 	},
 })
 
@@ -45,6 +46,7 @@ const Comments = ({customerId, setCustomerId}) => {
 	const [comment, setComment] = useState("")
 	const headingEl = useRef(null)
 	const inputEl = useRef(null)
+	const confirm = useConfirm()
 
 	const [editingId, setEditingId] = useState("")
 	const [refresh, setRefresh] = useState(false)
@@ -74,10 +76,22 @@ const Comments = ({customerId, setCustomerId}) => {
 		setEditingId("")
 	}, [editingId, customerId, comment])
 
-	const onRowDelete = useCallback(async (rowData) => {
-		await deleteComment(rowData)
-		setRefresh((prev) => !prev)
-	}, [])
+	const onRowDelete = useCallback(
+		async (rowData) => {
+			try {
+				await confirm({
+					description: "Do you really wanna delete the comment ?",
+					confirmationText: "Yes, Delete",
+					cancellationText: "No",
+				})
+				await deleteComment(rowData)
+				setRefresh((prev) => !prev)
+			} catch (error) {
+				console.log(error)
+			}
+		},
+		[confirm]
+	)
 
 	const classes = useStyles()
 
@@ -105,14 +119,14 @@ const Comments = ({customerId, setCustomerId}) => {
 				<Box className={classes.commentsWrapper}>
 					{comments.map((item) => (
 						<Card className={classes.card}>
-							<Tooltip title={moment(item.timeStamp).format("LLL")} placement="top-start" >
-							<Chip
-								label={moment(item.timeStamp).fromNow()}
-								size="small"
-								className={classes.timeStamp}
-							/>
+							<Tooltip title={moment(item.timeStamp).format("LLL")} placement="top-start">
+								<Chip
+									label={moment(item.timeStamp).fromNow()}
+									size="small"
+									className={classes.timeStamp}
+								/>
 							</Tooltip>
-							
+
 							<div className={classes.commentActionsWrapper}>
 								<Fab
 									color="primary"
