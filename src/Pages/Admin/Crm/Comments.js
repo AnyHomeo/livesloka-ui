@@ -6,6 +6,7 @@ import {Box, Button, Card, Chip, Drawer, Fab, TextField, Tooltip} from "@materia
 import {makeStyles} from "@material-ui/core/styles"
 import {Edit, Trash} from "react-feather"
 import {useConfirm} from "material-ui-confirm"
+import {useSnackbar} from "notistack"
 
 const useStyles = makeStyles({
 	list: {
@@ -47,6 +48,7 @@ const Comments = ({customerId, setCustomerId}) => {
 	const headingEl = useRef(null)
 	const inputEl = useRef(null)
 	const confirm = useConfirm()
+	const {enqueueSnackbar} = useSnackbar()
 
 	const [editingId, setEditingId] = useState("")
 	const [refresh, setRefresh] = useState(false)
@@ -63,18 +65,29 @@ const Comments = ({customerId, setCustomerId}) => {
 	}, [fetchData, refresh])
 
 	const onCommentSubmit = useCallback(async () => {
+		if (!comment) {
+			return enqueueSnackbar("Message is required", {
+				variant: "error",
+			})
+		}
 		if (editingId) {
 			await updateComment({_id: editingId, text: comment})
+			enqueueSnackbar("Updated comment successfully", {
+				variant: "success",
+			})
 		} else {
 			await addComments({
 				customer: customerId,
 				text: comment,
 			})
+			enqueueSnackbar("Added message successfully", {
+				variant: "success",
+			})
 		}
 		setRefresh((prev) => !prev)
 		setComment("")
 		setEditingId("")
-	}, [editingId, customerId, comment])
+	}, [editingId, customerId, comment, enqueueSnackbar])
 
 	const onRowDelete = useCallback(
 		async (rowData) => {
