@@ -26,6 +26,7 @@ import {
 	FormControl,
 	Backdrop,
 	CircularProgress,
+	TextField,
 } from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
@@ -71,6 +72,8 @@ function Scheduler() {
 	const [options, setOptions] = useState({})
 	const [timeZones, setTimeZones] = useState([])
 
+	const [filteredData, setFilteredData] = useState(allSchedules)
+	const [searchField, setSearchField] = useState("")
 	useEffect(() => {
 		getAllSchedulesData()
 	}, [refresh])
@@ -227,6 +230,29 @@ function Scheduler() {
 	)
 
 	const meetingLink = useMemo(() => retrieveMeetingLink(selectedSchedule), [selectedSchedule])
+
+	const arraySearch = (array, keyword) => {
+		const searchTerm = keyword.toLowerCase()
+		return array.filter((value) => {
+			return value?.className?.toLowerCase().match(new RegExp(searchTerm, "g"))
+		})
+	}
+
+	useEffect(() => {
+		handleOnChange(searchField)
+	}, [searchField, allSchedules])
+
+	const handleOnChange = async (e) => {
+		let value = e
+
+		if (value.length > 2) {
+			let search = await arraySearch(allSchedules, value)
+			// console.log(first)
+			setFilteredData(search)
+		} else {
+			setFilteredData(allSchedules)
+		}
+	}
 
 	return (
 		<>
@@ -421,6 +447,19 @@ function Scheduler() {
 							}
 							label="DayLight Savings"
 						/>
+
+						<TextField
+							label="Search"
+							variant="outlined"
+							style={{
+								color: "white",
+								float: "right",
+								marginRight: 5,
+								marginTop: 5,
+							}}
+							size="small"
+							onChange={(e) => setSearchField(e.target.value)}
+						/>
 					</div>
 					<div
 						style={{
@@ -490,7 +529,7 @@ function Scheduler() {
 														options={options}
 														selectedSlots={selectedSlots}
 														setSelectedSlots={setSelectedSlots}
-														allSchedules={allSchedules}
+														allSchedules={filteredData}
 														day={day}
 														time={time}
 														i={i}

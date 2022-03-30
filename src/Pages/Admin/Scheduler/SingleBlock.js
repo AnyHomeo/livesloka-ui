@@ -144,24 +144,26 @@ function SingleBlock({
 							availableSlotsEditingMode
 								? "pointer"
 								: "default",
-						background: Object.keys(schedule).length
-							? schedule.cancelledTill && isFuture(schedule.cancelledTill)
-								? "#aaa"
-								: schedule.demo
-								? "linear-gradient(315deg, #e84118 0%, #e84118 74%)"
-								: schedule.isSummerCampClass
-								? "#3867D6"
-								: "linear-gradient(315deg, #f39c12 0%, #f39c12 74%)"
-							: categorizedData[category][teacher].availableSlots.includes(
-									`${day.toUpperCase()}-${time}`
-							  )
-							? "linear-gradient(315deg, #3bb78f 0%, #0bab64 74%)"
-							: undefined,
+						background:
+							schedule && Object.keys(schedule).length
+								? schedule.cancelledTill && isFuture(schedule.cancelledTill)
+									? "#aaa"
+									: schedule.demo
+									? "linear-gradient(315deg, #e84118 0%, #e84118 74%)"
+									: schedule.isSummerCampClass
+									? "#3867D6"
+									: "linear-gradient(315deg, #f39c12 0%, #f39c12 74%)"
+								: categorizedData[category][teacher].availableSlots.includes(
+										`${day.toUpperCase()}-${time}`
+								  )
+								? "linear-gradient(315deg, #3bb78f 0%, #0bab64 74%)"
+								: undefined,
 					}}
 					className="blockName"
 				>
 					<div>
-						{options[`${day.toUpperCase()}-${time}`] &&
+						{options &&
+							options[`${day.toUpperCase()}-${time}`] &&
 							options[`${day.toUpperCase()}-${time}`].map((customer) => (
 								<Tooltip title={customer}>
 									<div style={{position: "absolute", bottom: 0, left: 0}}>
@@ -170,7 +172,7 @@ function SingleBlock({
 								</Tooltip>
 							))}
 					</div>
-					{Object.keys(schedule).length ? (
+					{schedule && Object.keys(schedule).length ? (
 						<>
 							{schedule.className}
 							<Tooltip
