@@ -23,15 +23,7 @@ import Dialog from "@material-ui/core/Dialog"
 import MuiAlert from "@material-ui/lab/Alert"
 import Autocomplete from "@material-ui/lab/Autocomplete"
 import Tooltip from "@material-ui/core/Tooltip"
-import {
-	Slide,
-	TextField,
-	Snackbar,
-	Checkbox,
-	Switch,
-	Card,
-	Grid,
-} from "@material-ui/core"
+import {Slide, TextField, Snackbar, Checkbox, Switch, Card, Grid} from "@material-ui/core"
 import EqualizerIcon from "@material-ui/icons/Equalizer"
 import Comments from "./Comments"
 import "date-fns"
@@ -52,9 +44,7 @@ import AnalogClockTime from "../../../Components/AnalogClockTime"
 import {Copy} from "react-feather"
 import {Container} from "@material-ui/core"
 import EditPlans from "./EditPlans"
-import { copyToClipboard } from "../../../Services/utils"
-
-
+import {copyToClipboard} from "../../../Services/utils"
 
 const getSlotFromTime = (date) => {
 	let daysarr = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
@@ -688,8 +678,9 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					headerStyle: {whiteSpace: "nowrap"},
 					editable: "never",
 					render: (rowData) => (
-						<Button style={{color: "black"}} 
-						// onClick={() => setRewardsModalOpen(rowData.email)}
+						<Button
+							style={{color: "black"}}
+							// onClick={() => setRewardsModalOpen(rowData.email)}
 						>
 							{rowData.login ? rowData.login.rewards : undefined}
 						</Button>
@@ -1004,7 +995,20 @@ const CrmDetails = ({isSummerCampStudents}) => {
 				},
 			])
 		}
-	}, [columnFilters, classDropdown, timeZoneDropdown, classStatusDropdown, currencyDropdown, countryDropdown, teachersDropdown, agentDropdown, categoryDropdown, subjectDropdown, isSummerCampStudents, toggleField])
+	}, [
+		columnFilters,
+		classDropdown,
+		timeZoneDropdown,
+		classStatusDropdown,
+		currencyDropdown,
+		countryDropdown,
+		teachersDropdown,
+		agentDropdown,
+		categoryDropdown,
+		subjectDropdown,
+		isSummerCampStudents,
+		toggleField,
+	])
 
 	const handleSnackBarClose = (event, reason) => {
 		if (reason === "clickaway") {
@@ -1614,12 +1618,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 				/>
 			</div>
 
-			<Comments
-				commentsCustomerId={commentsCustomerId}
-				name={name}
-				isCommentsOpen={isCommentsOpen}
-				setIsCommentsOpen={setIsCommentsOpen}
-			/>
+			<Comments customerId={commentsCustomerId} setCustomerId={setCommentsCustomerId} />
 
 			{historyStudentData && (
 				<Dialog

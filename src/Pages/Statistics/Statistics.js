@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react"
+import React, {useCallback, useEffect, useMemo, useState} from "react"
 import Tabs from "@material-ui/core/Tabs"
 import Tab from "@material-ui/core/Tab"
 import SingleDayStats from "./SingleDayStats"
@@ -18,7 +18,6 @@ import {
 	DialogActions,
 	TextField,
 } from "@material-ui/core"
-import Drawer from "@material-ui/core/Drawer"
 
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
@@ -32,12 +31,12 @@ import CancelIcon from "@material-ui/icons/Cancel"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import momentTZ from "moment-timezone"
 import useDocumentTitle from "../../Components/useDocumentTitle"
-import {getComments, getTimeZones} from "../../Services/Services"
+import {getCommentsByCustomerIds, getTimeZones} from "../../Services/Services"
 import {editCustomer} from "./../../Services/Services"
 import {Link} from "react-router-dom"
 import Axios from "axios"
 import {useConfirm} from "material-ui-confirm"
-import {getDaysToAdd, retrieveMeetingLink} from "../../Services/utils"
+import {copyToClipboard, getDaysToAdd, retrieveMeetingLink} from "../../Services/utils"
 import {MessageCircle, Smartphone} from "react-feather"
 import {useHistory} from "react-router-dom"
 import Comments from "../Admin/Crm/Comments"
@@ -46,17 +45,6 @@ import ToggleCancelClass from "../../Components/ToggleCancelClass"
 import moment from "moment"
 
 let days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
-
-const copyToClipboard = (text) => {
-	navigator.clipboard.writeText(text).then(
-		function () {
-			console.log("Async: Copying to clipboard was successful!")
-		},
-		function (err) {
-			console.error("Async: Could not copy text: ", err)
-		}
-	)
-}
 
 function TabPanel(props) {
 	const {children, value, index, ...other} = props
@@ -74,10 +62,6 @@ function TabPanel(props) {
 	)
 }
 
-function pageRefresh() {
-	window.location.reload()
-}
-
 function Statistics() {
 	const [searchField, setSearchField] = useState("")
 	const history = useHistory()
@@ -91,9 +75,8 @@ function Statistics() {
 	const [dialogData, setDialogData] = useState({})
 	const [refresh, setRefresh] = useState(false)
 	const [timeZoneLookup, setTimeZoneLookup] = useState({})
-	const [selectedCustomerId, setSelectedCustomerId] = useState("")
-	const [selectedCustomerName, setSelectedCustomerName] = useState("")
-	const [isCommentsOpen, setIsCommentsOpen] = useState(false)
+	const [selectedCommentsCustomerId, setSelectedCommentsCustomerId] = useState("")
+	const [latestComments, setLatestComments] = useState([])
 	const [openLeaveDialog, setOpenLeaveDialog] = useState(false)
 	const [leaveData, setLeaveData] = useState({
 		scheduleId: "",
@@ -120,7 +103,6 @@ function Statistics() {
 	}, [])
 
 	const handleChange = (event, newValue) => {
-		console.log(newValue)
 		setValue(newValue)
 	}
 
@@ -165,19 +147,14 @@ function Statistics() {
 	}
 
 	const deleteSchedule = async (id) => {
-		setRefresh(false)
 		try {
-			confirm({
+			await confirm({
 				description: "Do you Really want to Delete!",
 				confirmationText: "Yes! delete",
 			})
-				.then(async () => {
-					await Axios.get(`${process.env.REACT_APP_API_KEY}/schedule/delete/${id}`)
-					// getAllSchedulesData()
-					setDialogOpen(false)
-					setRefresh(true)
-				})
-				.catch(() => {})
+			await Axios.get(`${process.env.REACT_APP_API_KEY}/schedule/delete/${id}`)
+			setDialogOpen(false)
+			setRefresh((prev) => !prev)
 		} catch (error) {
 			console.log(error.response)
 		}
@@ -185,31 +162,23 @@ function Statistics() {
 
 	const meetingLink = useMemo(() => retrieveMeetingLink(dialogData), [dialogData])
 
-	const [drawerState, setDrawerState] = useState({
-		left: false,
-	})
+	const mapLatestComments = useCallback(async () => {
+		try {
+			if (!selectedCommentsCustomerId && Object.keys(dialogData).length) {
+				const commentsResponse = await getCommentsByCustomerIds(
+					dialogData.students.map(({_id}) => _id)
+				)
+				const {result} = commentsResponse.data
+				setLatestComments(result)
+			}
+		} catch (error) {
+			console.log(error)
+		}
+	}, [dialogData, selectedCommentsCustomerId])
 
-	const toggleDrawer = (anchor, open) => (event) => {
-		console.log("again")
-
-		setDrawerState({...drawerState, [anchor]: open})
-	}
-
-	const fetchhData = async (commentsCustomerId) => {
-		let {data} = await getComments(commentsCustomerId)
-		return data.result
-	}
-
-	const CommentRender = ({id}) => {
-		const [testing, setTesting] = useState()
-		fetchhData(id).then((data) => setTesting(data && data[0]?.text))
-
-		return (
-			<div style={{width: 200, inlineSize: "200px", overflow: "hidden"}}>
-				<p style={{fontSize: 14, wordWrap: "break-word"}}>{testing && testing}</p>
-			</div>
-		)
-	}
+	useEffect(() => {
+		mapLatestComments()
+	}, [mapLatestComments])
 
 	return (
 		<div>
@@ -218,14 +187,17 @@ function Statistics() {
 				setIsAddLeaveDialogOpen={setOpenLeaveDialog}
 				{...leaveData}
 			/>
-
+			<Comments
+				customerId={selectedCommentsCustomerId}
+				setCustomerId={setSelectedCommentsCustomerId}
+			/>
 			<Dialog
 				open={dialogOpen}
 				onClose={() => setDialogOpen(false)}
 				aria-labelledby="alert-dialog-title"
 				aria-describedby="alert-dialog-description"
 				fullWidth
-				maxWidth={"md"}
+				maxWidth="md"
 			>
 				<DialogTitle id="alert-dialog-title">
 					<h2>Schedule Details</h2>
@@ -288,24 +260,24 @@ function Statistics() {
 								cellStyle: {whiteSpace: "wrap"},
 								headerStyle: {whiteSpace: "nowrap"},
 								field: "comment",
-								render: (rowData) => <CommentRender id={rowData._id} />,
+								render: (rowData) => {
+									let commentIndex = latestComments.findIndex(
+										(comment) => comment.customer === rowData._id
+									)
+									if (commentIndex > -1) {
+										let comment = latestComments[commentIndex]
+										return comment.text
+									}
+								},
 							},
 
 							{
 								field: "autoDemo",
 								title: "Customer Type",
 								type: "boolean",
-								render: (rowData) => {
-									return (
-										<>
-											{rowData.autoDemo ? (
-												<Chip label="New" size="small" color="primary" />
-											) : (
-												<Chip label="Old" size="small" color="secondary" />
-											)}
-										</>
-									)
-								},
+								render: (rowData) => (
+									<Chip label={rowData.autoDemo ? "New" : "Old"} size="small" color="primary" />
+								),
 							},
 							{
 								field: "firstName",
@@ -424,26 +396,12 @@ function Statistics() {
 								icon: () => <MessageCircle />,
 								tooltip: "Add Comment",
 								onClick: (event, rowData) => {
-									setSelectedCustomerId(rowData._id)
-									setSelectedCustomerName(rowData.firstName)
-									setIsCommentsOpen(true)
-									setDrawerState({left: true})
+									setSelectedCommentsCustomerId(rowData._id)
 								},
 							}),
 						]}
 					/>
 				</DialogContent>
-				<Drawer anchor={"left"} open={drawerState["left"]} onClose={toggleDrawer("left", false)}>
-					<Comments
-						commentsCustomerId={selectedCustomerId}
-						name={selectedCustomerName}
-						isCommentsOpen={isCommentsOpen}
-						setIsCommentsOpen={setIsCommentsOpen}
-						drawerState={drawerState}
-						setDrawerState={setDrawerState}
-					/>
-				</Drawer>
-
 				<DialogActions>
 					<ToggleCancelClass
 						schedule={dialogData}
@@ -524,7 +482,7 @@ function Statistics() {
 				variant="contained"
 				color="primary"
 				size="small"
-				onClick={pageRefresh}
+				onClick={() => setRefresh((prev) => !prev)}
 				endIcon={<Icon>refresh</Icon>}
 				style={{
 					marginLeft: 24,
