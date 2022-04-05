@@ -1,4 +1,4 @@
-import {Button, Card, Collapse, IconButton, TextField} from "@material-ui/core"
+import {Button, Card, Collapse, IconButton, Paper, TextField} from "@material-ui/core"
 import React, {useCallback, useContext, useEffect, useState} from "react"
 import SchedulerCard from "./SchedulerCard"
 import {Link, useParams} from "react-router-dom"
@@ -7,6 +7,29 @@ import {ChevronDown, ChevronUp} from "react-feather"
 import moment from "moment"
 import GlobalContext from "../../../context/GlobalContext"
 import SchedulerModal from "./SchedulerModal"
+import InputBase from "@material-ui/core/InputBase"
+import SearchIcon from "@material-ui/icons/Search"
+import {makeStyles} from "@material-ui/core/styles"
+
+const useStyles = makeStyles((theme) => ({
+	root: {
+		padding: "2px 4px",
+		display: "flex",
+		alignItems: "center",
+		width: "100%",
+	},
+	input: {
+		marginLeft: theme.spacing(1),
+		flex: 1,
+	},
+	iconButton: {
+		padding: 10,
+	},
+	divider: {
+		height: 28,
+		margin: 4,
+	},
+}))
 
 const ScheduleCard = ({
 	item,
@@ -81,6 +104,8 @@ const ScheduleCard = ({
 }
 
 const SchedulerCardConatiner = () => {
+	const classes = useStyles()
+
 	const [searchTerm, setSearchTerm] = useState("")
 
 	const {state} = useContext(GlobalContext)
@@ -126,12 +151,23 @@ const SchedulerCardConatiner = () => {
 
 	return (
 		<div style={{margin: 5}}>
-			<TextField
+			{/* <TextField
 				label="Search"
 				fullWidth
 				variant="outlined"
 				onChange={(e) => setSearchTerm(e.target.value)}
-			/>
+			/> */}
+
+			<Paper component="form" className={classes.root}>
+				<InputBase
+					onChange={(e) => setSearchTerm(e.target.value)}
+					className={classes.input}
+					placeholder="Search"
+				/>
+				<IconButton type="submit" className={classes.iconButton} aria-label="search">
+					<SearchIcon onClick={() => fetchSchedules(searchTerm)} />
+				</IconButton>
+			</Paper>
 			{Object.keys(scheduleData).length &&
 				scheduleData.schedules.map((item) => {
 					return (

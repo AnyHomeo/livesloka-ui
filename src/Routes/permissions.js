@@ -46,6 +46,7 @@ import FinancialPage from "../Pages/Accountant/FinancialPage"
 import TeacherReporting from "../Pages/TeacherFeedback/TeacherReporting"
 import HistoricCurrency from "../Pages/HistoricCurrency/HistoricCurrency"
 import SchedulerCardConatiner from "../Pages/Admin/SchedulerMobile/SchedulerCardConatiner"
+import TeacherFeedback from "../Pages/TeacherFeedback/TeacherFeedback"
 
 const adminRoutes = [
 	{permission: "Financial Dashboard", path: "/dashboard", exact: true, component: Dashboard},
@@ -218,6 +219,12 @@ const adminRoutes = [
 		path: "/teacher/reporting",
 		exact: true,
 		component: TeacherReporting,
+	},
+	{
+		permission: "Video Manager",
+		path: "/teacher/feedback",
+		exact: true,
+		component: TeacherFeedback,
 	},
 ]
 
