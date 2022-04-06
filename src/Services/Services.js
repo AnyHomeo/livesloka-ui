@@ -2,6 +2,7 @@ import axios from "axios"
 import {isAutheticated} from "../auth"
 import {services} from "./config"
 import Axios from "axios"
+import moment from "moment"
 const API = services["prod"]
 
 export const login = (userId, password) => Axios.post(`${API.main}${API.login}`, {userId, password})
@@ -238,3 +239,5 @@ export const getSchedulesOfTeacher = (teacherId) =>
 export const applyTeacherLeave = (data) => Axios.post(`${API.main}/teacher-leaves`, data)
 export const getCommentsByCustomerIds = (customerIds) =>
 	Axios.get(`${API.main}/admin/comments?customers=${customerIds.join(",")}`)
+export const getWatiFeedbackMessages = () =>
+	Axios.get(`${API.main}/api/wati?from=${moment().startOf("month")}&to=${moment().endOf("month")}`)

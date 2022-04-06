@@ -1,9 +1,8 @@
 import {Card, Chip} from "@material-ui/core"
-import React, {useState} from "react"
+import React from "react"
 import momentTZ from "moment-timezone"
 import WhatsAppIcon from "@material-ui/icons/WhatsApp"
 import {X, Check, MessageCircle} from "react-feather"
-import {getComments} from "../../Services/Services"
 
 const StatisticsMobile = ({
 	data,
@@ -13,21 +12,7 @@ const StatisticsMobile = ({
 	drawerState,
 	setDrawerState,
 }) => {
-	const fetchhData = async (commentsCustomerId) => {
-		let {data} = await getComments(commentsCustomerId)
-		return data.result
-	}
 
-	const CommentRender = ({id}) => {
-		const [testing, setTesting] = useState()
-		fetchhData(id).then((data) => setTesting(data && data[0]?.text))
-
-		return (
-			<>
-				<p style={{fontSize: 12}}>{testing && testing}</p>
-			</>
-		)
-	}
 	return (
 		<div style={{marginTop: 10}}>
 			{data &&
@@ -45,7 +30,6 @@ const StatisticsMobile = ({
 								boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
 							}}
 						>
-							<div></div>
 							<div
 								style={{
 									flex: 0.7,
@@ -124,7 +108,6 @@ const StatisticsMobile = ({
 										)}
 									</div>
 								</div>
-								<CommentRender id={item._id} />
 							</div>
 
 							<div
