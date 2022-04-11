@@ -50,6 +50,7 @@ export default function TransactionTablenew({id, type}) {
 						<TableCell align="right">Customer name</TableCell>
 						<TableCell align="right">Amount {type === "PAYPAL" ? "(USD)" : "(INR)"}</TableCell>
 						<TableCell align="right">Transaction Fee</TableCell>
+						<TableCell align="right">Deposit amount</TableCell>
 						<TableCell align="right">Date</TableCell>
 					</TableRow>
 				</TableHead>
@@ -74,6 +75,7 @@ export default function TransactionTablenew({id, type}) {
 								<TableCell align="right">{row.customer.person}</TableCell>
 								<TableCell align="right">{row.taxableValue}</TableCell>
 								<TableCell align="right">{row.transactionFee}</TableCell>
+								<TableCell align="right">{row.taxableValue - row.transactionFee}</TableCell>
 								<TableCell align="right">
 									{moment(row.paymentDate).format("MMMM Do YYYY")}
 								</TableCell>
@@ -89,6 +91,9 @@ export default function TransactionTablenew({id, type}) {
 						</TableCell>
 						<TableCell align="right">
 							Total Fee: {data?.reduce((total, row) => total + (row.transactionFee ?? 0), 0)}
+						</TableCell>
+						<TableCell align="right">
+						Total Deposit: {data?.reduce((total, row) => total + ((row.taxableValue ?? 0) - (row.transactionFee ?? 0)), 0).toFixed(2)}
 						</TableCell>
 						<TableCell align="right"></TableCell>
 					</TableRow>
