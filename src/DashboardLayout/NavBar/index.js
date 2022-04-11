@@ -27,7 +27,6 @@ import {
 	UserMinus,
 	UserCheck,
 	Sun,
-	Users,
 	MessageCircle,
 	AlignJustify,
 	Film,
@@ -36,10 +35,8 @@ import NavItem from "./NavItem"
 import useWindowDimensions from "../../Components/useWindowDimensions"
 import AccountBalanceOutlinedIcon from "@material-ui/icons/AccountBalanceOutlined"
 import {isAutheticated} from "../../auth"
-import EventNoteOutlinedIcon from "@material-ui/icons/EventNoteOutlined"
 import ExpandLess from "@material-ui/icons/ExpandLess"
 import ExpandMore from "@material-ui/icons/ExpandMore"
-import ContactSupportOutlinedIcon from "@material-ui/icons/ContactSupportOutlined"
 import {useState} from "react"
 import support from "../../Images/Navicons/support.png"
 import EventsPng from "../../Images/Navicons/events.png"
@@ -48,6 +45,7 @@ import management from "../../Images/Navicons/management.png"
 import ReportsPng from "../../Images/Navicons/reports.png"
 import SalesPng from "../../Images/Navicons/sales.png"
 import teacherPng from "../../Images/Navicons/teacher.png"
+import { WhatsApp } from "@material-ui/icons"
 const useStyles = makeStyles(() => ({
 	mobileDrawer: {
 		width: 256,
@@ -78,165 +76,6 @@ const useStyles = makeStyles(() => ({
 
 const NavBar = ({onMobileClose, openMobile}) => {
 	const {width} = useWindowDimensions()
-
-	const items = [
-		{
-			href: width <= 550 ? "/customer-data-mobile" : "/customer-data",
-			icon: FileText,
-			title: "Customer Data",
-			permission: "Customer Data",
-		},
-		{
-			href: "/summercamps",
-			icon: Sun,
-			title: "Summer Camp Data",
-			permission: "Customer Data",
-		},
-		{
-			href: "/add-fields",
-			icon: Edit,
-			title: "Add Fields",
-			permission: "Add Fields",
-		},
-		{
-			href: "/attendance",
-			icon: Trello,
-			title: "Attendance",
-			permission: "Attendance",
-		},
-		{
-			href: "/scheduler",
-			icon: UserIcon,
-			title: "Timetable",
-			permission: "Timetable",
-		},
-		{
-			href: "/meeting-scheduler",
-			icon: SettingsIcon,
-			title: "Scheduler",
-			permission: "Timetable",
-		},
-		{
-			href: "/leaves",
-			icon: UserMinus,
-			title: "Leaves",
-			permission: "Leaves",
-		},
-		{
-			href: "/reset/password",
-			icon: LockIcon,
-			title: "Reset Password",
-			permission: "Reset Password",
-		},
-		{
-			href: "/zoom-dashboard",
-			icon: Video,
-			title: "Zoom Dashboard",
-			permission: "Zoom Dashboard",
-		},
-		{
-			href: "/teacherDetails",
-			icon: Trello,
-			title: "Teachers Data",
-			permission: "Teachers Data",
-		},
-		{
-			href: "/teacher-salary",
-			icon: BarChart2,
-			title: "Teachers Salary",
-			permission: "Teachers Salary",
-		},
-		{
-			href: width <= 550 ? "/statistics/mobile" : "/statistics",
-			icon: BarChart,
-			title: "Live Dashboard",
-			permission: "Statistics",
-		},
-		{
-			href: "/dashboard",
-			icon: DollarSign,
-			title: "Financial Dashboard",
-			permission: "Financial Dashboard",
-		},
-		{
-			href: "/room",
-			icon: MessageCircle,
-			title: "Rooms",
-			permission: "Messages",
-		},
-		{
-			href: "/nonroom",
-			icon: MessageCircle,
-			title: "Non Rooms",
-			permission: "Messages",
-		},
-		{
-			href: "/payments",
-			icon: DollarSign,
-			title: "Payments",
-			permission: "Payments",
-		},
-		{
-			href: "/update/classes",
-			icon: UserCheck,
-			title: "Update Classes Paid",
-			permission: "Update Classes Paid",
-		},
-		{
-			href: "/inclass",
-			icon: Users,
-			title: "Demo/Inclass Students",
-			permission: "Demo/Inclass Students",
-		},
-		{
-			href: "/careers",
-			icon: Trello,
-			title: "Careers Applications",
-			permission: "Careers Applications",
-		},
-		{
-			href: "/notifications",
-			icon: MessageCircle,
-			title: "Broadcast Notifications",
-			permission: "Broadcast Notifications",
-		},
-		{
-			href: "/financial",
-			icon: AccountBalanceOutlinedIcon,
-			title: "Financial Dashboard",
-			permission: "Financial Dashboard",
-		},
-		{
-			href: "/options",
-			icon: AlignJustify,
-			title: "Options",
-			permission: "Options",
-		},
-		{
-			href: "/products",
-			icon: DollarSign,
-			title: "Paypal & Stripe",
-			permission: "Paypal & Stripe",
-		},
-		{
-			href: "/video-folders",
-			icon: Film,
-			title: "Video Manager",
-			permission: "Video Manager",
-		},
-		{
-			href: "/accountant/invoice",
-			icon: FileText,
-			title: "GST Data",
-			permission: "Accounts",
-		},
-		{
-			href: "/accountant/finance",
-			icon: BarChart,
-			title: "Accountant Dashboard",
-			permission: "Accounts",
-		},
-	]
 
 	const Support = [
 		{
@@ -275,6 +114,12 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			icon: Trello,
 			title: "Attendance",
 			permission: "Attendance",
+		},
+		{
+			href: "/teacher/feedback",
+			icon: WhatsApp,
+			title: "Feedback",
+			permission: "Messages",
 		},
 	]
 
