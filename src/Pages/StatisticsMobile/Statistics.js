@@ -177,8 +177,6 @@ function Statistics() {
 	})
 
 	const toggleDrawer = (anchor, open) => (event) => {
-		console.log("again")
-
 		setDrawerState({...drawerState, [anchor]: open})
 	}
 

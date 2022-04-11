@@ -42,7 +42,7 @@ const useStyles = makeStyles({
 	},
 })
 
-const Comments = ({customerId, setCustomerId}) => {
+const Comments = ({commentsCustomerId, drawerState, setDrawerState}) => {
 	const [comments, setComments] = useState([])
 	const [comment, setComment] = useState("")
 	const headingEl = useRef(null)
@@ -54,11 +54,11 @@ const Comments = ({customerId, setCustomerId}) => {
 	const [refresh, setRefresh] = useState(false)
 
 	const fetchData = useCallback(async () => {
-		let {data} = await getComments(customerId)
+		let {data} = await getComments(commentsCustomerId)
 		setComments(data.result)
 		setComment("")
 		setEditingId("")
-	}, [customerId])
+	}, [commentsCustomerId])
 
 	useEffect(() => {
 		fetchData()
@@ -77,7 +77,7 @@ const Comments = ({customerId, setCustomerId}) => {
 			})
 		} else {
 			await addComments({
-				customer: customerId,
+				customer: commentsCustomerId,
 				text: comment,
 			})
 			enqueueSnackbar("Added message successfully", {
@@ -87,7 +87,7 @@ const Comments = ({customerId, setCustomerId}) => {
 		setRefresh((prev) => !prev)
 		setComment("")
 		setEditingId("")
-	}, [editingId, customerId, comment, enqueueSnackbar])
+	}, [editingId, commentsCustomerId, comment, enqueueSnackbar])
 
 	const onRowDelete = useCallback(
 		async (rowData) => {
@@ -109,7 +109,11 @@ const Comments = ({customerId, setCustomerId}) => {
 	const classes = useStyles()
 
 	return (
-		<Drawer anchor="left" open={!!customerId} onClose={() => setCustomerId("")}>
+		<Drawer
+			anchor="left"
+			open={!!commentsCustomerId}
+			onClose={() => setDrawerState({...drawerState, ["left"]: false})}
+		>
 			<div className={classes.list} role="presentation">
 				<h2 style={{textAlign: "center"}} ref={headingEl}>
 					Comments

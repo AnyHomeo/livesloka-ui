@@ -12,7 +12,6 @@ const StatisticsMobile = ({
 	drawerState,
 	setDrawerState,
 }) => {
-
 	return (
 		<div style={{marginTop: 10}}>
 			{data &&
@@ -131,6 +130,7 @@ const StatisticsMobile = ({
 										marginRight: 5,
 									}}
 									onClick={() => {
+										console.log(item._id)
 										setSelectedCustomerId(item._id)
 										setDrawerState({...drawerState, left: true})
 									}}
