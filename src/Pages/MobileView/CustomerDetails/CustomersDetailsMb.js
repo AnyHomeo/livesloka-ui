@@ -91,7 +91,7 @@ const CustomersDetailsMb = () => {
 	const [categoryDropdown, setCategoryDropdown] = useState()
 	const [subjectDropdown, setSubjectDropdown] = useState()
 	const [countryDropdown, setCountryDropdown] = useState()
-
+	const [teachersDropdown, setTeachersDropdown] = useState({})
 	const [customersEditData, setCustomersEditData] = useState({})
 
 	useEffect(() => {
@@ -252,7 +252,7 @@ const CustomersDetailsMb = () => {
 					<IconButton
 						style={{marginTop: -15}}
 						onClick={() => {
-							classStatusDropDown.forEach((data) => {
+							classStatusDropDown.map((data) => {
 								if (data.id === customersEditData.classStatusId) {
 									copyToClipboard(data.classStatusName)
 								}
@@ -278,7 +278,7 @@ const CustomersDetailsMb = () => {
 						{disableEditButton ? (
 							<p className={classes.subText1}>
 								{classStatusDropDown &&
-									classStatusDropDown.forEach((data) => {
+									classStatusDropDown.map((data) => {
 										if (data.id === customersEditData.classStatusId) {
 											return <span>{data.classStatusName}</span>
 										}
@@ -304,7 +304,7 @@ const CustomersDetailsMb = () => {
 					<IconButton
 						style={{marginTop: -15}}
 						onClick={() => {
-							classStatusDropDown.forEach((data) => {
+							classStatusDropDown.map((data) => {
 								if (data.id === customersEditData.classStatusId) {
 									copyToClipboard(data.classStatusName)
 								}
@@ -339,7 +339,7 @@ const CustomersDetailsMb = () => {
 						{disableEditButton ? (
 							<p className={classes.subText1}>
 								{timezoneDropdown &&
-									timezoneDropdown.forEach((data) => {
+									timezoneDropdown.map((data) => {
 										if (data.id === customersEditData.timeZoneId) {
 											return <span>{data.timeZoneName}</span>
 										}
@@ -366,7 +366,7 @@ const CustomersDetailsMb = () => {
 					<IconButton
 						style={{marginTop: -15}}
 						onClick={() => {
-							timezoneDropdown.forEach((data) => {
+							timezoneDropdown.map((data) => {
 								if (data.id === customersEditData.timeZoneId) {
 									copyToClipboard(data.timeZoneName)
 								}
@@ -415,7 +415,7 @@ const CustomersDetailsMb = () => {
 						<div sytle={{display: "flex", flexDirection: "column"}}>
 							{subjectDropdown &&
 								subjectDropdown.map((data) => {
-									return customersEditData.requestedSubjects.forEach((sub) => {
+									return customersEditData.requestedSubjects.map((sub) => {
 										if (data.id === sub) {
 											return (
 												<p
@@ -505,40 +505,80 @@ const CustomersDetailsMb = () => {
 					</IconButton>
 				</div>
 
-				<div
-					style={{display: "flex", flexDirection: "row", cursor: "pointer"}}
-					onClick={() => studentsHistorytable(customersEditData._id)}
-				>
-					<Card className={classes.card1}>
-						<p className={classes.subText}> Classes Left: </p>
-					</Card>
+				{customersEditData.autoDemo && customersEditData.paidTill ? (
+					<div style={{display: "flex", flexDirection: "row"}}>
+						<Card className={classes.card1}>
+							<p className={classes.subText}>Due Date: </p>
+						</Card>
 
-					<Card className={classes.card2}>
-						{disableEditButton ? (
-							<p className={classes.subText1}>{customersEditData.numberOfClassesBought}</p>
-						) : (
-							<TextField
-								label="Classes Left"
-								variant="outlined"
-								fullWidth
-								name="numberOfClassesBought"
-								onChange={handleFormValueChange}
-								value={customersEditData.numberOfClassesBought}
-								InputProps={{
-									readOnly: true,
-								}}
-							/>
-						)}
-					</Card>
-					<IconButton
-						style={{marginTop: -15}}
-						onClick={() => {
-							copyToClipboard(customersEditData.numberOfClassesBought)
-						}}
+						<Card className={classes.card2}>
+							{disableEditButton ? (
+								<p className={classes.subText1}>
+									{customersEditData.paidTill
+										? moment(customersEditData.paidTill).format("MMM DD, yyyy")
+										: ""}
+								</p>
+							) : (
+								<MuiPickersUtilsProvider utils={DateFnsUtils}>
+									<DatePicker
+										label="Update Due date"
+										value={customersEditData.paidTill}
+										onChange={(e) => {
+											setCustomersEditData({
+												...customersEditData,
+												["paidTill"]: e,
+											})
+										}}
+										animateYearScrolling
+									/>
+								</MuiPickersUtilsProvider>
+							)}
+						</Card>
+						<IconButton
+							style={{marginTop: -15}}
+							onClick={() => {
+								copyToClipboard(customersEditData.gender)
+							}}
+						>
+							<FileCopyIcon />
+						</IconButton>
+					</div>
+				) : (
+					<div
+						style={{display: "flex", flexDirection: "row", cursor: "pointer"}}
+						onClick={() => studentsHistorytable(customersEditData._id)}
 					>
-						<FileCopyIcon />
-					</IconButton>
-				</div>
+						<Card className={classes.card1}>
+							<p className={classes.subText}> Classes Left: </p>
+						</Card>
+
+						<Card className={classes.card2}>
+							{disableEditButton ? (
+								<p className={classes.subText1}>{customersEditData.numberOfClassesBought}</p>
+							) : (
+								<TextField
+									label="Classes Left"
+									variant="outlined"
+									fullWidth
+									name="numberOfClassesBought"
+									onChange={handleFormValueChange}
+									value={customersEditData.numberOfClassesBought}
+									InputProps={{
+										readOnly: true,
+									}}
+								/>
+							)}
+						</Card>
+						<IconButton
+							style={{marginTop: -15}}
+							onClick={() => {
+								copyToClipboard(customersEditData.numberOfClassesBought)
+							}}
+						>
+							<FileCopyIcon />
+						</IconButton>
+					</div>
+				)}
 
 				<div style={{display: "flex", flexDirection: "row"}}>
 					<Card className={classes.card1}>
@@ -574,44 +614,6 @@ const CustomersDetailsMb = () => {
 
 				<div style={{display: "flex", flexDirection: "row"}}>
 					<Card className={classes.card1}>
-						<p className={classes.subText}>Due Date: </p>
-					</Card>
-
-					<Card className={classes.card2}>
-						{disableEditButton ? (
-							<p className={classes.subText1}>
-								{customersEditData.paidTill
-									? moment(customersEditData.paidTill).format("MMM DD, yyyy")
-									: ""}
-							</p>
-						) : (
-							<MuiPickersUtilsProvider utils={DateFnsUtils}>
-								<DatePicker
-									label="Basic example"
-									value={customersEditData.paidTill}
-									onChange={(e) => {
-										setCustomersEditData({
-											...customersEditData,
-											["paidTill"]: e,
-										})
-									}}
-									animateYearScrolling
-								/>
-							</MuiPickersUtilsProvider>
-						)}
-					</Card>
-					<IconButton
-						style={{marginTop: -15}}
-						onClick={() => {
-							copyToClipboard(customersEditData.gender)
-						}}
-					>
-						<FileCopyIcon />
-					</IconButton>
-				</div>
-
-				<div style={{display: "flex", flexDirection: "row"}}>
-					<Card className={classes.card1}>
 						<p className={classes.subText}>Class Name:</p>
 					</Card>
 
@@ -619,7 +621,7 @@ const CustomersDetailsMb = () => {
 						{disableEditButton ? (
 							<p className={classes.subText1}>
 								{classesIdDropdown &&
-									classesIdDropdown.forEach((data) => {
+									classesIdDropdown.map((data) => {
 										if (data.id === customersEditData.classId) {
 											return <span>{data.className}</span>
 										}
@@ -648,7 +650,7 @@ const CustomersDetailsMb = () => {
 						style={{marginTop: -15}}
 						onClick={() => {
 							classesIdDropdown &&
-								classesIdDropdown.forEach((data) => {
+								classesIdDropdown.map((data) => {
 									if (data.id === customersEditData.classId) {
 										copyToClipboard(data.className)
 									}
@@ -668,7 +670,7 @@ const CustomersDetailsMb = () => {
 						{disableEditButton ? (
 							<p className={classes.subText1}>
 								{subjectDropdown &&
-									subjectDropdown.forEach((data) => {
+									subjectDropdown.map((data) => {
 										if (data.id === customersEditData.subjectId) {
 											return <span>{data.subjectName}</span>
 										}
@@ -698,7 +700,7 @@ const CustomersDetailsMb = () => {
 						style={{marginTop: -15}}
 						onClick={() => {
 							subjectDropdown &&
-								subjectDropdown.forEach((data) => {
+								subjectDropdown.map((data) => {
 									if (data.id === customersEditData.subjectId) {
 										copyToClipboard(data.subjectName)
 									}
@@ -781,7 +783,7 @@ const CustomersDetailsMb = () => {
 						{disableEditButton ? (
 							<p className={classes.subText1}>
 								{teacherDropdown &&
-									teacherDropdown.forEach((data) => {
+									teacherDropdown.map((data) => {
 										if (data.id === customersEditData.teacherId) {
 											return <span>{data.TeacherName}</span>
 										}
@@ -811,7 +813,7 @@ const CustomersDetailsMb = () => {
 						style={{marginTop: -15}}
 						onClick={() => {
 							teacherDropdown &&
-								teacherDropdown.forEach((data) => {
+								teacherDropdown.map((data) => {
 									if (data.id === customersEditData.teacherId) {
 										copyToClipboard(data.TeacherName)
 									}
@@ -831,7 +833,7 @@ const CustomersDetailsMb = () => {
 						{disableEditButton ? (
 							<p className={classes.subText1}>
 								{countryDropdown &&
-									countryDropdown.forEach((data) => {
+									countryDropdown.map((data) => {
 										if (data.id === customersEditData.countryId) {
 											return <span>{data.countryName}</span>
 										}
@@ -860,7 +862,7 @@ const CustomersDetailsMb = () => {
 						style={{marginTop: -15}}
 						onClick={() => {
 							countryDropdown &&
-								countryDropdown.forEach((data) => {
+								countryDropdown.map((data) => {
 									if (data.id === customersEditData.countryId) {
 										copyToClipboard(data.countryName)
 									}
@@ -944,7 +946,7 @@ const CustomersDetailsMb = () => {
 						{disableEditButton ? (
 							<p className={classes.subText1}>
 								{currencyDropdown &&
-									currencyDropdown.forEach((data) => {
+									currencyDropdown.map((data) => {
 										if (data.id === customersEditData.proposedCurrencyId) {
 											return <span>{data.currencyName}</span>
 										}
@@ -973,7 +975,7 @@ const CustomersDetailsMb = () => {
 						style={{marginTop: -15}}
 						onClick={() => {
 							currencyDropdown &&
-								currencyDropdown.forEach((data) => {
+								currencyDropdown.map((data) => {
 									if (data.id === customersEditData.proposedCurrencyId) {
 										copyToClipboard(data.currencyName)
 									}
@@ -992,7 +994,7 @@ const CustomersDetailsMb = () => {
 						{disableEditButton ? (
 							<p className={classes.subText1}>
 								{agentDropdown &&
-									agentDropdown.forEach((data) => {
+									agentDropdown.map((data) => {
 										if (data.id === customersEditData.agentId) {
 											return <span>{data.AgentName}</span>
 										}
@@ -1022,7 +1024,7 @@ const CustomersDetailsMb = () => {
 						style={{marginTop: -15}}
 						onClick={() => {
 							agentDropdown &&
-								agentDropdown.forEach((data) => {
+								agentDropdown.map((data) => {
 									if (data.id === customersEditData.agentId) {
 										copyToClipboard(data.AgentName)
 									}
@@ -1068,13 +1070,13 @@ const CustomersDetailsMb = () => {
 
 				<div style={{display: "flex", flexDirection: "row"}}>
 					<Card className={classes.card1}>
-						<p className={classes.subText}>Agent:</p>
+						<p className={classes.subText}>Category:</p>
 					</Card>
 					<Card className={classes.card2}>
 						{disableEditButton ? (
 							<p className={classes.subText1}>
 								{categoryDropdown &&
-									categoryDropdown.forEach((data) => {
+									categoryDropdown.map((data) => {
 										if (data.id === customersEditData.categoryId) {
 											return <span>{data.categoryName}</span>
 										}
@@ -1105,7 +1107,7 @@ const CustomersDetailsMb = () => {
 						style={{marginTop: -15}}
 						onClick={() => {
 							categoryDropdown &&
-								categoryDropdown.forEach((data) => {
+								categoryDropdown.map((data) => {
 									if (data.id === customersEditData.categoryId) {
 										copyToClipboard(data.categoryName)
 									}
