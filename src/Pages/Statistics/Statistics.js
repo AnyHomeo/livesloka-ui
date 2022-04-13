@@ -17,6 +17,7 @@ import {
 	Switch,
 	DialogActions,
 	TextField,
+	Drawer,
 } from "@material-ui/core"
 
 import EditIcon from "@material-ui/icons/Edit"
@@ -180,6 +181,15 @@ function Statistics() {
 		mapLatestComments()
 	}, [mapLatestComments])
 
+	const [drawerState, setDrawerState] = useState({
+		left: false,
+	})
+
+	const toggleDrawer = (anchor, open) => (event) => {
+		setDrawerState({...drawerState, [anchor]: open})
+	}
+
+	console.log(selectedCommentsCustomerId)
 	return (
 		<div>
 			<ApplyTeacherLeaves
@@ -187,10 +197,13 @@ function Statistics() {
 				setIsAddLeaveDialogOpen={setOpenLeaveDialog}
 				{...leaveData}
 			/>
-			<Comments
-				customerId={selectedCommentsCustomerId}
-				setCustomerId={setSelectedCommentsCustomerId}
-			/>
+			<Drawer anchor={"left"} open={drawerState["left"]} onClose={toggleDrawer("left", false)}>
+				<Comments
+					commentsCustomerId={selectedCommentsCustomerId}
+					drawerState={drawerState}
+					setDrawerState={setDrawerState}
+				/>
+			</Drawer>
 			<Dialog
 				open={dialogOpen}
 				onClose={() => setDialogOpen(false)}
@@ -397,6 +410,7 @@ function Statistics() {
 								tooltip: "Add Comment",
 								onClick: (event, rowData) => {
 									setSelectedCommentsCustomerId(rowData._id)
+									setDrawerState({...drawerState, left: true})
 								},
 							}),
 						]}
