@@ -17,11 +17,11 @@ const StatusColumn = ({data}) => {
 	const classes = useStyles()
 	return (
 		<div className={classes.root}>
-			<p>{data.name.status}</p>
-			<span style={{display: "flex", justifyContent: "space-between"}}>
-				<p style={{fontSize: 14}}>{data.name.amount}</p>
-				<p style={{fontSize: 14, color: "#2d3436"}}> {data.name.admission} Admission</p>
-			</span>
+			<p>{data.data.classStatusName}</p>
+			{/* <span style={{display: "flex", justifyContent: "space-between"}}>
+				<p style={{fontSize: 14}}>{data.data.amount}</p>
+				<p style={{fontSize: 14, color: "#2d3436"}}> {data.data.admission} Admission</p>
+			</span> */}
 		</div>
 	)
 }

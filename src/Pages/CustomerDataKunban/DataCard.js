@@ -1,17 +1,19 @@
 import {Chip, makeStyles} from "@material-ui/core"
 import React from "react"
-import Crown from "../../Images/crown.png"
+import Teacher from "../../Images/teacher.png"
+import money from "../../Images/money.png"
 const DataCard = ({data, provided, snapshot}) => {
 	const useStyles = makeStyles({
 		root: {
 			userSelect: "none",
-			padding: 5,
+			// padding: 5,
 			margin: "0 0 8px 0",
 			minHeight: "50px",
 			backgroundColor: snapshot.isDragging ? "#70a1ff" : "white",
 			boxShadow: "rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px",
 			borderRadius: 5,
 			...provided.draggableProps.style,
+			overflow: "hidden",
 		},
 	})
 	const classes = useStyles()
@@ -23,24 +25,37 @@ const DataCard = ({data, provided, snapshot}) => {
 			{...provided.draggableProps}
 			{...provided.dragHandleProps}
 		>
-			<span style={{display: "flex", justifyContent: "space-between"}}>
-				<p style={{fontSize: 12, fontWeight: "bold"}}>{data.parent}</p>
-				<p style={{fontSize: 12, display: "flex", alignItems: "center"}}>
-					<img src={Crown} style={{height: 15, width: 15, marginRight: 3}} alt="" /> {data.agent}
-				</p>
-			</span>
+			<div style={{height: 20, widht: "100%", backgroundColor: "#3867d6"}}>
+				<p style={{fontSize: 12, textAlign: "center", color: "white"}}>{data.lastName}</p>
+			</div>
+			<div style={{padding: 2}}>
+				<span style={{display: "flex", justifyContent: "space-between"}}>
+					<p style={{fontSize: 12}}>{data.firstName}</p>
+					<p style={{fontSize: 12, display: "flex", alignItems: "center"}}>
+						<img src={Teacher} style={{height: 15, width: 15, marginRight: 5}} alt="" />{" "}
+						{"Preeti Bisht"}
+					</p>
+				</span>
+				<span style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+					<p style={{fontSize: 12}}>{"Tollywood"}</p>
 
-			<span style={{display: "flex", justifyContent: "space-between"}}>
-				<p style={{fontSize: 12, color: "#2f3542"}}>{data.studentName}</p>
-				<p style={{fontSize: 12}}>{data.age}</p>
-			</span>
-			{data.tags.map((tag, i) => (
-				<Chip
-					style={{marginRight: 2, height: 20, backgroundColor: i === 0 ? "#FD7272" : "#9AECDB"}}
-					size="small"
-					label={<p style={{fontSize: 10, fontWeight: "bold"}}>{tag}</p>}
-				/>
-			))}
+					<p style={{fontSize: 12, display: "flex", alignItems: "center"}}>
+						<img src={money} style={{height: 15, width: 15, marginRight: 5}} alt="" />{" "}
+						{`${data.proposedAmount}.00`}
+					</p>
+				</span>
+				<span
+					style={{
+						display: "flex",
+						justifyContent: "space-between",
+						alignItems: "center",
+						marginTop: 2,
+					}}
+				>
+					<p style={{fontSize: 12}}>{data?.timeZone?.timeZoneName}</p>
+					<p style={{fontSize: 12}}>{data.age}</p>
+				</span>
+			</div>
 		</div>
 	)
 }
