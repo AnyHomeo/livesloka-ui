@@ -47,6 +47,7 @@ import TeacherReporting from "../Pages/TeacherFeedback/TeacherReporting"
 import HistoricCurrency from "../Pages/HistoricCurrency/HistoricCurrency"
 import SchedulerCardConatiner from "../Pages/Admin/SchedulerMobile/SchedulerCardConatiner"
 import {Feedback} from "../Pages/Feedback"
+import CustomerDataKunban from "../Pages/CustomerDataKunban/CustomerDataKunban"
 
 const adminRoutes = [
 	{permission: "Financial Dashboard", path: "/dashboard", exact: true, component: Dashboard},
@@ -225,6 +226,12 @@ const adminRoutes = [
 		path: "/teacher/feedback",
 		exact: true,
 		component: Feedback,
+	},
+	{
+		permission: "Messages",
+		path: "/kunban/board",
+		exact: true,
+		component: CustomerDataKunban,
 	},
 ]
 
