@@ -115,11 +115,11 @@ const InvoicePages = () => {
 			),
 		},
 		{
-			title: "Payment Rate",
+			title: "Exchange rate from customer",
 			field: "exchangeRate",
 		},
 		{
-			title: "Deposit Rate",
+			title: "Exchange rate from Paypal",
 			field: "depositExchangeRate",
 		},
 		{
