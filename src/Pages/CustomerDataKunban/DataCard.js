@@ -1,10 +1,22 @@
 import {Chip, makeStyles} from "@material-ui/core"
-import React from "react"
+import React, {useCallback, useEffect, useState} from "react"
 import Teacher from "../../Images/teacher.png"
 import money from "../../Images/money.png"
 import "./Datacard.css"
-import {WhatsApp} from "@material-ui/icons"
-const DataCard = ({data, provided, snapshot}) => {
+import {Comment, WhatsApp} from "@material-ui/icons"
+import {getComments, getCommentsByCustomerIds} from "../../Services/Services"
+import {MessageCircle} from "react-feather"
+const DataCard = ({
+	data,
+	provided,
+	snapshot,
+	setSelectedCommentsCustomerId,
+	drawerState,
+	setDrawerState,
+	editCustomerData,
+	setEditCustomerData,
+	setSelectedCustomer,
+}) => {
 	const useStyles = makeStyles({
 		root: {
 			userSelect: "none",
@@ -26,66 +38,55 @@ const DataCard = ({data, provided, snapshot}) => {
 			ref={provided.innerRef}
 			{...provided.draggableProps}
 			{...provided.dragHandleProps}
+			onClick={() => {
+				setEditCustomerData({...editCustomerData, right: true})
+				setSelectedCustomer(data)
+			}}
 		>
 			<div className="fontchange" style={{padding: 10}}>
 				<span style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
 					<p style={{fontSize: 15, fontWeight: 550, marginTop: 2}}>{data.lastName}</p>
-					<WhatsApp style={{height: 20, width: 20, color: "#27ae60"}} />
+					<WhatsApp
+						onClick={() =>
+							window.open(
+								`https://api.whatsapp.com/send?phone=${
+									data.whatsAppnumber.indexOf("+") !== -1
+										? data.whatsAppnumber.split("+")[1].split(" ").join("")
+										: data.countryCode
+										? data.countryCode + data.whatsAppnumber.split(" ").join("")
+										: data.whatsAppnumber.split(" ").join("")
+								}`
+							)
+						}
+						style={{height: 20, width: 20, color: "#27ae60"}}
+					/>
 				</span>
-				<p style={{fontSize: 12, fontWeight: 500, marginTop: 2}}>
-					{data.firstName} {data.age && <>({data.age})</>}
-				</p>
+				<span style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+					<p style={{fontSize: 12, fontWeight: 500, marginTop: 2}}>
+						{data.firstName} {data.age && <>({data.age})</>}
+					</p>
+					<MessageCircle
+						onClick={() => {
+							setSelectedCommentsCustomerId(data._id)
+							setDrawerState({...drawerState, left: true})
+						}}
+						style={{height: 20, width: 20}}
+					/>
+				</span>
+
+				<p style={{fontSize: 12, fontWeight: 500, marginTop: 2}}>{data?.teacher?.TeacherName}</p>
 				<p style={{fontSize: 12, fontWeight: 500, marginTop: 2}}>{"Apr 15 09:30 PM"}</p>
 
 				<p style={{fontSize: 12, fontWeight: 500, marginTop: 2}}>{`$${data.proposedAmount}.00`}</p>
-
-				{/* <div
-					size="small"
-					label={<p style={{fontSize: 12, color: "white"}}>EST</p>}
-					style={{backgroundColor: "#e74c3c", marginTop: 5}}
-				/>
-				 */}
-
-				{/* <div style={{height: 20, widht: "100%", backgroundColor: "#3867d6"}}>
-				<p style={{fontSize: 12, textAlign: "center", color: "white"}}>{data.lastName}</p>
-			</div>
-			<div style={{padding: 2}}>
-				<span style={{display: "flex", justifyContent: "space-between"}}>
-					<p style={{fontSize: 12}}>{data.firstName}</p>
-					<p style={{fontSize: 12, display: "flex", alignItems: "center"}}>
-						<img src={Teacher} style={{height: 15, width: 15, marginRight: 5}} alt="" />{" "}
-						{"Preeti Bisht"}
-					</p>
-				</span>
-				<span style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-					<p style={{fontSize: 12}}>{"Tollywood"}</p>
-
-					<p style={{fontSize: 12, display: "flex", alignItems: "center"}}>
-						<img src={money} style={{height: 15, width: 15, marginRight: 5}} alt="" />{" "}
-						{`${data.proposedAmount}.00`}
-					</p>
-				</span>
-				<span
-					style={{
-						display: "flex",
-						justifyContent: "space-between",
-						alignItems: "center",
-						marginTop: 2,
-					}}
-				>
-					<p style={{fontSize: 12}}>{data?.timeZone?.timeZoneName}</p>
-					<p style={{fontSize: 12}}>{data.age}</p>
-				</span>
-			</div> */}
 			</div>
 
-			<div style={{display: "flex"}}>
+			<div style={{display: "flex", justifyContent: "space-between"}}>
 				<div
 					style={{
 						marginRight: 76,
 						backgroundColor: "white",
 						marginTop: 5,
-						// width: "70%",
+						width: "50%",
 						height: 25,
 						width: 50,
 						backgroundColor: "#e74c3c",
@@ -95,37 +96,29 @@ const DataCard = ({data, provided, snapshot}) => {
 						justifyContent: "center",
 						alignItems: "center",
 						marginBottom: 10,
+						flex: 0.3,
 					}}
 				>
-					<p style={{fontSize: 12, color: "white"}}>EST</p>
+					<p style={{fontSize: 12, color: "white"}}>{data?.timeZone?.timeZoneName}</p>
 				</div>
 
-				<div>
-					<div
-						style={{
-							marginLeft: 76,
-							backgroundColor: "white",
-							marginTop: 5,
-							width: 5,
-							height: 25,
-							width: "auto",
-							backgroundColor: "#e74c3c",
-							borderTopLeftRadius: 15,
-							borderBottomLeftRadius: 15,
-							display: "flex",
-							justifyContent: "center",
-							alignItems: "center",
-							marginBottom: 10,
-						}}
-					>
-						<p style={{fontSize: 12, color: "white", padding: 10}}>Tollywood</p>
-					</div>
-
-					{/* <Chip
-						size="small"
-						label={<p style={{fontSize: 12, color: "white"}}>Tollywood</p>}
-						style={{backgroundColor: "#e74c3c", marginTop: 5}}
-					/> */}
+				<div
+					style={{
+						backgroundColor: "white",
+						marginTop: 5,
+						height: 25,
+						width: "50%",
+						backgroundColor: "#3867d6",
+						borderTopLeftRadius: 15,
+						borderBottomLeftRadius: 15,
+						display: "flex",
+						justifyContent: "center",
+						alignItems: "center",
+						marginBottom: 10,
+						flex: 0.5,
+					}}
+				>
+					<p style={{fontSize: 12, color: "white", padding: 10}}>{data?.subject?.subjectName}</p>
 				</div>
 			</div>
 		</div>

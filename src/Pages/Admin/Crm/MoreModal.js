@@ -9,13 +9,14 @@ import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
 import LibraryAddIcon from "@material-ui/icons/LibraryAdd"
 import SmsIcon from "@material-ui/icons/Sms"
-import {IconButton, makeStyles, Snackbar} from "@material-ui/core"
+import {Drawer, IconButton, makeStyles, Snackbar} from "@material-ui/core"
 import MuiAlert from "@material-ui/lab/Alert"
 import {Link} from "react-router-dom"
 import {Alert} from "@material-ui/lab"
 import Axios from "axios"
 import {useConfirm} from "material-ui-confirm"
 import {Activity} from "react-feather"
+import Comments from "./Comments"
 const useStyles = makeStyles((theme) => ({
 	iconCont: {
 		display: "flex",
@@ -38,6 +39,7 @@ const MoreModal = ({
 	const [response, setResponse] = useState("")
 	const [success, setSuccess] = useState(false)
 	const [modalOpen, setModalOpen] = useState(false)
+	const [selectedCommentsCustomerId, setSelectedCommentsCustomerId] = useState("")
 
 	const handleClose = () => {
 		setOpen(false)
@@ -72,8 +74,24 @@ const MoreModal = ({
 		return <MuiAlert elevation={6} variant="filled" {...props} />
 	}
 
+	const [drawerState, setDrawerState] = useState({
+		left: false,
+	})
+
+	const toggleDrawer = (anchor, open) => (event) => {
+		setDrawerState({...drawerState, [anchor]: open})
+	}
+
 	return (
 		<div>
+			<Drawer anchor={"left"} open={drawerState["left"]} onClose={toggleDrawer("left", false)}>
+				<Comments
+					commentsCustomerId={selectedCommentsCustomerId}
+					drawerState={drawerState}
+					setDrawerState={setDrawerState}
+				/>
+			</Drawer>
+
 			{open && (
 				<Snackbar open={modalOpen} autoHideDuration={1000} onClose={() => handleAlert()}>
 					<Alert onClose={() => handleAlert()} severity={success ? "success" : "warning"}>
@@ -161,9 +179,8 @@ const MoreModal = ({
 							<div
 								className={classes.iconCont}
 								onClick={() => {
-									commentModalOpen(true)
-									setNameComment(data.firstName)
-									setIdComment(data._id)
+									setSelectedCommentsCustomerId(data._id)
+									setDrawerState({...drawerState, left: true})
 								}}
 							>
 								<IconButton>

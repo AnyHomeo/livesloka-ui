@@ -1,4 +1,4 @@
-import {Button, IconButton, makeStyles, Menu} from "@material-ui/core"
+import {Button, Drawer, IconButton, makeStyles, Menu} from "@material-ui/core"
 import {Sort, Star} from "@material-ui/icons"
 import {ToggleButton, ToggleButtonGroup} from "@material-ui/lab"
 import Axios from "axios"
@@ -13,7 +13,11 @@ import {addDays} from "date-fns"
 import {DateRangePicker} from "react-date-range"
 import "react-date-range/dist/styles.css" // main css file
 import "react-date-range/dist/theme/default.css" // theme css file
-
+import NewAdmissioin from "./NewAdmissioin"
+import Comments from "../Admin/Crm/Comments"
+import DateRangeDialog from "./DateRangeDialog"
+import moment from "moment"
+import EditCustomer from "./EditCustomer"
 const useStyles = makeStyles({
 	userFilter: {
 		marginLeft: 15,
@@ -38,278 +42,16 @@ const useStyles = makeStyles({
 			backgroundColor: "lightblue",
 		},
 	},
+	hideScrollBar: {
+		margin: 8,
+		overflowY: "scroll",
+		boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
+		borderRadius: 5,
+		"&::-webkit-scrollbar": {
+			display: "none",
+		},
+	},
 })
-
-const itemsFromBackend = [
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-]
-
-const itemsFromBackend1 = [
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-]
-
-const itemsFromBackend2 = [
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-]
-
-const itemsFromBackend3 = [
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-	{
-		id: uuid(),
-		content: {
-			parent: "Tejaswini Sareddy",
-			studentName: "Sindu Ajay",
-			agent: "Ram Kishore",
-			age: "23",
-			tags: ["Bollywood", "EST"],
-		},
-	},
-]
-
-const columnsFromBackend = {
-	[uuid()]: {
-		data: {
-			status: "New Inquiry",
-			amount: "$0.00",
-			admission: "8",
-		},
-		items: itemsFromBackend,
-	},
-	[uuid()]: {
-		data: {
-			status: "Details Sent",
-			amount: "$0.00",
-			admission: "8",
-		},
-		items: itemsFromBackend1,
-	},
-	[uuid()]: {
-		data: {
-			status: "Responded",
-			amount: "$0.00",
-			admission: "8",
-		},
-		items: itemsFromBackend2,
-	},
-	[uuid()]: {
-		data: {
-			status: "Demo Scheduled",
-			amount: "$0.00",
-			admission: "8",
-		},
-		items: itemsFromBackend3,
-	},
-	[uuid()]: {
-		data: {
-			status: "Demo Done",
-			amount: "$0.00",
-			admission: "8",
-		},
-		items: itemsFromBackend3,
-	},
-	[uuid()]: {
-		data: {
-			status: "Yes For Class",
-			amount: "$0.00",
-			admission: "8",
-		},
-		items: itemsFromBackend3,
-	},
-	[uuid()]: {
-		data: {
-			status: "Yes For Class",
-			amount: "$0.00",
-			admission: "8",
-		},
-		items: itemsFromBackend3,
-	},
-}
 
 const updateCusomter = async (moved, destination, columns) => {
 	const destColumn = columns[destination.droppableId]
@@ -368,13 +110,14 @@ const onDragEnd = (result, columns, setColumns) => {
 
 function CustomerDataKunban() {
 	const [showPicker, setShowPicker] = useState(false)
-	const [filteredDate, setFilteredDate] = useState([
+	let dateFilter = [
 		{
 			startDate: new Date(),
 			endDate: new Date(),
 			key: "selection",
 		},
-	])
+	]
+	const [filteredDate, setFilteredDate] = useState(dateFilter)
 
 	const classes = useStyles()
 	const [columns, setColumns] = useState({})
@@ -391,12 +134,14 @@ function CustomerDataKunban() {
 	}
 
 	useEffect(() => {
+		// setFilteredDate(JSON.parse(localStorage.getItem("filteredDate")))
 		fetchData()
 	}, [])
-
 	const fetchData = async () => {
+		console.log(filteredDate)
+		console.log(filteredDate)
 		let url = `${process.env.REACT_APP_API_KEY}/api/customers/dashboard`
-		if (filteredDate.length) {
+		if (filteredDate != null && filteredDate.length) {
 			url = `${
 				process.env.REACT_APP_API_KEY
 			}/api/customers/dashboard?from=${filteredDate[0].startDate.toISOString()}&to=${filteredDate[0].endDate.toISOString()}`
@@ -406,10 +151,29 @@ function CustomerDataKunban() {
 			setColumns(data?.data?.result)
 		} catch (error) {}
 	}
+	const [selectedCommentsCustomerId, setSelectedCommentsCustomerId] = useState("")
+	const [selectedCustomer, setSelectedCustomer] = useState({})
+	const [drawerState, setDrawerState] = useState({
+		right: false,
+		left: false,
+	})
+
+	const [editCustomerData, setEditCustomerData] = useState({
+		right: false,
+	})
+
+	const toggleDrawer = (anchor, open) => (event) => {
+		setDrawerState({...drawerState, [anchor]: open})
+	}
+
+	const toggleDrawerEditData = (anchor, open) => (event) => {
+		setEditCustomerData({...editCustomerData, [anchor]: open})
+	}
+	const [open, setOpen] = useState(false)
 
 	return (
 		<>
-			{showPicker && (
+			{/* {showPicker && (
 				<div
 					style={{
 						display: "flex",
@@ -438,7 +202,15 @@ function CustomerDataKunban() {
 						Apply
 					</Button>
 				</div>
-			)}
+			)} */}
+
+			<DateRangeDialog
+				open={open}
+				setOpen={setOpen}
+				setFilteredDate={setFilteredDate}
+				filteredDate={filteredDate}
+				fetchData={fetchData}
+			/>
 
 			<div>
 				<Menu
@@ -511,10 +283,14 @@ function CustomerDataKunban() {
 					</div>
 					<IconButton
 						style={{backgroundColor: "#2ecc7050", marginLeft: 20}}
-						onClick={() => setShowPicker(!showPicker)}
+						onClick={() => setOpen(!open)}
 					>
 						<Clock style={{color: "#27ae60"}} />
 					</IconButton>
+					<p style={{marginLeft: 10, fontWeight: 600}}>
+						{moment(filteredDate && filteredDate[0].startDate).format("MMM Do YY")} -{" "}
+						{moment(filteredDate && filteredDate[0].endDate).format("MMM Do YY")}
+					</p>
 				</div>
 				<div style={{display: "flex", alignItems: "center"}}>
 					<p>Sort By</p>
@@ -547,6 +323,7 @@ function CustomerDataKunban() {
 					</ToggleButtonGroup>
 
 					<Button
+						onClick={() => setDrawerState({...drawerState, right: true})}
 						style={{
 							marginLeft: 10,
 							backgroundColor: "#27ae60",
@@ -569,15 +346,16 @@ function CustomerDataKunban() {
 				style={{
 					display: "flex",
 					justifyContent: "flex-start",
-					height: "100%",
-					marginTop: 20,
+					// height: "100%",
+					marginTop: 10,
 					width: "100%",
-					// overflowX: "scroll",
+					overflowX: "scroll",
 					// width: "min-content",
 					marginLeft: "auto",
 					// overflowY: "scroll",
-					overflow: "scroll",
+					// overflow: "scroll",
 					// overflow: "hidden",
+					height: "100vh",
 				}}
 			>
 				{columns && (
@@ -594,7 +372,7 @@ function CustomerDataKunban() {
 								>
 									<StatusColumn data={column} />
 									{/* <h2>{column.name}</h2> */}
-									<div style={{margin: 8}}>
+									<div className={classes.hideScrollBar}>
 										<Droppable droppableId={columnId} key={columnId}>
 											{(provided, snapshot) => {
 												return (
@@ -606,9 +384,9 @@ function CustomerDataKunban() {
 															padding: 2,
 															width: 250,
 															minHeight: 500,
-															boxShadow:
-																"rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
+
 															borderRadius: 5,
+															overflow: "hidden",
 														}}
 													>
 														{column.items.map((item, index) => {
@@ -620,6 +398,14 @@ function CustomerDataKunban() {
 																				data={item.content}
 																				provided={provided}
 																				snapshot={snapshot}
+																				setSelectedCommentsCustomerId={
+																					setSelectedCommentsCustomerId
+																				}
+																				drawerState={drawerState}
+																				setDrawerState={setDrawerState}
+																				editCustomerData={editCustomerData}
+																				setEditCustomerData={setEditCustomerData}
+																				setSelectedCustomer={setSelectedCustomer}
 																			/>
 																		)
 																	}}
@@ -638,6 +424,26 @@ function CustomerDataKunban() {
 					</DragDropContext>
 				)}
 			</div>
+
+			<Drawer anchor={"right"} open={drawerState["right"]} onClose={toggleDrawer("right", false)}>
+				<NewAdmissioin />
+			</Drawer>
+
+			<Drawer
+				anchor={"right"}
+				open={editCustomerData["right"]}
+				onClose={toggleDrawerEditData("right", false)}
+			>
+				<EditCustomer selectedCustomer={selectedCustomer} fetchData={fetchData} />
+			</Drawer>
+
+			<Drawer anchor={"left"} open={drawerState["left"]} onClose={toggleDrawer("left", false)}>
+				<Comments
+					commentsCustomerId={selectedCommentsCustomerId}
+					drawerState={drawerState}
+					setDrawerState={setDrawerState}
+				/>
+			</Drawer>
 		</>
 	)
 }

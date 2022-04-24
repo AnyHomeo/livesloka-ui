@@ -1,6 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&display=swap');
+.react-tel-input .form-control {
+	width: 255px !important;
+	flex: 0.7 !important;
+	outline-color: #45aaf2 !important;
+}
 
-.fontchange {
-    font-family: 'Montserrat', sans-serif !important;
-    
-} 
+.notdisplayed {
+	display: none;
+}
+
+.displayed {
+	display: flex;
+	flex: 0.1;
+	cursor: pointer;
+}
