@@ -1,6 +1,6 @@
-import {Button, makeStyles} from "@material-ui/core"
+import {Button, IconButton, makeStyles} from "@material-ui/core"
 import React, {useState} from "react"
-import {Check, XCircle} from "react-feather"
+import {Check, Edit2, XCircle} from "react-feather"
 import {editCustomer} from "../../Services/Services"
 const useStyles = makeStyles({
 	leftFont: {
@@ -606,50 +606,71 @@ const EditCustomer = ({selectedCustomer, fetchData}) => {
 											type="text"
 										/>
 									) : (
-										<p className={classes.rightFont}>{editingData[item]}</p>
+										<>
+											{editingData[item] === 0 && (
+												<p className={classes.rightFont}>{editingData[item]}</p>
+											)}
+											{editingData[item] === true || editingData[item] == false ? (
+												<p className={classes.rightFont}>HEllo</p>
+											) : (
+												<p className={classes.rightFont}>{editingData[item]}</p>
+											)}
+										</>
 									)}
 								</span>
 							</div>
 
-							{item === hoveredFields && (
-								<div className={display}>
-									<div
-										style={{
-											height: 25,
-											width: 25,
-											backgroundColor: "#2ecc71",
-											borderRadius: 50,
-											display: "flex",
-											justifyContent: "center",
-											alignItems: "center",
-											color: "white",
-										}}
-										onClick={() => {
-											setIsInput(!isInput)
-											if (isInput) {
-												onCustomerUpdate()
-											}
-										}}
-									>
-										<Check style={{height: 18, width: 18}} />
-									</div>
-									<div
-										style={{
-											height: 25,
-											width: 25,
-											backgroundColor: "#e74c3c",
-											borderRadius: 50,
-											display: "flex",
-											justifyContent: "center",
-											alignItems: "center",
-											color: "white",
-											marginLeft: 10,
-										}}
-										onClick={() => setIsInput(false)}
-									>
-										<XCircle style={{height: 18, width: 18}} />
-									</div>
-								</div>
+							{!isInput ? (
+								<>
+									{item === hoveredFields && (
+										<IconButton onClick={() => setIsInput(!isInput)}>
+											<Edit2 />
+										</IconButton>
+									)}
+								</>
+							) : (
+								<>
+									{item === hoveredFields && (
+										<div className={display}>
+											<div
+												style={{
+													height: 25,
+													width: 25,
+													backgroundColor: "#2ecc71",
+													borderRadius: 50,
+													display: "flex",
+													justifyContent: "center",
+													alignItems: "center",
+													color: "white",
+												}}
+												onClick={() => {
+													setIsInput(!isInput)
+													if (isInput) {
+														onCustomerUpdate()
+													}
+												}}
+											>
+												<Check style={{height: 18, width: 18}} />
+											</div>
+											<div
+												style={{
+													height: 25,
+													width: 25,
+													backgroundColor: "#e74c3c",
+													borderRadius: 50,
+													display: "flex",
+													justifyContent: "center",
+													alignItems: "center",
+													color: "white",
+													marginLeft: 10,
+												}}
+												onClick={() => setIsInput(false)}
+											>
+												<XCircle style={{height: 18, width: 18}} />
+											</div>
+										</div>
+									)}
+								</>
 							)}
 						</div>
 					)

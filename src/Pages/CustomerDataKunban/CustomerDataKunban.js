@@ -310,7 +310,7 @@ function CustomerDataKunban() {
 					width: "100%",
 					overflowX: "scroll",
 					marginLeft: "auto",
-					height: "100vh",
+					height: "calc(100vh - 160px)",
 				}}
 			>
 				{columns && (
@@ -338,7 +338,7 @@ function CustomerDataKunban() {
 															style={{
 																background: snapshot.isDraggingOver ? "lightblue" : "#f1f2f6",
 																padding: 2,
-																width: 250,
+																width: 220,
 																minHeight: 500,
 
 																borderRadius: 5,

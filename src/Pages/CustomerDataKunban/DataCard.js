@@ -22,7 +22,7 @@ const DataCard = ({
 			userSelect: "none",
 			// padding: 5,
 			margin: "0 0 8px 0",
-			minHeight: "50px",
+			minHeight: "auto",
 			backgroundColor: snapshot.isDragging ? "#70a1ff" : "white",
 			boxShadow: "rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px",
 			borderRadius: 5,
@@ -45,26 +45,34 @@ const DataCard = ({
 		>
 			<div className="fontchange" style={{padding: 10}}>
 				<span style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-					<p style={{fontSize: 15, fontWeight: 550, marginTop: 2}}>{data.lastName}</p>
-					<WhatsApp
-						onClick={() =>
-							window.open(
-								`https://api.whatsapp.com/send?phone=${
-									data.whatsAppnumber.indexOf("+") !== -1
-										? data.whatsAppnumber.split("+")[1].split(" ").join("")
-										: data.countryCode
-										? data.countryCode + data.whatsAppnumber.split(" ").join("")
-										: data.whatsAppnumber.split(" ").join("")
-								}`
-							)
-						}
-						style={{height: 20, width: 20, color: "#27ae60"}}
-					/>
+					{data.lastName && (
+						<p style={{fontSize: 15, fontWeight: 550, marginTop: 2}}>{data.lastName}</p>
+					)}
+
+					{data.whatsAppnumber && (
+						<WhatsApp
+							onClick={() =>
+								window.open(
+									`https://api.whatsapp.com/send?phone=${
+										data.whatsAppnumber.indexOf("+") !== -1
+											? data.whatsAppnumber.split("+")[1].split(" ").join("")
+											: data.countryCode
+											? data.countryCode + data.whatsAppnumber.split(" ").join("")
+											: data.whatsAppnumber.split(" ").join("")
+									}`
+								)
+							}
+							style={{height: 20, width: 20, color: "#27ae60"}}
+						/>
+					)}
 				</span>
 				<span style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-					<p style={{fontSize: 12, fontWeight: 500, marginTop: 2}}>
-						{data.firstName} {data.age && <>({data.age})</>}
-					</p>
+					{data.firstName && (
+						<p style={{fontSize: 12, fontWeight: 500, marginTop: 2}}>
+							{data.firstName} {data.age && <>({data.age})</>}
+						</p>
+					)}
+
 					<MessageCircle
 						onClick={() => {
 							setSelectedCommentsCustomerId(data._id)
@@ -73,53 +81,63 @@ const DataCard = ({
 						style={{height: 20, width: 20}}
 					/>
 				</span>
+				{data?.teacher?.TeacherName && (
+					<p style={{fontSize: 12, fontWeight: 500, marginTop: 2}}>{data?.teacher?.TeacherName}</p>
+				)}
 
-				<p style={{fontSize: 12, fontWeight: 500, marginTop: 2}}>{data?.teacher?.TeacherName}</p>
-				<p style={{fontSize: 12, fontWeight: 500, marginTop: 2}}>{"Apr 15 09:30 PM"}</p>
+				{/* <p style={{fontSize: 12, fontWeight: 500, marginTop: 2}}>{"Apr 15 09:30 PM"}</p> */}
 
-				<p style={{fontSize: 12, fontWeight: 500, marginTop: 2}}>{`$${data.proposedAmount}.00`}</p>
+				{data.proposedAmount && (
+					<p
+						style={{fontSize: 12, fontWeight: 500, marginTop: 2}}
+					>{`$${data.proposedAmount}.00`}</p>
+				)}
 			</div>
 
 			<div style={{display: "flex", justifyContent: "space-between"}}>
-				<div
-					style={{
-						marginRight: 76,
-						backgroundColor: "white",
-						marginTop: 5,
-						width: "50%",
-						height: 25,
-						width: 50,
-						backgroundColor: "#e74c3c",
-						borderTopRightRadius: 15,
-						borderBottomRightRadius: 15,
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-						marginBottom: 10,
-						flex: 0.3,
-					}}
-				>
-					<p style={{fontSize: 12, color: "white"}}>{data?.timeZone?.timeZoneName}</p>
-				</div>
+				{data?.timeZone?.timeZoneName && (
+					<div
+						style={{
+							marginRight: 76,
+							backgroundColor: "white",
+							marginTop: 5,
+							width: "50%",
+							height: 25,
+							width: 50,
+							backgroundColor: "#e74c3c",
+							borderTopRightRadius: 15,
+							borderBottomRightRadius: 15,
+							display: "flex",
+							justifyContent: "center",
+							alignItems: "center",
+							marginBottom: 10,
+							flex: 0.3,
+						}}
+					>
+						<p style={{fontSize: 12, color: "white"}}>{data?.timeZone?.timeZoneName}</p>
+					</div>
+				)}
 
-				<div
-					style={{
-						backgroundColor: "white",
-						marginTop: 5,
-						height: 25,
-						width: "50%",
-						backgroundColor: "#3867d6",
-						borderTopLeftRadius: 15,
-						borderBottomLeftRadius: 15,
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-						marginBottom: 10,
-						flex: 0.5,
-					}}
-				>
-					<p style={{fontSize: 12, color: "white", padding: 10}}>{data?.subject?.subjectName}</p>
-				</div>
+				{data?.subject?.subjectName && (
+					<div
+						style={{
+							backgroundColor: "white",
+							marginTop: 5,
+							height: 25,
+							width: "50%",
+							backgroundColor: "#3867d6",
+							borderTopLeftRadius: 15,
+							borderBottomLeftRadius: 15,
+							display: "flex",
+							justifyContent: "center",
+							alignItems: "center",
+							marginBottom: 10,
+							flex: 0.5,
+						}}
+					>
+						<p style={{fontSize: 12, color: "white", padding: 10}}>{data?.subject?.subjectName}</p>
+					</div>
+				)}
 			</div>
 		</div>
 	)
