@@ -241,3 +241,5 @@ export const getCommentsByCustomerIds = (customerIds) =>
 	Axios.get(`${API.main}/admin/comments?customers=${customerIds.join(",")}`)
 export const getWatiFeedbackMessages = () =>
 	Axios.get(`${API.main}/api/wati?from=${moment().startOf("month")}&to=${moment().endOf("month")}`)
+export const addAdmission = (data) =>
+Axios.post(`${API.main}/api/customers/dashboard/customer`,data)

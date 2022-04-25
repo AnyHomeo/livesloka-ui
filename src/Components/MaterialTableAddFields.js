@@ -136,6 +136,20 @@ const MaterialTableAddFields = ({
 			}
 			setColumns(
 				keys.map((key) => {
+					if (key === "statusOrder") {
+						return {
+							title: "Order",
+							field: key,
+							type: "numeric",
+						}
+					}
+					if (key === "statusCategory") {
+						return {
+							title: "Category",
+							field: key,
+							lookup: {SALES: "SALES", SUPPORT: "SUPPORT"},
+						}
+					}
 					if (key === "role") {
 						return {
 							title: "Role",
@@ -354,7 +368,7 @@ const MaterialTableAddFields = ({
 				isLoading={loading || imageLoading}
 				options={{
 					paging: false,
-					padding:20,
+					padding: 20,
 					maxBodyHeight: height - 180,
 					addRowPosition: "first",
 					actionsColumnIndex: 0,

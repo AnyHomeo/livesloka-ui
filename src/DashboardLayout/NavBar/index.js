@@ -45,7 +45,7 @@ import management from "../../Images/Navicons/management.png"
 import ReportsPng from "../../Images/Navicons/reports.png"
 import SalesPng from "../../Images/Navicons/sales.png"
 import teacherPng from "../../Images/Navicons/teacher.png"
-import {WhatsApp} from "@material-ui/icons"
+import {DeveloperBoardTwoTone, WhatsApp} from "@material-ui/icons"
 const useStyles = makeStyles(() => ({
 	mobileDrawer: {
 		width: 256,
@@ -197,10 +197,10 @@ const NavBar = ({onMobileClose, openMobile}) => {
 			permission: "Financial Dashboard",
 		},
 		{
-			href: "/kunban/board",
-			icon: AccountBalanceOutlinedIcon,
+			href: "/sales/dashboard",
+			icon: DeveloperBoardTwoTone,
 			title: "Boards",
-			permission: "Messages",
+			permission: "Customer Data",
 		},
 	]
 

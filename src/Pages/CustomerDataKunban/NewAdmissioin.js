@@ -2,7 +2,7 @@ import {Button, makeStyles} from "@material-ui/core"
 import React, {useState} from "react"
 import PhoneInput from "react-phone-input-2"
 import "react-phone-input-2/lib/style.css"
-import {AddCustomer} from "../../Services/Services"
+import {addAdmission} from "../../Services/Services"
 const useStyles = makeStyles({
 	input: {
 		height: 30,
@@ -15,18 +15,21 @@ const useStyles = makeStyles({
 	},
 })
 
-const NewAdmissioin = () => {
+const NewAdmissioin = ({onClose,refresh}) => {
 	const classes = useStyles()
 	const [firstName, setFirstName] = useState("")
 	const [whatsAppnumber, setWhatsAppnumber] = useState("")
 	const onSubmit = async () => {
+		const number = whatsAppnumber.slice(whatsAppnumber.length - 10)
+
 		let formData = {
 			firstName,
-			whatsAppnumber,
-			subject: "Sloka",
+			whatsAppnumber: number,
+			countryCode: "+" + whatsAppnumber.split(number)[0],
 		}
 		try {
-			let data = await AddCustomer(formData)
+			await addAdmission(formData)
+			refresh()
 		} catch (error) {
 			console.log(error)
 		}
@@ -72,6 +75,7 @@ const NewAdmissioin = () => {
 			<div style={{marginTop: 20, display: "flex", justifyContent: "flex-end"}}>
 				<Button
 					variant="outlined"
+					onClick={onClose}
 					style={{
 						backgroundColor: "#f1f2f6",
 						color: "black",

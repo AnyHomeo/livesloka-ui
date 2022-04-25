@@ -2,18 +2,15 @@ import {Button, Drawer, IconButton, makeStyles, Menu} from "@material-ui/core"
 import {Sort, Star} from "@material-ui/icons"
 import {ToggleButton, ToggleButtonGroup} from "@material-ui/lab"
 import Axios from "axios"
-import React, {useEffect, useState} from "react"
+import React, {useCallback, useEffect, useState} from "react"
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd"
 import {AlignJustify, BarChart2, ChevronDown, Clock, Filter, Plus} from "react-feather"
-import {uuid} from "uuidv4"
 import DataCard from "./DataCard"
 import StatusColumn from "./StatusColumn"
 import {editCustomer} from "../../Services/Services"
-import {addDays} from "date-fns"
-import {DateRangePicker} from "react-date-range"
 import "react-date-range/dist/styles.css" // main css file
 import "react-date-range/dist/theme/default.css" // theme css file
-import NewAdmissioin from "./NewAdmissioin"
+import NewAdmission from "./NewAdmissioin"
 import Comments from "../Admin/Crm/Comments"
 import DateRangeDialog from "./DateRangeDialog"
 import moment from "moment"
@@ -80,7 +77,6 @@ const onDragEnd = (result, columns, setColumns) => {
 		const destItems = [...destColumn.items]
 		const [removed] = sourceItems.splice(source.index, 1)
 		destItems.splice(destination.index, 0, removed)
-		// console.log("Removed", removed)
 		updateCusomter(removed, destination, columns)
 		setColumns({
 			...columns,
@@ -109,37 +105,24 @@ const onDragEnd = (result, columns, setColumns) => {
 }
 
 function CustomerDataKunban() {
-	const [showPicker, setShowPicker] = useState(false)
 	let dateFilter = [
 		{
-			startDate: new Date(),
+			startDate: new Date(moment().subtract(1, "month").format()),
 			endDate: new Date(),
 			key: "selection",
 		},
 	]
 	const [filteredDate, setFilteredDate] = useState(dateFilter)
-
 	const classes = useStyles()
 	const [columns, setColumns] = useState({})
-
+	const [refresh, setRefresh] = useState(false)
 	const [userFilterMenu, setUserFilterMenu] = useState(null)
 	const [filters, setFilters] = useState(null)
 
-	const handleClick = (event) => {
-		setUserFilterMenu(event.currentTarget)
-	}
+	const handleClick = (event) => setUserFilterMenu(event.currentTarget)
+	const handleClose = () => setUserFilterMenu(null)
 
-	const handleClose = () => {
-		setUserFilterMenu(null)
-	}
-
-	useEffect(() => {
-		// setFilteredDate(JSON.parse(localStorage.getItem("filteredDate")))
-		fetchData()
-	}, [])
-	const fetchData = async () => {
-		console.log(filteredDate)
-		console.log(filteredDate)
+	const fetchData = useCallback(async () => {
 		let url = `${process.env.REACT_APP_API_KEY}/api/customers/dashboard`
 		if (filteredDate != null && filteredDate.length) {
 			url = `${
@@ -148,9 +131,17 @@ function CustomerDataKunban() {
 		}
 		try {
 			const data = await Axios.get(url)
+			console.log(data?.data?.result)
 			setColumns(data?.data?.result)
-		} catch (error) {}
-	}
+		} catch (error) {
+			console.error(error)
+		}
+	}, [filteredDate])
+
+	useEffect(() => {
+		fetchData()
+	}, [fetchData, refresh])
+
 	const [selectedCommentsCustomerId, setSelectedCommentsCustomerId] = useState("")
 	const [selectedCustomer, setSelectedCustomer] = useState({})
 	const [drawerState, setDrawerState] = useState({
@@ -173,37 +164,6 @@ function CustomerDataKunban() {
 
 	return (
 		<>
-			{/* {showPicker && (
-				<div
-					style={{
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-						marginTop: 10,
-						flexDirection: "column",
-					}}
-				>
-					<DateRangePicker
-						onChange={(item) => setFilteredDate([item.selection])}
-						showSelectionPreview={true}
-						moveRangeOnFirstSelection={false}
-						months={2}
-						ranges={filteredDate}
-						direction="horizontal"
-					/>
-
-					<Button
-						style={{backgroundColor: "#3867d6", marginTop: 10, color: "white"}}
-						onClick={() => {
-							fetchData()
-							setShowPicker(false)
-						}}
-					>
-						Apply
-					</Button>
-				</div>
-			)} */}
-
 			<DateRangeDialog
 				open={open}
 				setOpen={setOpen}
@@ -346,87 +306,89 @@ function CustomerDataKunban() {
 				style={{
 					display: "flex",
 					justifyContent: "flex-start",
-					// height: "100%",
 					marginTop: 10,
 					width: "100%",
 					overflowX: "scroll",
-					// width: "min-content",
 					marginLeft: "auto",
-					// overflowY: "scroll",
-					// overflow: "scroll",
-					// overflow: "hidden",
 					height: "100vh",
 				}}
 			>
 				{columns && (
 					<DragDropContext onDragEnd={(result) => onDragEnd(result, columns, setColumns)}>
-						{Object.entries(columns).map(([columnId, column], index) => {
-							return (
-								<div
-									style={{
-										display: "flex",
-										flexDirection: "column",
-										alignItems: "center",
-									}}
-									key={columnId}
-								>
-									<StatusColumn data={column} />
-									{/* <h2>{column.name}</h2> */}
-									<div className={classes.hideScrollBar}>
-										<Droppable droppableId={columnId} key={columnId}>
-											{(provided, snapshot) => {
-												return (
-													<div
-														{...provided.droppableProps}
-														ref={provided.innerRef}
-														style={{
-															background: snapshot.isDraggingOver ? "lightblue" : "#f1f2f6",
-															padding: 2,
-															width: 250,
-															minHeight: 500,
+						{Object.entries(columns)
+							.sort((a, b) => a[1].data.statusOrder - b[1].data.statusOrder)
+							.map(([columnId, column], index) => {
+								return (
+									<div
+										style={{
+											display: "flex",
+											flexDirection: "column",
+											alignItems: "center",
+										}}
+										key={columnId}
+									>
+										<StatusColumn data={column} />
+										<div className={classes.hideScrollBar}>
+											<Droppable droppableId={columnId} key={columnId}>
+												{(provided, snapshot) => {
+													return (
+														<div
+															{...provided.droppableProps}
+															ref={provided.innerRef}
+															style={{
+																background: snapshot.isDraggingOver ? "lightblue" : "#f1f2f6",
+																padding: 2,
+																width: 250,
+																minHeight: 500,
 
-															borderRadius: 5,
-															overflow: "hidden",
-														}}
-													>
-														{column.items.map((item, index) => {
-															return (
-																<Draggable key={item.id} draggableId={item.id} index={index}>
-																	{(provided, snapshot) => {
-																		return (
-																			<DataCard
-																				data={item.content}
-																				provided={provided}
-																				snapshot={snapshot}
-																				setSelectedCommentsCustomerId={
-																					setSelectedCommentsCustomerId
-																				}
-																				drawerState={drawerState}
-																				setDrawerState={setDrawerState}
-																				editCustomerData={editCustomerData}
-																				setEditCustomerData={setEditCustomerData}
-																				setSelectedCustomer={setSelectedCustomer}
-																			/>
-																		)
-																	}}
-																</Draggable>
-															)
-														})}
-														{provided.placeholder}
-													</div>
-												)
-											}}
-										</Droppable>
+																borderRadius: 5,
+																overflow: "hidden",
+															}}
+														>
+															{column.items.map((item, index) => {
+																return (
+																	<Draggable key={item.id} draggableId={item.id} index={index}>
+																		{(provided, snapshot) => {
+																			return (
+																				<DataCard
+																					data={item.content}
+																					provided={provided}
+																					snapshot={snapshot}
+																					setSelectedCommentsCustomerId={
+																						setSelectedCommentsCustomerId
+																					}
+																					drawerState={drawerState}
+																					setDrawerState={setDrawerState}
+																					editCustomerData={editCustomerData}
+																					setEditCustomerData={setEditCustomerData}
+																					setSelectedCustomer={setSelectedCustomer}
+																				/>
+																			)
+																		}}
+																	</Draggable>
+																)
+															})}
+															{provided.placeholder}
+														</div>
+													)
+												}}
+											</Droppable>
+										</div>
 									</div>
-								</div>
-							)
-						})}
+								)
+							})}
 					</DragDropContext>
 				)}
 			</div>
 
 			<Drawer anchor={"right"} open={drawerState["right"]} onClose={toggleDrawer("right", false)}>
-				<NewAdmissioin />
+				<NewAdmission
+					onClose={toggleDrawer("right", false)}
+					refresh={() => {
+						setRefresh((prev) => !prev)
+						toggleDrawer("right", false)()
+					}}
+				/>
 			</Drawer>
 
 			<Drawer

@@ -228,8 +228,8 @@ const adminRoutes = [
 		component: Feedback,
 	},
 	{
-		permission: "Messages",
-		path: "/kunban/board",
+		permission: "Customer Data",
+		path: "/sales/dashboard",
 		exact: true,
 		component: CustomerDataKunban,
 	},
