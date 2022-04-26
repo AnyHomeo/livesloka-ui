@@ -2,7 +2,7 @@ import {Dialog, Button} from "@material-ui/core"
 import React from "react"
 import {DateRangePicker} from "react-date-range"
 
-const DateRangeDialog = ({open, setOpen, setFilteredDate, filteredDate, fetchData}) => {
+const DateRangeDialog = ({open, setOpen, setFilteredDate, filteredDate, fetchData, from}) => {
 	return (
 		<div>
 			<Dialog fullWidth={true} maxWidth={"md"} onClose={() => setOpen(false)} open={open}>
@@ -27,9 +27,14 @@ const DateRangeDialog = ({open, setOpen, setFilteredDate, filteredDate, fetchDat
 							marginBottom: 20,
 						}}
 						onClick={() => {
-							fetchData()
-							setOpen(false)
-							localStorage.setItem("filteredDate", JSON.stringify(filteredDate))
+							if (from === "filters") {
+								setOpen(false)
+								localStorage.setItem("filteredDate", JSON.stringify(filteredDate))
+							} else {
+								fetchData()
+								setOpen(false)
+								localStorage.setItem("filteredDate", JSON.stringify(filteredDate))
+							}
 						}}
 					>
 						Apply

@@ -6,6 +6,7 @@ import "./Datacard.css"
 import {Comment, WhatsApp} from "@material-ui/icons"
 import {getComments, getCommentsByCustomerIds} from "../../Services/Services"
 import {MessageCircle} from "react-feather"
+import {colorArr} from "../../Services/ColorArr"
 const DataCard = ({
 	data,
 	provided,
@@ -32,6 +33,9 @@ const DataCard = ({
 	})
 	const classes = useStyles()
 
+	let randomColor = () => {
+		return "#" + Math.floor(Math.random() * 16777215).toString(16)
+	}
 	return (
 		<div
 			className={classes.root}
@@ -94,38 +98,111 @@ const DataCard = ({
 				)}
 			</div>
 
-			<div style={{display: "flex", justifyContent: "space-between"}}>
-				{data?.timeZone?.timeZoneName && (
-					<div
-						style={{
-							marginRight: 76,
-							backgroundColor: "white",
-							marginTop: 5,
-							width: "50%",
-							height: 25,
-							width: 50,
-							backgroundColor: "#e74c3c",
-							borderTopRightRadius: 15,
-							borderBottomRightRadius: 15,
-							display: "flex",
-							justifyContent: "center",
-							alignItems: "center",
-							marginBottom: 10,
-							flex: 0.3,
-						}}
-					>
-						<p style={{fontSize: 12, color: "white"}}>{data?.timeZone?.timeZoneName}</p>
-					</div>
-				)}
+			{data?.timeZone?.timeZoneName && data?.subject?.subjectName ? (
+				<div style={{display: "flex", justifyContent: "space-between"}}>
+					{data?.timeZone?.timeZoneName ? (
+						<div
+							style={{
+								marginRight: 76,
+								backgroundColor: "white",
+								marginTop: 5,
+								width: "50%",
+								height: 25,
+								width: 50,
+								backgroundColor:
+									colorArr[
+										data?.timeZone?.timeZoneName
+											? data?.timeZone?.timeZoneName.charCodeAt(0) - 64
+											: "random".charCodeAt(0) - 64
+									],
+								borderTopRightRadius: 15,
+								borderBottomRightRadius: 15,
+								display: "flex",
+								justifyContent: "center",
+								alignItems: "center",
+								marginBottom: 10,
+								flex: 0.3,
+							}}
+						>
+							<p style={{fontSize: 12, color: "white"}}>{data?.timeZone?.timeZoneName}</p>
+						</div>
+					) : (
+						<div
+							style={{
+								marginRight: 76,
+								backgroundColor: "white",
+								marginTop: 5,
+								width: "50%",
+								height: 25,
+								width: 50,
+								borderTopRightRadius: 15,
+								borderBottomRightRadius: 15,
+								display: "flex",
+								justifyContent: "center",
+								alignItems: "center",
+								marginBottom: 10,
+								flex: 0.3,
+							}}
+						></div>
+					)}
 
-				{data?.subject?.subjectName && (
+					{data?.subject?.subjectName ? (
+						<div
+							style={{
+								marginTop: 5,
+								height: 25,
+								width: "50%",
+								backgroundColor:
+									colorArr[
+										data?.subject?.subjectName
+											? data?.subject?.subjectName.charCodeAt(0) - 64
+											: "random".charCodeAt(0) - 64
+									],
+								borderTopLeftRadius: 15,
+								borderBottomLeftRadius: 15,
+								display: "flex",
+								justifyContent: "center",
+								alignItems: "center",
+								marginBottom: 10,
+								flex: 0.5,
+							}}
+						>
+							<p style={{fontSize: 12, color: "white", padding: 10}}>
+								{data?.subject?.subjectName}
+							</p>
+						</div>
+					) : (
+						<div
+							style={{
+								marginTop: 5,
+								height: 25,
+								width: "50%",
+								borderTopLeftRadius: 15,
+								borderBottomLeftRadius: 15,
+								display: "flex",
+								justifyContent: "center",
+								alignItems: "center",
+								marginBottom: 10,
+								flex: 0.5,
+							}}
+						></div>
+					)}
+				</div>
+			) : null}
+
+			{data?.teacher?.TeacherName ? (
+				<div style={{display: "flex", justifyContent: "space-between", marginTop: -3}}>
+					<div></div>
 					<div
 						style={{
-							backgroundColor: "white",
-							marginTop: 5,
 							height: 25,
-							width: "50%",
-							backgroundColor: "#3867d6",
+							width: "auto",
+							backgroundColor:
+								colorArr[
+									data?.subject?.subjectName
+										? data?.subject?.subjectName.charCodeAt(0) - 64
+										: "random".charCodeAt(0) - 64
+								],
 							borderTopLeftRadius: 15,
 							borderBottomLeftRadius: 15,
 							display: "flex",
@@ -135,10 +212,12 @@ const DataCard = ({
 							flex: 0.5,
 						}}
 					>
-						<p style={{fontSize: 12, color: "white", padding: 10}}>{data?.subject?.subjectName}</p>
+						<p style={{fontSize: 12, fontWeight: 500, marginTop: 2, color: "white"}}>
+							{data?.teacher?.TeacherName}
+						</p>
 					</div>
-				)}
-			</div>
+				</div>
+			) : null}
 		</div>
 	)
 }

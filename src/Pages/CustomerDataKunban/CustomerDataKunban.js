@@ -15,6 +15,7 @@ import Comments from "../Admin/Crm/Comments"
 import DateRangeDialog from "./DateRangeDialog"
 import moment from "moment"
 import EditCustomer from "./EditCustomer"
+import CustomerFilters from "./CustomerFilters"
 const useStyles = makeStyles({
 	userFilter: {
 		marginLeft: 15,
@@ -162,8 +163,11 @@ function CustomerDataKunban() {
 	}
 	const [open, setOpen] = useState(false)
 
+	const [customFilterOpen, setCustomFilterOpen] = useState(false)
 	return (
 		<>
+			{customFilterOpen && <CustomerFilters />}
+
 			<DateRangeDialog
 				open={open}
 				setOpen={setOpen}
@@ -234,7 +238,10 @@ function CustomerDataKunban() {
 				}}
 			>
 				<div style={{display: "flex", alignItems: "center"}}>
-					<IconButton style={{backgroundColor: "#2ecc7050"}}>
+					<IconButton
+						onClick={() => setCustomFilterOpen(!customFilterOpen)}
+						style={{backgroundColor: "#2ecc7050"}}
+					>
 						<Filter style={{color: "#27ae60"}} />
 					</IconButton>
 					<div className={classes.userFilter} onClick={handleClick}>
