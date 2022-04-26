@@ -42,15 +42,19 @@ const DataCard = ({
 			ref={provided.innerRef}
 			{...provided.draggableProps}
 			{...provided.dragHandleProps}
-			onClick={() => {
-				setEditCustomerData({...editCustomerData, right: true})
-				setSelectedCustomer(data)
-			}}
 		>
 			<div className="fontchange" style={{padding: 10}}>
 				<span style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
 					{data.lastName && (
-						<p style={{fontSize: 15, fontWeight: 550, marginTop: 2}}>{data.lastName}</p>
+						<p
+							onClick={() => {
+								setEditCustomerData({...editCustomerData, right: true})
+								setSelectedCustomer(data)
+							}}
+							style={{fontSize: 15, fontWeight: 550, marginTop: 2}}
+						>
+							{data.lastName}
+						</p>
 					)}
 
 					{data.whatsAppnumber && (
@@ -196,7 +200,7 @@ const DataCard = ({
 					<div
 						style={{
 							height: 25,
-							width: "auto",
+							maxWidth: "33%",
 							backgroundColor:
 								colorArr[
 									data?.subject?.subjectName
@@ -212,7 +216,18 @@ const DataCard = ({
 							flex: 0.5,
 						}}
 					>
-						<p style={{fontSize: 12, fontWeight: 500, marginTop: 2, color: "white"}}>
+						<p
+							style={{
+								fontSize: 10,
+								fontWeight: 500,
+								marginTop: 2,
+								color: "white",
+								whiteSpace: "nowrap",
+								overflow: "hidden",
+								textOverflow: "ellipsis",
+								padding: 2,
+							}}
+						>
 							{data?.teacher?.TeacherName}
 						</p>
 					</div>

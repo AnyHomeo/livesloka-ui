@@ -607,14 +607,7 @@ const EditCustomer = ({selectedCustomer, fetchData}) => {
 										/>
 									) : (
 										<>
-											{editingData[item] === 0 && (
-												<p className={classes.rightFont}>{editingData[item]}</p>
-											)}
-											{editingData[item] === true || editingData[item] == false ? (
-												<p className={classes.rightFont}>HEllo</p>
-											) : (
-												<p className={classes.rightFont}>{editingData[item]}</p>
-											)}
+											<p className={classes.rightFont}>{editingData[item]}</p>
 										</>
 									)}
 								</span>
