@@ -4,7 +4,7 @@ import {ToggleButton, ToggleButtonGroup} from "@material-ui/lab"
 import Axios from "axios"
 import React, {useCallback, useEffect, useState} from "react"
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd"
-import {AlignJustify, BarChart2, ChevronDown, Clock, Filter, Plus} from "react-feather"
+import {AlignJustify, BarChart2, ChevronDown, Clock, Edit2, Filter, Plus} from "react-feather"
 import DataCard from "./DataCard"
 import StatusColumn from "./StatusColumn"
 import {editCustomer} from "../../Services/Services"
@@ -16,6 +16,7 @@ import DateRangeDialog from "./DateRangeDialog"
 import moment from "moment"
 import EditCustomer from "./EditCustomer"
 import CustomerFilters from "./CustomerFilters"
+import EditDataCard from "./EditDataCard"
 const useStyles = makeStyles({
 	userFilter: {
 		marginLeft: 15,
@@ -43,7 +44,7 @@ const useStyles = makeStyles({
 	hideScrollBar: {
 		margin: 8,
 		overflowY: "scroll",
-		boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
+		boxShadow: "rgba(50, 50, 105, 0.15) 0px 2px 5px 0px, rgba(0, 0, 0, 0.05) 0px 1px 1px 0px",
 		borderRadius: 5,
 		"&::-webkit-scrollbar": {
 			display: "none",
@@ -164,6 +165,9 @@ function CustomerDataKunban() {
 	const [open, setOpen] = useState(false)
 
 	const [customFilterOpen, setCustomFilterOpen] = useState(false)
+	const [editCardDrawer, seteditCardDrawer] = useState({
+		right: false,
+	})
 	return (
 		<>
 			{customFilterOpen && <CustomerFilters />}
@@ -226,10 +230,10 @@ function CustomerDataKunban() {
 
 			<div
 				style={{
-					height: 70,
+					height: 60,
 					width: "100%",
 					backgroundColor: "white",
-					marginTop: 25,
+					marginTop: 10,
 					boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
 					padding: 10,
 					display: "flex",
@@ -240,7 +244,7 @@ function CustomerDataKunban() {
 				<div style={{display: "flex", alignItems: "center"}}>
 					<IconButton
 						onClick={() => setCustomFilterOpen(!customFilterOpen)}
-						style={{backgroundColor: "#2ecc7050"}}
+						style={{backgroundColor: "#2ecc7050", height: 40, width: 40}}
 					>
 						<Filter style={{color: "#27ae60"}} />
 					</IconButton>
@@ -249,7 +253,7 @@ function CustomerDataKunban() {
 						<ChevronDown />
 					</div>
 					<IconButton
-						style={{backgroundColor: "#2ecc7050", marginLeft: 20}}
+						style={{backgroundColor: "#2ecc7050", marginLeft: 20, height: 40, width: 40}}
 						onClick={() => setOpen(!open)}
 					>
 						<Clock style={{color: "#27ae60"}} />
@@ -273,6 +277,13 @@ function CustomerDataKunban() {
 					</div>
 					<IconButton style={{border: "1px solid #b2bec3", height: 40, width: 40, marginLeft: 10}}>
 						<Sort style={{height: 25, width: 25}} />
+					</IconButton>
+
+					<IconButton
+						onClick={() => seteditCardDrawer({...editCardDrawer, ["right"]: true})}
+						style={{border: "1px solid #b2bec3", height: 40, width: 40, marginLeft: 10}}
+					>
+						<Edit2 style={{height: 25, width: 25}} />
 					</IconButton>
 
 					<ToggleButtonGroup
@@ -317,7 +328,7 @@ function CustomerDataKunban() {
 					width: "100%",
 					overflowX: "scroll",
 					marginLeft: "auto",
-					height: "calc(100vh - 160px)",
+					height: "calc(100vh - 150px)",
 				}}
 			>
 				{columns && (
@@ -344,37 +355,55 @@ function CustomerDataKunban() {
 															ref={provided.innerRef}
 															style={{
 																background: snapshot.isDraggingOver ? "lightblue" : "#f1f2f6",
-																padding: 2,
+																padding: 1,
 																width: 220,
-																minHeight: 500,
+																minHeight: "calc(100vh - 160px)",
 
 																borderRadius: 5,
 																overflow: "hidden",
 															}}
 														>
-															{column.items.map((item, index) => {
-																return (
-																	<Draggable key={item.id} draggableId={item.id} index={index}>
-																		{(provided, snapshot) => {
-																			return (
-																				<DataCard
-																					data={item.content}
-																					provided={provided}
-																					snapshot={snapshot}
-																					setSelectedCommentsCustomerId={
-																						setSelectedCommentsCustomerId
-																					}
-																					drawerState={drawerState}
-																					setDrawerState={setDrawerState}
-																					editCustomerData={editCustomerData}
-																					setEditCustomerData={setEditCustomerData}
-																					setSelectedCustomer={setSelectedCustomer}
-																				/>
-																			)
-																		}}
-																	</Draggable>
-																)
-															})}
+															{column.items.length == 0 ? (
+																<div
+																	style={{
+																		display: "flex",
+																		justifyContent: "center",
+																		alignItems: "center",
+																		height: "calc(100vh - 250px)",
+																	}}
+																>
+																	<p style={{fontSize: 14, fontWeight: 600}}>
+																		No Admission in this stage
+																	</p>
+																</div>
+															) : (
+																<>
+																	{column.items.map((item, index) => {
+																		return (
+																			<Draggable key={item.id} draggableId={item.id} index={index}>
+																				{(provided, snapshot) => {
+																					return (
+																						<DataCard
+																							data={item.content}
+																							provided={provided}
+																							snapshot={snapshot}
+																							setSelectedCommentsCustomerId={
+																								setSelectedCommentsCustomerId
+																							}
+																							drawerState={drawerState}
+																							setDrawerState={setDrawerState}
+																							editCustomerData={editCustomerData}
+																							setEditCustomerData={setEditCustomerData}
+																							setSelectedCustomer={setSelectedCustomer}
+																						/>
+																					)
+																				}}
+																			</Draggable>
+																		)
+																	})}
+																</>
+															)}
+
 															{provided.placeholder}
 														</div>
 													)
@@ -412,6 +441,14 @@ function CustomerDataKunban() {
 					drawerState={drawerState}
 					setDrawerState={setDrawerState}
 				/>
+			</Drawer>
+
+			<Drawer
+				anchor={"right"}
+				open={editCardDrawer["right"]}
+				onClose={() => seteditCardDrawer({...editCardDrawer, ["right"]: false})}
+			>
+				<EditDataCard drawerState={editCardDrawer} setDrawerState={seteditCardDrawer} />
 			</Drawer>
 		</>
 	)
