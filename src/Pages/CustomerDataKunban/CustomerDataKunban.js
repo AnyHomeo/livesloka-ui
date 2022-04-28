@@ -109,7 +109,7 @@ const onDragEnd = (result, columns, setColumns) => {
 function CustomerDataKunban() {
 	let dateFilter = [
 		{
-			startDate: new Date(moment().subtract(1, "month").format()),
+			startDate: new Date(moment().subtract(3, "years").format()),
 			endDate: new Date(),
 			key: "selection",
 		},

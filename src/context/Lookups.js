@@ -16,10 +16,11 @@ export const LookupContext = createContext(initialState)
 
 export const LookupContextProvider = ({children}) => {
 	const [lookups, setLookups] = useState({})
-
+	console.log("hello")
     const fetchAllLookups = useCallback(async () => {
         const lookups = await getLookups()
-        setLookups(lookups)
+		console.log(lookups.data.result)
+        setLookups(lookups.data.result)
     },[])
 
 	useEffect(() => {

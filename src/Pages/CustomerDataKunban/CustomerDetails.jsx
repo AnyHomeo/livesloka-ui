@@ -1,4 +1,13 @@
-import {Box, Divider, Grid, IconButton, makeStyles, Switch, Tooltip, Typography} from "@material-ui/core"
+import {
+	Box,
+	Divider,
+	Grid,
+	IconButton,
+	makeStyles,
+	Switch,
+	Tooltip,
+	Typography,
+} from "@material-ui/core"
 import moment from "moment"
 import React from "react"
 import WhatsAppIcon from "@material-ui/icons/WhatsApp"
@@ -15,7 +24,6 @@ function CustomerDetails({customer, refresh}) {
 		agentLookup,
 		classStatusLookup,
 		timeZoneLookup,
-		subjectDropdown,
 		classLookup,
 		subjectLookup,
 		teachersLookup,
@@ -24,25 +32,29 @@ function CustomerDetails({customer, refresh}) {
 		categoryDropdown,
 	} = useLookups()
 
+	console.log(customer)
+
 	const customerDisplayFormat = [
 		{
 			title: "Join",
-			editable: "never",
+			isNotEditable: true,
 			field: "isJoinButtonEnabledByAdmin",
 			type: "boolean",
-			render: (row) => <Switch />
+			render: (row) => <Switch className={classes.mtminus} />,
 		},
 		{
 			title: "Subscription",
-			editable: "never",
+			isNotEditable: true,
 			field: "isSubscription",
 			type: "boolean",
+			render: (row) => <Switch className={classes.mtminus} />,
 		},
 		{
 			title: "New",
-			editable: "never",
+			isNotEditable: true,
 			field: "autoDemo",
 			type: "boolean",
+			render: (row) => <Switch className={classes.mtminus} />,
 		},
 		{
 			title: "Customer Status",
@@ -52,15 +64,14 @@ function CustomerDetails({customer, refresh}) {
 		{
 			title: "Entry Date",
 			field: "createdAt",
-			editable: "never",
 			type: "datetime",
-			render: (rowData) => moment(rowData.createdAt).format("MMMM Do YYYY"),
+			render: (row) => moment(row.createdAt).format("MMMM Do YYYY"),
 		},
 		{
 			title: "Agent",
 			field: "agentId",
 			lookup: agentLookup,
-			editable: isAutheticated().roleId === 3 ? undefined : "never",
+			isNotEditable: isAutheticated().roleId !== 3,
 		},
 		{
 			title: "Time Zone",
@@ -72,36 +83,24 @@ function CustomerDetails({customer, refresh}) {
 			field: "firstName",
 		},
 		{
-			title: "Requested Subjects",
-			field: "requestedSubjects",
-			editable: "never",
-			render: (row) => (
-				<div>
-					{Array.isArray(row.requestedSubjects)
-						? row.requestedSubjects.map((subject) => <div>{subjectDropdown[subject]}</div>)
-						: ""}
-				</div>
-			),
-		},
-		{
 			title: "Guardian",
 			field: "lastName",
 		},
 		{
 			title: "Age",
 			field: "age",
-			type: "numeric",
+			type: "number",
 		},
 		{
 			title: "Class left",
 			field: "numberOfClassesBought",
-			type: "numeric",
+			type: "number",
 			editable: "never",
 		},
 		{
 			title: "Rewards",
 			field: "login.rewards",
-			type: "numeric",
+			type: "number",
 			editable: "never",
 		},
 		{
@@ -111,7 +110,7 @@ function CustomerDetails({customer, refresh}) {
 		{
 			title: "Default classes",
 			field: "noOfClasses",
-			type: "numeric",
+			type: "number",
 		},
 		{
 			title: "Due Date",
@@ -172,7 +171,7 @@ function CustomerDetails({customer, refresh}) {
 							className={classes.link}
 							target="__blank"
 							href={`https://api.whatsapp.com/send?phone=${replaceSpecialCharacters(
-								rowData.countryCode + rowData.whatsAppnumber
+								(rowData.countryCode ? rowData.countryCode : "") + rowData.whatsAppnumber
 							)}`}
 						>
 							<Tooltip title={`Message ${rowData.firstName}`}>
@@ -204,17 +203,17 @@ function CustomerDetails({customer, refresh}) {
 		{
 			title: "Students",
 			field: "numberOfStudents",
-			type: "numeric",
+			type: "number",
 		},
 		{
 			title: "Amount",
 			field: "proposedAmount",
-			type: "numeric",
+			type: "number",
 		},
 		{
 			title: "Discount",
 			field: "discount",
-			type: "numeric",
+			type: "number",
 		},
 		{
 			title: "Currency",
@@ -247,21 +246,23 @@ function CustomerDetails({customer, refresh}) {
 			<Box className={classes.customerDetails}>
 				{customerDisplayFormat.map((row, index) => (
 					<Grid container spacing={1} key={index} className={classes.row}>
-						<Grid item xs={12} lg={5} align="right">
+						<Grid item md={5} align="right">
 							<Box className={classes.boldHeading}>{row.title}: </Box>
 						</Grid>
-						<Grid item xs={11} lg={5} align="left">
+						<Grid item md={5} align="left">
 							{row.render
 								? row.render(customer)
 								: row.lookup
-								? row.lookup[customer[row.field]] + "yes"
+								? row.lookup[customer[row.field]]
 								: customer[row.field]}
 						</Grid>
-						<Grid item xs={1} align="right" className="edit">
-							<IconButton size="small">
-								<Edit size={16} />
-							</IconButton>
-						</Grid>
+						{!row?.isNotEditable && (
+							<Grid item xs={1} align="right" className="edit">
+								<IconButton size="small">
+									<Edit size={16} />
+								</IconButton>
+							</Grid>
+						)}
 					</Grid>
 				))}
 			</Box>
@@ -303,5 +304,8 @@ const useStyles = makeStyles((theme) => ({
 		"& .edit": {
 			display: "none",
 		},
+	},
+	mtminus: {
+		marginTop: -8,
 	},
 }))
