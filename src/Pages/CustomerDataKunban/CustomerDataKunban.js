@@ -432,7 +432,11 @@ function CustomerDataKunban() {
 				open={editCustomerData["right"]}
 				onClose={toggleDrawerEditData("right", false)}
 			>
-				<CustomerDetails customer={selectedCustomer} refresh={fetchData} />
+				<CustomerDetails
+					customer={selectedCustomer}
+					refresh={() => setRefresh((prev) => !prev)}
+					setCustomer={setSelectedCustomer}
+				/>
 			</Drawer>
 
 			<Drawer anchor={"left"} open={drawerState["left"]} onClose={toggleDrawer("left", false)}>

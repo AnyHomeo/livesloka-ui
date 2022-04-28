@@ -66,4 +66,12 @@ export const getDaysToAdd = (value) => {
 	return value >= todayDay ? value - todayDay : 7 - (todayDay - value)
 }
 
-export const replaceSpecialCharacters = (str) => str.replace(/[^\w\s]/gi, '')
+export const replaceSpecialCharacters = (str) => str.replace(/[^\w\s]/gi, "")
+
+export const truncate = (str = "", num = 10) => {
+	if (str.length > num) {
+		return str.slice(0, num) + "..."
+	} else {
+		return str
+	}
+}
