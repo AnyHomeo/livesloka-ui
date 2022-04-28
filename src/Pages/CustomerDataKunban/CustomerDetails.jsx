@@ -156,6 +156,7 @@ const CustomerDetails = ({customer, refresh, setCustomer}) => {
 		{
 			title: "Whatsapp",
 			field: "whatsAppnumber",
+			type: "number",
 			render: (rowData) =>
 				rowData.whatsAppnumber ? (
 					<div className={classes.flexCenter}>
@@ -187,12 +188,13 @@ const CustomerDetails = ({customer, refresh, setCustomer}) => {
 			type: "date",
 			render: (rowData) =>
 				rowData.paidTill ? moment(rowData.paidTill).format("MMM DD, yyyy") : "",
+			isNotEditable: true,
 		},
 		{
 			title: "Class left",
 			field: "numberOfClassesBought",
 			type: "number",
-			editable: "never",
+			isNotEditable: true,
 		},
 		{
 			title: "Customer Status",
@@ -259,7 +261,7 @@ const CustomerDetails = ({customer, refresh, setCustomer}) => {
 			title: "Rewards",
 			field: "login.rewards",
 			type: "number",
-			editable: "never",
+			isNotEditable: true,
 		},
 		{
 			title: "Email",
@@ -287,7 +289,7 @@ const CustomerDetails = ({customer, refresh, setCustomer}) => {
 		{
 			title: "Group",
 			field: "oneToOne",
-			type: "boolean",
+			render: (row) => <Switch className={classes.mtminus} />,
 		},
 		{
 			title: "Country",
