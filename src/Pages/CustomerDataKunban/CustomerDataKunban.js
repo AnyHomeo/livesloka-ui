@@ -14,9 +14,9 @@ import NewAdmission from "./NewAdmissioin"
 import Comments from "../Admin/Crm/Comments"
 import DateRangeDialog from "./DateRangeDialog"
 import moment from "moment"
-import EditCustomer from "./EditCustomer"
 import CustomerFilters from "./CustomerFilters"
 import EditDataCard from "./EditDataCard"
+import CustomerDetails from "./CustomerDetails"
 const useStyles = makeStyles({
 	userFilter: {
 		marginLeft: 15,
@@ -280,7 +280,7 @@ function CustomerDataKunban() {
 					</IconButton>
 
 					<IconButton
-						onClick={() => seteditCardDrawer({...editCardDrawer, ["right"]: true})}
+						onClick={() => seteditCardDrawer({...editCardDrawer, right: true})}
 						style={{border: "1px solid #b2bec3", height: 40, width: 40, marginLeft: 10}}
 					>
 						<Edit2 style={{height: 25, width: 25}} />
@@ -363,7 +363,7 @@ function CustomerDataKunban() {
 																overflow: "hidden",
 															}}
 														>
-															{column.items.length == 0 ? (
+															{column.items.length === 0 ? (
 																<div
 																	style={{
 																		display: "flex",
@@ -432,7 +432,7 @@ function CustomerDataKunban() {
 				open={editCustomerData["right"]}
 				onClose={toggleDrawerEditData("right", false)}
 			>
-				<EditCustomer selectedCustomer={selectedCustomer} fetchData={fetchData} />
+				<CustomerDetails customer={selectedCustomer} refresh={fetchData} />
 			</Drawer>
 
 			<Drawer anchor={"left"} open={drawerState["left"]} onClose={toggleDrawer("left", false)}>
@@ -446,7 +446,7 @@ function CustomerDataKunban() {
 			<Drawer
 				anchor={"right"}
 				open={editCardDrawer["right"]}
-				onClose={() => seteditCardDrawer({...editCardDrawer, ["right"]: false})}
+				onClose={() => seteditCardDrawer({...editCardDrawer, right: false})}
 			>
 				<EditDataCard drawerState={editCardDrawer} setDrawerState={seteditCardDrawer} />
 			</Drawer>

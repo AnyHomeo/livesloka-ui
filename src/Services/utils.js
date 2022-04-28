@@ -65,3 +65,5 @@ export const getDaysToAdd = (value) => {
 	let todayDay = moment().get("day")
 	return value >= todayDay ? value - todayDay : 7 - (todayDay - value)
 }
+
+export const replaceSpecialCharacters = (str) => str.replace(/[^\w\s]/gi, '')

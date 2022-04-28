@@ -14,6 +14,7 @@ import {ToastContainer, toast} from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import {useHistory, useLocation} from "react-router-dom"
 import GlobalState from "./context/GlobalState"
+import {LookupContextProvider} from "./context/Lookups"
 let socket
 
 const queryClient = new QueryClient()
@@ -101,7 +102,9 @@ const App = () => {
 				<ConfirmProvider>
 					<GlobalState>
 						<GlobalStyles />
-						<Routes />
+						<LookupContextProvider>
+							<Routes />
+						</LookupContextProvider>
 						<ToastContainer />
 					</GlobalState>
 				</ConfirmProvider>
