@@ -242,4 +242,5 @@ export const getCommentsByCustomerIds = (customerIds) =>
 export const getWatiFeedbackMessages = () =>
 	Axios.get(`${API.main}/api/wati?from=${moment().startOf("month")}&to=${moment().endOf("month")}`)
 export const addAdmission = (data) =>
-Axios.post(`${API.main}/api/customers/dashboard/customer`,data)
+	Axios.post(`${API.main}/api/customers/dashboard/customer`, data)
+export const getLookups = () => Axios.get(`${API.main}/api/customers/lookups`)

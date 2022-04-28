@@ -10,7 +10,6 @@ import axios from "axios"
 import {io} from "socket.io-client"
 import {useConfirm} from "material-ui-confirm"
 import {isAutheticated} from "../../auth"
-import getRandomColor from "../../Services/randomColor"
 
 let socket
 
@@ -22,8 +21,6 @@ function MainGlobalChat({roomID}) {
 	const [message, setMessage] = useState("")
 	const [timeout, setSTimeout] = useState(undefined)
 	const confirm = useConfirm()
-
-	const history = useHistory()
 
 	const getRole = isAutheticated().roleId
 	const userID = isAutheticated().username

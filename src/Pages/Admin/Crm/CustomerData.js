@@ -16,7 +16,6 @@ import {
 	getByUserSettings,
 	getSummerCampStudents,
 	getCustomerDatFromFilterName,
-	getCustomerRewards,
 } from "../../../Services/Services"
 import Button from "@material-ui/core/Button"
 import Dialog from "@material-ui/core/Dialog"

@@ -14,7 +14,7 @@ const GlobalChat = () => {
 	const [rooms, setRooms] = useState([])
 	const [searchValue, setSearchValue] = useState("")
 
-	const fetchRooms = () => {
+	const fetchRooms = useCallback(() => {
 		console.log("fetching rooms")
 		axios.get(`${process.env.REACT_APP_API_KEY}/nonrooms`).then(({data}) => {
 			if (data) {
@@ -26,7 +26,7 @@ const GlobalChat = () => {
 				}
 			}
 		})
-	}
+	}, [ID, getRole])
 
 	useEffect(() => {
 		socket = io.connect(process.env.REACT_APP_API_KEY)
@@ -51,7 +51,7 @@ const GlobalChat = () => {
 		return () => {
 			removeListners()
 		}
-	}, [])
+	}, [fetchRooms])
 	const removeListners = () => {
 		console.log("UnMounted Global CHAT")
 		socket.removeAllListeners()

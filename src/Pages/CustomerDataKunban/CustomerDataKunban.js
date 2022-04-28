@@ -14,9 +14,9 @@ import NewAdmission from "./NewAdmissioin"
 import Comments from "../Admin/Crm/Comments"
 import DateRangeDialog from "./DateRangeDialog"
 import moment from "moment"
-import EditCustomer from "./EditCustomer"
 import CustomerFilters from "./CustomerFilters"
 import EditDataCard from "./EditDataCard"
+import CustomerDetails from "./CustomerDetails"
 const useStyles = makeStyles({
 	userFilter: {
 		marginLeft: 15,
@@ -109,7 +109,7 @@ const onDragEnd = (result, columns, setColumns) => {
 function CustomerDataKunban() {
 	let dateFilter = [
 		{
-			startDate: new Date(moment().subtract(1, "month").format()),
+			startDate: new Date(moment().subtract(3, "years").format()),
 			endDate: new Date(),
 			key: "selection",
 		},
@@ -367,7 +367,7 @@ function CustomerDataKunban() {
 																overflow: "hidden",
 															}}
 														>
-															{column.items.length == 0 ? (
+															{column.items.length === 0 ? (
 																<div
 																	style={{
 																		display: "flex",
@@ -436,7 +436,11 @@ function CustomerDataKunban() {
 				open={editCustomerData["right"]}
 				onClose={toggleDrawerEditData("right", false)}
 			>
-				<EditCustomer selectedCustomer={selectedCustomer} fetchData={fetchData} />
+				<CustomerDetails
+					customer={selectedCustomer}
+					refresh={() => setRefresh((prev) => !prev)}
+					setCustomer={setSelectedCustomer}
+				/>
 			</Drawer>
 
 			<Drawer anchor={"left"} open={drawerState["left"]} onClose={toggleDrawer("left", false)}>
@@ -450,7 +454,7 @@ function CustomerDataKunban() {
 			<Drawer
 				anchor={"right"}
 				open={editCardDrawer["right"]}
-				onClose={() => seteditCardDrawer({...editCardDrawer, ["right"]: false})}
+				onClose={() => seteditCardDrawer({...editCardDrawer, right: false})}
 			>
 				<EditDataCard
 					drawerState={editCardDrawer}
