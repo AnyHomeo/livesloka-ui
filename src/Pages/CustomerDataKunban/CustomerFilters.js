@@ -173,7 +173,12 @@ const CustomerFilters = () => {
 	const [open, setOpen] = useState(false)
 
 	return (
-		<div>
+		<div style={{width: 400}}>
+			<div style={{padding: 20}}>
+				<p style={{fontSize: 18, fontWeight: 600}}>Custom Filters</p>
+				<hr style={{marginTop: 20}} />
+			</div>
+
 			<DateRangeDialog
 				open={open}
 				setOpen={setOpen}
@@ -186,32 +191,33 @@ const CustomerFilters = () => {
 			<div
 				style={{
 					display: "flex",
-					flexDirection: "row",
-					margin: "30px",
+					flexDirection: "column",
 					alignItems: "center",
-					justifyContent: "center",
+					justifyContent: "space-evenly",
 					flexWrap: "wrap",
 				}}
 			>
-				<TextField size="small" label="Filter name" variant="outlined" />
+				<div style={{width: "300px", margin: "10px 0"}}>
+					<TextField size="small" fullWidth label="Filter name" variant="outlined" />
 
-				<TextField
-					onClick={() => setOpen(!open)}
-					style={{marginLeft: 20}}
-					size="small"
-					label="Date Range"
-					variant="outlined"
-					value={`${moment(filteredDate && filteredDate[0].startDate).format(
-						"MMM Do YY"
-					)} - ${moment(filteredDate && filteredDate[0].endDate).format("MMM Do YY")}`}
-				/>
+					<TextField
+						style={{marginTop: 20}}
+						fullWidth
+						onClick={() => setOpen(!open)}
+						size="small"
+						label="Date Range"
+						variant="outlined"
+						value={`${moment(filteredDate && filteredDate[0].startDate).format(
+							"MMM Do YY"
+						)} - ${moment(filteredDate && filteredDate[0].endDate).format("MMM Do YY")}`}
+					/>
+				</div>
 			</div>
 
 			<div
 				style={{
 					display: "flex",
-					flexDirection: "row",
-					margin: "30px",
+					flexDirection: "column",
 					alignItems: "center",
 					justifyContent: "space-evenly",
 					flexWrap: "wrap",

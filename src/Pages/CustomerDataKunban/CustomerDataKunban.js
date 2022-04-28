@@ -168,10 +168,15 @@ function CustomerDataKunban() {
 	const [editCardDrawer, seteditCardDrawer] = useState({
 		right: false,
 	})
+
+	const [filtersDrawer, setFiltersDrawer] = useState({
+		right: false,
+	})
+	const [statusData, setStatusData] = useState({})
+
+	console.log(filtersDrawer)
 	return (
 		<>
-			{customFilterOpen && <CustomerFilters />}
-
 			<DateRangeDialog
 				open={open}
 				setOpen={setOpen}
@@ -243,20 +248,20 @@ function CustomerDataKunban() {
 			>
 				<div style={{display: "flex", alignItems: "center"}}>
 					<IconButton
-						onClick={() => setCustomFilterOpen(!customFilterOpen)}
-						style={{backgroundColor: "#2ecc7050", height: 40, width: 40}}
+						onClick={() => setFiltersDrawer({...filtersDrawer, right: true})}
+						style={{backgroundColor: "#3867d650", height: 40, width: 40}}
 					>
-						<Filter style={{color: "#27ae60"}} />
+						<Filter style={{color: "#3867d6"}} />
 					</IconButton>
 					<div className={classes.userFilter} onClick={handleClick}>
 						<p style={{color: "#2d3436"}}>Ram Leads</p>
 						<ChevronDown />
 					</div>
 					<IconButton
-						style={{backgroundColor: "#2ecc7050", marginLeft: 20, height: 40, width: 40}}
+						style={{backgroundColor: "#3867d650", marginLeft: 20, height: 40, width: 40}}
 						onClick={() => setOpen(!open)}
 					>
-						<Clock style={{color: "#27ae60"}} />
+						<Clock style={{color: "#3867d6"}} />
 					</IconButton>
 					<p style={{marginLeft: 10, fontWeight: 600}}>
 						{moment(filteredDate && filteredDate[0].startDate).format("MMM Do YY")} -{" "}
@@ -277,13 +282,6 @@ function CustomerDataKunban() {
 					</div>
 					<IconButton style={{border: "1px solid #b2bec3", height: 40, width: 40, marginLeft: 10}}>
 						<Sort style={{height: 25, width: 25}} />
-					</IconButton>
-
-					<IconButton
-						onClick={() => seteditCardDrawer({...editCardDrawer, ["right"]: true})}
-						style={{border: "1px solid #b2bec3", height: 40, width: 40, marginLeft: 10}}
-					>
-						<Edit2 style={{height: 25, width: 25}} />
 					</IconButton>
 
 					<ToggleButtonGroup
@@ -345,7 +343,13 @@ function CustomerDataKunban() {
 										}}
 										key={columnId}
 									>
-										<StatusColumn data={column} />
+										<StatusColumn
+											data={column}
+											drawerState={editCardDrawer}
+											setDrawerState={seteditCardDrawer}
+											statusData={statusData}
+											setStatusData={setStatusData}
+										/>
 										<div className={classes.hideScrollBar}>
 											<Droppable droppableId={columnId} key={columnId}>
 												{(provided, snapshot) => {
@@ -448,7 +452,19 @@ function CustomerDataKunban() {
 				open={editCardDrawer["right"]}
 				onClose={() => seteditCardDrawer({...editCardDrawer, ["right"]: false})}
 			>
-				<EditDataCard drawerState={editCardDrawer} setDrawerState={seteditCardDrawer} />
+				<EditDataCard
+					drawerState={editCardDrawer}
+					setDrawerState={seteditCardDrawer}
+					statusData={statusData}
+				/>
+			</Drawer>
+
+			<Drawer
+				anchor={"right"}
+				open={filtersDrawer["right"]}
+				onClose={() => setFiltersDrawer({...filtersDrawer, ["right"]: false})}
+			>
+				<CustomerFilters />
 			</Drawer>
 		</>
 	)

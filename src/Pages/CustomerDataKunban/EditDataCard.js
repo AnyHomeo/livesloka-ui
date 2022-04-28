@@ -48,7 +48,6 @@ const reorder = (list, startIndex, endIndex) => {
 }
 
 function CheckBoxCard({data, index, lastElement}) {
-	console.log(lastElement)
 	return (
 		<Draggable draggableId={data.id} index={index}>
 			{(provided) => (
@@ -97,9 +96,10 @@ const DragableCard = React.memo(function DragableCard({data}) {
 	))
 })
 
-function EditDataCard({drawerState, setDrawerState}) {
+function EditDataCard({drawerState, setDrawerState, statusData}) {
 	const [state, setState] = useState({data: editableFields})
 
+	console.log(statusData)
 	function onDragEnd(result) {
 		if (!result.destination) {
 			return
@@ -124,7 +124,7 @@ function EditDataCard({drawerState, setDrawerState}) {
 					alignItems: "center",
 				}}
 			>
-				<p style={{fontWeight: 550, fontSize: 18}}>Displayed Fields</p>
+				<p style={{fontWeight: 550, fontSize: 18}}>{statusData?.data?.classStatusName}</p>
 				<div
 					style={{
 						height: 30,
