@@ -1,111 +1,47 @@
 import {Button, TextField} from "@material-ui/core"
 import {Autocomplete} from "@material-ui/lab"
 import React, {useCallback, useEffect, useState} from "react"
-import {isAutheticated} from "../../auth"
-import {getByUserSettings, getData, getSettings, updateSettings} from "../../Services/Services"
+import {getData} from "../../Services/Services"
 import DateRangeDialog from "./DateRangeDialog"
 import moment from "moment"
-const CustomerFilters = () => {
-	const [data, setData] = useState([])
+import {useSnackbar} from "notistack"
 
-	const fetchData = useCallback(async () => {
-		try {
-			setLoading(true)
-			let id = isAutheticated()._id
-			let data
-			data = await getByUserSettings(id)
-			let details = data.data.result
-			setData(details)
-			setLoading(false)
-		} catch (error) {
-			console.error(error)
-		}
-	}, [])
+const initialFilterState = {
+	classStatuses: [],
+	timeZones: [],
+	classes: [],
+	teachers: [],
+	countries: [],
+	agents: [],
+	subjects: [],
+	paidClasses: [],
+}
 
-	useEffect(() => {
-		fetchData()
-	}, [fetchData])
-	const names = [
-		"Class",
-		"Time Zone",
-		"Class Status",
-		"Currency",
-		"Country",
-		"Teacher",
-		"Agent",
-		"Category",
-		"Subject",
-	]
+const names = [
+	"Class",
+	"Time Zone",
+	"Class Status",
+	"Currency",
+	"Country",
+	"Teacher",
+	"Agent",
+	"Category",
+	"Subject",
+]
 
-	const status = [
-		"className",
-		"timeZoneName",
-		"classStatusName",
-		"currencyName",
-		"countryName",
-		"TeacherName",
-		"AgentName",
-		"categoryName",
-		"subjectName",
-	]
+const status = [
+	"className",
+	"timeZoneName",
+	"classStatusName",
+	"currencyName",
+	"countryName",
+	"TeacherName",
+	"AgentName",
+	"categoryName",
+	"subjectName",
+]
 
-	const AutoCompleteFilterData = ({dropdown, i}) => {
-		return (
-			<Autocomplete
-				multiple
-				size="small"
-				id="tags-standard"
-				filterSelectedOptions
-				options={Object.keys(dropdown).map((id) => ({
-					id,
-					name: dropdown[id],
-				}))}
-				limitTags={1}
-				getOptionSelected={(option, value) => option.id === value.id}
-				value={
-					filters[
-						[
-							"classStatuses",
-							"timeZones",
-							"classes",
-							"teachers",
-							"countries",
-							"agents",
-							"subjects",
-						][i]
-					]
-				}
-				onChange={(e, v) => {
-					setFilters((prev) => {
-						let prevFilters = {...prev}
-						return {
-							...prevFilters,
-							[[
-								"classStatuses",
-								"timeZones",
-								"classes",
-								"teachers",
-								"countries",
-								"agents",
-								"subjects",
-							][i]]: v,
-						}
-					})
-				}}
-				getOptionLabel={(option) => option.name}
-				renderInput={(params) => (
-					<TextField
-						{...params}
-						variant="outlined"
-						label={
-							["Class Status", "Time Zone", "Class", "Teacher", "Country", "Agent", "Subject"][i]
-						}
-					/>
-				)}
-			/>
-		)
-	}
-
+const CustomerFilters = ({setViews, closeDrawer}) => {
 	const [classDropdown, setClassDropdown] = useState({})
 	const [timeZoneDropdown, setTimeZoneDropdown] = useState({})
 	const [classStatusDropdown, setClassStatusDropdown] = useState({})
@@ -113,53 +49,108 @@ const CustomerFilters = () => {
 	const [teachersDropdown, setTeachersDropdown] = useState({})
 	const [agentDropdown, setAgentDropdown] = useState({})
 	const [subjectDropdown, setSubjectDropdown] = useState({})
-	const [loading, setLoading] = useState(false)
-	const [currencyDropdown, setCurrencyDropdown] = useState({})
-	const [categoryDropdown, setCategoryDropdown] = useState({})
 
-	const [filters, setFilters] = useState({
-		classStatuses: [],
-		timeZones: [],
-		classes: [],
-		teachers: [],
-		countries: [],
-		agents: [],
-		subjects: [],
-		paidClasses: [],
-	})
+	const [filters, setFilters] = useState(initialFilterState)
+	const [filterName, setFilterName] = useState("")
+	const {enqueueSnackbar} = useSnackbar()
 
-	const fetchDropDown = (index) => {
+	const fetchDropDown = useCallback(async (index) => {
 		var obj = {}
-		getData(names[index])
-			.then((data) => {
-				data.data.result.forEach((item) => {
-					if (names[index] === "Class Status") {
-						if (item.status === "1") {
-							obj[item.id] = item[status[index]]
-						}
-					} else {
-						obj[item.id] = item[status[index]]
-					}
-				})
-			})
-			.catch((err) => {
-				console.error(err)
-			})
+		let data = await getData(names[index])
+		data.data.result.forEach((item) => {
+			if (names[index] === "Class Status") {
+				if (item.status === "1") {
+					obj[item.id] = item[status[index]]
+				}
+			} else {
+				obj[item.id] = item[status[index]]
+			}
+		})
 		return obj
-	}
+	}, [])
+
+	const AutoCompleteFilterData = useCallback(
+		({dropdown, i}) => {
+			return (
+				<Autocomplete
+					multiple
+					size="small"
+					id="tags-standard"
+					filterSelectedOptions
+					options={Object.keys(dropdown).map((id) => ({
+						id,
+						name: dropdown[id],
+					}))}
+					limitTags={1}
+					getOptionSelected={(option, value) => option.id === value.id}
+					value={
+						filters[
+							[
+								"classStatuses",
+								"timeZones",
+								"classes",
+								"teachers",
+								"countries",
+								"agents",
+								"subjects",
+							][i]
+						]
+					}
+					onChange={(e, v) => {
+						setFilters((prev) => {
+							let prevFilters = {...prev}
+							return {
+								...prevFilters,
+								[[
+									"classStatuses",
+									"timeZones",
+									"classes",
+									"teachers",
+									"countries",
+									"agents",
+									"subjects",
+								][i]]: v,
+							}
+						})
+					}}
+					getOptionLabel={(option) => option.name}
+					renderInput={(params) => (
+						<TextField
+							{...params}
+							variant="outlined"
+							label={
+								["Class Status", "Time Zone", "Class", "Teacher", "Country", "Agent", "Subject"][i]
+							}
+						/>
+					)}
+				/>
+			)
+		},
+		[filters]
+	)
 
 	//load all dropdowns
+	const fetchAllDropdowns = useCallback(async () => {
+		let setDropDowns = [
+			setClassDropdown,
+			setTimeZoneDropdown,
+			setClassStatusDropdown,
+			setCountryDropdown,
+			setTeachersDropdown,
+			setAgentDropdown,
+			setSubjectDropdown,
+		]
+
+		for (let i = 0; i < setDropDowns.length; i++) {
+			const setDropDown = setDropDowns[i]
+			let dropDownData = await fetchDropDown(i)
+			setDropDown(dropDownData)
+		}
+	}, [fetchDropDown])
+
 	useEffect(() => {
-		setClassDropdown(fetchDropDown(0))
-		setTimeZoneDropdown(fetchDropDown(1))
-		setClassStatusDropdown(fetchDropDown(2))
-		setCurrencyDropdown(fetchDropDown(3))
-		setCountryDropdown(fetchDropDown(4))
-		setTeachersDropdown(fetchDropDown(5))
-		setAgentDropdown(fetchDropDown(6))
-		setCategoryDropdown(fetchDropDown(7))
-		setSubjectDropdown(fetchDropDown(8))
-	}, [])
+		fetchAllDropdowns()
+	}, [fetchAllDropdowns])
 
 	let dateFilter = [
 		{
@@ -184,7 +175,6 @@ const CustomerFilters = () => {
 				setOpen={setOpen}
 				setFilteredDate={setFilteredDate}
 				filteredDate={filteredDate}
-				fetchData={fetchData}
 				from={"filters"}
 			/>
 
@@ -198,7 +188,14 @@ const CustomerFilters = () => {
 				}}
 			>
 				<div style={{width: "300px", margin: "10px 0"}}>
-					<TextField size="small" fullWidth label="Filter name" variant="outlined" />
+					<TextField
+						size="small"
+						fullWidth
+						label="Filter name"
+						variant="outlined"
+						value={filterName}
+						onChange={(e) => setFilterName(e.target.value)}
+					/>
 
 					<TextField
 						style={{marginTop: 20}}
@@ -281,65 +278,36 @@ const CustomerFilters = () => {
 				>
 					<Button
 						variant="contained"
-						color="primary"
-						style={{margin: "5px"}}
-						onClick={(e) => {
-							setLoading(true)
-							let id = isAutheticated()._id
-							if (id) {
-								updateSettings(id, {
-									filters,
-								})
-									.then((data) => {
-										fetchData()
-									})
-									.catch((err) => {
-										console.log(err)
-									})
-							}
+						style={{marginRight: "5px"}}
+						onClick={() => {
+							setFilters(initialFilterState)
+							setFilterName("")
+							closeDrawer()
 						}}
 					>
-						Apply
+						Cancel
 					</Button>
-
 					<Button
 						variant="contained"
 						color="primary"
 						style={{margin: "5px"}}
 						onClick={() => {
-							let id = isAutheticated()._id
-							setLoading(true)
-							setFilters({
-								classStatuses: [],
-								timeZones: [],
-								classes: [],
-								teachers: [],
-								countries: [],
-								agents: [],
-								subjects: [],
-								paidClasses: [],
-							})
-							updateSettings(id, {
-								filters: {
-									classStatuses: [],
-									timeZones: [],
-									classes: [],
-									teachers: [],
-									countries: [],
-									agents: [],
-									subjects: [],
-									paidClasses: [],
-								},
-							})
-								.then((data) => {
-									fetchData()
+							if (filterName) {
+								setFilters(initialFilterState)
+								setViews((prev) => {
+									let prevData = [...prev]
+									prevData.push(filterName)
+									return prevData
 								})
-								.catch((err) => {
-									console.log(err)
-								})
+								setFilterName("")
+								closeDrawer()
+								enqueueSnackbar("Customer Filter view added successfully", {variant: "success"})
+							} else {
+								enqueueSnackbar("View name is required", {variant: "error"})
+							}
 						}}
 					>
-						Clear
+						Apply
 					</Button>
 				</div>
 			</div>

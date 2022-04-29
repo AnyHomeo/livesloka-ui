@@ -27,14 +27,8 @@ const DateRangeDialog = ({open, setOpen, setFilteredDate, filteredDate, fetchDat
 							marginBottom: 20,
 						}}
 						onClick={() => {
-							if (from === "filters") {
-								setOpen(false)
-								localStorage.setItem("filteredDate", JSON.stringify(filteredDate))
-							} else {
-								fetchData()
-								setOpen(false)
-								localStorage.setItem("filteredDate", JSON.stringify(filteredDate))
-							}
+							setOpen(false)
+							localStorage.setItem("filteredDate", JSON.stringify(filteredDate))
 						}}
 					>
 						Apply

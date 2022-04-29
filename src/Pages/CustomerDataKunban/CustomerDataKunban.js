@@ -4,7 +4,7 @@ import {ToggleButton, ToggleButtonGroup} from "@material-ui/lab"
 import Axios from "axios"
 import React, {useCallback, useEffect, useState} from "react"
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd"
-import {AlignJustify, BarChart2, ChevronDown, Clock, Edit2, Filter, Plus} from "react-feather"
+import {AlignJustify, BarChart2, ChevronDown, Clock, Filter, Plus} from "react-feather"
 import DataCard from "./DataCard"
 import StatusColumn from "./StatusColumn"
 import {editCustomer} from "../../Services/Services"
@@ -150,6 +150,7 @@ function CustomerDataKunban() {
 		right: false,
 		left: false,
 	})
+	const [views, setViews] = useState(["Ram Leads"])
 
 	const [editCustomerData, setEditCustomerData] = useState({
 		right: false,
@@ -164,7 +165,6 @@ function CustomerDataKunban() {
 	}
 	const [open, setOpen] = useState(false)
 
-	const [customFilterOpen, setCustomFilterOpen] = useState(false)
 	const [editCardDrawer, seteditCardDrawer] = useState({
 		right: false,
 	})
@@ -174,7 +174,6 @@ function CustomerDataKunban() {
 	})
 	const [statusData, setStatusData] = useState({})
 
-	console.log(filtersDrawer)
 	return (
 		<>
 			<DateRangeDialog
@@ -193,22 +192,12 @@ function CustomerDataKunban() {
 					onClose={handleClose}
 				>
 					<div style={{width: 300, height: "auto", cursor: "pointer"}}>
-						<div className={classes.userFilterMenuItem}>
-							<Star style={{color: "#27ae60", marginLeft: 5, marginRight: 5}} />
-							<p>Ram Kishore</p>
-						</div>
-						<div className={classes.userFilterMenuItem}>
-							<Star style={{color: "#27ae60", marginLeft: 5, marginRight: 5}} />
-							<p>Ram Kishore</p>
-						</div>
-						<div className={classes.userFilterMenuItem}>
-							<Star style={{color: "#27ae60", marginLeft: 5, marginRight: 5}} />
-							<p>Ram Kishore</p>
-						</div>
-						<div className={classes.userFilterMenuItem}>
-							<Star style={{color: "#27ae60", marginLeft: 5, marginRight: 5}} />
-							<p>Ram Kishore</p>
-						</div>
+						{views.map((view) => (
+							<div className={classes.userFilterMenuItem}>
+								<Star style={{color: "#27ae60", marginLeft: 5, marginRight: 5}} />
+								<p>{view}</p>
+							</div>
+						))}
 					</div>
 				</Menu>
 			</div>
@@ -466,9 +455,12 @@ function CustomerDataKunban() {
 			<Drawer
 				anchor={"right"}
 				open={filtersDrawer["right"]}
-				onClose={() => setFiltersDrawer({...filtersDrawer, ["right"]: false})}
+				onClose={() => setFiltersDrawer({...filtersDrawer, right: false})}
 			>
-				<CustomerFilters />
+				<CustomerFilters
+					setViews={setViews}
+					closeDrawer={() => setFiltersDrawer({...filtersDrawer, right: false})}
+				/>
 			</Drawer>
 		</>
 	)
