@@ -191,7 +191,7 @@ const AttedanceByClass = () => {
             id="free-solo-demo"
             freeSolo
             options={classes}
-            getOptionLabel={(option) => option.className}
+            getOptionLabel={(option) => option.className || ""}
             onChange={(e, v) => {
               if (v && v._id) {
                 setSelectedScheduleId(v._id);

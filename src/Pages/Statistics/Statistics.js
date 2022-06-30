@@ -160,7 +160,7 @@ function Statistics() {
 			console.log(error.response)
 		}
 	}
-
+	console.log(dialogData)
 	const meetingLink = useMemo(() => retrieveMeetingLink(dialogData), [dialogData])
 
 	const mapLatestComments = useCallback(async () => {
@@ -189,7 +189,6 @@ function Statistics() {
 		setDrawerState({...drawerState, [anchor]: open})
 	}
 
-	console.log(selectedCommentsCustomerId)
 	return (
 		<div>
 			<ApplyTeacherLeaves
@@ -222,11 +221,14 @@ function Statistics() {
 							<OutlinedInput
 								id="Meeting-Link"
 								label="Meeting Link"
-								value={meetingLink}
+								value={dialogData.teacher?.joinLink}
 								fullWidth
 								endAdornment={
 									<InputAdornment position="end">
-										<IconButton onClick={() => copyToClipboard(meetingLink)} edge="end">
+										<IconButton
+											onClick={() => copyToClipboard(dialogData.teacher?.joinLink)}
+											edge="end"
+										>
 											<FileCopyIcon />
 										</IconButton>
 									</InputAdornment>

@@ -43,7 +43,7 @@ import OutlinedInput from "@material-ui/core/OutlinedInput"
 import {getData} from "./../../../Services/Services"
 import hours from "../../../Services/hours.json"
 import times from "../../../Services/times.json"
-import {copyToClipboard, retrieveMeetingLink} from "../../../Services/utils"
+import {copyToClipboard} from "../../../Services/utils"
 import ToggleCancelClass from "../../../Components/ToggleCancelClass"
 
 const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
@@ -229,8 +229,6 @@ function Scheduler() {
 		[timeZones]
 	)
 
-	const meetingLink = useMemo(() => retrieveMeetingLink(selectedSchedule), [selectedSchedule])
-
 	const arraySearch = (array, keyword) => {
 		const searchTerm = keyword.toLowerCase()
 		return array.filter((value) => {
@@ -299,11 +297,11 @@ function Scheduler() {
 										<OutlinedInput
 											id="Meeting-Link"
 											label="Meeting Link"
-											value={meetingLink}
+											value={selectedSchedule?.teacherData?.joinLink}
 											fullWidth
 											endAdornment={
 												<InputAdornment position="end">
-													<IconButton onClick={() => copyToClipboard(meetingLink)} edge="end">
+													<IconButton onClick={() => copyToClipboard(selectedSchedule?.teacherData?.joinLink)} edge="end">
 														<FileCopyOutlined />
 													</IconButton>
 												</InputAdornment>
@@ -411,7 +409,7 @@ function Scheduler() {
 					</Button>
 
 					<Button
-						onClick={() => window.open(meetingLink)}
+						onClick={() => window.open(selectedSchedule?.teacherData?.joinLink)}
 						variant="outlined"
 						style={{backgroundColor: "#2ecc71", color: "white"}}
 						startIcon={<AdjustIcon />}

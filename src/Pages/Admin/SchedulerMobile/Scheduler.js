@@ -96,8 +96,6 @@ function Scheduler() {
 		[timeZones]
 	)
 
-	const meetingLink = useMemo(() => retrieveMeetingLink(selectedSchedule), [selectedSchedule])
-
 	useEffect(() => {
 		fetchcategorizedTeachers()
 	}, [])
@@ -153,11 +151,14 @@ function Scheduler() {
 										<OutlinedInput
 											id="Meeting-Link"
 											label="Meeting Link"
-											value={meetingLink}
+											value={selectedSchedule?.teacherData?.joinLink}
 											fullWidth
 											endAdornment={
 												<InputAdornment position="end">
-													<IconButton onClick={() => copyToClipboard(meetingLink)} edge="end">
+													<IconButton
+														onClick={() => copyToClipboard(selectedSchedule?.teacherData?.joinLink)}
+														edge="end"
+													>
 														<FileCopyOutlined />
 													</IconButton>
 												</InputAdornment>
@@ -328,7 +329,7 @@ function Scheduler() {
 					</Button>
 
 					<Button
-						onClick={() => window.open(meetingLink)}
+						onClick={() => window.open(selectedSchedule?.teacherData?.joinLink)}
 						variant="outlined"
 						style={{backgroundColor: "#2ecc71", color: "white"}}
 						startIcon={<AdjustIcon />}

@@ -69,7 +69,7 @@ exports.services = {
 		"Update Status": "/admin/update/Status",
 
 		Teacher:
-			"/teacher?params=id,TeacherDesc,TeacherName,TeacherStatus,_id,category,teacherMail,Salary_tillNow,Commission_Amount_One,Commission_Amount_Many,Bank_account,Phone_number,Bank_full_name,isDemoIncludedInSalaries,leaveDifferenceHours,teacherImageLink,demoPriority,subject,isNotAvailableInBooking,teacherVideoLink,experience,rewards",
+			"/teacher?params=id,TeacherDesc,TeacherName,TeacherStatus,_id,category,teacherMail,Salary_tillNow,Commission_Amount_One,Commission_Amount_Many,Bank_account,Phone_number,Bank_full_name,isDemoIncludedInSalaries,leaveDifferenceHours,teacherImageLink,demoPriority,subject,isNotAvailableInBooking,teacherVideoLink,experience,rewards,joinLink",
 		"Add Teacher": "/admin/add/Teacher",
 		"Update Teacher": "/admin/update/Teacher",
 		"Delete Teacher": "/admin/delete/Teacher",

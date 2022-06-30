@@ -271,7 +271,7 @@ const SingleRow = ({
 									</Tooltip>
 									<Tooltip title="Join Zoom">
 										<IconButton
-											onClick={() => window.open(retrieveMeetingLink(singleData))}
+											onClick={() => window.open(singleData?.teacher?.joinLink)}
 											size="small"
 										>
 											<Video style={{height: 18, width: 18, color: "#0984e3"}} />
