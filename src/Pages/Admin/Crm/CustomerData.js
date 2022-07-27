@@ -483,70 +483,20 @@ const CrmDetails = ({isSummerCampStudents}) => {
 		if (Object.keys(columnFilters).length) {
 			setColumns([
 				{
-					title: "Join",
+					title: "Student Name",
+					field: "firstName",
 					width: "1%",
-					align: "center",
-					editable: "never",
 					cellStyle: {whiteSpace: "nowrap"},
 					headerStyle: {whiteSpace: "nowrap"},
-					field: "isJoinButtonEnabledByAdmin",
-					render: (rowData) => (
-						<Switch
-							onChange={() =>
-								toggleField(rowData, {
-									isJoinButtonEnabledByAdmin: !rowData.isJoinButtonEnabledByAdmin,
-									_id: rowData._id,
-								})
-							}
-							checked={rowData.isJoinButtonEnabledByAdmin}
-							name="isJoinButtonEnabledByAdmin"
-							inputProps={{"aria-label": "secondary checkbox"}}
-						/>
-					),
+					hidden: !columnFilters["firstName"].selected,
 				},
 				{
-					title: "Subscription",
+					title: "Guardian",
+					field: "lastName",
 					width: "1%",
-					align: "center",
-					editable: "never",
 					cellStyle: {whiteSpace: "nowrap"},
 					headerStyle: {whiteSpace: "nowrap"},
-					field: "isSubscription",
-					render: (rowData) => (
-						<Switch
-							onChange={() =>
-								toggleField(rowData, {
-									isSubscription: !rowData.isSubscription,
-									_id: rowData._id,
-								})
-							}
-							checked={!!rowData.isSubscription}
-							name="isSubscription"
-							inputProps={{"aria-label": "secondary checkbox"}}
-						/>
-					),
-				},
-				{
-					title: "New",
-					width: "1%",
-					align: "center",
-					editable: "never",
-					cellStyle: {whiteSpace: "nowrap"},
-					headerStyle: {whiteSpace: "nowrap"},
-					field: "autoDemo",
-					render: (rowData) => (
-						<Switch
-							onChange={() =>
-								toggleField(rowData, {
-									autoDemo: !rowData.autoDemo,
-									_id: rowData._id,
-								})
-							}
-							checked={!!rowData.autoDemo}
-							name="autoDemo"
-							inputProps={{"aria-label": "secondary checkbox"}}
-						/>
-					),
+					hidden: !columnFilters["lastName"].selected,
 				},
 				{
 					title: "Customer Status",
@@ -595,14 +545,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					hidden: !columnFilters["timeZoneId"].selected,
 				},
 				{title: "Id", field: "id", hidden: true},
-				{
-					title: "Student Name",
-					field: "firstName",
-					width: "1%",
-					cellStyle: {whiteSpace: "nowrap"},
-					headerStyle: {whiteSpace: "nowrap"},
-					hidden: !columnFilters["firstName"].selected,
-				},
+
 				{
 					title: "Requested Subjects",
 					field: "requestedSubjects",
@@ -619,14 +562,7 @@ const CrmDetails = ({isSummerCampStudents}) => {
 						</div>
 					),
 				},
-				{
-					title: "Guardian",
-					field: "lastName",
-					width: "1%",
-					cellStyle: {whiteSpace: "nowrap"},
-					headerStyle: {whiteSpace: "nowrap"},
-					hidden: !columnFilters["lastName"].selected,
-				},
+
 				{
 					title: "Age",
 					field: "age",
@@ -991,6 +927,72 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					hidden: !columnFilters["phone"].selected,
 					cellStyle: {whiteSpace: "nowrap"},
 					headerStyle: {whiteSpace: "nowrap"},
+				},
+				{
+					title: "Join",
+					width: "1%",
+					align: "center",
+					editable: "never",
+					cellStyle: {whiteSpace: "nowrap"},
+					headerStyle: {whiteSpace: "nowrap"},
+					field: "isJoinButtonEnabledByAdmin",
+					render: (rowData) => (
+						<Switch
+							onChange={() =>
+								toggleField(rowData, {
+									isJoinButtonEnabledByAdmin: !rowData.isJoinButtonEnabledByAdmin,
+									_id: rowData._id,
+								})
+							}
+							checked={rowData.isJoinButtonEnabledByAdmin}
+							name="isJoinButtonEnabledByAdmin"
+							inputProps={{"aria-label": "secondary checkbox"}}
+						/>
+					),
+				},
+				{
+					title: "Subscription",
+					width: "1%",
+					align: "center",
+					editable: "never",
+					cellStyle: {whiteSpace: "nowrap"},
+					headerStyle: {whiteSpace: "nowrap"},
+					field: "isSubscription",
+					render: (rowData) => (
+						<Switch
+							onChange={() =>
+								toggleField(rowData, {
+									isSubscription: !rowData.isSubscription,
+									_id: rowData._id,
+								})
+							}
+							checked={!!rowData.isSubscription}
+							name="isSubscription"
+							inputProps={{"aria-label": "secondary checkbox"}}
+						/>
+					),
+				},
+				{
+					title: "New",
+					width: "1%",
+					align: "center",
+					editable: "never",
+					cellStyle: {whiteSpace: "nowrap"},
+					headerStyle: {whiteSpace: "nowrap"},
+					field: "autoDemo",
+					render: (rowData) => (
+						<Switch
+							onChange={() =>
+								toggleField(rowData, {
+									autoDemo: !rowData.autoDemo,
+									_id: rowData._id,
+								})
+							}
+							checked={!!rowData.autoDemo}
+							name="autoDemo"
+							inputProps={{"aria-label": "secondary checkbox"}}
+						/>
+					),
 				},
 			])
 		}
@@ -1402,22 +1404,6 @@ const CrmDetails = ({isSummerCampStudents}) => {
 					data={data}
 					tableRef={materialTableRef}
 					initialFormData={initialFormData}
-					options={{
-						pageSize: 20,
-						pageSizeOptions: [20, 30, 40, 50, data.length],
-						paginationType: "stepped",
-						searchFieldVariant: "outlined",
-						actionsColumnIndex: 0,
-						addRowPosition: "first",
-						maxBodyHeight: height - 220,
-						exportButton: true,
-						filtering: true,
-						rowStyle: (rowData) => {
-							return {
-								backgroundColor: rowData.isRedeemedCustomer ? "#eee" : "#fff",
-							}
-						},
-					}}
 					actions={[
 						(rowData) => ({
 							icon: () => <DollarSign />,
@@ -1515,6 +1501,22 @@ const CrmDetails = ({isSummerCampStudents}) => {
 							},
 						},
 					]}
+					options={{
+						pageSize: 20,
+						pageSizeOptions: [20, 30, 40, 50, data.length],
+						paginationType: "stepped",
+						searchFieldVariant: "outlined",
+						actionsColumnIndex: -1,
+						addRowPosition: "first",
+						maxBodyHeight: height - 220,
+						exportButton: true,
+						filtering: true,
+						rowStyle: (rowData) => {
+							return {
+								backgroundColor: rowData.isRedeemedCustomer ? "#eee" : "#fff",
+							}
+						},
+					}}
 					editable={{
 						onRowAdd: isSummerCampStudents
 							? undefined

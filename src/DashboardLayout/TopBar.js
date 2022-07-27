@@ -35,7 +35,7 @@ import noti from "./notification.mp3"
 import AssignChats from "./AssignChats"
 import {ChevronDown, ChevronUp, Smartphone} from "react-feather"
 import GlobalContext from "../context/GlobalContext"
-import { DesktopMac } from "@material-ui/icons"
+import {DesktopMac} from "@material-ui/icons"
 var audio = new Audio(noti)
 
 let socket
@@ -107,7 +107,7 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 	const timezoneArr = [
 		{
 			id: 1,
-			title: "IST", 
+			title: "IST",
 			tz: "Asia/Kolkata",
 		},
 		{
@@ -202,56 +202,52 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 					<MenuIcon />
 				</IconButton>
 
-				{width <= 550 ? null : (
-					<>
-						{timezoneArr.map((time, i) => (
-							<div
-								key={time.id}
-								style={{
-									display: "flex",
-									width: "100%",
-									justifyContent: "center",
-									alignItems: "center",
-								}}
-							>
-								<div
-									className={classes.textContainer}
-									key={time.id}
-									style={{
-										flexDirection: "column",
-										justifyContent: "center",
-										marginTop: -10,
-									}}
-								>
-									{/* <p className={classes.timeText} style={{color: "white", textAlign: "center"}}>
+				{timezoneArr.map((time, i) => (
+					<div
+						key={time.id}
+						style={{
+							display: "flex",
+							width: "100%",
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+					>
+						<div
+							className={classes.textContainer}
+							key={time.id}
+							style={{
+								flexDirection: "column",
+								justifyContent: "center",
+								marginTop: -10,
+							}}
+						>
+							{/* <p className={classes.timeText} style={{color: "white", textAlign: "center"}}>
 								{time.title}:{" "}
 							</p> */}
 
-									<div>
-										<Chip
-											avatar={<Avatar>{time.title.substr(0, 1)}</Avatar>}
-											onClick={() => handleClickOpen(time)}
-											style={{fontWeight: "bold"}}
-											size={width > 700 ? "small" : "small"}
-											label={moment
-												.tz(AllTimeZones, customTimeArr)
-												.clone()
-												.tz(time.tz)
-												.format("h:mm A")}
-										/>
+							<div>
+								<Chip
+									avatar={<Avatar>{time.title.substr(0, 1)}</Avatar>}
+									onClick={() => handleClickOpen(time)}
+									style={{fontWeight: "bold"}}
+									size={width > 700 ? "small" : "small"}
+									label={moment
+										.tz(AllTimeZones, customTimeArr)
+										.clone()
+										.tz(time.tz)
+										.format("h:mm A")}
+								/>
 
-										{/* <p
+								{/* <p
 									className={classes.timeText}
 									style={{color: "white", textAlign: "center", fontWeight: "bold"}}
 								>
 									{moment(AllTimeZones).tz(time.tz).format("h:mm A")}
 								</p> */}
-									</div>
-								</div>
 							</div>
-						))}
-					</>
-				)}
+						</div>
+					</div>
+				))}
 
 				<div>
 					<Dialog open={open} onClose={handleClose}>
@@ -302,32 +298,32 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 					>
 						{isAutheticated().roleId === 3 && (
 							<>
-								{location.pathname.includes('/scheduler/mobile/') ? (
+								{location.pathname.includes("/scheduler/mobile/") ? (
 									<>
-									<IconButton size="small" onClick={() => history.push('/scheduler')} >
-									<DesktopMac style={{color:'white'}} />
-									</IconButton>
-									<IconButton onClick={() => expandAll(!state.expandAll)}>
-										{state.expandAll ? (
-											<ChevronUp
-												style={{
-													color: "white",
-													float: "right",
-													height: 30,
-													width: 30,
-												}}
-											/>
-										) : (
-											<ChevronDown
-												style={{
-													color: "white",
-													float: "right",
-													height: 30,
-													width: 30,
-												}}
-											/>
-										)}
-									</IconButton>
+										<IconButton size="small" onClick={() => history.push("/scheduler")}>
+											<DesktopMac style={{color: "white"}} />
+										</IconButton>
+										<IconButton onClick={() => expandAll(!state.expandAll)}>
+											{state.expandAll ? (
+												<ChevronUp
+													style={{
+														color: "white",
+														float: "right",
+														height: 30,
+														width: 30,
+													}}
+												/>
+											) : (
+												<ChevronDown
+													style={{
+														color: "white",
+														float: "right",
+														height: 30,
+														width: 30,
+													}}
+												/>
+											)}
+										</IconButton>
 									</>
 								) : null}
 

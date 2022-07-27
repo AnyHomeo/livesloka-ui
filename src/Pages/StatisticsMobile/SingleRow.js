@@ -9,7 +9,7 @@ import Checkbox from "@material-ui/core/Checkbox"
 import {isAutheticated} from "../../auth"
 import io from "socket.io-client"
 import moment from "moment"
-import { isFuture } from "../../Services/utils"
+import {isFuture} from "../../Services/utils"
 const socket = io(process.env.REACT_APP_API_KEY)
 function SingleRow({
 	setDialogOpen,
