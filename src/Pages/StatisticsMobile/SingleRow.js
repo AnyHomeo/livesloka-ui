@@ -130,12 +130,10 @@ function SingleRow({
 		>
 			<div
 				style={{
-					// background: "#eb4d4b",
 					height: "100%",
 					display: "flex",
 					justifyContent: "center",
 					alignItems: "center",
-					// width: 80,
 					flex: 0.1,
 				}}
 			>
@@ -246,8 +244,7 @@ function SingleRow({
 				<IconButton size="small" onClick={() => resetZoomLink(singleData._id)} edge="end">
 					<LoopIcon />
 				</IconButton>
-
-				<a target="_blank" href={singleData.meetingLink} rel="noreferrer">
+				<a target="_blank" href={singleData?.teacher?.joinLink} rel="noreferrer">
 					<IconButton size="small">
 						<Video style={{height: 18, width: 18, color: "#0984e3"}} />
 					</IconButton>

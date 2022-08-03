@@ -162,7 +162,6 @@ function Statistics() {
 		}
 	}
 
-	const meetingLink = useMemo(() => retrieveMeetingLink(dialogData), [dialogData])
 
 	const [selectedCustomerId, setSelectedCustomerId] = useState("")
 
@@ -237,7 +236,7 @@ function Statistics() {
 				>
 					<InputAdornment position="end">
 						<div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-							<Button onClick={() => copyToClipboard(meetingLink)} edge="end">
+							<Button onClick={() => copyToClipboard(dialogData.teacher.joinLink)} edge="end">
 								<Copy />
 							</Button>
 							<p style={{fontSize: 10}}>Zoom</p>
@@ -302,7 +301,7 @@ function Statistics() {
 					>
 						<DeleteIcon />
 					</IconButton>
-					<IconButton onClick={() => window.open(meetingLink)} variant="outlined">
+					<IconButton onClick={() => window.open(dialogData.teacher.joinLink)} variant="outlined">
 						<AdjustIcon />
 					</IconButton>
 				</DialogActions>

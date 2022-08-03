@@ -231,10 +231,6 @@ function SingleDayStats({
 		arrayOfTeacherIds()
 	}, [arrayOfTeacherIds])
 
-	let testing = {
-		"3:00 AM": [],
-	}
-
 	const createObject = (data) => {
 		let obj = {}
 
@@ -265,9 +261,7 @@ function SingleDayStats({
 						<Grid key={i} item sx={12} style={{width: "100%"}}>
 							<div className="hour">
 								<Card
-									// className="hourCard"
 									style={{
-										// margin: 5,
 										width: "100%",
 										height: "auto",
 										display: "flex",
@@ -275,11 +269,9 @@ function SingleDayStats({
 										marginTop: 10,
 										borderRadius: "0px !important",
 										border: "1px solid rgb(9, 132, 227)",
-										// margin: 10,
 										boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
 									}}
 								>
-									{/* <Clock style={{marginRight: 5, height: 20, height: 20}} />{" "} */}
 									<Card style={{backgroundColor: "rgb(9, 132, 227)"}}>
 										<p style={{textAlign: "center", padding: 5, color: "white"}}>{`${
 											item.split(" ")[0]
@@ -291,8 +283,6 @@ function SingleDayStats({
 											setDialogData={setDialogData}
 											day={day}
 											selectedSlot={selectedSlot}
-											// time={`${day}-${time}`}
-											// prevTime={i !== 0 ? `${day}-${times[i - 1]}` : ""}
 											singleData={singleData}
 											setDialogOpen={setDialogOpen}
 											leaves={leaves}

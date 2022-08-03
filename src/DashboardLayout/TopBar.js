@@ -202,6 +202,21 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 					<MenuIcon />
 				</IconButton>
 
+				{location.pathname === "/statistics/mobile" ? (
+					<IconButton
+						onClick={() => history.push("/statistics")}
+						variant="contained"
+						color="primary"
+						size="small"
+						style={{
+							marginRight: 5,
+							float: "right",
+						}}
+					>
+						<Smartphone style={{color: "white"}} />
+					</IconButton>
+				) : null}
+
 				{timezoneArr.map((time, i) => (
 					<div
 						key={time.id}
@@ -325,21 +340,6 @@ const TopBar = ({className, onMobileNavOpen, ...rest}) => {
 											)}
 										</IconButton>
 									</>
-								) : null}
-
-								{location.pathname === "/statistics/mobile" ? (
-									<IconButton
-										onClick={() => history.push("/statistics")}
-										variant="contained"
-										color="primary"
-										size="small"
-										style={{
-											marginRight: 5,
-											float: "right",
-										}}
-									>
-										<Smartphone style={{color: "white"}} />
-									</IconButton>
 								) : null}
 
 								<Link
