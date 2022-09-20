@@ -5,15 +5,7 @@ import AccordionSummary from "@material-ui/core/AccordionSummary"
 import AccordionDetails from "@material-ui/core/AccordionDetails"
 import Typography from "@material-ui/core/Typography"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
-import {
-	Card,
-	IconButton,
-	TextField,
-	Switch,
-	FormControl,
-	Select,
-	MenuItem,
-} from "@material-ui/core"
+import {Card, IconButton, TextField, Switch, FormControl, Select, MenuItem} from "@material-ui/core"
 import {Edit, Trash2, ArrowRightCircle, XCircle} from "react-feather"
 import {editField} from "../../../../Services/Services"
 

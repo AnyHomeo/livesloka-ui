@@ -27,12 +27,12 @@ function Routes() {
 					TransitionComponent={Slide}
 				>
 					<DashboardLayout>
-						{adminRoutes.map(({path, exact, component: Component,permission}) => (
+						{adminRoutes.map(({path, exact, component: Component, permission}) => (
 							<AdminRoute
 								path={path}
 								exact={exact}
 								component={() => (
-									<PermissionController permission={permission} >
+									<PermissionController permission={permission}>
 										<Component />
 									</PermissionController>
 								)}

@@ -5,7 +5,7 @@ import {Alert, Autocomplete} from "@material-ui/lab"
 import {Button, TextField} from "@material-ui/core"
 import {updateBoughtClasses} from "./../../../Services/Services"
 import useDocumentTitle from "../../../Components/useDocumentTitle"
-import { useParams } from "react-router-dom"
+import {useParams} from "react-router-dom"
 
 function UpdateNumberOfBoughtClasses() {
 	useDocumentTitle("Classes Paid")
@@ -44,9 +44,7 @@ function UpdateNumberOfBoughtClasses() {
 			.then((data) => {
 				setAllCustomers(data.data.result)
 				if (params && params.id) {
-					setSelectedCustomer(
-						data.data.result.filter((student) => student._id === params.id)[0]
-					)
+					setSelectedCustomer(data.data.result.filter((student) => student._id === params.id)[0])
 				}
 			})
 			.catch((err) => {

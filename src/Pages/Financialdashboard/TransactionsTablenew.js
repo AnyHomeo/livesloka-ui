@@ -93,7 +93,13 @@ export default function TransactionTablenew({id, type}) {
 							Total Fee: {data?.reduce((total, row) => total + (row.transactionFee ?? 0), 0)}
 						</TableCell>
 						<TableCell align="right">
-						Total Deposit: {data?.reduce((total, row) => total + ((row.taxableValue ?? 0) - (row.transactionFee ?? 0)), 0).toFixed(2)}
+							Total Deposit:{" "}
+							{data
+								?.reduce(
+									(total, row) => total + ((row.taxableValue ?? 0) - (row.transactionFee ?? 0)),
+									0
+								)
+								.toFixed(2)}
 						</TableCell>
 						<TableCell align="right"></TableCell>
 					</TableRow>

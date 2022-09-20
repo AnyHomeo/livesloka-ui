@@ -14,7 +14,7 @@ import {getNewSlots} from "./helpers"
 import {useSnackbar} from "notistack"
 import Axios from "axios"
 import {useConfirm} from "material-ui-confirm"
-import { isFuture } from "../../../Services/utils"
+import {isFuture} from "../../../Services/utils"
 
 function SingleBlock({
 	day,

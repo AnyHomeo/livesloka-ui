@@ -1,7 +1,7 @@
 import React from "react"
 import {ReactSVG} from "react-svg"
 import {IconButton} from "@material-ui/core"
-import TextareaAutosize from "react-autosize-textarea";
+import TextareaAutosize from "react-autosize-textarea"
 import "./SingleNotification.css"
 
 function SingleNotification({icon, color, title, text, setNotificationData}) {

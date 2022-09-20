@@ -1,83 +1,81 @@
 .highcharts-data-table,
 .highcharts-data-table table {
-    width: 100%;  
+	width: 100%;
 }
 
 .highcharts-data-table table .number,
 .highcharts-data-table table .text {
-    text-align: center;
-    padding: 10px;
-    border-collapse: collapse;
-    text-transform: capitalize;
+	text-align: center;
+	padding: 10px;
+	border-collapse: collapse;
+	text-transform: capitalize;
 }
 
 /* Zebra striping */
 .highcharts-data-table table tr:nth-of-type(even) {
-    background: #eee;
+	background: #eee;
 }
 
 .highcharts-data-table table th {
-    color: black;
-    font-weight: bold;
+	color: black;
+	font-weight: bold;
 }
 
 .highcharts-data-table table td,
 .highcharts-data-table table th {
-    padding: 10px;
-    border: 1px solid #ccc;
-    font-size: 18px;
+	padding: 10px;
+	border: 1px solid #ccc;
+	font-size: 18px;
 }
 
 @media only screen and (max-width: 760px),
-(min-device-width: 768px) and (max-device-width: 1024px) {
+	(min-device-width: 768px) and (max-device-width: 1024px) {
+	.highcharts-data-table table {
+		width: 100%;
+	}
 
-    .highcharts-data-table table {
-        width: 100%;
-    }
+	/* Force table to not be like tables anymore */
+	.highcharts-data-table table,
+	.highcharts-data-table thead,
+	.highcharts-data-table tbody,
+	.highcharts-data-table th,
+	.highcharts-data-table td,
+	.highcharts-data-table tr {
+		display: block;
+	}
 
-    /* Force table to not be like tables anymore */
-    .highcharts-data-table table,
-    .highcharts-data-table thead,
-    .highcharts-data-table tbody,
-    .highcharts-data-table th,
-    .highcharts-data-table td,
-    .highcharts-data-table tr {
-        display: block;
-    }
+	/* Hide table headers (but not display: none;, for accessibility) */
+	.highcharts-data-table thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
 
-    /* Hide table headers (but not display: none;, for accessibility) */
-    .highcharts-data-table thead tr {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
-    }
+	.highcharts-data-table tr {
+		border: 1px solid #ccc;
+	}
 
-    .highcharts-data-table tr {
-        border: 1px solid #ccc;
-    }
+	.highcharts-data-table td {
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee;
+		position: relative;
+		padding-left: 50%;
+	}
 
-    .highcharts-data-table td {
-        /* Behave  like a "row" */
-        border: none;
-        border-bottom: 1px solid #eee;
-        position: relative;
-        padding-left: 50%;
-    }
+	.highcharts-data-table td:before {
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%;
+		padding-right: 10px;
+		white-space: nowrap;
+		/* Label the data */
+		content: attr(data-column);
 
-    .highcharts-data-table td:before {
-        /* Now like a table header */
-        position: absolute;
-        /* Top/left values mimic padding */
-        top: 6px;
-        left: 6px;
-        width: 45%;
-        padding-right: 10px;
-        white-space: nowrap;
-        /* Label the data */
-        content: attr(data-column);
-
-        color: #000;
-        font-weight: bold;
-    }
-
+		color: #000;
+		font-weight: bold;
+	}
 }

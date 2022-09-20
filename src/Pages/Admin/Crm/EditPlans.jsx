@@ -68,8 +68,8 @@ const EditPlans = ({customerId, setCustomerId}) => {
 					setCustomerId("")
 				})
 		} else {
-            setPlans([])
-        }
+			setPlans([])
+		}
 	}, [customerId, enqueueSnackbar, setCustomerId])
 
 	const updatePlans = useCallback(() => {
@@ -88,8 +88,7 @@ const EditPlans = ({customerId, setCustomerId}) => {
 				enqueueSnackbar("Plans updated successfully", {
 					variant: "success",
 				})
-					setCustomerId("")
-
+				setCustomerId("")
 			})
 			.catch((err) => {
 				console.error(err)
@@ -97,8 +96,7 @@ const EditPlans = ({customerId, setCustomerId}) => {
 					variant: "error",
 				})
 			})
-	}, [optionsId, enqueueSnackbar, plans,setCustomerId])
-
+	}, [optionsId, enqueueSnackbar, plans, setCustomerId])
 
 	return (
 		<Dialog

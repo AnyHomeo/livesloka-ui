@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react"
 
 function EditCustomer() {
-  return (
-	<div>EditCustomer</div>
-  )
+	return <div>EditCustomer</div>
 }
 
 export default EditCustomer
@@ -45,7 +43,6 @@ export default EditCustomer
 // const EditCustomer = ({selectedCustomer, refresh}) => {
 // 	const classes = useStyles()
 // 	const [editingData, setEditingData] = useState(selectedCustomer)
-
 
 // 	const [display, setDisplay] = useState("notdisplayed")
 // 	const showButton = (e) => {

@@ -24,7 +24,7 @@ const MessageAndDateDialog = ({isOpen, handleClose, onSubmit, schedule}) => {
 		<Dialog open={isOpen}>
 			<DialogTitle onClose={handleClose}>
 				{schedule.className && schedule.className.length > 40
-					? `Cancel ${schedule.className.slice(0,40)}...`
+					? `Cancel ${schedule.className.slice(0, 40)}...`
 					: schedule.className}
 			</DialogTitle>
 			<DialogContent dividers>
@@ -109,7 +109,6 @@ const ToggleCancelClass = ({onToggleSuccess, schedule, setSchedule}) => {
 		() => !!(schedule.cancelledTill && isFuture(schedule.cancelledTill)),
 		[schedule.cancelledTill]
 	)
-
 
 	return (
 		<>

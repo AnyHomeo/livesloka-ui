@@ -1,12 +1,10 @@
-import React from 'react'
+import React from "react"
 import MaterialTable from "material-table"
-import { Chip, makeStyles } from '@material-ui/core'
-import moment from 'moment'
-
+import {Chip, makeStyles} from "@material-ui/core"
+import moment from "moment"
 
 export const FeedbackTable = ({data}) => {
 	const classes = useStyles()
-
 
 	const columns = [
 		{
@@ -32,11 +30,15 @@ export const FeedbackTable = ({data}) => {
 		},
 	]
 
-  return (
-    <div className={classes.tableWrapper}>
-			<MaterialTable data={data} columns={columns} title={`Feedback of ${moment().format("MMMM")} month`} />
+	return (
+		<div className={classes.tableWrapper}>
+			<MaterialTable
+				data={data}
+				columns={columns}
+				title={`Feedback of ${moment().format("MMMM")} month`}
+			/>
 		</div>
-  )
+	)
 }
 
 const useStyles = makeStyles(() => ({

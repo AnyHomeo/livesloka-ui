@@ -60,7 +60,6 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const ExtraTeacherDetails = ({dates, presentees, absentees, requestedPaidStudents, open}) => {
-
 	return (
 		<Collapse in={open} timeout="auto" unmountOnExit>
 			<Table aria-label="simple table">
@@ -81,12 +80,7 @@ const ExtraTeacherDetails = ({dates, presentees, absentees, requestedPaidStudent
 							<TableCell align="center">
 								{presentees[i].map((student) => (
 									<>
-									<Chip
-										key={student}
-										style={{marginBottom: 5}}
-										label={student}
-										size="medium"
-									/>
+										<Chip key={student} style={{marginBottom: 5}} label={student} size="medium" />
 									</>
 								))}
 							</TableCell>

@@ -137,7 +137,7 @@ function EditDataCard({drawerState, setDrawerState, statusData}) {
 					}}
 				>
 					<XCircle
-						onClick={() => setDrawerState({...drawerState, ["right"]: false})}
+						onClick={() => setDrawerState({...drawerState, right: false})}
 						style={{color: "#57606f"}}
 					/>
 				</div>

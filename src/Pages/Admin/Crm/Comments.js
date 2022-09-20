@@ -112,7 +112,7 @@ const Comments = ({commentsCustomerId, drawerState, setDrawerState}) => {
 		<Drawer
 			anchor="left"
 			open={!!commentsCustomerId}
-			onClose={() => setDrawerState({...drawerState, ["left"]: false})}
+			onClose={() => setDrawerState({...drawerState, left: false})}
 		>
 			<div className={classes.list} role="presentation">
 				<h2 style={{textAlign: "center"}} ref={headingEl}>

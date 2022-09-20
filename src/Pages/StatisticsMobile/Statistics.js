@@ -162,7 +162,6 @@ function Statistics() {
 		}
 	}
 
-
 	const [selectedCustomerId, setSelectedCustomerId] = useState("")
 
 	const [drawerState, setDrawerState] = useState({

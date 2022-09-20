@@ -9,7 +9,14 @@ import {deleteSubscriptionProduct, getAllPlansOfTheProduct} from "../../Services
 import {useSnackbar} from "notistack"
 import {deleteSubscriptionPlan} from "./../../Services/Services"
 
-function Product({product, setProductsRefresh, plansRefresh, editingId, setEditingId, setOpenAddPlanModal}) {
+function Product({
+	product,
+	setProductsRefresh,
+	plansRefresh,
+	editingId,
+	setEditingId,
+	setOpenAddPlanModal,
+}) {
 	const classes = useStyles()
 	const [isPlansOpen, setIsPlansOpen] = useState(false)
 	const [plans, setPlans] = useState([])
@@ -152,15 +159,16 @@ function Product({product, setProductsRefresh, plansRefresh, editingId, setEditi
 									) : (
 										""
 									)}
-									<Typography variant='caption' style={{textAlign:'right'}} >
-										{item.currency.prefix || "$"} {Number(item.amount / item.intervalCount).toFixed(2)}
+									<Typography variant="caption" style={{textAlign: "right"}}>
+										{item.currency.prefix || "$"}{" "}
+										{Number(item.amount / item.intervalCount).toFixed(2)}
 									</Typography>
 									<Typography variant="h3" style={{textAlign: "center"}}>
 										{item.name}
 									</Typography>
 									<Typography variant="caption">{item.description}</Typography>
 									<div className={classes.planActions}>
-										<IconButton onClick={() => onEditClick(item._id)} >
+										<IconButton onClick={() => onEditClick(item._id)}>
 											<Edit size={16} />
 										</IconButton>
 										<IconButton onClick={() => onPlanDeleteClick(item)}>
@@ -229,7 +237,7 @@ const useStyles = makeStyles({
 		transform: "translateX(-20px)",
 		width: "fit-content",
 		position: "absolute",
-		top:10
+		top: 10,
 	},
 	currency: {
 		transform: "translateX(-20px)",

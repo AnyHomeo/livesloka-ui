@@ -11,7 +11,7 @@ function CustomerFilters({allAdminIds, setAllAdminIds, allCustomers}) {
 			}}
 			limitTags={2}
 			fullWidth
-			getOptionSelected={(option,value) => option.userId === value.userId}
+			getOptionSelected={(option, value) => option.userId === value.userId}
 			options={allCustomers}
 			getOptionLabel={(name) =>
 				name.customerId && name.customerId.firstName

@@ -1,56 +1,47 @@
-import React from 'react'
-import {
-	Typography,
-	IconButton,
-	Paper,
-	InputBase,
-	Grid,
-	Box,
-	Fab,
-} from "@material-ui/core"
+import React from "react"
+import {Typography, IconButton, Paper, InputBase, Grid, Box, Fab} from "@material-ui/core"
 import {makeStyles} from "@material-ui/core"
 import SearchIcon from "@material-ui/icons/Search"
 import {Plus} from "react-feather"
 
-function TopPart({ setSearch,setOpenAddPlanModal,setOpenAddProductModal }) {
-
+function TopPart({setSearch, setOpenAddPlanModal, setOpenAddProductModal}) {
 	const classes = useStyles()
 
-    return (
-        <Grid container alignItems="center" spacing={3} >
-        <Grid item xs={12} ms={12} md={6} lg={4}>
-            <Typography variant="h3">Livesloka Stripe Products</Typography>
-        </Grid>
-        <Grid item xs={12} ms={12} md={6} lg={4}>
-            <Paper className={classes.inputField}>
-                <InputBase
-                    onChange={(e) => setSearch(e.target.value)}
-                    className={classes.input}
-                    placeholder="Search Subjects"
-                />
-                <IconButton className={classes.iconButton} aria-label="search">
-                    <SearchIcon />
-                </IconButton>
-            </Paper>
-        </Grid>
-        <Grid item xs={12} ms={12} md={6} lg={4}>
-            <Box className={classes.buttons}>
-                <Box className={classes.buttonTextCenter}>
-                    <Fab color="primary" onClick={()=> setOpenAddProductModal(true)} >
-                        <Plus color="#fff" />
-                    </Fab>
-                    <p>Add Product</p>
-                </Box>
-                <Box className={classes.buttonTextCenter}>
-                    <Fab color="primary" onClick={() => setOpenAddPlanModal(true)} > 
-                        <Plus color="#fff" />
-                    </Fab>
-                    <p>Add Plans</p>
-                </Box>
-            </Box>
-        </Grid>
-    </Grid>
-    )
+	return (
+		<Grid container alignItems="center" spacing={3}>
+			<Grid item xs={12} ms={12} md={6} lg={4}>
+				<Typography variant="h3">Livesloka Stripe Products</Typography>
+			</Grid>
+			<Grid item xs={12} ms={12} md={6} lg={4}>
+				<Paper className={classes.inputField}>
+					<InputBase
+						onChange={(e) => setSearch(e.target.value)}
+						className={classes.input}
+						placeholder="Search Subjects"
+					/>
+					<IconButton className={classes.iconButton} aria-label="search">
+						<SearchIcon />
+					</IconButton>
+				</Paper>
+			</Grid>
+			<Grid item xs={12} ms={12} md={6} lg={4}>
+				<Box className={classes.buttons}>
+					<Box className={classes.buttonTextCenter}>
+						<Fab color="primary" onClick={() => setOpenAddProductModal(true)}>
+							<Plus color="#fff" />
+						</Fab>
+						<p>Add Product</p>
+					</Box>
+					<Box className={classes.buttonTextCenter}>
+						<Fab color="primary" onClick={() => setOpenAddPlanModal(true)}>
+							<Plus color="#fff" />
+						</Fab>
+						<p>Add Plans</p>
+					</Box>
+				</Box>
+			</Grid>
+		</Grid>
+	)
 }
 
 const useStyles = makeStyles(() => ({

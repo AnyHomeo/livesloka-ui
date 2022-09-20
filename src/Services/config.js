@@ -4,11 +4,11 @@ exports.services = {
 		login: "/login",
 		changePassword: "/ChangePassword",
 
-		"Comments": "/admin/get/CustomerMessageTemplates",
+		Comments: "/admin/get/CustomerMessageTemplates",
 		"Add Comments": "/admin/add/CustomerMessageTemplates",
 		"Update Comments": "/admin/update/CustomerMessageTemplates",
 		"Delete Comments": "/admin/delete/CustomerMessageTemplates",
-  
+
 		"Time Zone": "/admin/get/timeZone",
 		"Add Time Zone": "/admin/add/timeZone",
 		"Update Time Zone": "/admin/update/timeZone",

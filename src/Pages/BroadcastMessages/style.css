@@ -1,57 +1,57 @@
-.fluid-container{
-    max-width: 1200px;
-    margin: 20px auto;
+.fluid-container {
+	max-width: 1200px;
+	margin: 20px auto;
 }
 
-.space-between{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-direction: column;
-    gap:10px
+.space-between {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-direction: column;
+	gap: 10px;
 }
 
-.messages-card{
-    margin: 0 20px;
-    height: 100%;
+.messages-card {
+	margin: 0 20px;
+	height: 100%;
 }
 
-.pickers-row-color{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
+.pickers-row-color {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 100%;
 }
 
-.icons-picker{
-    width: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    background-color: #22194d;
-    border-radius: 6px;
-    position: relative;
-    height: 100px;
+.icons-picker {
+	width: 100px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+	background-color: #22194d;
+	border-radius: 6px;
+	position: relative;
+	height: 100px;
 }
 
-.icons-picker svg{
-    color: #fff;
-    margin: 10px;
+.icons-picker svg {
+	color: #fff;
+	margin: 10px;
 }
 
-.icon-picker-triangle{
-    width: 0px;
-    height: 0px;
-    border-style: solid;
-    border-width: 10px 10px 0px;
-    border-color: rgb(34, 25, 77) transparent transparent;
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    margin-left: -10px;
+.icon-picker-triangle {
+	width: 0px;
+	height: 0px;
+	border-style: solid;
+	border-width: 10px 10px 0px;
+	border-color: rgb(34, 25, 77) transparent transparent;
+	position: absolute;
+	bottom: -10px;
+	left: 50%;
+	margin-left: -10px;
 }
 
-.fluid-container .MuiToggleButton-label{
-    color: #000;
+.fluid-container .MuiToggleButton-label {
+	color: #000;
 }

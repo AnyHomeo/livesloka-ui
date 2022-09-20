@@ -298,7 +298,9 @@ export default function ZoomAccountDashboard() {
 																borderBottom: j % 2 !== 0 ? "1px solid rgba(0,0,0,0.5)" : "",
 															}}
 														>
-															{schedules && schedules.length ? schedules.map((schedule) => schedule.className).join(" || ") : ""}
+															{schedules && schedules.length
+																? schedules.map((schedule) => schedule.className).join(" || ")
+																: ""}
 														</div>
 													)
 												})}

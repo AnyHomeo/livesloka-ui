@@ -68,7 +68,7 @@ const TeacherLeaves = () => {
 						title: "Teacher",
 						field: "reason",
 						type: "string",
-						render: (rowData) => rowData.reason ? rowData.reason : '-'
+						render: (rowData) => (rowData.reason ? rowData.reason : "-"),
 					},
 					{
 						title: "Class Name",

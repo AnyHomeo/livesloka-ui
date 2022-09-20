@@ -301,7 +301,10 @@ function Scheduler() {
 											fullWidth
 											endAdornment={
 												<InputAdornment position="end">
-													<IconButton onClick={() => copyToClipboard(selectedSchedule?.teacherData?.joinLink)} edge="end">
+													<IconButton
+														onClick={() => copyToClipboard(selectedSchedule?.teacherData?.joinLink)}
+														edge="end"
+													>
 														<FileCopyOutlined />
 													</IconButton>
 												</InputAdornment>

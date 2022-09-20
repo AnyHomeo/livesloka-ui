@@ -526,7 +526,7 @@ const CustomersDetailsMb = () => {
 										onChange={(e) => {
 											setCustomersEditData({
 												...customersEditData,
-												["paidTill"]: e,
+												paidTill: e,
 											})
 										}}
 										animateYearScrolling

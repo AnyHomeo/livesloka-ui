@@ -50,7 +50,7 @@ function Careers() {
 				{
 					field: "dob",
 					title: "DOB",
-					type:"date"
+					type: "date",
 				},
 				{
 					field: "awards",
@@ -76,12 +76,12 @@ function Careers() {
 				{
 					field: "isPan",
 					title: "Pan card available",
-					type:"boolean"
+					type: "boolean",
 				},
 				{
 					field: "isWifi",
 					title: "Wifi Available",
-					type:"boolean"
+					type: "boolean",
 				},
 				{
 					field: "resumeLink",
@@ -105,7 +105,7 @@ function Careers() {
 				padding: 20,
 			}}
 			options={{
-				filtering:true
+				filtering: true,
 			}}
 			data={applications}
 			title="Applications"

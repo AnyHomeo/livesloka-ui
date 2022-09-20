@@ -1,13 +1,6 @@
 import React, {useMemo, useState} from "react"
 import "./scheduler.css"
-import {
-	Button,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogTitle,
-	Slide,
-} from "@material-ui/core"
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Slide} from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
 import {Link} from "react-router-dom"
@@ -25,12 +18,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />
 })
 
-const SchedulerModal = ({
-	selectedSchedule,
-	setSelectedSchedule,
-	fetchSchedules,
-	teacher,
-}) => {
+const SchedulerModal = ({selectedSchedule, setSelectedSchedule, fetchSchedules, teacher}) => {
 	const confirm = useConfirm()
 	const [scheduleId, setScheduleId] = useState("")
 	const meetingLink = useMemo(() => retrieveMeetingLink(selectedSchedule), [selectedSchedule])
@@ -118,19 +106,11 @@ const SchedulerModal = ({
 						<XCircle />
 					</Button>
 					<Link style={{textDecoration: "none"}} to={`/edit-schedule/${scheduleId}`}>
-						<Button
-							style={{width: "100%"}}
-							variant="outlined"
-							color="primary"
-						>
+						<Button style={{width: "100%"}} variant="outlined" color="primary">
 							<EditIcon />
 						</Button>
 					</Link>
-					<Button
-						onClick={() => deleteSchedule()}
-						variant="outlined"
-						color="secondary"
-					>
+					<Button onClick={() => deleteSchedule()} variant="outlined" color="secondary">
 						<DeleteIcon />
 					</Button>
 

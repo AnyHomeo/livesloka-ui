@@ -136,7 +136,7 @@ const MaterialTableAddFields = ({
 			}
 			setColumns(
 				keys.map((key) => {
-					if(key === 'joinLink'){
+					if (key === "joinLink") {
 						return {
 							title: "Join Link",
 							field: key,

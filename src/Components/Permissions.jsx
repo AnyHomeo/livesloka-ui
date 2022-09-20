@@ -3,7 +3,6 @@ import React, {useCallback} from "react"
 import {patchPermission} from "../Services/Services"
 
 function Permissions({allPermissions, availablePermissions, roleId, setRoles}) {
-
 	const addOrRemovePermission = useCallback(
 		(permission) => async () => {
 			try {
@@ -26,7 +25,6 @@ function Permissions({allPermissions, availablePermissions, roleId, setRoles}) {
 						prevRoles[index].permissions.push(permission)
 						return prevRoles
 					})
-					
 				}
 			} catch (error) {
 				console.log(error)

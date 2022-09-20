@@ -15,7 +15,7 @@ const useStyles = makeStyles({
 	},
 })
 
-const NewAdmissioin = ({onClose,refresh}) => {
+const NewAdmissioin = ({onClose, refresh}) => {
 	const classes = useStyles()
 	const [firstName, setFirstName] = useState("")
 	const [whatsAppnumber, setWhatsAppnumber] = useState("")

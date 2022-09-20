@@ -99,7 +99,7 @@ function NotificationsTable() {
 								customers: () => "selected Customers",
 								teacher: () => teachers.map((teacher) => teacher.TeacherName),
 							}
-							console.log(referenceObject,queryType)
+							console.log(referenceObject, queryType)
 							return {
 								acknowledgedBy: acknowledgedBy.length,
 								agent: admin?.AgentName || "BOT",
@@ -110,15 +110,26 @@ function NotificationsTable() {
 										  ))
 										: customersDescription,
 								iconWithColor: icon + background,
-								referedBy: broadCastTo === "teachers" ? "NA" : referenceObject[queryType] ? referenceObject[queryType]() : "",
-								reference: broadCastTo === "teachers" ? "NA" : referenceObjectOnlyText[queryType] ? referenceObjectOnlyText[queryType]() : "",
-								iconAndColor: (
-									icon ? 
+								referedBy:
+									broadCastTo === "teachers"
+										? "NA"
+										: referenceObject[queryType]
+										? referenceObject[queryType]()
+										: "",
+								reference:
+									broadCastTo === "teachers"
+										? "NA"
+										: referenceObjectOnlyText[queryType]
+										? referenceObjectOnlyText[queryType]()
+										: "",
+								iconAndColor: icon ? (
 									<ReactSVG
 										className="color-with-icon"
 										style={{background}}
 										src={require(`./icons/${icon}.svg`)}
-									/> : <span />
+									/>
+								) : (
+									<span />
 								),
 								title,
 								message: text,

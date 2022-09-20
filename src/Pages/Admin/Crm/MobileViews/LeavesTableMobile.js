@@ -118,7 +118,8 @@ const AccordianInside = ({data, setRefresh, tables}) => {
 						}}
 					>
 						<Typography className={classes.heading}>
-							{data.studentId && data.studentId.firstName} {`(${data.studentId && data.studentId.lastName})`}
+							{data.studentId && data.studentId.firstName}{" "}
+							{`(${data.studentId && data.studentId.lastName})`}
 						</Typography>
 					</div>
 				</AccordionSummary>

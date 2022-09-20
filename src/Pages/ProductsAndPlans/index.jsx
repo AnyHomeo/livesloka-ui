@@ -68,7 +68,15 @@ function ProductsAndPlans() {
 				setEditingId={setEditingId}
 			/>
 			{filteredProducts.map((product) => (
-				<Product key={product._id} setOpenAddPlanModal={setOpenAddPlanModal} editingId={editingId} setEditingId={setEditingId} product={product} setProductsRefresh={setProductsRefresh} plansRefresh={plansRefresh} />
+				<Product
+					key={product._id}
+					setOpenAddPlanModal={setOpenAddPlanModal}
+					editingId={editingId}
+					setEditingId={setEditingId}
+					product={product}
+					setProductsRefresh={setProductsRefresh}
+					plansRefresh={plansRefresh}
+				/>
 			))}
 		</Container>
 	)

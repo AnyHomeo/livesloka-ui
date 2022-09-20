@@ -32,7 +32,7 @@ import Optionstable from "./Optionstable"
 import {useSnackbar} from "notistack"
 import DateFnsUtils from "@date-io/date-fns"
 import {DatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers"
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from "@material-ui/core/styles"
 
 const defaultOptions = {
 	loop: true,
@@ -351,11 +351,11 @@ function Options() {
 										)
 									})}
 							</List>
-							{
-								plans.length ? (
-									<h1 style={{textAlign: "center", margin: "10px 0px"}}> Select Plans to display </h1>
-								) : ""
-							}
+							{plans.length ? (
+								<h1 style={{textAlign: "center", margin: "10px 0px"}}> Select Plans to display </h1>
+							) : (
+								""
+							)}
 							<Grid container spacing={3}>
 								{plans.map((plan, i) => {
 									return (
@@ -365,7 +365,7 @@ function Options() {
 													{plan.name}
 												</Typography>
 												<Typography>
-													{plan?.currency?.prefix || '$'} {plan.amount / plan.intervalCount}
+													{plan?.currency?.prefix || "$"} {plan.amount / plan.intervalCount}
 												</Typography>
 												<Typography align="center">{plan.description}</Typography>
 												<Typography align="center">
@@ -494,8 +494,8 @@ function Options() {
 export default Options
 
 const useStyles = makeStyles(() => ({
-	datePickerWrapper:{
+	datePickerWrapper: {
 		maxWidth: 400,
-		margin:'10px auto'
-	}
+		margin: "10px auto",
+	},
 }))

@@ -8,7 +8,6 @@ export default function CommentAutoComplete({options, setOptions, addComment}) {
 
 	const addValueToComment = React.useCallback(() => {
 		addComment(value._id)
-
 	}, [addComment, value])
 
 	return (
@@ -68,7 +67,12 @@ export default function CommentAutoComplete({options, setOptions, addComment}) {
 					<TextField {...params} variant="outlined" fullWidth label="Add new comment" />
 				)}
 			/>
-			<Button variant="contained" color="secondary" onClick={addValueToComment} disabled={!value?._id} >
+			<Button
+				variant="contained"
+				color="secondary"
+				onClick={addValueToComment}
+				disabled={!value?._id}
+			>
 				Submit
 			</Button>
 		</div>

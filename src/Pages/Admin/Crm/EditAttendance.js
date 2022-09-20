@@ -129,10 +129,8 @@ const BooleanRadioBox = ({value, onChange, label}) => {
 	)
 }
 
-
 const EditAttendance = () => {
 	useDocumentTitle("Edit Attendance")
-
 
 	const [studentNameLists, setStudentNameLists] = useState([])
 	const [studentAttendance, setStudentAttendance] = useState([])

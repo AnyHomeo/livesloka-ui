@@ -4,23 +4,23 @@ import {TextField} from "@material-ui/core"
 import Autocomplete from "@material-ui/lab/Autocomplete"
 import {useEffect, useState} from "react"
 
-function AgentsFilters({ setAllAdminIds,agentStateAndSetStates }) {
-	const { allAgents, setAllAgents, selectedAgents, setSelectedAgents } = agentStateAndSetStates
+function AgentsFilters({setAllAdminIds, agentStateAndSetStates}) {
+	const {allAgents, setAllAgents, selectedAgents, setSelectedAgents} = agentStateAndSetStates
 
 	useEffect(() => {
-		if(allAgents && !allAgents.length){
+		if (allAgents && !allAgents.length) {
 			getData("Agent")
-			.then((data) => {
-				setAllAgents(data.data.result)
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+				.then((data) => {
+					setAllAgents(data.data.result)
+				})
+				.catch((err) => {
+					console.log(err)
+				})
 		}
 	}, [])
 
-    useEffect(() => {
-        if (selectedAgents && selectedAgents.length) {
+	useEffect(() => {
+		if (selectedAgents && selectedAgents.length) {
 			getAdminsFromQuery(
 				"agent",
 				selectedAgents.map((agent) => agent.id)
@@ -31,10 +31,10 @@ function AgentsFilters({ setAllAdminIds,agentStateAndSetStates }) {
 				.catch((err) => {
 					console.log(err)
 				})
-		}else {
+		} else {
 			setAllAdminIds([])
 		}
-    }, [selectedAgents])
+	}, [selectedAgents])
 
 	return (
 		<Autocomplete
@@ -44,7 +44,7 @@ function AgentsFilters({ setAllAdminIds,agentStateAndSetStates }) {
 			}}
 			limitTags={5}
 			fullWidth
-			getOptionSelected={(option,value) => option.id === value.id}
+			getOptionSelected={(option, value) => option.id === value.id}
 			options={allAgents ? allAgents : []}
 			getOptionLabel={(name) => name.AgentName}
 			onChange={(event, value) => {

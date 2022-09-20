@@ -152,7 +152,7 @@ export default function AddPlans({
 						...data.data.result,
 						amount: amount / intervalCount,
 						currency: currency._id,
-						list: list || []
+						list: list || [],
 					}))
 				})
 				.catch((error) => {
@@ -300,26 +300,27 @@ export default function AddPlans({
 							/>
 						</FormControl>
 						<List dense>
-							{ formData.list && formData.list.map((item) => (
-								<ListItem key={item}>
-									<ListItemText primary={item} />
-									<ListItemIcon>
-										<IconButton
-											onClick={() => {
-												setInitialListItem(item)
-												setListItem(item)
-											}}
-										>
-											<EditIcon />
-										</IconButton>
-									</ListItemIcon>
-									<ListItemIcon>
-										<IconButton onClick={() => deleteListItem(item)}>
-											<DeleteIcon />
-										</IconButton>
-									</ListItemIcon>
-								</ListItem>
-							))}
+							{formData.list &&
+								formData.list.map((item) => (
+									<ListItem key={item}>
+										<ListItemText primary={item} />
+										<ListItemIcon>
+											<IconButton
+												onClick={() => {
+													setInitialListItem(item)
+													setListItem(item)
+												}}
+											>
+												<EditIcon />
+											</IconButton>
+										</ListItemIcon>
+										<ListItemIcon>
+											<IconButton onClick={() => deleteListItem(item)}>
+												<DeleteIcon />
+											</IconButton>
+										</ListItemIcon>
+									</ListItem>
+								))}
 						</List>
 					</div>
 				</DialogContent>

@@ -30,7 +30,9 @@ export const Feedback = () => {
 				setChartData(
 					Object.keys(chart).map((teacher) => ({
 						name: teacher,
-						y: (chart[teacher]["Yes"] / Object.values(chart[teacher]).reduce((a, b) => a + b, 0) ) * 100,
+						y:
+							(chart[teacher]["Yes"] / Object.values(chart[teacher]).reduce((a, b) => a + b, 0)) *
+							100,
 					}))
 				)
 			})

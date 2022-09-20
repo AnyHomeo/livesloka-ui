@@ -85,7 +85,7 @@ const Expensestable = ({date}) => {
 					title: "Attachment",
 					field: "attachment",
 					render: (rowData) => (
-						<a href={rowData.attachment} target="_blank">
+						<a href={rowData.attachment} target="_blank" rel="noreferrer">
 							<IconButton>
 								<GetAppIcon />
 							</IconButton>
