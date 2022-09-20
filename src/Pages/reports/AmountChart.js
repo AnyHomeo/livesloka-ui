@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useCallback, useEffect, useState} from "react"
 import {Line} from "react-chartjs-2"
 import clsx from "clsx"
 
@@ -16,19 +16,15 @@ const AmountChart = ({dailyDataline, dataa, className, ...rest}) => {
 	const theme = useTheme()
 	const [TotalSum, setTotalSum] = useState([])
 	const [totalDates, setTotalDates] = useState([])
-	useEffect(() => {
-		getDailyChartData()
-	}, [])
 
-	let finalTotalAmount = []
-	let finalDates = []
-
-	const getDailyChartData = async () => {
+	const getDailyChartData = useCallback(async () => {
+		let finalTotalAmount = []
+		let finalDates = []
 		const {
 			data: {result},
 		} = await axios.get(`${process.env.REACT_APP_API_KEY}/payment/get/dailydatagraph/`)
 
-		Object.keys(result).map((data) => {
+		Object.keys(result).forEach((data) => {
 			if (data.startsWith("February")) {
 				finalTotalAmount.push(result[data].totalSum)
 				finalDates.push(result[data].dates.toString())
@@ -36,7 +32,11 @@ const AmountChart = ({dailyDataline, dataa, className, ...rest}) => {
 		})
 		setTotalSum(finalTotalAmount)
 		setTotalDates(finalDates)
-	}
+	}, [])
+
+	useEffect(() => {
+		getDailyChartData()
+	}, [getDailyChartData])
 
 	const data = {
 		datasets: [

@@ -1,17 +1,7 @@
 import React from "react"
 import clsx from "clsx"
 import PropTypes from "prop-types"
-import {
-	Avatar,
-	Box,
-	Card,
-	CardContent,
-	Grid,
-	Typography,
-	colors,
-	makeStyles,
-} from "@material-ui/core"
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward"
+import {Avatar, Card, CardContent, Grid, Typography, colors, makeStyles} from "@material-ui/core"
 import PeopleIcon from "@material-ui/icons/PeopleOutlined"
 
 const useStyles = makeStyles((theme) => ({
@@ -53,15 +43,6 @@ const TotalCustomers = ({total, className, ...rest}) => {
 						</Avatar>
 					</Grid>
 				</Grid>
-				{/* <Box mt={2} display="flex" alignItems="center">
-          <ArrowUpwardIcon className={classes.differenceIcon} />
-          <Typography className={classes.differenceValue} variant="body2">
-            16%
-          </Typography>
-          <Typography color="textSecondary" variant="caption">
-            Since last month
-          </Typography>
-        </Box> */}
 			</CardContent>
 		</Card>
 	)

@@ -65,9 +65,8 @@ const PaymentsTable = ({data}) => {
 		},
 	]
 
-	const tableData = []
-
-	data &&
+	const tableData =
+		data &&
 		data.data.result.map((data) => {
 			let formData = {}
 			if (data.paymentData !== null && data.type === "PAYPAL") {
@@ -96,7 +95,7 @@ const PaymentsTable = ({data}) => {
 				}
 			}
 
-			tableData.push(formData)
+			return formData
 		})
 
 	return (

@@ -1,7 +1,6 @@
 import React from "react"
 import {IconButton, makeStyles} from "@material-ui/core"
-import {Edit, Play, Trash} from "react-feather"
-import {useParams} from "react-router-dom"
+import {Edit, Trash} from "react-feather"
 import Axios from "axios"
 import {useConfirm} from "material-ui-confirm"
 
@@ -73,7 +72,13 @@ const CertificateCard = ({
 					srcset=""
 				/>
 			) : (
-				<object width="100%" height="150" data={item.image} type="application/pdf"></object>
+				<object
+					width="100%"
+					height="150"
+					data={item.image}
+					type="application/pdf"
+					aria-label="im"
+				></object>
 			)}
 
 			<div

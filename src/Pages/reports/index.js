@@ -29,12 +29,6 @@ const Dashboard = () => {
 	}, [])
 
 	const [allData, setAllData] = useState()
-	const [totalAmount, setTotalAmount] = useState()
-	const [totalTransactions, setTotalTransactions] = useState()
-	const [successTrx, setSuccessTrx] = useState()
-	const [failedTrx, setFailedTrx] = useState()
-
-	const [dailyDataLine, setDailyDataLine] = useState()
 
 	const getAllTransactions = async () => {
 		const data = await axios.get(`${process.env.REACT_APP_API_KEY}/payment/get/alltransactions/`)
@@ -48,24 +42,6 @@ const Dashboard = () => {
 				monthlyData[month].count++
 				monthlyData[month].responses.push(item)
 			})
-
-		// monthlyData[moment(new Date()).format("MMMM YYYY")].responses.map(
-		//   (data) => {
-		//     if (data.paymentData !== null) {
-		//       successtransactions++;
-		//       setSuccessTrx(successtransactions);
-		//       amount += parseInt(data.paymentData.transactions[0].amount.total);
-		//       setTotalAmount(amount);
-		//     } else {
-		//       failedtransactions++;
-		//       setFailedTrx(failedtransactions);
-		//     }
-		//   }
-		// );
-
-		// setTotalTransactions(
-		//   monthlyData[moment(new Date()).format("MMMM YYYY")].responses.length
-		// );
 	}
 
 	return (
@@ -73,22 +49,22 @@ const Dashboard = () => {
 			<Container maxWidth={false}>
 				<Grid container spacing={3}>
 					<Grid item lg={3} sm={6} xl={3} xs={12}>
-						<Budget dataa={allData} amount={totalAmount} />
+						<Budget dataa={allData} amount={0} />
 					</Grid>
 					<Grid item lg={3} sm={6} xl={3} xs={12}>
-						<TotalCustomers total={totalTransactions} />
+						<TotalCustomers total={0} />
 					</Grid>
 					<Grid item lg={3} sm={6} xl={3} xs={12}>
-						<TasksProgress success={successTrx} />
+						<TasksProgress success={0} />
 					</Grid>
 					<Grid item lg={3} sm={6} xl={3} xs={12}>
-						<TotalProfit failed={failedTrx} />
+						<TotalProfit failed={0} />
 					</Grid>
 					<Grid item lg={8} md={6} xl={8} xs={12}>
-						<AmountChart dailyDataline={dailyDataLine} dataa={allData} />
+						<AmountChart dailyDataline={0} dataa={allData} />
 					</Grid>
 					<Grid item lg={4} md={6} xl={4} xs={12}>
-						<TrafficByDevice totaltrx={totalTransactions} failed={failedTrx} success={successTrx} />
+						<TrafficByDevice totaltrx={0} failed={0} success={0} />
 					</Grid>
 					<Grid item lg={12} md={12} xs={12}>
 						{/* <LatestOrders data={allData} /> */}

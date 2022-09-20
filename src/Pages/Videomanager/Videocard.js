@@ -1,6 +1,6 @@
 import {IconButton, makeStyles} from "@material-ui/core"
-import {Edit, Play, Trash} from "react-feather"
-import React, {useState} from "react"
+import {Edit, Trash} from "react-feather"
+import React from "react"
 import Vimeo from "@u-wave/react-vimeo"
 import {useConfirm} from "material-ui-confirm"
 

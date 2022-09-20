@@ -1,21 +1,9 @@
-import React, {useState, useEffect} from "react"
+import React from "react"
 import clsx from "clsx"
 import PropTypes from "prop-types"
-import {
-	Avatar,
-	Box,
-	Card,
-	CardContent,
-	Grid,
-	Typography,
-	colors,
-	makeStyles,
-} from "@material-ui/core"
-import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward"
+import {Avatar, Card, CardContent, Grid, Typography, colors, makeStyles} from "@material-ui/core"
 import MoneyIcon from "@material-ui/icons/Money"
 import CountUp from "react-countup"
-import axios from "axios"
-const moment = require("moment")
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -37,9 +25,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Budget = ({dataa, amount, className, ...rest}) => {
 	const classes = useStyles()
-
-	const [usdVal, setUsdVal] = useState()
-
 	return (
 		<Card className={clsx(classes.root, className)} {...rest}>
 			<CardContent>
@@ -59,15 +44,6 @@ const Budget = ({dataa, amount, className, ...rest}) => {
 						</Avatar>
 					</Grid>
 				</Grid>
-				{/* <Box mt={2} display="flex" alignItems="center">
-          <ArrowDownwardIcon className={classes.differenceIcon} />
-          <Typography className={classes.differenceValue} variant="body2">
-            12%
-          </Typography>
-          <Typography color="textSecondary" variant="caption">
-            Since last month
-          </Typography>
-        </Box> */}
 			</CardContent>
 		</Card>
 	)

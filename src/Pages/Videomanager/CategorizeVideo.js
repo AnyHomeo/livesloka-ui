@@ -1,36 +1,15 @@
-import {Container, Grid, IconButton, makeStyles, Menu, MenuItem} from "@material-ui/core"
+import {Container, Grid, IconButton, makeStyles} from "@material-ui/core"
 import Axios from "axios"
 import React, {useState, useEffect} from "react"
-import {Folder, Plus} from "react-feather"
+import {Plus} from "react-feather"
 import {useParams} from "react-router-dom"
 import AddCertificateModal from "./AddCertificateModal"
 import AddVideoModal from "./AddVideoModal"
-import Videocard from "./Videocard"
-import {Link} from "react-router-dom"
 import VideoPage from "./VideoPage"
 import CertificatePage from "./CetrificatePage"
 import BulkUploadCertificate from "./BulkUploadCertificate"
-const useStyles = makeStyles(() => ({
-	folderCard: {
-		height: 50,
-		width: 150,
-		border: "0.5px solid #34495e",
-		borderRadius: 5,
-		display: "flex",
-		alignItems: "center",
-		padding: 5,
-		cursor: "pointer",
-		margin: 10,
-		justifyContent: "space-between",
-	},
-	menuIcons: {
-		color: "#34495e",
-		marginRight: 20,
-	},
-}))
 
 const CategorizeVideo = () => {
-	const classes = useStyles()
 	const params = useParams()
 
 	const [openAddVideo, setOpenAddVideo] = useState(false)

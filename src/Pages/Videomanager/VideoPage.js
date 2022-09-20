@@ -4,7 +4,7 @@ import Videocard from "./Videocard"
 const VideoPage = ({data, getBackData, open, setOpen, setUpdateVidoeFlag, setUpdateVideoData}) => {
 	let array = []
 	data &&
-		data.map((item) => {
+		data.forEach((item) => {
 			if (item.url !== "") {
 				array.push(item)
 			}

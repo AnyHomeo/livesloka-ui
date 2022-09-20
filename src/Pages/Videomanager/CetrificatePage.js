@@ -11,7 +11,7 @@ const CertificatePage = ({
 }) => {
 	let array = []
 	data &&
-		data.map((item) => {
+		data.forEach((item) => {
 			if (item.image) {
 				array.push(item)
 			}

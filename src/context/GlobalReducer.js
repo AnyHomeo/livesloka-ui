@@ -1,6 +1,6 @@
 import {EXPAND_ALL} from "./Types"
 
-export default (state, action) => {
+const globalReducer = (state, action) => {
 	switch (action.type) {
 		case EXPAND_ALL:
 			return {
@@ -11,3 +11,5 @@ export default (state, action) => {
 			return state
 	}
 }
+
+export default globalReducer
